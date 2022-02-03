@@ -4,7 +4,7 @@ setup(
 	name='pyNA',
 	author="Laurens Jozef A. Voet",
 	author_email="laurens.ja.voet@gmail.com",
-	description="pyNA is the python Noise Assessment tool to assess aircraft noise during take-off operations.",
+	description="python Noise Assessment tool to assess aircraft noise during take-off and landing operations.",
 	version='1.0.0',
 	packages=['pyNA'],
 	url="https://github.com/MIT-LAE/pyNA",
