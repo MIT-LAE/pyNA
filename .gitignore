@@ -2,8 +2,13 @@
 __pycache__/
 .DS_Store
 .idea/
+
 venv/
 pyNA.egg-info/
+
 cases/*
 !cases/nasa_stca_standard
+
 wg3/
+
+utils/*.ipynb
