@@ -12,7 +12,7 @@ from pyNA.src.trajectory_src.aerodynamics import Aerodynamics
 
 
 # Load settings and aircraft
-settings = pyna.load_settings(case_name="NASA STCA Standard")
+settings = pyna.load_settings(case_name="nasa_stca_standard")
 settings.pyNA_directory = 'pyNA'
 ac = Aircraft(name=settings.ac_name, settings=settings)
 

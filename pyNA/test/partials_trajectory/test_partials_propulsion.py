@@ -9,7 +9,7 @@ os.environ["pyna_language"] = 'python'
 from pyNA.src.trajectory_src.propulsion import Propulsion
 from pyNA.pyna import pyna
 
-# Is not used for NASA STCA Standard!
+# Is not used for nasa_stca_standard!
 pyna_settings = pyna.load_settings(case_name="stca")
 pyna_settings.engine_file_name = 'engine_deck_stca.csv'
 pyna_settings.pyNA_directory = 'pyNA'

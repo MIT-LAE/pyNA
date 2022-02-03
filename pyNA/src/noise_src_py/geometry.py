@@ -139,7 +139,7 @@ class Geometry(om.ExplicitComponent):
 
                 # Compute azimuthal directivity angle
                 # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 27
-                if settings.case_name in ["NASA STCA Standard", "stca_enginedesign_standard"]:
+                if settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
                     outputs['phi'][i, :] = np.zeros(n_t)
                 else:
                     phi = -180. / np.pi * np.arctan2(n_vcr_s_1, n_vcr_s_2)

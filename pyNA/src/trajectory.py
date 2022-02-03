@@ -304,7 +304,8 @@ class Trajectory:
             self.phases['groundroll'].add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                # self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                self.phases['groundroll'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, ref=10.)
             else:
                 self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -324,7 +325,8 @@ class Trajectory:
             self.phases['rotation'].add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=-2., upper=18., ref=10., defect_ref=10.)
             # PHLD
             if control_optimization and settings.PHLD:
-                self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                # self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                self.phases['rotation'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, ref=10.)
             else:
                 self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['rotation'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -353,7 +355,8 @@ class Trajectory:
                 self.phases['climb'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                # self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                self.phases['climb'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, ref=10.)
             else:
                 self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['climb'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -522,7 +525,8 @@ class Trajectory:
                 if control_optimization and settings.PHLD:
                     for j, phase_name in enumerate(self.phase_name_lst):
                         if phase_name in ['groundroll', 'rotation', 'climb', 'cutback']:
-                            problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
+                            # problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
+                            problem.model.connect('phases.' + phase_name + '.interpolated.controls:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                         else:
                             problem.model.connect('phases.' + phase_name + '.interpolated.controls:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                 else:

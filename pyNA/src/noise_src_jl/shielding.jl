@@ -4,7 +4,7 @@ function shielding(settings, n_t)
     # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
     shield = zeros((length(settings.x_observer_array), n_t, settings.N_f))
     
-    if (settings.case_name in ["NASA STCA Standard", "stca_enginedesign_standard"]) && settings.shielding == true
+    if (settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]) && settings.shielding == true
         
         if settings.observer_lst == ["lateral", "flyover"] || settings.observer_lst == ["flyover", "lateral"] || settings.observer_lst == ["approach"]
 

@@ -167,7 +167,7 @@ class Source(om.ExplicitComponent):
             if settings.core:
                 msap_core = Core.core(self, inputs['theta'][i, :], inputs)
                 
-                if settings.suppression and settings.case_name in ["NASA STCA Standard", "stca_enginedesign_standard"]:
+                if settings.suppression and settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
                     idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings.N_f)) > 0.8)
                     msap_core[idx_TS] = (10.**(-2.3 / 10.) * msap_core)[idx_TS]
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_core
@@ -175,7 +175,7 @@ class Source(om.ExplicitComponent):
             if settings.jet_mixing:
                 msap_jet_mixing = Jet.jet_mixing(self, inputs['theta'][i, :], inputs)
                 
-                if settings.suppression and settings.case_name in ["NASA STCA Standard", "stca_enginedesign_standard"]:
+                if settings.suppression and settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
                     idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings.N_f)) > 0.8)
                     msap_jet_mixing[idx_TS] = (10. **(-2.3 / 10.) * msap_jet_mixing)[idx_TS]
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_jet_mixing
@@ -183,7 +183,7 @@ class Source(om.ExplicitComponent):
             if settings.jet_shock:
                 msap_jet_shock = Jet.jet_shock(self, inputs['theta'][i, :], inputs)
                 
-                if settings.suppression and settings.case_name in ["NASA STCA Standard", "stca_enginedesign_standard"]:
+                if settings.suppression and settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
                     idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings.N_f)) > 0.8)
                     msap_jet_shock[idx_TS] = (10. **(-2.3 / 10.) * msap_jet_shock)[idx_TS]
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_jet_shock

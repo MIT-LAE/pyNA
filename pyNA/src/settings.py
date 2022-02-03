@@ -438,8 +438,8 @@ class Settings(FrozenClass):
             self.jet_shock = True
             self.airframe = True
 
-        # Set lateral and flyover observer locations for NASA STCA Standard trajectory
-        if self.case_name in ['NASA STCA Standard', 'stca_enginedesign_standard']:
+        # Set lateral and flyover observer locations for nasa_stca_standard trajectory
+        if self.case_name in ['nasa_stca_standard', 'stca_enginedesign_standard']:
             if self.observer_lst == 'lateral':
                 self.x_observer_array = np.array([[3756.66, 450., 1.2192]])
 
@@ -449,8 +449,8 @@ class Settings(FrozenClass):
             elif self.observer_lst == ['lateral', 'flyover'] or self.observer_lst == ['flyover', 'lateral']:
                 self.x_observer_array = np.array([[3756.66, 450., 1.2192], [6500., 0., 1.2192]])
 
-        # Disable validation if not NASA STCA Standard trajectory
-        if not self.case_name == 'NASA STCA Standard':
+        # Disable validation if not nasa_stca_standard trajectory
+        if not self.case_name == 'nasa_stca_standard':
             self.validation = False
 
         return

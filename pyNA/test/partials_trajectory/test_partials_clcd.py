@@ -12,7 +12,7 @@ from pyNA.src.trajectory_src.clcd import CLCD
 
 
 # Load settings and aircraft
-settings = pyna.load_settings(case_name="NASA STCA Standard")
+settings = pyna.load_settings(case_name="nasa_stca_standard")
 settings.pyNA_directory = '/Users/laurensvoet/Documents/Research/pyNA/pyNA'
 
 py = pyna(pyna_settings)

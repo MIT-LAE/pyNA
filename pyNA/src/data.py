@@ -309,7 +309,7 @@ class Data:
         """
 
         # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
-        if settings.case_name == 'NASA STCA Standard':
+        if settings.case_name == 'nasa_stca_standard':
             # Check if all sources
             if settings.all_sources:
                 for i, observer in enumerate(settings.observer_lst):
@@ -356,7 +356,7 @@ class Data:
             else:
                 raise ValueError('Invalid noise component for trajectory validation. Specify core/jet mixing/fan inlet/fan discharge/airframe')
         else:
-            raise ValueError('No validation data available for this case name. Specify NASA STCA Standard.')
+            raise ValueError('No validation data available for this case name. Specify nasa_stca_standard.')
 
         return None
 
@@ -454,7 +454,7 @@ class Data:
         self.shield_f = []
         self.shield_a = []
 
-        if settings.case_name == 'NASA STCA Standard':
+        if settings.case_name == 'nasa_stca_standard':
 
             for i, observer in enumerate(settings.observer_lst):
 

@@ -9,7 +9,7 @@ from pyNA.src.trajectory_src.atmosphere import Atmosphere
 
 
 # Load settings and aircraft
-settings = pyna.load_settings(case_name="NASA STCA Standard")
+settings = pyna.load_settings(case_name="nasa_stca_standard")
 
 # Inputs
 nn = 20

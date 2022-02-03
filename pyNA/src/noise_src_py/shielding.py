@@ -48,7 +48,7 @@ class Shielding(om.ExplicitComponent):
         settings = self.options['settings']
         data = self.options['data']
 
-        if settings.case_name in ["NASA STCA Standard", "stca_enginedesign_standard"] and settings.shielding:
+        if settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"] and settings.shielding:
                 
             for i in np.arange(len(settings.observer_lst)):
 
