@@ -1,0 +1,8 @@
+.ipynb_checkpoints/
+__pycache__/
+.DS_Store
+.idea/
+venv/
+pyNA.egg-info/
+cases/
+wg3/
