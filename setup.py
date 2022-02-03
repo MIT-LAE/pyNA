@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 setup(
 	name='pyNA',
 	author="Laurens Jozef A. Voet",
-	author_email="lvoet@mit.edu",
-	description="pyNA (python Noise Assessment) computes aircraft noise on take-off trajectories.",
+	author_email="laurens.ja.voet@gmail.com",
+	description="pyNA is the python Noise Assessment tool to assess aircraft noise during take-off operations.",
 	version='1.0.0',
 	packages=['pyNA'],
-	url="https://github.mit.edu/lvoet/pyNA",
+	url="https://github.com/MIT-LAE/pyNA",
 	include_package_data=True,
 	package_data={'': ['data/*']},
 	install_requires=[
