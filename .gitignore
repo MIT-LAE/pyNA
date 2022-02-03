@@ -4,6 +4,6 @@ __pycache__/
 .idea/
 venv/
 pyNA.egg-info/
-cases/
+cases/*
 !cases/nasa_stca_standard
 wg3/
