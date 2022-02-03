@@ -5,4 +5,5 @@ __pycache__/
 venv/
 pyNA.egg-info/
 cases/
+!cases/NASA STCA Standard/
 wg3/
