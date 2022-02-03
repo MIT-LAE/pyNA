@@ -1,0 +1,554 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="core" href="core.html" /><link rel="prev" title="pyna" href="pyNA.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>airframe - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="module-airframe">
+<span id="airframe"></span><h1>airframe<a class="headerlink" href="#module-airframe" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="airframe.Airframe">
+<em class="property">class </em><code class="sig-prename descclassname">airframe.</code><code class="sig-name descname">Airframe</code><a class="reference internal" href="_modules/airframe.html#Airframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="airframe.Airframe.airframe">
+<em class="property">static </em><code class="sig-name descname">airframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">phi</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/airframe.html#Airframe.airframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe.airframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute airframe noise mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – pyNA component computing noise sources
+:type source: Source</p></li>
+<li><p><strong>inputs</strong> (<em>openmdao.vectors.default_vector.DefaultVector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_af</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [n_t, settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="airframe.Airframe.landing_gear">
+<em class="property">static </em><code class="sig-name descname">landing_gear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">c_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">phi</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">I_landing_gear</span><span class="p">:</span> <span class="n">numpy.int64</span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/airframe.html#Airframe.landing_gear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe.landing_gear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute landing gear mean-square acoustic pressure (msap)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – aircraft parameters</p></li>
+<li><p><strong>M_0</strong> (<em>np.float64</em>) – ambient Mach number [-]</p></li>
+<li><p><strong>c_0</strong> (<em>np.float64</em>) – ambient speed of sound [m/s]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>phi</strong> (<em>np.float64</em>) – azimuthal directivity angle [deg]</p></li>
+<li><p><strong>I_landing_gear</strong> (<em>np.int64</em>) – landing gear deflection (0/1) [-]</p></li>
+<li><p><strong>freq</strong> (<em>np.ndarray</em><em> [</em><em>settings.N_f</em><em>]</em>) – 1/3rd octave frequency [Hz]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_lg</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="airframe.Airframe.leading_edge_slat">
+<em class="property">static </em><code class="sig-name descname">leading_edge_slat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">c_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">rho_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">mu_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">phi</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/airframe.html#Airframe.leading_edge_slat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe.leading_edge_slat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute leading-edge slat mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – aircraft parameters</p></li>
+<li><p><strong>M_0</strong> (<em>np.float64</em>) – ambient Mach number [-]</p></li>
+<li><p><strong>c_0</strong> (<em>np.float64</em>) – ambient speed of sound [m/s]</p></li>
+<li><p><strong>rho_0</strong> (<em>np.float64</em>) – ambient density [kg/m3]</p></li>
+<li><p><strong>mu_0</strong> (<em>np.float64</em>) – ambient dynamic viscosity [kg/m/s]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>phi</strong> (<em>np.float64</em>) – azimuthal directivity angle [deg]</p></li>
+<li><p><strong>freq</strong> (<em>np.ndarray</em><em> [</em><em>settings.N_f</em><em>]</em>) – 1/3rd octave frequency [Hz]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_les</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="airframe.Airframe.trailing_edge_flap">
+<em class="property">static </em><code class="sig-name descname">trailing_edge_flap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">c_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">phi</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta_flaps</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/airframe.html#Airframe.trailing_edge_flap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe.trailing_edge_flap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute trailing-edge flap mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – aircraft parameters</p></li>
+<li><p><strong>M_0</strong> (<em>np.float64</em>) – ambient Mach number [-]</p></li>
+<li><p><strong>c_0</strong> (<em>np.float64</em>) – ambient speed of sound [m/s]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>phi</strong> (<em>np.float64</em>) – azimuthal directivity angle [deg]</p></li>
+<li><p><strong>theta_flaps</strong> (<em>np.float64</em>) – flap deflection angle [deg]</p></li>
+<li><p><strong>freq</strong> (<em>np.ndarray</em><em> [</em><em>settings.N_f</em><em>]</em>) – 1/3rd octave frequency [Hz]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_tef</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="airframe.Airframe.trailing_edge_horizontal_tail">
+<em class="property">static </em><code class="sig-name descname">trailing_edge_horizontal_tail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">c_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">rho_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">mu_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">phi</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/airframe.html#Airframe.trailing_edge_horizontal_tail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe.trailing_edge_horizontal_tail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute horizontal tail trailing edge mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – aircraft parameters</p></li>
+<li><p><strong>M_0</strong> (<em>np.float64</em>) – ambient Mach number [-]</p></li>
+<li><p><strong>c_0</strong> (<em>np.float64</em>) – ambient speed of sound [m/s]</p></li>
+<li><p><strong>rho_0</strong> (<em>np.float64</em>) – ambient density [kg/m3]</p></li>
+<li><p><strong>mu_0</strong> (<em>np.float64</em>) – ambient dynamic viscosity [kg/m/s]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>phi</strong> (<em>np.float64</em>) – azimuthal directivity angle [deg]</p></li>
+<li><p><strong>freq</strong> (<em>np.ndarray</em><em> [</em><em>settings.N_f</em><em>]</em>) – 1/3rd octave frequency [Hz]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_h</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="airframe.Airframe.trailing_edge_vertical_tail">
+<em class="property">static </em><code class="sig-name descname">trailing_edge_vertical_tail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">c_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">rho_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">mu_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">phi</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/airframe.html#Airframe.trailing_edge_vertical_tail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe.trailing_edge_vertical_tail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute vertical tail trailing edge mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – aircraft parameters</p></li>
+<li><p><strong>M_0</strong> (<em>np.float64</em>) – ambient Mach number [-]</p></li>
+<li><p><strong>c_0</strong> (<em>np.float64</em>) – ambient speed of sound [m/s]</p></li>
+<li><p><strong>rho_0</strong> (<em>np.float64</em>) – ambient density [kg/m3]</p></li>
+<li><p><strong>mu_0</strong> (<em>np.float64</em>) – ambient dynamic viscosity [kg/m/s]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>phi</strong> (<em>np.float64</em>) – azimuthal directivity angle [deg]</p></li>
+<li><p><strong>freq</strong> (<em>np.ndarray</em><em> [</em><em>settings.N_f</em><em>]</em>) – 1/3rd octave frequency [Hz]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_h</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="airframe.Airframe.trailing_edge_wing">
+<em class="property">static </em><code class="sig-name descname">trailing_edge_wing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">c_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">rho_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">mu_0</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">phi</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/airframe.html#Airframe.trailing_edge_wing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#airframe.Airframe.trailing_edge_wing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute wing trailing edge mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – aircraft parameters</p></li>
+<li><p><strong>M_0</strong> (<em>np.float64</em>) – ambient Mach number [-]</p></li>
+<li><p><strong>c_0</strong> (<em>np.float64</em>) – ambient speed of sound [m/s]</p></li>
+<li><p><strong>rho_0</strong> (<em>np.float64</em>) – ambient density [kg/m3]</p></li>
+<li><p><strong>mu_0</strong> (<em>np.float64</em>) – ambient dynamic viscosity [kg/m/s]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>phi</strong> (<em>np.float64</em>) – azimuthal directivity angle [deg]</p></li>
+<li><p><strong>freq</strong> (<em>np.ndarray</em><em> [</em><em>settings.N_f</em><em>]</em>) – 1/3rd octave frequency [Hz]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_w</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [n_t, settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<div class="section" id="theory">
+<h2>theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>The Fink method is used to assess airframe noise. The general equation for the mean-square acoustic pressure for the aircraft noise components is:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[&lt;p^2&gt;^*_{af,comp} = 10\log{10} \left[ \frac{\Pi^*_{comp}}{4\pi(r_s^*)^2p_{\textrm{ref}}^2} \frac{D_{comp}\theta, \phi) F_{comp}(S_{comp})}{(1 - M_0 cos(\theta))^4} \right]\]</div></div>
+<p>This equation is applied to the individual noise source contributions (denoted by subscript comp), namely wing trailing edge (including main wing, horizontal and vertical tail), leading edge slat, trailing edge flap and landing gear noise (including main and nose gear).</p>
+<div class="section" id="wing-trailing-edge-noise">
+<h3>Wing trailing edge noise<a class="headerlink" href="#wing-trailing-edge-noise" title="Permalink to this headline">¶</a></h3>
+<p>The equations in this section are applicable to the main wing, horizontal tail or vertical tail surface (denoted by the subscript x). The acoustic power for trailing edge noise is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\Pi^*_{xte} = K_{xte} M_0^5 \delta_{xte}^*G_x \left(\frac{b_x}{b_w}\right)^2\]</div></div>
+<p>In this equation, the constant <span class="math notranslate nohighlight">\(K_{xte} = 7.075\cdot 10^{-6}\)</span> for an aerodynamically clean wing configuration and <span class="math notranslate nohighlight">\(K_{xte} = 4.464\cdot 10^{-5}\)</span> for non-clean configuration. The boundary layer thickness at the wing trailing edge in this equation is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\delta^*_{xte} = 0.37 \frac{A_x}{b_x^2}\left(\frac{\rho_0 M_0 c_0 A_x}{\mu_0 b_x} \right)^{-0.2}\]</div></div>
+<p>where <span class="math notranslate nohighlight">\(A_w\)</span> and <span class="math notranslate nohighlight">\(b_w\)</span> are the wing area and span of the respective wing element. The spectral distribution function, <span class="math notranslate nohighlight">\(F_{xte}(S_{xte})\)</span>, is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}F_{xte}(S_{xte}) =
+\begin{cases}
+0.613 (10 S_{xte})^4 [(10S_{xte})^{1.35} + 0.5]^{-4} &amp; \textrm{if delta wing} \\
+0.485 (10 S_{xte})^4 [(10S_{xte})^{1.5} + 0.5]^{-4} &amp; \textrm{if rectangular wing} \\
+\end{cases}\end{split}\]</div></div>
+<p>The directivity function, <span class="math notranslate nohighlight">\(D_{xte}\)</span>, the Strouhal number, <span class="math notranslate nohighlight">\(S_{xte}\)</span>, and the spectral distribution function, <span class="math notranslate nohighlight">\(F_{xte}(S_{xte})\)</span>, are given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[D_{xte} = 4cos^2(\phi) cos^2\left(\frac{\theta}{2}\right)\]</div></div>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[S_{xte}  = \frac{f \delta^*_{xte}b_x}{M_0 c_0} (1 - M_0 cos\theta)\]</div></div>
+</div>
+<div class="section" id="leading-edge-slat">
+<h3>Leading edge slat<a class="headerlink" href="#leading-edge-slat" title="Permalink to this headline">¶</a></h3>
+<p>The noise from the leading edge slats has 2 components, because of 2 different noise generating mechanisms. Firstly, an increase in the main wing trailing edge noise, because of the change in boundary layer thickness (<em>component 1</em>), and secondly, the noise generated by the slat itself (<em>component 2</em>). The noise power of both components is equal to <span class="math notranslate nohighlight">\(\Pi^*_{les,1} = \Pi^*_{les,2} = 4.464\cdot 10^{-5} M_0^5 \delta_{wte}^*\)</span>, where the boundary layer thickness of the main wing, <span class="math notranslate nohighlight">\(\delta_{wte}^*\)</span>, is given by the equation in the wing section. The directivity function, <span class="math notranslate nohighlight">\(D_{les}\)</span>, of both noise components is equal and given by the same equation from the wing section. The spectral distribution function, <span class="math notranslate nohighlight">\(F_{les}\)</span>, is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+F_{les,1}(S_{les,1}) = 0.613 (10 S_{les}) ^ 4 \cdot [(10S_{les,1}) ^ 1.5 + 0.5] ^{-4} &amp; \textrm{if component 1}\\
+F_{les,1}(S_{les,1}) = 0.613 (2.19 S_{les}) ^ 4 \cdot [(2.19S_{les,2}) ^ 1.5 + 0.5] ^{-4} &amp; \textrm{if component 2}\\
+\end{cases}\end{split}\]</div></div>
+<p>where the spectrum functions <span class="math notranslate nohighlight">\(S_{les,1} = S_{les,2}\)</span> are given by the same equation from the wing section.</p>
+</div>
+<div class="section" id="trailing-edge-flaps">
+<h3>Trailing edge flaps<a class="headerlink" href="#trailing-edge-flaps" title="Permalink to this headline">¶</a></h3>
+<p>The noise power of the trailing edge flaps depends on the number of slots and is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\Pi^*_{af,tef} =
+\begin{cases}
+2.787e-4  M_0 ^ 6 \frac{A_{flap} }{ b_w ^ 2} sin^2(\delta_{flap}) &amp; \textrm{if $n_{slots}&lt;$  3}  \\
+3.509e-4  M_0 ^ 6 \frac{A_{flap} }{ b_w ^ 2} sin^2(\delta_{flap}) &amp; \textrm{if $n_{slots}$ = 3}
+\end{cases}\end{split}\]</div></div>
+<p>The spectral distribution function, <span class="math notranslate nohighlight">\(F_{tef}\)</span>, for single, double and triple slotted flaps is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{ll}
+    F_{tef, 1-2 slot} = \begin{cases}
+    0.0480 S_{tef} &amp; \textrm{if $S_{tef} &lt;2$}\\
+    0.1406S_{tef}^{-0.55}&amp; \textrm{if $2\leq S_{tef}\leq20$}\\
+    216.49S_{tef}^{-3}&amp; \textrm{if $20&lt;S_{tef}$}\\
+    \end{cases}
+    &amp;
+    F_{tef, 3 slot} = \begin{cases}
+    0.0257S_{tef}&amp; \textrm{if $S_{tef}&lt;2$}\\
+    0.0536S_{tef}^{-0.06525}&amp; \textrm{if $2\leq S_{tef}\leq75$}\\
+    17078S_{tef}^3&amp; \textrm{if $75&lt;S_{tef}$}\\
+    \end{cases}
+\end{array}\end{split}\]</div></div>
+<p>The directivity function, <span class="math notranslate nohighlight">\(D_{tef}\)</span>, and the Strouhal number, <span class="math notranslate nohighlight">\(S_{tef}\)</span>, are given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[D_{tef}(\theta, \phi) = 3(\sin\delta_{flap}\ \cos\theta + \cos\delta_f \ \sin \theta \cos \phi)^2\]</div></div>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[S_{tef} = \frac{f A_{flap}}{M_0 b_f c_0} (1 - M_0 cos\theta)\]</div></div>
+</div>
+<div class="section" id="landing-gear">
+<h3>Landing gear<a class="headerlink" href="#landing-gear" title="Permalink to this headline">¶</a></h3>
+<p>If the landing gear is extracted, the noise for each landing gear (i.e. main gear, nose gear) consists of wheel-noise and strut-noise. The noise power for the landing gear noise is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+\Pi^*_{lg,wheel} = 4.349e-4 M_0^6 n_{wheel} \left(\frac{d_{tire}}{b_w}\right)^2 &amp; \textrm{for wheel noise; one/two-wheel landing gear} \\
+\Pi^*_{lg,wheel} = 3.414e-4 M_0^6 n_{wheel} \left(\frac{d_{tire}}{b_w}\right)^2 &amp; \textrm{for wheel noise; one/two-wheel landing gear} \\
+\Pi^*_{lg,strut} = 2.735e-4 M_0^6 \left(\frac{d_{tire}}{b_w}\right)^2\left(\frac{l_{strut}}{d_{tire}}\right) &amp; \textrm{for wheel strut noise} \\
+\end{cases}\end{split}\]</div></div>
+<p>The spectral distribution function, <span class="math notranslate nohighlight">\(F_{lg}\)</span>, for the landing gear noise is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+F_{lg, wheel} = 13.59S_{lg}^2 (12.5 + S_{lg}^2)^{-2.25} &amp; \textrm{for wheel-noise; 2-wheel gear} \\
+F_{lg, wheel} = 0.0577S_{lg}^2 (1 + 0.25S_{lg}^2)^{-1.5} &amp; \textrm{for wheel-noise; 4-wheel gear} \\
+F_{lg, strut} = 5.325S_{lg}^2(30+S_{lg}^8){-1} &amp; \textrm{for strut-noise; 2-wheel gear} \\
+F_{lg, strut} = 1.280S_{lg}^3(1.06+S_{lg}^2){-3} &amp; \textrm{for strut-noise; 2-wheel gear} \\
+\end{cases}\end{split}\]</div></div>
+<p>The directivity function, <span class="math notranslate nohighlight">\(D_{lg}\)</span>, and the Strouhal number, <span class="math notranslate nohighlight">\(S_{lg}\)</span>, for the landing gear noise are given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+D_{lg, wheel} = \frac{3}{2}sin^2 \theta &amp; \textrm{for wheel-noise} \\
+D_{lg, strut} = 3 sin^2\theta sin^2\phi &amp; \textrm{for strut-noise} \\
+\end{cases}\end{split}\]</div></div>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[S_{lg} = \frac{f d_{\textrm{tire}}}{M_0 c_0}(1 - M_0 cos\theta)\]</div></div>
+</div>
+<div class="section" id="combining-the-aircraft-noise-components">
+<h3>Combining the aircraft noise components<a class="headerlink" href="#combining-the-aircraft-noise-components" title="Permalink to this headline">¶</a></h3>
+<p>The total mean-square acoustic pressure of the aircraft noise is given by the sum of the individual components:.</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[&lt;p^2&gt;^*_{af,total} = \sum &lt;p^2&gt;^*_{af,wte} + &lt;p^2&gt;^*_{af,les} + &lt;p^2&gt;^*_{af,tef} + \sum &lt;p^2&gt;^*_{af,lg}\]</div></div>
+</div>
+<div class="section" id="hsr-suppression">
+<h3>HSR suppression<a class="headerlink" href="#hsr-suppression" title="Permalink to this headline">¶</a></h3>
+<p>An airframe suppression factor, <span class="math notranslate nohighlight">\(\sigma\)</span>, as function of frequency, <span class="math notranslate nohighlight">\(f\)</span>, and polar directivity angle, <span class="math notranslate nohighlight">\(\theta\)</span> is applied to the total mean-square acoustic pressure:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[&lt;p^2&gt;^*_{af,total, s} = \sigma_{supp}(f, \theta)&lt;p^2&gt;^*_{af,total}\]</div></div>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="core.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">core</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="pyNA.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">pyna</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/airframe.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">airframe</a><ul>
+<li><a class="reference internal" href="#theory">theory</a><ul>
+<li><a class="reference internal" href="#wing-trailing-edge-noise">Wing trailing edge noise</a></li>
+<li><a class="reference internal" href="#leading-edge-slat">Leading edge slat</a></li>
+<li><a class="reference internal" href="#trailing-edge-flaps">Trailing edge flaps</a></li>
+<li><a class="reference internal" href="#landing-gear">Landing gear</a></li>
+<li><a class="reference internal" href="#combining-the-aircraft-noise-components">Combining the aircraft noise components</a></li>
+<li><a class="reference internal" href="#hsr-suppression">HSR suppression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

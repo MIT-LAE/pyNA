@@ -1,0 +1,377 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="settings" href="settings.html" /><link rel="prev" title="engine" href="engine.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>noise - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="module-noise">
+<span id="noise"></span><h1>noise<a class="headerlink" href="#module-noise" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="noise.Noise">
+<em class="property">class </em><code class="sig-prename descclassname">noise.</code><code class="sig-name descname">Noise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/noise.html#Noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The noise module contains the methods to compute the noise signature used by pyNA.</p>
+<dl class="py method">
+<dt id="noise.Noise.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/noise.html#Noise.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize noise class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="noise.Noise.compute_epnl">
+<em class="property">static </em><code class="sig-name descname">compute_epnl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t_o</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">pnlt</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">C</span><span class="p">:</span> <span class="n">numpy.ndarray</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/noise.html#Noise.compute_epnl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.compute_epnl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute EPNL from time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_o</strong> (<em>np.ndarray</em>) – observer time [s]</p></li>
+<li><p><strong>pnlt</strong> (<em>np.ndarray</em>) – tone-corrected perceived noise level [dB]</p></li>
+<li><p><strong>C</strong> (<em>np.ndarray</em>) – tone corrections for pnlt [dB]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>epnl</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.flaot64</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="noise.Noise.compute_source_distribution">
+<em class="property">static </em><code class="sig-name descname">compute_source_distribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">pandas.core.frame.DataFrame</span></em>, <em class="sig-param"><span class="n">time_step</span><span class="p">:</span> <span class="n">numpy.int64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.compute_source_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.compute_source_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute noise source directional and spectral distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>problem</strong> (<em>om.Problem</em>) – openmdao problem</p></li>
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
+<li><p><strong>path</strong> (<em>pd.DataFrame</em>) – path of trajectory time_series</p></li>
+<li><p><strong>time_step</strong> (<em>np.int64</em>) – Time step in predefined trajectory at which to compute the noise source distribution.</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="noise.Noise.compute_time_series">
+<em class="property">static </em><code class="sig-name descname">compute_time_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">pandas.core.frame.DataFrame</span></em>, <em class="sig-param"><span class="n">engine</span></em>, <em class="sig-param"><span class="n">mode</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.compute_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.compute_time_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute noise of predefined trajectory time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>problem</strong> (<em>om.Problem</em>) – openmdao problem</p></li>
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
+<li><p><strong>path</strong> (<em>pd.DataFrame</em>) – path of trajectory time series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="noise.Noise.get_indices_noise_input_vector">
+<em class="property">static </em><code class="sig-name descname">get_indices_noise_input_vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span></em>, <em class="sig-param"><span class="n">n_t</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/noise.html#Noise.get_indices_noise_input_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.get_indices_noise_input_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get (julia) indices for input vector noise model.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="noise.Noise.setup_source_distribution">
+<code class="sig-name descname">setup_source_distribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">pyNA.src.engine.Engine</span></em>, <em class="sig-param"><span class="n">comp</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">time_step</span><span class="p">:</span> <span class="n">numpy.int64</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/noise.html#Noise.setup_source_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.setup_source_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup model for computing noise source directional and spectral distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>problem</strong> (<em>om.Problem</em>) – openmdao problem</p></li>
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
+<li><p><strong>engine</strong> (<a class="reference internal" href="engine.html#engine.Engine" title="engine.Engine"><em>Engine</em></a>) – engine parameters</p></li>
+<li><p><strong>comp</strong> (<em>str</em>) – noise source component</p></li>
+<li><p><strong>time_step</strong> (<em>np.int64</em>) – Time step in predefined trajectory at which to compute the noise source distribution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="noise.Noise.setup_time_series">
+<code class="sig-name descname">setup_time_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">n_t</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">optimization</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.setup_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.setup_time_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup model for computing noise of predefined trajectory time_series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>problem</strong> (<em>om.Problem</em>) – openmdao problem</p></li>
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
+<li><p><strong>n_t</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Number of time steps in trajectory</p></li>
+<li><p><strong>optimization</strong> (<em>bool</em>) – flag to run trajectory optimization</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="noise.Noise.setup_trajectory_noise">
+<code class="sig-name descname">setup_trajectory_noise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">n_t</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">optimization</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.setup_trajectory_noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.setup_trajectory_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup model for computing noise along computed trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>problem</strong> (<em>om.Problem</em>) – openmdao problem</p></li>
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
+<li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
+<li><p><strong>n_t</strong> (<em>np.int</em>) – Number of time steps in trajectory</p></li>
+<li><p><strong>optimization</strong> (<em>bool</em>) – flag to run trajectory optimization</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="settings.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">settings</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="engine.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">engine</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/noise.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

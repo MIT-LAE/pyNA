@@ -1,0 +1,345 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="lateral attenuation" href="lateral_attenuation.html" /><link rel="prev" title="ipnlt" href="ipnlt.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>jet - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="jet">
+<h1>jet<a class="headerlink" href="#jet" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-jet">
+<span id="class-description"></span><h2>class description<a class="headerlink" href="#module-jet" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="jet.Jet">
+<em class="property">class </em><code class="sig-prename descclassname">jet.</code><code class="sig-name descname">Jet</code><a class="reference internal" href="_modules/jet.html#Jet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jet.Jet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="jet.Jet.jet_mixing">
+<em class="property">static </em><code class="sig-name descname">jet_mixing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/jet.html#Jet.jet_mixing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jet.Jet.jet_mixing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute jet mixing noise mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="source.html#source.Source" title="source.Source"><em>Source</em></a>) – pyNA component computing noise sources</p></li>
+<li><p><strong>inputs</strong> (<em>openmdao.vectors.default_vector.DefaultVector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_jet_mixing</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[n_t, settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="jet.Jet.jet_shock">
+<em class="property">static </em><code class="sig-name descname">jet_shock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/jet.html#Jet.jet_shock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jet.Jet.jet_shock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute jet mixing noise mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – </p></li>
+<li><p><strong>inputs</strong> (<em>openmdao.vectors.default_vector.DefaultVector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_jet_shock</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[n_t, settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="theory">
+<h2>theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="jet-mixing-noise">
+<h3>Jet mixing noise<a class="headerlink" href="#jet-mixing-noise" title="Permalink to this headline">¶</a></h3>
+<p>Jet mixing noise accounts for the noise generated by turbulent jet fluid exiting a nozzle creating a shear layer with the surrounding fluid. The SAE ARP876 method is used to estimate mean-square acoustic pressure of the the jet mixing noise:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[&lt;p^2(r_s^*)&gt;^* = 10\log_{10}\left[\frac{\Pi^*_{jet}A_{jet}^*}{4\pi (r_s^*)^2p_{\textrm{ref}}^2}  \frac{D(\theta,V_{jet}^*) F(S_c, \theta,V_{jet}^*,T_{jet}^*)}{1-M_0 \cos(\theta-\delta)} \left(\frac{V_{jet}^*-M_0}{V_{jet}^*}\right)^{m(\theta)} \right]\]</div></div>
+<p>where:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\Pi_{jet}^* = (6.67\cdot 10^{-5}) (\rho_{jet}^*)^{\omega(V_{jet}^*)} (V_{jet}^*)^8 P(V_{jet}^*)\]</div></div>
+<p>The density exponent, <span class="math notranslate nohighlight">\(\omega\)</span>, accounts for the effect of density on noise in heated jets. The Strouhal number, <span class="math notranslate nohighlight">\(S_c\)</span>, used in the spectral distribution function, <span class="math notranslate nohighlight">\(F(S_c, \theta,V_{jet}^*,T_{jet}^*)\)</span>, is given by <span class="math notranslate nohighlight">\(S_c = \frac{f^*d_{jet}^*}{\xi(V_{jet}^*)(V_{jet}^*-M_0)}\)</span>. The directivity function, <span class="math notranslate nohighlight">\(D(\theta, V_{jet}^*)\)</span>, the spectral distribution, <span class="math notranslate nohighlight">\(F(S_c,\theta,V_{jet}^*,T_{jet}^*)\)</span>, the density exponent, <span class="math notranslate nohighlight">\(\omega(V_j^*)\)</span>, the power deviation factor <span class="math notranslate nohighlight">\(P(V_{j}^*)\)</span>, the Strouhal correction factor <span class="math notranslate nohighlight">\(\xi(V_{jet}^*)\)</span>, and the forward velocity index <span class="math notranslate nohighlight">\(m(\theta)\)</span> are tabulated online.</p>
+</div>
+<div class="section" id="jet-shock-cell-noise">
+<h3>Jet shock-cell noise<a class="headerlink" href="#jet-shock-cell-noise" title="Permalink to this headline">¶</a></h3>
+<p>Supersonic jets that are not perfectly expanded will create a shocks cell structure that interact with the turbulent jet flow. This interaction is the main driver of the shock-cell noise. The SAE ARP876 method is used to estimate jet-shock cell mean-square acoustic pressure for supersonic exhaust Mach numbers (<span class="math notranslate nohighlight">\(M_{jet}&gt;1\)</span>):</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[&lt;p^2(r_s^*)&gt;^* =  10\log_{10} \left[ \frac{1.92\cdot10^{-3} A_j^*}{4\pi(r_s^*)^2p_{\textrm{ref}}^2} \left[\frac{1+W(\sigma,\theta,V_j^*)}{1-M_0 \cos(\theta-\delta)}\right] \beta^\eta H(\sigma) \right]\]</div></div>
+<p>The pressure ratio parameter, <span class="math notranslate nohighlight">\(\beta = \sqrt{M_{jet}^2-1}\)</span>, indicates that shock noise will only be produced with a supersonic exhaust velocity. The frequency parameter, <span class="math notranslate nohighlight">\(\sigma = 7.8\beta(1-M_0 \cos \theta) \sqrt{A_{jet}^*}f^*\)</span>, where <span class="math notranslate nohighlight">\(f^* = f\sqrt{A_e}/c_0\)</span>.
+The pressure ratio parameter, <span class="math notranslate nohighlight">\(\eta\)</span>, is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\eta = \begin{cases}
+    1  &amp;  \textrm{if } T_{jet}^* &lt; 1.1 \text{ and } \beta &gt; 1 \\
+    2  &amp;  \textrm{if } T_{jet}^* \leq 1.1 \text{ and } \beta &gt; 1 \\
+    4  &amp;  \textrm{if } \beta \leq 1
+\end{cases}\end{split}\]</div></div>
+<p>The shock-cell interference function, <span class="math notranslate nohighlight">\(W(\sigma, \theta, V_{jet}^*)\)</span>, is given by:footnote{This equation is an updated version of Eq. 6 on page 8.5-4 in Zorumski. To obtain the shock cell interference function graph on Figure 4 in Zorumski, one factor textit{b} in the denominator should be omitted.}</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+    W = \frac{4}{N_s b} \sum_{k=1}^{N_s-1} \left[C(\sigma\right]^{k^2} \sum_{m=0}^{N_s - (k+1)} \frac{\sin (b\sigma q_{km}/2)}{\sigma q_{km}} \cos(\sigma q_{km}) \hspace{0.5cm} \textrm{where} \\ \hspace{0.5cm} q_{km} = \frac{1.7k}{V_{jet}^*} \left[ 1 - 0.06 \left( m + \frac{k+1}{2} \right) \right](1 + 0.7V_{jet}^* \cos \theta)
+\end{split}\end{split}\]</div></div>
+<p>The correlation coefficient, <span class="math notranslate nohighlight">\(C(\sigma)\)</span>, and the group source strength spectrum, <span class="math notranslate nohighlight">\(H(\sigma)\)</span>, are tabulated online.</p>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lateral_attenuation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">lateral attenuation</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ipnlt.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">ipnlt</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/jet.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">jet</a><ul>
+<li><a class="reference internal" href="#module-jet">class description</a></li>
+<li><a class="reference internal" href="#theory">theory</a><ul>
+<li><a class="reference internal" href="#jet-mixing-noise">Jet mixing noise</a></li>
+<li><a class="reference internal" href="#jet-shock-cell-noise">Jet shock-cell noise</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

@@ -1,0 +1,349 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="levels" href="levels.html" /><link rel="prev" title="lateral attenuation" href="lateral_attenuation.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>levels_int - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="levels-int">
+<h1>levels_int<a class="headerlink" href="#levels-int" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-levels_int">
+<span id="class-description"></span><h2>class description<a class="headerlink" href="#module-levels_int" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="levels_int.LevelsInt">
+<em class="property">class </em><code class="sig-prename descclassname">levels_int.</code><code class="sig-name descname">LevelsInt</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels_int.html#LevelsInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels_int.LevelsInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openmdao.core.explicitcomponent.ExplicitComponent</span></code></p>
+<p>Compute noise levels according to ICAO Annex 16 Volume I: Noise.</p>
+<ul class="simple">
+<li><p>Sound pressure level (spl)</p></li>
+<li><p>Integrated overall sound pressure level (ioaspl)</p></li>
+<li><p>Integrated pnlt (ipnlt)</p></li>
+<li><p>Effective perceived noise level (epnl)</p></li>
+</ul>
+<p>The <em>LevelsInt</em> component requires the following inputs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['oaspl']</span></code>:          overall sound pressure level [dB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['pnlt']</span></code>:           perceived noise level, tone corrected [dB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['C']</span></code>:              tone-corrections [dB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['t_o']</span></code>:            observer time [s]</p></li>
+</ul>
+<p>The <em>LevelsInt</em> component computes the following outputs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs['ioaspl']</span></code>:        time-integrated overall sound pressure level [-]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs['ipnlt']</span></code>:         time-integrated pnlt [-]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs['epnl']</span></code>:          effective perceived noise level [EPNdB]</p></li>
+</ul>
+<p>The <em>LevelsInt</em> component has the following options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">settings</span></code>:                 pyna settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_t</span></code>:                      number of time steps in the noise time series</p></li>
+</ul>
+<dl class="py method">
+<dt id="levels_int.LevelsInt.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em>, <em class="sig-param"><span class="n">outputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels_int.html#LevelsInt.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels_int.LevelsInt.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute outputs given inputs. The model is assumed to be in an unscaled state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<em>Vector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
+<li><p><strong>outputs</strong> (<em>Vector</em>) – unscaled, dimensional output variables read via outputs[key]</p></li>
+<li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
+<li><p><strong>discrete_outputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete output values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="levels_int.LevelsInt.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels_int.html#LevelsInt.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels_int.LevelsInt.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform any one-time initialization run at instantiation.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="levels_int.LevelsInt.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels_int.html#LevelsInt.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels_int.LevelsInt.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare inputs and outputs.</p>
+<dl class="simple">
+<dt>Available attributes:</dt><dd><p>name
+pathname
+comm
+options</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Julia version of the <em>Levels</em> component, <code class="docutils literal notranslate"><span class="pre">levels_int.jl</span></code>, is not documented yet. However, it is very similar to the Python version, <code class="docutils literal notranslate"><span class="pre">levels.py</span></code>. More information and examples on how OpenMDAO.jl components work can be found <a class="reference external" href="https://github.com/byuflowlab/OpenMDAO.jl/tree/master/examples">here</a>.</p>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>The effective perceived noise level (EPNL) is calculated using the method described in ICAO Annex 16, Volume I cite{ICAO2017}. Firstly, the tone-corrected perceived noise level signal, <span class="math notranslate nohighlight">\(PNLT\)</span>, and the tone corrections matrix, <span class="math notranslate nohighlight">\(C\)</span>, at the observer are interpolated at time steps <span class="math notranslate nohighlight">\(\Delta t = 0.5s\)</span>. The effective perceived noise level, <span class="math notranslate nohighlight">\(EPNL\)</span>, is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[EPNL = \max (PNLT) + D\]</div></div>
+<p>The duration correction, <span class="math notranslate nohighlight">\(D\)</span>, is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[D = 10 \log_{10} \frac{1}{t_0} \sum_{i\in \mathcal{I}} 10^{\frac{PNLT}{10}} - \max (PNLT)\]</div></div>
+<p>where <span class="math notranslate nohighlight">\(t_0 = 10s\)</span> and $mathcal{I}$ contains all points in the <span class="math notranslate nohighlight">\(PNLT\)</span> time series that satisfy <span class="math notranslate nohighlight">\(PNLT &gt; PNLTM - 10\)</span>. Finally, $PNLTM$ includes a correction term in the case of one-third octave band-sharing:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[PNLTM = PNLT[i_{\max}] + \Delta_c\]</div></div>
+<p>where <span class="math notranslate nohighlight">\(i_{\max}\)</span> is the index of the maximum value of the <span class="math notranslate nohighlight">\(PNLT\)</span> time series. The correction term, <span class="math notranslate nohighlight">\(\Delta_c\)</span>, is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\Delta_c = \begin{cases}
+C_{\textrm{avg}} = \frac{1}{5}\sum_{i=-2}^{2}C[i_{\max} + i] \quad &amp; \textrm{if} \quad C_{\textrm{avg}} &gt; C(i_{\max})\\
+0 \quad &amp; \textrm{otherwise}\\
+\end{cases}\end{split}\]</div></div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="levels.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">levels</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lateral_attenuation.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">lateral attenuation</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/levels_int.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">levels_int</a><ul>
+<li><a class="reference internal" href="#module-levels_int">class description</a></li>
+<li><a class="reference internal" href="#theory">theory</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

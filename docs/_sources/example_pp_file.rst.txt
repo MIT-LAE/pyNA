@@ -1,0 +1,12 @@
+.. _examplepostprocessing:
+
+post-processing_file
+====================
+
+An example of a post-processing file is shown below. 
+
+.. code-block::
+
+	pyna.plot_noise_trajectory()
+
+	

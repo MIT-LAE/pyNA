@@ -1,0 +1,4 @@
+ac
+==
+
+The ac dictionary contains the following aircraft parameters used in the pyNA object:

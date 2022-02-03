@@ -1,0 +1,25 @@
+load trajectory
+===============
+
+For ``settings['trajectory_mode']=load``, trajectory data frame (``trajectory['data']``) contains the following variables: 
+
+=================== ======================================== ======
+Variable            Description                              Unit
+=================== ======================================== ======
+t_source            Source time                              s
+X                   Aircraft x-position                      m
+Y                   Aircraft y-position                      m
+Z                   Aircraft z-position                      m
+V                   Aircraft velocity                        m/s
+M_0                 Ambient Mach number                      \-
+TS                  Thrust-setting                           \-
+c_0                 Ambient speed of sound                   m/s
+T_0                 Ambient temperature                      K
+p_0                 Ambient pressure                         Pa
+rho_0               Ambient density                          kg/m3
+mu_0                Ambient dynamic viscosity                kg/ms
+alpha               Aircraft angle of attack                 rad
+climb_angle         Aircraft climb climb_angle               rad
+Airframe LG         Aircraft landing gear extraction         \-
+Airframe delta_f    Aircraft flap angle                      deg
+=================== ======================================== ======

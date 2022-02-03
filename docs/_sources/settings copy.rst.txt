@@ -1,0 +1,130 @@
+.. _settings:
+
+settings
+========
+
+The settings dictionary contains the following elements:
+
+======================= ======================================================= =============== ======= ===========================================
+Name                    Description                                             Units           Type    Options	
+======================= ======================================================= =============== ======= ===========================================
+case_name               Case name to analyze                                    \-              str     \- 	
+case_directory          Case directory                                          \-              str     \- 	
+trajectory_file_name    Trajectory file name                                    \-              str     \-
+engine_file_name        Engine deck file name                                   \-              str     \-
+aero_file_name          Aerodynamics deck file name                             \-              str     \-
+output_file_name        Output file name                                        \-              str     \- 		
+ac_name                 Aircraft parameters file name                           \-              str     \-
+save_results            Flag to save results                                    \-              bool    \-
+fan_inlet               Flag to enable fan inlet noise source                   \-              bool    \-
+fan_discharge           Flag to enable fan discharge noise source               \-              bool    \-
+core                    Flag to enable core noise source                        \-              bool    \-
+jet_mixing              Flag to enable jet mixing source                        \-              bool    \-
+jet_shock               Flag to enable jet shock noise source                   \-              bool    \-
+airframe                Flag to enable airframe noise source                    \-              bool    \-
+all_sources             Flag to enable all noise sources                        \-              bool    \-
+language                Programming language to solve components                \-              str     python / julia
+observer                Observer to analyze                                     \-              str     takeoff / approach
+method_core_turb        Method to compute core noise turbine attenuation        \-              str     GE / PW
+fan_BB_method           Method broadband fan noise source                       \-              str     original / allied_signal / geae / kresja
+fan_RS_method           Method rotor-stator interaction fan noise source        \-              str     original / allied_signal / geae / kresja
+fan_igv                 Flag for fan inlet guide vanes                          \-              bool    \-
+fan_id                  Flag for inlet distortions                              \-              bool    \-
+ge_flight_cleanup       Flag for ge flight cleanup effects                      \-              str     takeoff / approach / none
+levels_int_metric       Integrated noise metric to compute                      \-              str     oaspl_int / pnlt_int / epnl
+absorption              Flag for atmospheric absorption effects                 \-              bool    \-
+groundeffects           Flag for ground effects                                 \-              bool    \-
+suppression             Flag for suppression of noise modules                   \-              bool    \-
+shielding               Flag for shielding effects                              \-              bool    \-
+hsr_calibration         Flag for HSR airframe calibration                       \-              bool    \-
+validation              Flag for validation with NASA STCA                      \-              bool    \-
+bandshare               Flag for bandshare epnl computations                    \-              bool    \-
+TCF800                  Flag for tone penalty addition to PNLT metric           \-              bool    \-
+combination_tones       Flag for combination tones in the fan noise source      \-              bool    \-
+N_shock                 Number of shocks in supersonic jet                      \-              int64   \-
+dT                      Delta temperature in standard atmosphere                K               float64 \-
+sigma                   Specific flow resistance of the ground                  kg/(s m3)       float64 \-
+a_coh                   Air incoherence constant                                \-              float64 \-
+N_f                     Number of discrete 1/3rd octave frequency bands         \-              int64	\-
+N_b                     Number of discrete 1/3rd octave sub-bands               \-              int64  	\-
+n_alt_abs               Number of integration steps in atmospheric prop.        \-              int64 	\-
+A_e                     Engine reference area                                   \-              float64	\-
+dt_epnl                 Time step of interpolated pnlt in epnl calc.            float64         \-      \-
+n_harmonics             Number of harmonics in fan tone calc.                   \-              int64	\-
+r_0                     Source-observer distance                                m               float64	\-
+p_ref                   Acoustic reference pressure                             Pa              float64	\-
+optimize_noise          Flag for optimizing the trajectory for noise            \-              bool    \-
+climb_phase_lst         List with names of climb phases                         \-              lst     \-
+climb_control_lst       List with control flags for climb phases                \-              lst     \-
+climb_TS_lst            List with thrust-settings for climb phases              \-              lst     \-
+climb_alt_lst           List with end altitudes for climb phases                 m              lst     \-
+interp_fraction_lst     List with trajectory intepolation fractions             \-              lst     \-
+transcription_order     Trajectory transcription order                          \-              int64   \-
+num_segments            Trajectory number of segments                           \-              int64   \-
+max_iter                Trajectory max. iterations                              \-              int64   \-
+======================= ======================================================= =============== ======= ===========================================
+ 	
+
+An example of a settings dictionary is shown below. 
+
+.. code-block::
+
+	# Initialize pyna_settings 
+	pyna_settings = dict()
+
+	# Directories and file names
+	pyna_settings['case_name'] = 'case_1'                         # Case name ('Standard','Approach'...)
+	pyna_settings['case_directory'] = 'pyNA/cases/case_1'         # Case directory [-]
+	pyna_settings['trajectory_file_name'] = 'Trajectory_1.csv'    # Name of the trajectory in the setup/traj folder [-]
+	pyna_settings['engine_file_name'] = 'engine_1.csv'            # File name of the take-off engine inputs [-] 
+	pyna_settings['ac_name'] = 'stca'                             # Name of the aircraft in the setup/ac folder [-] ('stca')
+	     
+	pyna_settings['language'] = 'python'                          # Language to use to solve components (julia/python)
+	    
+	# Save data     
+	pyna_settings['save_results'] = True                          # Flag to save results [-]
+	pyna_settings['output_file_name'] = 'Trajectory_1.sql'        # Name of the output .sql file [-]
+	    
+	# Noise sources     
+	pyna_settings['fan_inlet'] = False                            # Enable fan inlet noise source (True/False)
+	pyna_settings['fan_discharge'] = False                        # Enable fan discharge noise source (True/False)
+	pyna_settings['core'] = False                                 # Enable core noise source (True/False)
+	pyna_settings['jet_mixing'] = True                            # Enable jet mixing noise source (True/False)
+	pyna_settings['jet_shock'] = False                            # Enable jet shock noise source (True/False)
+	pyna_settings['airframe'] = False                             # Enable airframe noise source (True/False)
+	pyna_settings['all_sources'] = True                           # Enable all noise sources (True/False)
+	     
+	pyna_settings['observer'] = 'flyover'                         # Observers to analyze [-] ('flyover','lateral','approach')
+	pyna_settings['method_atm'] = 'load'                          # Method to generate atmospheric table ('load', 'calc') [-]
+	pyna_settings['method_core_turb'] = 'GE'                      # Method to account for turbine transmission in the combustor ('GE', 'PW') [-]
+	pyna_settings['fan_BB_method'] = 3                            # Method BB (1: Original / 2: AlliedSignal / 3: GEAE / 4: Kresja) [-]
+	pyna_settings['fan_RS_method'] = 2                            # Method RS (1: Original / 2: AlliedSignal / 3: GEAE / 4: Kresja) [-]
+	pyna_settings['fan_igv'] = 0                                  # Fan inlet guide vanes (0: No / 1: Yes) 
+	pyna_settings['fan_id'] = 0                                   # Fan inlet distortions (0: No / 1: Yes) 
+	pyna_settings['ge_flight_cleanup'] = 1                        # GE flight cleanup switch (0: None / 1: Takeoff / 2: App) [-]
+	     
+	# Flags      
+	pyna_settings['absorption'] = True                            # Flag for atmospheric absorption
+	pyna_settings['groundeffects'] =  True                        # Flag for ground effects
+	pyna_settings['suppression'] = True                           # Flag for suppression of engine modules
+	pyna_settings['shielding'] = False                            # Flag for shielding effects (not implemented yet)
+	pyna_settings['hsr_calibration'] = True                       # Flag for HSR-era airframe calibration
+	pyna_settings['validation'] = False                           # Flag for validation with NASA STCA noise model
+	pyna_settings['bandshare'] = True                             # Flag to plot PNLT
+	pyna_settings['TCF800'] = True                                # Flag for tone penalty addition to PNLT metric; allows any tone below 800Hz to be ignored
+	pyna_settings['combination_tones'] = False                    # Flag for combination tones int he fan noise model
+	     
+	# Constants     
+	pyna_settings['N_e'] = 3                                      # Number of engines[-]
+	pyna_settings['N_shock'] = 8                                  # Number of shocks in supersonic jet [-]
+	pyna_settings['dT'] = 10.0169                                 # dT standard atmosphere [K]
+	pyna_settings['sigma'] = 291.0 * 515.379                      # Specific flow resistance of ground [kg/s m3]
+	pyna_settings['a_coh'] = 0.01                                 # Incoherence constant [-]
+	pyna_settings['N_f'] = 24                                     # Number of discrete 1/3 octave frequency bands [-]
+	pyna_settings['N_b'] = 5                                      # Number of bands (propagation) [-]
+	pyna_settings['n_altitude_absorption'] = 5                    # Number of integration steps in atmospheric propagation [-]
+	pyna_settings['A_e'] = 10.334*(0.3048**2)                     # Engine reference area [m2]
+	pyna_settings['dt_epnl'] = 0.5                                # Time step of to calculate EPNL from interpolated PNLT data [s]
+	pyna_settings['n_harmonics'] = 10                             # Number of harmonics to be considered in tones [-]
+	pyna_settings['r_0'] = 0.3048                                 # Distance source observer in source mode [m]
+	pyna_settings['p_ref'] = 2e-5                                 # Reference pressure [Pa] 

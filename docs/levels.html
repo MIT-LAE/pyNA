@@ -1,0 +1,476 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="noise_model" href="noise_model.html" /><link rel="prev" title="levels_int" href="levels_int.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>levels - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="levels">
+<h1>levels<a class="headerlink" href="#levels" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-levels">
+<span id="class-description"></span><h2>class description<a class="headerlink" href="#module-levels" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="levels.Levels">
+<em class="property">class </em><code class="sig-prename descclassname">levels.</code><code class="sig-name descname">Levels</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels.html#Levels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels.Levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openmdao.core.explicitcomponent.ExplicitComponent</span></code></p>
+<p>Compute noise levels according to ICAO Annex 16 Volume I: Noise.</p>
+<ul class="simple">
+<li><p>Sound pressure level (spl)</p></li>
+<li><p>Overall sound pressure level (oaspl)</p></li>
+<li><p>Perceived noise level, tone-corrected (pnlt)</p></li>
+<li><p>Tone corrections (C)</p></li>
+</ul>
+<p>The <em>Levels</em> component requires the following inputs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['rho_0']</span></code>:          ambient density [kg/m3]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['c_0']</span></code>:            ambient speed of sound [m/s]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['msap_prop']</span></code>:      mean-square acoustic pressure, propagated to the observer (re. rho_0^2c_0^2) [-]</p></li>
+</ul>
+<p>The <em>Levels</em> component computes the following outputs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs['spl']</span></code>:           sound pressure level [dB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs['oaspl']</span></code>:         overall sound pressure level [dB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs['pnlt']</span></code>:          perceived noise leve, tone corrected [PNdB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs['C']</span></code>:             pnlt tone correction [dB]</p></li>
+</ul>
+<p>The <em>LevelsInt</em> component has the following options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">settings</span></code>:                 pyna settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_t</span></code>:                      number of time steps in the noise time series</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>:                     pyna noise data</p></li>
+</ul>
+<dl class="py method">
+<dt id="levels.Levels.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em>, <em class="sig-param"><span class="n">outputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels.html#Levels.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels.Levels.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute outputs given inputs. The model is assumed to be in an unscaled state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<em>Vector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
+<li><p><strong>outputs</strong> (<em>Vector</em>) – unscaled, dimensional output variables read via outputs[key]</p></li>
+<li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
+<li><p><strong>discrete_outputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete output values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="levels.Levels.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels.html#Levels.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels.Levels.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform any one-time initialization run at instantiation.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="levels.Levels.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/levels.html#Levels.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#levels.Levels.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare inputs and outputs.</p>
+<dl class="simple">
+<dt>Available attributes:</dt><dd><p>name
+pathname
+comm
+options</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Julia version of the <em>Levels</em> component, <code class="docutils literal notranslate"><span class="pre">levels.jl</span></code>, is not documented yet. However, it is very similar to the Python version, <code class="docutils literal notranslate"><span class="pre">levels.py</span></code>. More information and examples on how OpenMDAO.jl components work can be found <a class="reference external" href="https://github.com/byuflowlab/OpenMDAO.jl/tree/master/examples">here</a>.</p>
+</div>
+</div>
+<div class="section" id="theory">
+<h2>theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sound-pressure-level">
+<h3>Sound pressure level<a class="headerlink" href="#sound-pressure-level" title="Permalink to this headline">¶</a></h3>
+<p>The sound pressure level (SPL) is calculated using:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[SPL(\theta,\phi,f) = &lt;p_{\textrm{prop}}^2&gt;^* + \ 20\log_{10}\left[\frac{\rho_0 c_0^2}{p_{ref}}\right]
+\label{eq:SPL}\]</div></div>
+<p>The reference pressure <span class="math notranslate nohighlight">\(p_{\textrm{ref}} = 2\cdot 10^{-5}\)</span>.</p>
+</div>
+<div class="section" id="overall-sound-pressure-level">
+<h3>Overall sound pressure level<a class="headerlink" href="#overall-sound-pressure-level" title="Permalink to this headline">¶</a></h3>
+<p>The overall sound pressure level (OASPL) is calculated using:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[OASPL(\theta,\phi) = 10\log_{10}\left[ \sum_{i=1}^{N_{freq}}\left( 10^{\frac{SPL(\theta,\phi,f)}{10}} \right) \right]\]</div></div>
+</div>
+<div class="section" id="tone-corrected-perceived-noise-level">
+<h3>Tone-corrected perceived noise level<a class="headerlink" href="#tone-corrected-perceived-noise-level" title="Permalink to this headline">¶</a></h3>
+<p>The tone-corrected perceived noise level (PNLT) is calculated using the method described in ICAO Annex 16, Volume I cite{ICAO2017}. The PNLT calculation at each time step requires an SPL spectrum as a function of frequency. In this section, the SPL at the i-th one-third octave frequency band is denoted by <span class="math notranslate nohighlight">\(SPL[i]\)</span>.
+Firstly, the SPL is converted into perceived noisiness:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}n[i] =
+\begin{cases}
+10^{m_c(SPL[i] - SPL_c[i])} \quad &amp; \quad \textrm{if}\quad SPL_a[i] \leq SPL[i]\\
+10^{m_b(SPL[i] - SPL_b[i])} \quad &amp; \quad \textrm{if}\quad SPL_b[i] \leq SPL[i] \leq SPL_a[i]\\
+0.3 \cdot 10^{m_e(SPL[i] - SPL_e[i])} \quad &amp; \quad \textrm{if}\quad SPL_e[i] \leq SPL[i] \leq SPL_b[i]\\
+0.1 \cdot 10^{m_d(SPL[i] - SPL_d[i])} \quad &amp; \quad \textrm{if}\quad SPL_d[i] \leq SPL[i] \leq SPL_e[i]\\
+0 \quad &amp; \quad \textrm{otherwise}\\
+\end{cases}\end{split}\]</div></div>
+<p>The Noy tables (i.e. <span class="math notranslate nohighlight">\(SPL_a\)</span>, <span class="math notranslate nohighlight">\(SPL_b\)</span>, <span class="math notranslate nohighlight">\(SPL_c\)</span>, <span class="math notranslate nohighlight">\(SPL_d\)</span>, <span class="math notranslate nohighlight">\(SPL_e\)</span>, <span class="math notranslate nohighlight">\(m_b\)</span>, <span class="math notranslate nohighlight">\(m_c\)</span>, <span class="math notranslate nohighlight">\(m_d\)</span>, <span class="math notranslate nohighlight">\(m_d\)</span>) are tabulated online. The perceived noisiness values are combined to total perceived noisiness using:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[N = \max(n) + 0.15\left( \sum_{i=1}^{24} - \max(n) \right)\]</div></div>
+<p>The perceived noise level is computed using:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[PNL = 40 \ + \ \frac{10}{\log_{10} 2} \log_{10} N\]</div></div>
+<p>The corrections for spectral irregularities on the perceived noise level involve several steps. <em>Step 1</em>: compute the slopes of the SPL spectrum using:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}s[i] =
+\begin{cases}
+N.A. \quad &amp; \textrm{if} \quad i \leq 3\\
+SPL[i] - SPL[i-1] \quad &amp; \textrm{if} \quad \textrm{otherwise} \\
+\end{cases}\end{split}\]</div></div>
+<p><em>Step 2</em>: Encircle the values of the slopes in the spectrum with a value larger than 5, i.e. <span class="math notranslate nohighlight">\(|s[i] - s[i-1]| &gt; 5\)</span>.  <em>Step 3</em>: In the spectrum of SPL, encircle:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+\textrm{SPL[i]}     \quad &amp; \textrm{if} \quad \textrm{encircled value of slope} s[i] &gt; 0 \ \textrm{and}\ s[i] &gt; s[i-1] \\
+\textrm{SPL[i-1]}   \quad &amp; \textrm{if} \quad \textrm{encircled value of slope} s[i] \leq 0 \ \textrm{and}\ s[i-1] &gt; 0 \\
+\textrm{nothing}    \quad &amp; \textrm{otherwise} \\
+\end{cases}\end{split}\]</div></div>
+<p><em>Step 4</em>: Compute adjusted <span class="math notranslate nohighlight">\(SPL\)</span>, i.e. <span class="math notranslate nohighlight">\(SPL'\)</span>:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}SPL'[i] =
+\begin{cases}
+SPL[i]  \quad &amp; \textrm{if} \quad \textrm{SPL[i] is not encircled}\\
+0.5(SPL[i-1]+SPL[i+1])  \quad &amp; \textrm{if} \quad \textrm{SPL[i] is encircled}\\
+SPL[23] + s[23]  \quad &amp; \textrm{if} \quad \textrm{i=24 and SPL[i] is encircled}\\
+\end{cases}\end{split}\]</div></div>
+<p><em>Step 5</em>: Compute adjusted slopes <span class="math notranslate nohighlight">\(s'\)</span>, including an ‘imaginary’ 25-th frequency band:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}s'[i] =
+\begin{cases}
+s'[4] \quad &amp; \textrm{if} \quad \textrm{i = 3}\\
+SPL'[i+1]-SPL'[i]\quad &amp; \textrm{if} \quad \textrm{i $\in $[4,24]}\\
+s[24] \quad &amp; \textrm{if} \quad \textrm{i = 25}\\
+0 \quad &amp; \textrm{if} \quad \textrm{otherwise}\\
+\end{cases}\end{split}\]</div></div>
+<p><em>Step 6</em>: Compute average of adjacent adjusted slopes:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\bar{s} =
+\begin{cases}
+    \frac{1}{3}(s'[i] + s'[i+1] + s'[i+2])\quad &amp; \textrm{if} \quad \textrm{i $\in$ [3,23]}\\
+    0 \quad &amp; \textrm{if} \quad \textrm{otherwise}\\
+\end{cases}\end{split}\]</div></div>
+<p><em>Step 7</em>: Compute final adjusted SPL, i.e. <span class="math notranslate nohighlight">\(SPL"\)</span>:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}SPL"[i] =
+\begin{cases}
+SPL[i] \quad &amp; \textrm{if} \quad \textrm{i=3}\\
+SPL"[i-1] + \bar{s}[i-1] \quad &amp; \textrm{if} \quad \textrm{i &gt; 3}\\
+0 \quad &amp; \textrm{if} \quad \textrm{otherwise}\\
+\end{cases}\end{split}\]</div></div>
+<p><em>Step 8</em>: Compute differences <span class="math notranslate nohighlight">\(F[i] = SPL[i]-SPL[i]"\)</span>. <em>Step 9</em>: Compute the tone corrections, <span class="math notranslate nohighlight">\(C[i]\)</span>, using:</p>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 39%"/>
+<col style="width: 28%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>f[i] [Hz]</p></th>
+<th class="head"><p>F[i] (Step 8)</p></th>
+<th class="head"><p>C[i]</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(f[i]\in [50, 500)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(3/2 \leq F[i] &lt; 3\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(F[i]/3 - 1/2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(.\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(3&lt;F[i]&lt;20\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(F/6\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(.\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(20 \leq F[i]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(10/3\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(f[i]\in [500, 5000)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(3/2 \leq F[i] &lt; 3\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(F[i]/3 - 1\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(.\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(3 \leq F[i] &lt; 20\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(F[i]/3\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(.\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(20 \leq F[i]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(20/3\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(f[i]\in [5000, 10000]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(3/2 \leq F[i] &lt; 3\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(F/3 - 1/2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(.\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(3 \leq F[i] &lt; 20\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(F[i]/6\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(.\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(20 \leq F[i]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(10/3\)</span></p></td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Step 10</em>: Compute the largest tone-correction and add it to the perceived noise level to obtain the tone-corrected perceived noise level:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[PNLT = PNL + \max_{i\in \mathcal{I}} C\]</div></div>
+<p>When computing the maximum tone correction, the range of frequencies below 800Hz is ignored when enabling the <code class="docutils literal notranslate"><span class="pre">TCF8001</span></code> flag.</p>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="noise_model.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">noise_model</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="levels_int.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">levels_int</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/levels.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">levels</a><ul>
+<li><a class="reference internal" href="#module-levels">class description</a></li>
+<li><a class="reference internal" href="#theory">theory</a><ul>
+<li><a class="reference internal" href="#sound-pressure-level">Sound pressure level</a></li>
+<li><a class="reference internal" href="#overall-sound-pressure-level">Overall sound pressure level</a></li>
+<li><a class="reference internal" href="#tone-corrected-perceived-noise-level">Tone-corrected perceived noise level</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

@@ -1,0 +1,673 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>settings - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for settings</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pdb</span>
+
+<div class="viewcode-block" id="FrozenClass"><a class="viewcode-back" href="../settings.html#settings.FrozenClass">[docs]</a><span class="k">class</span> <span class="nc">FrozenClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__is_frozen</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_frozen</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span> <span class="s2">"Invalid attribute specified for the </span><span class="si">%r</span><span class="s2"> class."</span> <span class="o">%</span> <span class="bp">self</span> <span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__is_frozen</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Settings"><a class="viewcode-back" href="../settings.html#settings.Settings">[docs]</a><span class="nd">@dataclass</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">Settings</span><span class="p">(</span><span class="n">FrozenClass</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    pyNA settings class</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="Settings.__init__"><a class="viewcode-back" href="../settings.html#settings.Settings.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">case_name</span><span class="p">,</span> 
+                <span class="n">language</span> <span class="o">=</span> <span class="s1">'python'</span><span class="p">,</span> 
+                <span class="n">pyNA_directory</span> <span class="o">=</span> <span class="s1">'.'</span><span class="p">,</span> 
+                <span class="n">engine_file_name</span> <span class="o">=</span> <span class="s1">'Engine_to.csv'</span><span class="p">,</span> 
+                <span class="n">trajectory_file_name</span> <span class="o">=</span> <span class="s1">'Trajectory_to.csv'</span><span class="p">,</span>
+                <span class="n">output_file_name</span> <span class="o">=</span> <span class="s1">'Trajectory_stca.sql'</span><span class="p">,</span> 
+                <span class="n">ac_name</span> <span class="o">=</span> <span class="s1">'stca'</span><span class="p">,</span> 
+                <span class="n">save_results</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">fan_inlet</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">fan_discharge</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">core</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">jet_mixing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">jet_shock</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">airframe</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">all_sources</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">fan_igv</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">fan_id</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">observer_lst</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">),</span>
+                <span class="n">method_core_turb</span> <span class="o">=</span><span class="s1">'GE'</span><span class="p">,</span> 
+                <span class="n">fan_BB_method</span> <span class="o">=</span><span class="s1">'geae'</span><span class="p">,</span> 
+                <span class="n">fan_RS_method</span> <span class="o">=</span> <span class="s1">'allied_signal'</span><span class="p">,</span>
+                <span class="n">ge_flight_cleanup</span> <span class="o">=</span> <span class="s1">'takeoff'</span><span class="p">,</span> 
+                <span class="n">levels_int_metric</span> <span class="o">=</span> <span class="s1">'epnl'</span><span class="p">,</span> 
+                <span class="n">engine_mounting</span> <span class="o">=</span> <span class="s1">'underwing'</span><span class="p">,</span> 
+                <span class="n">direct_propagation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">absorption</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                <span class="n">groundeffects</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                <span class="n">lateral_attenuation</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">suppression</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                <span class="n">fan_liner_suppression</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">shielding</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                <span class="n">hsr_calibration</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                <span class="n">validation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                <span class="n">bandshare</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">TCF800</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                <span class="n">combination_tones</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">N_shock</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> 
+                <span class="n">dT</span> <span class="o">=</span> <span class="mf">10.0169</span><span class="p">,</span> 
+                <span class="n">sigma</span> <span class="o">=</span> <span class="mf">291.0</span> <span class="o">*</span> <span class="mf">515.379</span><span class="p">,</span> 
+                <span class="n">a_coh</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> 
+                <span class="n">N_f</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span> 
+                <span class="n">N_b</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> 
+                <span class="n">n_altitude_absorption</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="n">A_e</span> <span class="o">=</span> <span class="mf">10.334</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.3048</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> 
+                <span class="n">dt_epnl</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
+                <span class="n">n_harmonics</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> 
+                <span class="n">r_0</span> <span class="o">=</span> <span class="mf">0.3048</span><span class="p">,</span> 
+                <span class="n">p_ref</span><span class="o">=</span> <span class="mf">2e-5</span><span class="p">,</span> 
+                <span class="n">x_observer_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">12325.</span><span class="o">*</span><span class="mf">0.3048</span><span class="p">,</span> <span class="mf">450.</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="mf">0.3048</span><span class="p">],</span> <span class="p">[</span><span class="mf">21325.</span><span class="o">*</span><span class="mf">0.3048</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="mf">0.3048</span><span class="p">]]),</span>
+                <span class="n">noise_optimization</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">PTCB</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">PHLD</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                <span class="n">TS_to</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> 
+                <span class="n">TS_vnrs</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> 
+                <span class="n">TS_cutback</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
+                <span class="n">z_cutback</span> <span class="o">=</span> <span class="mf">500.</span><span class="p">,</span> 
+                <span class="n">theta_flaps</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> 
+                <span class="n">theta_slats</span> <span class="o">=</span> <span class="o">-</span><span class="mf">6.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> 
+                <span class="n">n_segments_vnrs</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> 
+                <span class="n">max_iter</span> <span class="o">=</span> <span class="mi">500</span><span class="p">):</span>
+
+        <span class="sd">"""</span>
+<span class="sd">        Initialize pyNA settings class</span>
+
+<span class="sd">        :param case_name: Case name [-]</span>
+<span class="sd">        :type case_name: str</span>
+<span class="sd">        :param pyNA_directory: Directory where pyNA is installed</span>
+<span class="sd">        :type pyNA_directory: str</span>
+<span class="sd">        :param engine_file_name: File name of the take-off engine inputs [-]</span>
+<span class="sd">        :type engine_file_name: str</span>
+<span class="sd">        :param trajectory_file_name: File name of the take-off trajectory [-]</span>
+<span class="sd">        :type trajectory_file_name: str</span>
+<span class="sd">        :param output_file_name: Name of the output .sql file [-]</span>
+<span class="sd">        :type output_file_name: str</span>
+<span class="sd">        :param ac_name: Name of the aircraft [-]</span>
+<span class="sd">        :type ac_name: str</span>
+<span class="sd">        :param save_results: Flag to save results [-]</span>
+<span class="sd">        :type save_results: bool</span>
+<span class="sd">        :param fan_inlet: Enable fan inlet noise source [-]</span>
+<span class="sd">        :type fan_inlet: bool</span>
+<span class="sd">        :param fan_discharge: Enable fan discharge noise source [-]</span>
+<span class="sd">        :type fan_discharge: bool</span>
+<span class="sd">        :param core: Enable core noise source [-]</span>
+<span class="sd">        :type core: bool</span>
+<span class="sd">        :param jet_mixing: Enable jet mixing noise source [-]</span>
+<span class="sd">        :type jet_mixing: bool</span>
+<span class="sd">        :param jet_shock: Enable jet shock noise source [-]</span>
+<span class="sd">        :type jet_shock: bool</span>
+<span class="sd">        :param airframe: Enable airframe noise source [-]</span>
+<span class="sd">        :type airframe: bool</span>
+<span class="sd">        :param all_sources: Enable all noise sources [-]</span>
+<span class="sd">        :type all_sources: bool</span>
+<span class="sd">        :param trajectory_mode: mode for trajectory calculations [-] ('cutback', optimization')</span>
+<span class="sd">        :type trajectory_mode: str</span>
+<span class="sd">        :param observer_lst: List of observers to analyze [-] ('flyover','lateral','approach', 'contour')</span>
+<span class="sd">        :type observer_lst: lst</span>
+<span class="sd">        :param method_core_turb: Method to account for turbine transmission in the combustor ('GE', 'PW') [-]</span>
+<span class="sd">        :type method_core_turb: str</span>
+<span class="sd">        :param fan_BB_method: Method BB (original / allied_signal / geae / kresja) [-]</span>
+<span class="sd">        :type fan_BB_method: str</span>
+<span class="sd">        :param fan_RS_method: Method RS (original / allied_signal / geae / kresja) [-]</span>
+<span class="sd">        :type fan_RS_method: str</span>
+<span class="sd">        :param fan_igv: Enable fan inlet guide vanes</span>
+<span class="sd">        :type fan_igv: bool</span>
+<span class="sd">        :param fan_id: Enable fan inlet distortions</span>
+<span class="sd">        :type fan_id: bool</span>
+<span class="sd">        :param ge_flight_cleanup: GE flight cleanup switch (none/takeoff/approach) [-]</span>
+<span class="sd">        :type ge_flight_cleanup: str</span>
+<span class="sd">        :param levels_int_metric: Integrated noise metric [-]</span>
+<span class="sd">        :type levels_int_metric: str</span>
+<span class="sd">        :param engine_mounting: Engine mounting ('fuselage'/'underwing'/'none') [-]</span>
+<span class="sd">        :type engine_mounting: str</span>
+<span class="sd">        :param direct_propagation: Flag for direct propagation (including distance and characteristic impedance effects) [-]</span>
+<span class="sd">        :type direct_propagation: bool</span>
+<span class="sd">        :param absorption: Flag for atmospheric absorption [-]</span>
+<span class="sd">        :type absorption: bool</span>
+<span class="sd">        :param groundeffects: Flag for ground effects [-]</span>
+<span class="sd">        :type groundeffects: bool</span>
+<span class="sd">        :param lateral_attenuation: Flag for empirical lateral attenuation effects [-]</span>
+<span class="sd">        :type lateral_attenuation: bool</span>
+<span class="sd">        :param suppression: Flag for suppression of engine modules [-]</span>
+<span class="sd">        :type suppression: bool</span>
+<span class="sd">        :param fan_liner_suppression: Flag for fan liner suppression [-]</span>
+<span class="sd">        :type fan_liner_suppression: bool</span>
+<span class="sd">        :param shielding: Flag for shielding effects (not implemented yet) [-]</span>
+<span class="sd">        :type shielding: bool</span>
+<span class="sd">        :param hsr_calibration: Flag for HSR-era airframe calibration [-]</span>
+<span class="sd">        :type hsr_calibration: bool</span>
+<span class="sd">        :param validation: Flag for validation with NASA STCA noise model [-]</span>
+<span class="sd">        :type validation: bool</span>
+<span class="sd">        :param bandshare: Flag to plot PNLT [-]</span>
+<span class="sd">        :type bandshare: bool</span>
+<span class="sd">        :param TCF800: Flag for tone penalty addition to PNLT metric; allows any tone below 800Hz to be ignored [-]</span>
+<span class="sd">        :type TCF800: bool</span>
+<span class="sd">        :param combination_tones: Flag for combination tones int he fan noise model [-]</span>
+<span class="sd">        :type combination_tones: bool</span>
+<span class="sd">        :param N_shock: Number of shocks in supersonic jet [-]</span>
+<span class="sd">        :type N_shock: int</span>
+<span class="sd">        :param dT: dT standard atmosphere [K]</span>
+<span class="sd">        :type dT: float</span>
+<span class="sd">        :param sigma: Specific flow resistance of ground [kg/s m3]</span>
+<span class="sd">        :type sigma: float</span>
+<span class="sd">        :param a_coh: Incoherence constant [-]</span>
+<span class="sd">        :type a_coh: float</span>
+<span class="sd">        :param N_f: Number of discrete 1/3 octave frequency bands [-]</span>
+<span class="sd">        :type N_f: int</span>
+<span class="sd">        :param N_b: Number of bands (propagation) [-]</span>
+<span class="sd">        :type N_b: int</span>
+<span class="sd">        :param n_altitude_absorption: Number of integration steps in atmospheric propagation [-]</span>
+<span class="sd">        :type n_altitude_absorption: int</span>
+<span class="sd">        :param A_e: Engine reference area [m2]</span>
+<span class="sd">        :type A_e: float</span>
+<span class="sd">        :param dt_epnl: Time step of to calculate EPNL from interpolated PNLT data [s]</span>
+<span class="sd">        :type dt_epnl: float</span>
+<span class="sd">        :param n_harmonics: Number of harmonics to be considered in tones [-]</span>
+<span class="sd">        :type n_harmonics: int</span>
+<span class="sd">        :param r_0: Distance source observer in source mode [m]</span>
+<span class="sd">        :type r_0: float</span>
+<span class="sd">        :param p_ref: Reference pressure [Pa]</span>
+<span class="sd">        :type p_ref: float</span>
+<span class="sd">        :param noise_optimization: Flag to noise-optimize the trajectory [-]</span>
+<span class="sd">        :type noise_optimization: bool</span>
+<span class="sd">        :param PTCB: Enable PTCB [-]</span>
+<span class="sd">        :type PTCB: bool</span>
+<span class="sd">        :param PHLD: Enable PHLD [-]</span>
+<span class="sd">        :type PHLD: bool</span>
+<span class="sd">        :param TS_to: Engine TO thrust-setting (values &lt; 1 denote APR) [-]</span>
+<span class="sd">        :type TS_to: float</span>
+<span class="sd">        :param TS_vnrs: Engine VNRS thrust-setting [-]</span>
+<span class="sd">        :type TS_vnrs: float</span>
+<span class="sd">        :param TS_cutback: Engine cutback thrust-setting [-]</span>
+<span class="sd">        :type TS_cutback: float</span>
+<span class="sd">        :param z_cutback: z-location of cutback [m]</span>
+<span class="sd">        :type z_cutback: float</span>
+<span class="sd">        :param theta_flaps: Flap deflection angles [deg]</span>
+<span class="sd">        :type theta_flaps: np.ndarray</span>
+<span class="sd">        :param theta_slats: Slat deflection angles [deg]</span>
+<span class="sd">        :type theta_slats: np.ndarray</span>
+<span class="sd">        :param n_segments_vnrs: List with phase number of segments [-]</span>
+<span class="sd">        :type n_segments_vnrs: int</span>
+<span class="sd">        :param max_iter: Maximum number of iterations for trajectory computations [-]</span>
+<span class="sd">        :type max_iter: int</span>
+
+<span class="sd">        """</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_name</span> <span class="o">=</span> <span class="n">case_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="n">language</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">=</span> <span class="n">pyNA_directory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_file_name</span> <span class="o">=</span> <span class="n">engine_file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_file_name</span> <span class="o">=</span> <span class="n">trajectory_file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file_name</span> <span class="o">=</span> <span class="n">output_file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ac_name</span> <span class="o">=</span> <span class="n">ac_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_results</span> <span class="o">=</span> <span class="n">save_results</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fan_inlet</span> <span class="o">=</span> <span class="n">fan_inlet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fan_discharge</span> <span class="o">=</span> <span class="n">fan_discharge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core</span> <span class="o">=</span> <span class="n">core</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_mixing</span> <span class="o">=</span> <span class="n">jet_mixing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_shock</span> <span class="o">=</span> <span class="n">jet_shock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">airframe</span> <span class="o">=</span> <span class="n">airframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_sources</span> <span class="o">=</span> <span class="n">all_sources</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span> <span class="o">=</span> <span class="n">observer_lst</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span> <span class="o">=</span> <span class="n">x_observer_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method_core_turb</span> <span class="o">=</span> <span class="n">method_core_turb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fan_BB_method</span> <span class="o">=</span> <span class="n">fan_BB_method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fan_RS_method</span> <span class="o">=</span> <span class="n">fan_RS_method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fan_igv</span> <span class="o">=</span> <span class="n">fan_igv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fan_id</span> <span class="o">=</span> <span class="n">fan_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ge_flight_cleanup</span> <span class="o">=</span> <span class="n">ge_flight_cleanup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levels_int_metric</span> <span class="o">=</span> <span class="n">levels_int_metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_mounting</span> <span class="o">=</span> <span class="n">engine_mounting</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_propagation</span> <span class="o">=</span> <span class="n">direct_propagation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">absorption</span> <span class="o">=</span> <span class="n">absorption</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groundeffects</span> <span class="o">=</span> <span class="n">groundeffects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lateral_attenuation</span> <span class="o">=</span> <span class="n">lateral_attenuation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppression</span> <span class="o">=</span> <span class="n">suppression</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fan_liner_suppression</span> <span class="o">=</span> <span class="n">fan_liner_suppression</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shielding</span> <span class="o">=</span> <span class="n">shielding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hsr_calibration</span> <span class="o">=</span> <span class="n">hsr_calibration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">validation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandshare</span> <span class="o">=</span> <span class="n">bandshare</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TCF800</span> <span class="o">=</span> <span class="n">TCF800</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combination_tones</span> <span class="o">=</span> <span class="n">combination_tones</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_shock</span> <span class="o">=</span> <span class="n">N_shock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dT</span> <span class="o">=</span> <span class="n">dT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a_coh</span> <span class="o">=</span> <span class="n">a_coh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_f</span> <span class="o">=</span> <span class="n">N_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_b</span> <span class="o">=</span> <span class="n">N_b</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_altitude_absorption</span> <span class="o">=</span> <span class="n">n_altitude_absorption</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A_e</span> <span class="o">=</span> <span class="n">A_e</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt_epnl</span> <span class="o">=</span> <span class="n">dt_epnl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_harmonics</span> <span class="o">=</span> <span class="n">n_harmonics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_0</span> <span class="o">=</span> <span class="n">r_0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_ref</span> <span class="o">=</span> <span class="n">p_ref</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_optimization</span> <span class="o">=</span> <span class="n">noise_optimization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PTCB</span> <span class="o">=</span> <span class="n">PTCB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PHLD</span> <span class="o">=</span> <span class="n">PHLD</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TS_to</span> <span class="o">=</span> <span class="n">TS_to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TS_vnrs</span> <span class="o">=</span> <span class="n">TS_vnrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TS_cutback</span> <span class="o">=</span> <span class="n">TS_cutback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_cutback</span> <span class="o">=</span> <span class="n">z_cutback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_flaps</span> <span class="o">=</span> <span class="n">theta_flaps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_slats</span> <span class="o">=</span> <span class="n">theta_slats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_segments_vnrs</span> <span class="o">=</span> <span class="n">n_segments_vnrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+
+        <span class="c1"># Freeze self.settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_freeze</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Settings.check"><a class="viewcode-back" href="../settings.html#settings.Settings.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="sd">"""</span>
+<span class="sd">        Check the pyNA settings before a run.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># pyNA directory</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="p">,</span> <span class="s2">"is not a valid directory location. Specify the name (string)."</span><span class="p">)</span>
+
+        <span class="c1"># Folder and file names</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">case_name</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">case_name</span><span class="p">,</span> <span class="s2">"does not have the correct type for the engine file name. type(settings.case_name) should be str."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine_file_name</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine_file_name</span><span class="p">,</span> <span class="s2">"does not have the correct type for the engine file name. type(settings.output_file_name) should be str."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_file_name</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_file_name</span><span class="p">,</span> <span class="s2">"does not have the correct type for the trajectory file name. type(settings.trajectory_file_name) should be str."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file_name</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file_name</span><span class="p">,</span> <span class="s2">"does not have the correct type for the output file name. type(settings.output_file_name) should be str."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ac_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'stca'</span><span class="p">,</span> <span class="s1">'a10'</span><span class="p">,</span> <span class="s1">'stca_verification'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ac_name</span><span class="p">,</span> <span class="s2">"is not a valid aircraft. Specify: 'stca', 'stca_verification', 'a10'."</span><span class="p">)</span>
+
+        <span class="c1"># Flags</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_results</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_results</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.save_results) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_inlet</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_inlet</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.fan_inlet) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_discharge</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_discharge</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.fan_discharge) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">core</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">core</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.core) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jet_mixing</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jet_mixing</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.jet_mixing) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jet_shock</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jet_shock</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.jet_shock) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">airframe</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">airframe</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.airframe) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_sources</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_sources</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.all_sources) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_igv</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_igv</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.fan_igv) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_id</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_id</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.fan_id) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direct_propagation</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direct_propagation</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.direct_propagation) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">absorption</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">absorption</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.absorption) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groundeffects</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groundeffects</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.groundeffects) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lateral_attenuation</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lateral_attenuation</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settingslateral_attenuation) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">suppression</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">suppression</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.suppression) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_liner_suppression</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_liner_suppression</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.fan_liner_suppression) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shielding</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shielding</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.shielding) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsr_calibration</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsr_calibration</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.hsr_calibration) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.validation) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bandshare</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bandshare</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.bandshare) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TCF800</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TCF800</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.TCF800) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combination_tones</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combination_tones</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.combination_tones) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PTCB</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PTCB</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.PTCB) should be bool."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PHLD</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PHLD</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.PHLD) should be bool."</span><span class="p">)</span>
+
+        <span class="c1"># Methods</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_core_turb</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'GE'</span><span class="p">,</span> <span class="s1">'PW'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">method_core_turb</span><span class="p">,</span> <span class="s2">"is not a valid option for the core turbine attenuation method. Specify: 'GE'/'PW'."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fan_BB_method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'original'</span><span class="p">,</span> <span class="s1">'allied_signal'</span><span class="p">,</span> <span class="s1">'geae'</span><span class="p">,</span> <span class="s1">'kresja'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_BB_method</span><span class="p">,</span> <span class="s2">"is not a valid option for the fan broadband method. Specify: 'original'/'allied_signal'/'geae'/'kresja'."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fan_RS_method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'original'</span><span class="p">,</span> <span class="s1">'allied_signal'</span><span class="p">,</span> <span class="s1">'geae'</span><span class="p">,</span> <span class="s1">'kresja'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_RS_method</span><span class="p">,</span> <span class="s2">"is not a valid option for the fan rotor-stator interation method. Specify: 'original'/'allied_signal'/'geae'/'kresja'."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ge_flight_cleanup</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'none'</span><span class="p">,</span> <span class="s1">'takeoff'</span><span class="p">,</span> <span class="s1">'approach'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ge_flight_cleanup</span><span class="p">,</span> <span class="s2">"is not a valid option for the GE flight clean-up effects method. Specify: 'none'/'takeoff'/'approach'."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_int_metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'epnl'</span><span class="p">,</span> <span class="s1">'ipnlt'</span><span class="p">,</span> <span class="s1">'ioaspl'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_int_metric</span><span class="p">,</span> <span class="s2">"is not a valid option for the integrated noise levels metric. Specify: 'epnl'/'ipnlt'/'ioaspl'."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine_mounting</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'fuselage'</span><span class="p">,</span> <span class="s1">'underwing'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine_mounting</span><span class="p">,</span> <span class="s2">"is not a valid option for the engine mounting description. Specify: 'fuselage', 'underwing', 'none'."</span><span class="p">)</span>
+
+        <span class="c1"># Values</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_shock</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_shock</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.N_shock) should be [int, np.int32, np.int64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dT</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dT</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.dT) should be [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.sigma) should be [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_coh</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_coh</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.a_coh) should be [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_f</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.N_f) should be [int, np.int32, np.int64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_b</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_b</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.N_b) should be [int, np.int32, np.int64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">remainder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The number of 1/3rd octave frequency sub-bands needs to be odd."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_altitude_absorption</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_altitude_absorption</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.n_altitude_absorption) should be [int, np.int32, np.int64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_harmonics</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_harmonics</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.n_harmonics) should be [int, np.int32, np.int64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A_e</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A_e</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.A_e) should be [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt_epnl</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt_epnl</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.dt_epnl) should be [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_0</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_0</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.r_0) should be [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_ref</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_ref</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.p_ref) should be [float, np.float32, np.float64]"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.x_observer_array) should be np.ndarray"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="p">),</span> <span class="p">(</span><span class="s1">'flyover'</span><span class="p">,</span> <span class="p">)]</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Shape of the x_observer_array should be (1, 3); instead shape is "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">,</span> <span class="p">),</span> <span class="p">(</span><span class="s1">'flyover'</span><span class="p">,</span> <span class="s1">'lateral'</span><span class="p">)]</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Shape of the x_observer_array should be (2, 3); instead shape is "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">))</span>
+
+        <span class="c1"># Trajectory options</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TS_to</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TS_to</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.TS_to) should be in [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TS_vnrs</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TS_vnrs</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.TS_vnrs) should be in [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="n">NoneType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TS_cutback</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">NoneType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TS_cutback</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.TS_cutback) should be in [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_cutback</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_cutback</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.z_cutback) should be in [float, np.float32, np.float64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_flaps</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_flaps</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.theta_flaps) should be np.ndarray"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_slats</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_slats</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.theta_slats) should be np.ndarray"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_segments_vnrs</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_segments_vnrs</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.n_segments_vnrs) should be in [int, np.int32, np.int64]"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="s2">"does not have the correct type. type(settings.max_iter) should be in [int, np.int32, np.int64]"</span><span class="p">)</span>
+
+        <span class="c1"># Observer list</span>
+        <span class="k">for</span> <span class="n">observer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">observer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span><span class="s1">'flyover'</span><span class="p">,</span> <span class="s1">'approach'</span><span class="p">,</span> <span class="s1">'contours'</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">observer</span><span class="p">,</span> <span class="s2">"is not a valid option for the observer list. Specify any from 'lateral'/'flyover'/'approach'/'contours'"</span><span class="p">)</span>
+
+        <span class="c1"># Language to use to solve components (julia/python)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'pyna_language'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'julia'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s1">'julia'</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'pyna_language'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'python'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s1">'python'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid environment variable pyna_language. Specify python/julia.'</span><span class="p">)</span>
+
+        <span class="c1"># Set all noise components equal to True if settings.all_sources == True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_sources</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fan_inlet</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fan_discharge</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">core</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">jet_mixing</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">jet_shock</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">airframe</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Set lateral and flyover observer locations for NASA STCA Standard trajectory</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'NASA STCA Standard'</span><span class="p">,</span> <span class="s1">'stca_enginedesign_standard'</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span> <span class="o">==</span> <span class="s1">'lateral'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">3756.66</span><span class="p">,</span> <span class="mf">450.</span><span class="p">,</span> <span class="mf">1.2192</span><span class="p">]])</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span> <span class="o">==</span> <span class="s1">'flyover'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">6500.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.2192</span><span class="p">]])</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span> <span class="o">==</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer_lst</span> <span class="o">==</span> <span class="p">[</span><span class="s1">'flyover'</span><span class="p">,</span> <span class="s1">'lateral'</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x_observer_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">3756.66</span><span class="p">,</span> <span class="mf">450.</span><span class="p">,</span> <span class="mf">1.2192</span><span class="p">],</span> <span class="p">[</span><span class="mf">6500.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.2192</span><span class="p">]])</span>
+
+        <span class="c1"># Disable validation if not NASA STCA Standard trajectory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_name</span> <span class="o">==</span> <span class="s1">'NASA STCA Standard'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span></div></div>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

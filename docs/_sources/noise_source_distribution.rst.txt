@@ -1,0 +1,26 @@
+noise\_source\_distribution
+===========================
+
+.. warning::
+	
+	This run-file is only available in the python version of pyNA. To run the noise spectral and directional distribution, set the python environment variable to ``'python'`` using:
+
+	.. code-block::
+	
+		import os
+		os.environ['language'] = 'python'
+
+N2-diagram
+----------
+
+.. image:: ./_images/n2_noise_source_distribution.png
+   :width: 900
+
+
+Module contents
+---------------
+
+.. automodule:: noise_source_distribution
+   :members:
+   :undoc-members:
+   :show-inheritance:

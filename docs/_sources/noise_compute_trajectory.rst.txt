@@ -1,0 +1,16 @@
+noise\_compute\_trajectory
+==========================
+
+N2-diagram
+----------
+
+.. image:: ./_images/n2_compute_trajectory.png
+   :width: 900
+
+Module contents
+---------------
+
+.. automodule:: noise_compute_trajectory
+   :members:
+   :undoc-members:
+   :show-inheritance:

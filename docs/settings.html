@@ -1,0 +1,436 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="trajectory" href="trajectory.html" /><link rel="prev" title="noise" href="noise.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>settings - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="settings">
+<span id="id1"></span><h1>settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-settings">
+<span id="class-description"></span><h2>class description<a class="headerlink" href="#module-settings" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="settings.FrozenClass">
+<em class="property">class </em><code class="sig-prename descclassname">settings.</code><code class="sig-name descname">FrozenClass</code><a class="reference internal" href="_modules/settings.html#FrozenClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#settings.FrozenClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+<dl class="py class">
+<dt id="settings.Settings">
+<em class="property">class </em><code class="sig-prename descclassname">settings.</code><code class="sig-name descname">Settings</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">case_name</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'python'</span></em>, <em class="sig-param"><span class="n">pyNA_directory</span><span class="o">=</span><span class="default_value">'.'</span></em>, <em class="sig-param"><span class="n">engine_file_name</span><span class="o">=</span><span class="default_value">'Engine_to.csv'</span></em>, <em class="sig-param"><span class="n">trajectory_file_name</span><span class="o">=</span><span class="default_value">'Trajectory_to.csv'</span></em>, <em class="sig-param"><span class="n">output_file_name</span><span class="o">=</span><span class="default_value">'Trajectory_stca.sql'</span></em>, <em class="sig-param"><span class="n">ac_name</span><span class="o">=</span><span class="default_value">'stca'</span></em>, <em class="sig-param"><span class="n">save_results</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fan_inlet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fan_discharge</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">core</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">jet_mixing</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">jet_shock</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">airframe</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">all_sources</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fan_igv</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fan_id</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">observer_lst</span><span class="o">=</span><span class="default_value">'lateral', 'flyover'</span></em>, <em class="sig-param"><span class="n">method_core_turb</span><span class="o">=</span><span class="default_value">'GE'</span></em>, <em class="sig-param"><span class="n">fan_BB_method</span><span class="o">=</span><span class="default_value">'geae'</span></em>, <em class="sig-param"><span class="n">fan_RS_method</span><span class="o">=</span><span class="default_value">'allied_signal'</span></em>, <em class="sig-param"><span class="n">ge_flight_cleanup</span><span class="o">=</span><span class="default_value">'takeoff'</span></em>, <em class="sig-param"><span class="n">levels_int_metric</span><span class="o">=</span><span class="default_value">'epnl'</span></em>, <em class="sig-param"><span class="n">engine_mounting</span><span class="o">=</span><span class="default_value">'underwing'</span></em>, <em class="sig-param"><span class="n">direct_propagation</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">absorption</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">groundeffects</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">lateral_attenuation</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">suppression</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fan_liner_suppression</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">shielding</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">hsr_calibration</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">validation</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">bandshare</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">TCF800</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">combination_tones</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">N_shock</span><span class="o">=</span><span class="default_value">8</span></em>, <em class="sig-param"><span class="n">dT</span><span class="o">=</span><span class="default_value">10.0169</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">149975.28900000002</span></em>, <em class="sig-param"><span class="n">a_coh</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">N_f</span><span class="o">=</span><span class="default_value">24</span></em>, <em class="sig-param"><span class="n">N_b</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">n_altitude_absorption</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">A_e</span><span class="o">=</span><span class="default_value">0.9600600153600001</span></em>, <em class="sig-param"><span class="n">dt_epnl</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">n_harmonics</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">r_0</span><span class="o">=</span><span class="default_value">0.3048</span></em>, <em class="sig-param"><span class="n">p_ref</span><span class="o">=</span><span class="default_value">2e-05</span></em>, <em class="sig-param"><span class="n">x_observer_array</span><span class="o">=</span><span class="default_value">array([[3756.66, 450.0, 1.2192], [6499.86, 0.0, 1.2192]])</span></em>, <em class="sig-param"><span class="n">noise_optimization</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PTCB</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PHLD</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">TS_to</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">TS_vnrs</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">TS_cutback</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">z_cutback</span><span class="o">=</span><span class="default_value">500.0</span></em>, <em class="sig-param"><span class="n">theta_flaps</span><span class="o">=</span><span class="default_value">array([10.0, 10.0, 10.0, 10.0, 10.0])</span></em>, <em class="sig-param"><span class="n">theta_slats</span><span class="o">=</span><span class="default_value">array([- 6.0, - 6.0, - 6.0, - 6.0, - 6.0])</span></em>, <em class="sig-param"><span class="n">n_segments_vnrs</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">500</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/settings.html#Settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#settings.Settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#settings.FrozenClass" title="settings.FrozenClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">settings.FrozenClass</span></code></a></p>
+<p>pyNA settings class</p>
+<dl class="py method">
+<dt id="settings.Settings.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">case_name</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'python'</span></em>, <em class="sig-param"><span class="n">pyNA_directory</span><span class="o">=</span><span class="default_value">'.'</span></em>, <em class="sig-param"><span class="n">engine_file_name</span><span class="o">=</span><span class="default_value">'Engine_to.csv'</span></em>, <em class="sig-param"><span class="n">trajectory_file_name</span><span class="o">=</span><span class="default_value">'Trajectory_to.csv'</span></em>, <em class="sig-param"><span class="n">output_file_name</span><span class="o">=</span><span class="default_value">'Trajectory_stca.sql'</span></em>, <em class="sig-param"><span class="n">ac_name</span><span class="o">=</span><span class="default_value">'stca'</span></em>, <em class="sig-param"><span class="n">save_results</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fan_inlet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fan_discharge</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">core</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">jet_mixing</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">jet_shock</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">airframe</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">all_sources</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fan_igv</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fan_id</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">observer_lst</span><span class="o">=</span><span class="default_value">'lateral', 'flyover'</span></em>, <em class="sig-param"><span class="n">method_core_turb</span><span class="o">=</span><span class="default_value">'GE'</span></em>, <em class="sig-param"><span class="n">fan_BB_method</span><span class="o">=</span><span class="default_value">'geae'</span></em>, <em class="sig-param"><span class="n">fan_RS_method</span><span class="o">=</span><span class="default_value">'allied_signal'</span></em>, <em class="sig-param"><span class="n">ge_flight_cleanup</span><span class="o">=</span><span class="default_value">'takeoff'</span></em>, <em class="sig-param"><span class="n">levels_int_metric</span><span class="o">=</span><span class="default_value">'epnl'</span></em>, <em class="sig-param"><span class="n">engine_mounting</span><span class="o">=</span><span class="default_value">'underwing'</span></em>, <em class="sig-param"><span class="n">direct_propagation</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">absorption</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">groundeffects</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">lateral_attenuation</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">suppression</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fan_liner_suppression</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">shielding</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">hsr_calibration</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">validation</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">bandshare</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">TCF800</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">combination_tones</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">N_shock</span><span class="o">=</span><span class="default_value">8</span></em>, <em class="sig-param"><span class="n">dT</span><span class="o">=</span><span class="default_value">10.0169</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">149975.28900000002</span></em>, <em class="sig-param"><span class="n">a_coh</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">N_f</span><span class="o">=</span><span class="default_value">24</span></em>, <em class="sig-param"><span class="n">N_b</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">n_altitude_absorption</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">A_e</span><span class="o">=</span><span class="default_value">0.9600600153600001</span></em>, <em class="sig-param"><span class="n">dt_epnl</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">n_harmonics</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">r_0</span><span class="o">=</span><span class="default_value">0.3048</span></em>, <em class="sig-param"><span class="n">p_ref</span><span class="o">=</span><span class="default_value">2e-05</span></em>, <em class="sig-param"><span class="n">x_observer_array</span><span class="o">=</span><span class="default_value">array([[3756.66, 450.0, 1.2192], [6499.86, 0.0, 1.2192]])</span></em>, <em class="sig-param"><span class="n">noise_optimization</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PTCB</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">PHLD</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">TS_to</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">TS_vnrs</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">TS_cutback</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">z_cutback</span><span class="o">=</span><span class="default_value">500.0</span></em>, <em class="sig-param"><span class="n">theta_flaps</span><span class="o">=</span><span class="default_value">array([10.0, 10.0, 10.0, 10.0, 10.0])</span></em>, <em class="sig-param"><span class="n">theta_slats</span><span class="o">=</span><span class="default_value">array([- 6.0, - 6.0, - 6.0, - 6.0, - 6.0])</span></em>, <em class="sig-param"><span class="n">n_segments_vnrs</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">500</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/settings.html#Settings.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#settings.Settings.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize pyNA settings class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>case_name</strong> (<em>str</em>) – Case name [-]</p></li>
+<li><p><strong>pyNA_directory</strong> (<em>str</em>) – Directory where pyNA is installed</p></li>
+<li><p><strong>engine_file_name</strong> (<em>str</em>) – File name of the take-off engine inputs [-]</p></li>
+<li><p><strong>trajectory_file_name</strong> (<em>str</em>) – File name of the take-off trajectory [-]</p></li>
+<li><p><strong>output_file_name</strong> (<em>str</em>) – Name of the output .sql file [-]</p></li>
+<li><p><strong>ac_name</strong> (<em>str</em>) – Name of the aircraft [-]</p></li>
+<li><p><strong>save_results</strong> (<em>bool</em>) – Flag to save results [-]</p></li>
+<li><p><strong>fan_inlet</strong> (<em>bool</em>) – Enable fan inlet noise source [-]</p></li>
+<li><p><strong>fan_discharge</strong> (<em>bool</em>) – Enable fan discharge noise source [-]</p></li>
+<li><p><strong>core</strong> (<em>bool</em>) – Enable core noise source [-]</p></li>
+<li><p><strong>jet_mixing</strong> (<em>bool</em>) – Enable jet mixing noise source [-]</p></li>
+<li><p><strong>jet_shock</strong> (<em>bool</em>) – Enable jet shock noise source [-]</p></li>
+<li><p><strong>airframe</strong> (<em>bool</em>) – Enable airframe noise source [-]</p></li>
+<li><p><strong>all_sources</strong> (<em>bool</em>) – Enable all noise sources [-]</p></li>
+<li><p><strong>trajectory_mode</strong> (<em>str</em>) – mode for trajectory calculations [-] (‘cutback’, optimization’)</p></li>
+<li><p><strong>observer_lst</strong> (<em>lst</em>) – List of observers to analyze [-] (‘flyover’,’lateral’,’approach’, ‘contour’)</p></li>
+<li><p><strong>method_core_turb</strong> (<em>str</em>) – Method to account for turbine transmission in the combustor (‘GE’, ‘PW’) [-]</p></li>
+<li><p><strong>fan_BB_method</strong> (<em>str</em>) – Method BB (original / allied_signal / geae / kresja) [-]</p></li>
+<li><p><strong>fan_RS_method</strong> (<em>str</em>) – Method RS (original / allied_signal / geae / kresja) [-]</p></li>
+<li><p><strong>fan_igv</strong> (<em>bool</em>) – Enable fan inlet guide vanes</p></li>
+<li><p><strong>fan_id</strong> (<em>bool</em>) – Enable fan inlet distortions</p></li>
+<li><p><strong>ge_flight_cleanup</strong> (<em>str</em>) – GE flight cleanup switch (none/takeoff/approach) [-]</p></li>
+<li><p><strong>levels_int_metric</strong> (<em>str</em>) – Integrated noise metric [-]</p></li>
+<li><p><strong>engine_mounting</strong> (<em>str</em>) – Engine mounting (‘fuselage’/’underwing’/’none’) [-]</p></li>
+<li><p><strong>direct_propagation</strong> (<em>bool</em>) – Flag for direct propagation (including distance and characteristic impedance effects) [-]</p></li>
+<li><p><strong>absorption</strong> (<em>bool</em>) – Flag for atmospheric absorption [-]</p></li>
+<li><p><strong>groundeffects</strong> (<em>bool</em>) – Flag for ground effects [-]</p></li>
+<li><p><strong>lateral_attenuation</strong> (<em>bool</em>) – Flag for empirical lateral attenuation effects [-]</p></li>
+<li><p><strong>suppression</strong> (<em>bool</em>) – Flag for suppression of engine modules [-]</p></li>
+<li><p><strong>fan_liner_suppression</strong> (<em>bool</em>) – Flag for fan liner suppression [-]</p></li>
+<li><p><strong>shielding</strong> (<em>bool</em>) – Flag for shielding effects (not implemented yet) [-]</p></li>
+<li><p><strong>hsr_calibration</strong> (<em>bool</em>) – Flag for HSR-era airframe calibration [-]</p></li>
+<li><p><strong>validation</strong> (<em>bool</em>) – Flag for validation with NASA STCA noise model [-]</p></li>
+<li><p><strong>bandshare</strong> (<em>bool</em>) – Flag to plot PNLT [-]</p></li>
+<li><p><strong>TCF800</strong> (<em>bool</em>) – Flag for tone penalty addition to PNLT metric; allows any tone below 800Hz to be ignored [-]</p></li>
+<li><p><strong>combination_tones</strong> (<em>bool</em>) – Flag for combination tones int he fan noise model [-]</p></li>
+<li><p><strong>N_shock</strong> (<em>int</em>) – Number of shocks in supersonic jet [-]</p></li>
+<li><p><strong>dT</strong> (<em>float</em>) – dT standard atmosphere [K]</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>) – Specific flow resistance of ground [kg/s m3]</p></li>
+<li><p><strong>a_coh</strong> (<em>float</em>) – Incoherence constant [-]</p></li>
+<li><p><strong>N_f</strong> (<em>int</em>) – Number of discrete 1/3 octave frequency bands [-]</p></li>
+<li><p><strong>N_b</strong> (<em>int</em>) – Number of bands (propagation) [-]</p></li>
+<li><p><strong>n_altitude_absorption</strong> (<em>int</em>) – Number of integration steps in atmospheric propagation [-]</p></li>
+<li><p><strong>A_e</strong> (<em>float</em>) – Engine reference area [m2]</p></li>
+<li><p><strong>dt_epnl</strong> (<em>float</em>) – Time step of to calculate EPNL from interpolated PNLT data [s]</p></li>
+<li><p><strong>n_harmonics</strong> (<em>int</em>) – Number of harmonics to be considered in tones [-]</p></li>
+<li><p><strong>r_0</strong> (<em>float</em>) – Distance source observer in source mode [m]</p></li>
+<li><p><strong>p_ref</strong> (<em>float</em>) – Reference pressure [Pa]</p></li>
+<li><p><strong>noise_optimization</strong> (<em>bool</em>) – Flag to noise-optimize the trajectory [-]</p></li>
+<li><p><strong>PTCB</strong> (<em>bool</em>) – Enable PTCB [-]</p></li>
+<li><p><strong>PHLD</strong> (<em>bool</em>) – Enable PHLD [-]</p></li>
+<li><p><strong>TS_to</strong> (<em>float</em>) – Engine TO thrust-setting (values &lt; 1 denote APR) [-]</p></li>
+<li><p><strong>TS_vnrs</strong> (<em>float</em>) – Engine VNRS thrust-setting [-]</p></li>
+<li><p><strong>TS_cutback</strong> (<em>float</em>) – Engine cutback thrust-setting [-]</p></li>
+<li><p><strong>z_cutback</strong> (<em>float</em>) – z-location of cutback [m]</p></li>
+<li><p><strong>theta_flaps</strong> (<em>np.ndarray</em>) – Flap deflection angles [deg]</p></li>
+<li><p><strong>theta_slats</strong> (<em>np.ndarray</em>) – Slat deflection angles [deg]</p></li>
+<li><p><strong>n_segments_vnrs</strong> (<em>int</em>) – List with phase number of segments [-]</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Maximum number of iterations for trajectory computations [-]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="settings.Settings.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/settings.html#Settings.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#settings.Settings.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the pyNA settings before a run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="sample-settings-file">
+<h2>sample settings file<a class="headerlink" href="#sample-settings-file" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize settings</span>
+<span class="n">pyna_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="c1"># Directories and file names</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'case_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'NASA STCA Standard'</span>                    <span class="c1"># Case name [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'case_directory'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'pyNA/cases/NASA STCA Standard'</span>    <span class="c1"># Case directory [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_file_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Trajectory_to.csv'</span>          <span class="c1"># Name of the trajectory in the setup/traj folder [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'engine_file_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Inputs_to.csv'</span>                  <span class="c1"># File name of the take-off engine inputs [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'aero_file_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'aerodeck.csv'</span>                     <span class="c1"># File nameme of the aerodynamics deck [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'output_file_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Trajectory_STCA.sql'</span>            <span class="c1"># Name of the output .sql file [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'ac_name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'stca'</span>                                    <span class="c1"># Aircraft name [-]</span>
+
+<span class="c1"># Mode</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'language'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'python'</span>            <span class="c1"># Language to use to solve components (julia/python) [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'save_results'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>            <span class="c1"># Flag to save results [-]</span>
+
+<span class="c1"># Noise settings</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'fan_inlet'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>              <span class="c1"># Enable fan inlet noise source (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'fan_discharge'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>          <span class="c1"># Enable fan discharge noise source (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'core'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>                   <span class="c1"># Enable core noise source (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'jet_mixing'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>              <span class="c1"># Enable jet mixing noise source (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'jet_shock'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>              <span class="c1"># Enable jet shock noise source (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'airframe'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>               <span class="c1"># Enable airframe noise source (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'all_sources'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>            <span class="c1"># Enable all noise sources (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'observer'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'lateral'</span>           <span class="c1"># Observers to analyze [-] ('flyover','lateral','approach')</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'method_core_turb'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'GE'</span>        <span class="c1"># Method to account for turbine transmission in the combustor ('GE', 'PW') [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'fan_BB_method'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'geae'</span>         <span class="c1"># Method BB (original / allied_signal / geae / kresja) [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'fan_RS_method'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'allied_signal'</span><span class="c1"># Method RS (original / allied_signal / geae / kresja) [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'fan_igv'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>                <span class="c1"># Fan inlet guide vanes (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'fan_id'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>                 <span class="c1"># Fan inlet distortions (True/False)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'ge_flight_cleanup'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'takeoff'</span>  <span class="c1"># GE flight cleanup switch (none / takeoff / approach) [-]</span>
+
+<span class="c1"># Flags</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'absorption'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>              <span class="c1"># Flag for atmospheric absorption</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'groundeffects'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>           <span class="c1"># Flag for ground effects</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'suppression'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>             <span class="c1"># Flag for suppression of engine modules</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'shielding'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>              <span class="c1"># Flag for shielding effects (not implemented yet)</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'hsr_calibration'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>         <span class="c1"># Flag for HSR-era airframe calibration</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'validation'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>              <span class="c1"># Flag for validation with NASA STCA noise model</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'bandshare'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>              <span class="c1"># Flag to plot PNLT</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'TCF800'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>                  <span class="c1"># Flag for tone penalty addition to PNLT metric; allows any tone below 800Hz to be ignored</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'combination_tones'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>      <span class="c1"># Flag for combination tones int he fan noise model</span>
+
+<span class="c1"># Constants</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'N_e'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>                        <span class="c1"># Number of engines[-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'N_shock'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>                    <span class="c1"># Number of shocks in supersonic jet [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'dT'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.0169</span>                   <span class="c1"># dT standard atmosphere [K]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'sigma'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">291.0</span> <span class="o">*</span> <span class="mf">515.379</span>        <span class="c1"># Specific flow resistance of ground [kg/s m3]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'a_coh'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>                   <span class="c1"># Incoherence constant [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'N_f'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">24</span>                       <span class="c1"># Number of discrete 1/3 octave frequency bands [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'N_b'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>                        <span class="c1"># Number of bands (propagation) [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'n_altitude_absorption'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>      <span class="c1"># Number of integration steps in atmospheric propagation [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'A_e'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.334</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.3048</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># Engine reference area [m2]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'dt_epnl'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>                  <span class="c1"># Time step of to calculate EPNL from interpolated PNLT data [s]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'n_harmonics'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>               <span class="c1"># Number of harmonics to be considered in tones [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'r_0'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3048</span>                   <span class="c1"># Distance source observer in source mode [m]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'p_ref'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2e-5</span>                   <span class="c1"># Reference pressure [Pa]</span>
+
+<span class="c1"># Trajectory settings</span>
+<span class="k">if</span> <span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'case_name'</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'case_1'</span><span class="p">,</span> <span class="s1">'stca'</span><span class="p">,</span> <span class="s1">'a10'</span><span class="p">]:</span>
+    <span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'compute'</span>                    <span class="c1"># Mode for trajectory calculations [-] ('load' / 'compute')</span>
+    <span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_optimize_noise'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>              <span class="c1"># Flag to noise-optimize the trajectory [-]</span>
+<span class="k">elif</span> <span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'case_name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'NASA STCA Standard'</span><span class="p">:</span>
+    <span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_mode'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'load'</span>                       <span class="c1"># Mode for trajectory calculations [-] ('load' / 'compute')</span>
+    <span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_optimize_noise'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>              <span class="c1"># Flag to noise-optimize the trajectory [-]</span>
+
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_climb_phase_lst'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climb'</span><span class="p">,</span> <span class="s1">'climb2'</span><span class="p">]</span>   <span class="c1"># Climb phase names [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_groundroll_TS'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.95</span>                    <span class="c1"># Groundroll thrust setting [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_rotation_TS'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.95</span>                      <span class="c1"># Rotation thrust setting [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_climb_alt_lst'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mf">1500.</span><span class="p">]</span>         <span class="c1"># Climb phases altitude list [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_climb_TS_lst'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.65</span><span class="o">*</span><span class="mf">0.95</span><span class="p">]</span>        <span class="c1"># Climb phases thrust setting list [-]</span>
+
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_num_segments'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>                        <span class="c1"># Trajectory number of segments [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_transcription_order'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>                 <span class="c1"># Trajectory dymos transcription ordor [-]</span>
+<span class="n">pyna_settings</span><span class="p">[</span><span class="s1">'trajectory_max_iter'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">250</span>                          <span class="c1"># Maximum number of iterations for trajectory computations [-]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="trajectory.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">trajectory</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="noise.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">noise</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/settings.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">settings</a><ul>
+<li><a class="reference internal" href="#module-settings">class description</a></li>
+<li><a class="reference internal" href="#sample-settings-file">sample settings file</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

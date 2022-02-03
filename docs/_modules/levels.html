@@ -1,0 +1,307 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>levels - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for levels</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pdb</span>
+<span class="kn">import</span> <span class="nn">openmdao</span>
+<span class="kn">import</span> <span class="nn">openmdao.api</span> <span class="k">as</span> <span class="nn">om</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pyNA.src.data</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">pyNA.src.settings</span> <span class="kn">import</span> <span class="n">Settings</span>
+<span class="kn">from</span> <span class="nn">pyNA.src.noise_src_py.spl</span> <span class="kn">import</span> <span class="n">spl</span>
+<span class="kn">from</span> <span class="nn">pyNA.src.noise_src_py.oaspl</span> <span class="kn">import</span> <span class="n">oaspl</span>
+<span class="kn">from</span> <span class="nn">pyNA.src.noise_src_py.pnlt</span> <span class="kn">import</span> <span class="n">pnlt</span>
+
+<div class="viewcode-block" id="Levels"><a class="viewcode-back" href="../levels.html#levels.Levels">[docs]</a><span class="k">class</span> <span class="nc">Levels</span><span class="p">(</span><span class="n">om</span><span class="o">.</span><span class="n">ExplicitComponent</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Compute noise levels according to ICAO Annex 16 Volume I: Noise.</span>
+
+<span class="sd">    * Sound pressure level (spl)</span>
+<span class="sd">    * Overall sound pressure level (oaspl)</span>
+<span class="sd">    * Perceived noise level, tone-corrected (pnlt)</span>
+<span class="sd">    * Tone corrections (C)</span>
+
+<span class="sd">    The *Levels* component requires the following inputs:</span>
+
+<span class="sd">    * ``inputs['rho_0']``:          ambient density [kg/m3]</span>
+<span class="sd">    * ``inputs['c_0']``:            ambient speed of sound [m/s]</span>
+<span class="sd">    * ``inputs['msap_prop']``:      mean-square acoustic pressure, propagated to the observer (re. rho_0^2c_0^2) [-]</span>
+
+<span class="sd">    The *Levels* component computes the following outputs:</span>
+
+<span class="sd">    * ``outputs['spl']``:           sound pressure level [dB]</span>
+<span class="sd">    * ``outputs['oaspl']``:         overall sound pressure level [dB]</span>
+<span class="sd">    * ``outputs['pnlt']``:          perceived noise leve, tone corrected [PNdB]</span>
+<span class="sd">    * ``outputs['C']``:             pnlt tone correction [dB]</span>
+
+<span class="sd">    The *LevelsInt* component has the following options: </span>
+
+<span class="sd">    * ``settings``:                 pyna settings</span>
+<span class="sd">    * ``n_t``:                      number of time steps in the noise time series</span>
+<span class="sd">    * ``data``:                     pyna noise data</span>
+
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="Levels.initialize"><a class="viewcode-back" href="../levels.html#levels.Levels.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'settings'</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="n">Settings</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'n_t'</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Number of time steps in trajectory'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="n">Data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Levels.setup"><a class="viewcode-back" href="../levels.html#levels.Levels.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Load options</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'settings'</span><span class="p">]</span>
+        <span class="n">n_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'n_t'</span><span class="p">]</span>
+
+        <span class="c1"># Number of observers</span>
+        <span class="n">n_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Add inputs and outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">'rho_0'</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_t</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s1">'kg/m**3'</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'ambient density [kg/m3]'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">'c_0'</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_t</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s1">'m/s'</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'ambient speed of sound [m/s]'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">'msap_prop'</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_t</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)),</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'mean-square acoustic pressure, propagated to the observer (re. rho_0^2c_0^2) [-]'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">'spl'</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_t</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'sound pressure level [dB]'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">'oaspl'</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_t</span><span class="p">)),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'overall sound pressure level [dB]'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">'pnlt'</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_t</span><span class="p">)),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'perceived noise level, tone corrected [PNdB]'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">bandshare</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_t</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'pnlt tone correction [dB]'</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Levels.compute"><a class="viewcode-back" href="../levels.html#levels.Levels.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">default_vector</span><span class="o">.</span><span class="n">DefaultVector</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">openmdao</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">default_vector</span><span class="o">.</span><span class="n">DefaultVector</span><span class="p">):</span>
+        <span class="c1"># Load options</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'settings'</span><span class="p">]</span>
+
+        <span class="c1"># Number of observers</span>
+        <span class="n">n_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">x_observer_array</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Extract inputs</span>
+        <span class="n">msap_prop</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'msap_prop'</span><span class="p">]</span>
+        <span class="n">rho_0</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'rho_0'</span><span class="p">]</span>
+        <span class="n">c_0</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'c_0'</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_obs</span><span class="p">):</span>
+
+            <span class="c1"># Compute SPL</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s1">'spl'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">spl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msap_prop</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">rho_0</span><span class="p">,</span> <span class="n">c_0</span><span class="p">)</span>
+
+            <span class="c1"># Compute OASPL</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s1">'oaspl'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">oaspl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">'spl'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+
+            <span class="c1"># Compute PNLT and C</span>
+            <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">bandshare</span><span class="p">:</span>
+                <span class="n">outputs</span><span class="p">[</span><span class="s1">'pnlt'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">'C'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">pnlt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">'spl'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">outputs</span><span class="p">[</span><span class="s1">'pnlt'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pnlt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">'spl'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span></div></div>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

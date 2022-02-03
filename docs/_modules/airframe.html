@@ -1,0 +1,685 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>airframe - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for airframe</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pdb</span>
+<span class="kn">import</span> <span class="nn">openmdao</span>
+<span class="kn">import</span> <span class="nn">openmdao.api</span> <span class="k">as</span> <span class="nn">om</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+
+<div class="viewcode-block" id="Airframe"><a class="viewcode-back" href="../airframe.html#airframe.Airframe">[docs]</a><span class="k">class</span> <span class="nc">Airframe</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Airframe.trailing_edge_wing"><a class="viewcode-back" href="../airframe.html#airframe.Airframe.trailing_edge_wing">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">trailing_edge_wing</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">M_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">c_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">rho_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute wing trailing edge mean-square acoustic pressure (msap).</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Dict[str, Any]</span>
+<span class="sd">        :param ac: aircraft parameters</span>
+<span class="sd">        :type ac: Dict[str, Any]</span>
+<span class="sd">        :param M_0: ambient Mach number [-]</span>
+<span class="sd">        :type M_0: np.float64</span>
+<span class="sd">        :param c_0: ambient speed of sound [m/s]</span>
+<span class="sd">        :type c_0: np.float64</span>
+<span class="sd">        :param rho_0: ambient density [kg/m3]</span>
+<span class="sd">        :type rho_0: np.float64</span>
+<span class="sd">        :param mu_0: ambient dynamic viscosity [kg/m/s]</span>
+<span class="sd">        :type mu_0: np.float64</span>
+<span class="sd">        :param theta: polar directivity angle [deg]</span>
+<span class="sd">        :type theta: np.float64</span>
+<span class="sd">        :param phi: azimuthal directivity angle [deg]</span>
+<span class="sd">        :type phi: np.float64</span>
+<span class="sd">        :param freq: 1/3rd octave frequency [Hz]</span>
+<span class="sd">        :type freq: np.ndarray [settings.N_f]</span>
+
+<span class="sd">        :return: msap_w</span>
+<span class="sd">        :rtype: np.ndarray [n_t, settings.N_f]</span>
+
+<span class="sd">        """</span>
+        <span class="c1">### ---------------- Wing trailing-edge noise ----------------</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 5</span>
+        <span class="n">delta_w_star</span> <span class="o">=</span> <span class="mf">0.37</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_S_w</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho_0</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_S_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">mu_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="c1"># Determine configuration constant and the sound power</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 7</span>
+        <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_clean_w</span><span class="p">:</span>
+            <span class="n">K_w</span> <span class="o">=</span> <span class="mf">7.075e-6</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">K_w</span> <span class="o">=</span> <span class="mf">4.464e-5</span>
+        <span class="n">Pi_star_w</span> <span class="o">=</span> <span class="n">K_w</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">delta_w_star</span>
+
+        <span class="c1"># Determine directivity function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 8</span>
+        <span class="n">D_w</span> <span class="o">=</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Determine spectral distribution function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 10-11-12</span>
+        <span class="n">S_w</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">delta_w_star</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_delta_wing</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">F_w</span> <span class="o">=</span> <span class="mf">0.613</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_w</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.35</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_delta_wing</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">F_w</span> <span class="o">=</span> <span class="mf">0.485</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_w</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid delta-wing flag configuration specified. Specify: 0/1.'</span><span class="p">)</span>
+
+        <span class="c1"># Determine msap</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1</span>
+        <span class="n">r_s_star_af</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">r_0</span><span class="o">/</span><span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span>
+        <span class="n">msap_w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r_s_star_af</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Pi_star_w</span> <span class="o">*</span> <span class="n">D_w</span> <span class="o">*</span> <span class="n">F_w</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">msap_w</span></div>
+
+<div class="viewcode-block" id="Airframe.trailing_edge_horizontal_tail"><a class="viewcode-back" href="../airframe.html#airframe.Airframe.trailing_edge_horizontal_tail">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">trailing_edge_horizontal_tail</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">M_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">c_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">rho_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute horizontal tail trailing edge mean-square acoustic pressure (msap).</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Dict[str, Any]</span>
+<span class="sd">        :param ac: aircraft parameters</span>
+<span class="sd">        :type ac: Dict[str, Any]</span>
+<span class="sd">        :param M_0: ambient Mach number [-]</span>
+<span class="sd">        :type M_0: np.float64</span>
+<span class="sd">        :param c_0: ambient speed of sound [m/s]</span>
+<span class="sd">        :type c_0: np.float64</span>
+<span class="sd">        :param rho_0: ambient density [kg/m3]</span>
+<span class="sd">        :type rho_0: np.float64</span>
+<span class="sd">        :param mu_0: ambient dynamic viscosity [kg/m/s]</span>
+<span class="sd">        :type mu_0: np.float64</span>
+<span class="sd">        :param theta: polar directivity angle [deg]</span>
+<span class="sd">        :type theta: np.float64</span>
+<span class="sd">        :param phi: azimuthal directivity angle [deg]</span>
+<span class="sd">        :type phi: np.float64</span>
+<span class="sd">        :param freq: 1/3rd octave frequency [Hz]</span>
+<span class="sd">        :type freq: np.ndarray [settings.N_f]</span>
+
+<span class="sd">        :return: msap_h</span>
+<span class="sd">        :rtype: np.ndarray [settings.N_f]</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># ---------------- Horizontal tail trailing-edge noise ----------------</span>
+        <span class="c1"># Trailing edge noise of the horizontal tail</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 5</span>
+        <span class="n">delta_h_star</span> <span class="o">=</span> <span class="mf">0.37</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_S_h</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_h</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho_0</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_S_h</span> <span class="o">/</span> <span class="p">(</span><span class="n">mu_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_h</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="c1"># Determine configuration constant and the sound power</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 7</span>
+        <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_clean_h</span><span class="p">:</span>
+            <span class="n">K_h</span> <span class="o">=</span> <span class="mf">7.075e-6</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">K_h</span> <span class="o">=</span> <span class="mf">4.464e-5</span>
+        <span class="n">Pi_star_h</span> <span class="o">=</span> <span class="n">K_h</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">delta_h_star</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_b_h</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Determine the directivity function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 8</span>
+        <span class="n">D_h</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Determine spectral distribution function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 10-11-12</span>
+        <span class="n">S_h</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">delta_h_star</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_h</span> <span class="o">/</span> <span class="p">(</span><span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span>
+        <span class="n">F_h</span> <span class="o">=</span> <span class="mf">0.485</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_h</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_h</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+
+        <span class="c1"># Determine msap</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1</span>
+        <span class="n">r_s_star_af</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">r_0</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span>
+        <span class="n">msap_h</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r_s_star_af</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Pi_star_h</span> <span class="o">*</span> <span class="n">D_h</span> <span class="o">*</span> <span class="n">F_h</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">msap_h</span></div>
+
+<div class="viewcode-block" id="Airframe.trailing_edge_vertical_tail"><a class="viewcode-back" href="../airframe.html#airframe.Airframe.trailing_edge_vertical_tail">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">trailing_edge_vertical_tail</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">M_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">c_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">rho_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute vertical tail trailing edge mean-square acoustic pressure (msap).</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Dict[str, Any]</span>
+<span class="sd">        :param ac: aircraft parameters</span>
+<span class="sd">        :type ac: Dict[str, Any]</span>
+<span class="sd">        :param M_0: ambient Mach number [-]</span>
+<span class="sd">        :type M_0: np.float64</span>
+<span class="sd">        :param c_0: ambient speed of sound [m/s]</span>
+<span class="sd">        :type c_0: np.float64</span>
+<span class="sd">        :param rho_0: ambient density [kg/m3]</span>
+<span class="sd">        :type rho_0: np.float64</span>
+<span class="sd">        :param mu_0: ambient dynamic viscosity [kg/m/s]</span>
+<span class="sd">        :type mu_0: np.float64</span>
+<span class="sd">        :param theta: polar directivity angle [deg]</span>
+<span class="sd">        :type theta: np.float64</span>
+<span class="sd">        :param phi: azimuthal directivity angle [deg]</span>
+<span class="sd">        :type phi: np.float64</span>
+<span class="sd">        :param freq: 1/3rd octave frequency [Hz]</span>
+<span class="sd">        :type freq: np.ndarray [settings.N_f]</span>
+
+<span class="sd">        :return: msap_h</span>
+<span class="sd">        :rtype: np.ndarray [settings.N_f]</span>
+<span class="sd">        """</span>
+
+        <span class="c1">### ---------------- Vertical tail trailing-edge noise ----------------</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 5</span>
+        <span class="n">delta_v_star</span> <span class="o">=</span> <span class="mf">0.37</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_S_v</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_v</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho_0</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_S_v</span> <span class="o">/</span> <span class="p">(</span><span class="n">mu_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_v</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="c1"># Trailing edge noise of the vertical tail</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 7</span>
+        <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_clean_v</span><span class="p">:</span>
+            <span class="n">K_v</span> <span class="o">=</span> <span class="mf">7.075e-6</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">K_v</span> <span class="o">=</span> <span class="mf">4.464e-5</span>
+        <span class="n">Pi_star_v</span> <span class="o">=</span> <span class="n">K_v</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">delta_v_star</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_b_v</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Determine directivity function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 8</span>
+        <span class="n">D_v</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Determine spectral distribution function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 10-11-12</span>
+        <span class="n">S_v</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">delta_v_star</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_v</span> <span class="o">/</span> <span class="p">(</span><span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_delta_wing</span><span class="p">:</span>
+            <span class="n">F_v</span> <span class="o">=</span> <span class="mf">0.613</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_v</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_v</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.35</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">F_v</span> <span class="o">=</span> <span class="mf">0.485</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_v</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_v</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.35</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+
+        <span class="c1"># Determine msap</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1</span>
+        <span class="n">r_s_star_af</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">r_0</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span>
+        <span class="n">msap_v</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r_s_star_af</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Pi_star_v</span> <span class="o">*</span> <span class="n">D_v</span> <span class="o">*</span> <span class="n">F_v</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">msap_v</span></div>
+
+<div class="viewcode-block" id="Airframe.leading_edge_slat"><a class="viewcode-back" href="../airframe.html#airframe.Airframe.leading_edge_slat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">leading_edge_slat</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">M_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">c_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">rho_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute leading-edge slat mean-square acoustic pressure (msap).</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Dict[str, Any]</span>
+<span class="sd">        :param ac: aircraft parameters</span>
+<span class="sd">        :type ac: Dict[str, Any]</span>
+<span class="sd">        :param M_0: ambient Mach number [-]</span>
+<span class="sd">        :type M_0: np.float64</span>
+<span class="sd">        :param c_0: ambient speed of sound [m/s]</span>
+<span class="sd">        :type c_0: np.float64</span>
+<span class="sd">        :param rho_0: ambient density [kg/m3]</span>
+<span class="sd">        :type rho_0: np.float64</span>
+<span class="sd">        :param mu_0: ambient dynamic viscosity [kg/m/s]</span>
+<span class="sd">        :type mu_0: np.float64</span>
+<span class="sd">        :param theta: polar directivity angle [deg]</span>
+<span class="sd">        :type theta: np.float64</span>
+<span class="sd">        :param phi: azimuthal directivity angle [deg]</span>
+<span class="sd">        :type phi: np.float64</span>
+<span class="sd">        :param freq: 1/3rd octave frequency [Hz]</span>
+<span class="sd">        :type freq: np.ndarray [settings.N_f]</span>
+
+<span class="sd">        :return: msap_les</span>
+<span class="sd">        :rtype: np.ndarray [settings.N_f]</span>
+<span class="sd">        """</span>
+
+        <span class="c1">### ---------------- Slat noise ----------------</span>
+        <span class="n">delta_w_star</span> <span class="o">=</span> <span class="mf">0.37</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_S_w</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho_0</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_S_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">mu_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="c1"># Noise power</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 4</span>
+        <span class="n">Pi_star_les1</span> <span class="o">=</span> <span class="mf">4.464e-5</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">delta_w_star</span>  <span class="c1"># Slat noise</span>
+        <span class="n">Pi_star_les2</span> <span class="o">=</span> <span class="mf">4.464e-5</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">delta_w_star</span>  <span class="c1"># Added trailing edge noise</span>
+        <span class="c1"># Determine the directivity function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 8</span>
+        <span class="n">D_les</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="c1"># Determine spectral distribution function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 10-12-13</span>
+        <span class="n">S_les</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">delta_w_star</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span>
+        <span class="n">F_les1</span> <span class="o">=</span> <span class="mf">0.613</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">S_les</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="mf">10.</span> <span class="o">*</span> <span class="n">S_les</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">F_les2</span> <span class="o">=</span> <span class="mf">0.613</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.19</span> <span class="o">*</span> <span class="n">S_les</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">((</span><span class="mf">2.19</span> <span class="o">*</span> <span class="n">S_les</span><span class="p">)</span> <span class="o">**</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="c1"># Calculate msap</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1</span>
+        <span class="n">r_s_star_af</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">r_0</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span>
+        <span class="n">msap_les</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r_s_star_af</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Pi_star_les1</span> <span class="o">*</span> <span class="n">D_les</span> <span class="o">*</span> <span class="n">F_les1</span> <span class="o">+</span> <span class="n">Pi_star_les2</span> <span class="o">*</span> <span class="n">D_les</span> <span class="o">*</span> <span class="n">F_les2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">msap_les</span></div>
+
+<div class="viewcode-block" id="Airframe.trailing_edge_flap"><a class="viewcode-back" href="../airframe.html#airframe.Airframe.trailing_edge_flap">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">trailing_edge_flap</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">M_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">c_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta_flaps</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute trailing-edge flap mean-square acoustic pressure (msap).</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Dict[str, Any]</span>
+<span class="sd">        :param ac: aircraft parameters</span>
+<span class="sd">        :type ac: Dict[str, Any]</span>
+<span class="sd">        :param M_0: ambient Mach number [-]</span>
+<span class="sd">        :type M_0: np.float64</span>
+<span class="sd">        :param c_0: ambient speed of sound [m/s]</span>
+<span class="sd">        :type c_0: np.float64</span>
+<span class="sd">        :param theta: polar directivity angle [deg]</span>
+<span class="sd">        :type theta: np.float64</span>
+<span class="sd">        :param phi: azimuthal directivity angle [deg]</span>
+<span class="sd">        :type phi: np.float64</span>
+<span class="sd">        :param theta_flaps: flap deflection angle [deg]</span>
+<span class="sd">        :type theta_flaps: np.float64</span>
+<span class="sd">        :param freq: 1/3rd octave frequency [Hz]</span>
+<span class="sd">        :type freq: np.ndarray [settings.N_f]</span>
+
+<span class="sd">        :return: msap_tef</span>
+<span class="sd">        :rtype: np.ndarray [settings.N_f]</span>
+<span class="sd">        """</span>
+        <span class="c1">### ---------------- Flap noise ----------------</span>
+        <span class="c1"># Calculate noise power</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 14-15</span>
+        <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_s</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">Pi_star_tef</span> <span class="o">=</span> <span class="mf">2.787e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_S_f</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_flaps</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_s</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">Pi_star_tef</span> <span class="o">=</span> <span class="mf">3.509e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_S_f</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_flaps</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid number of flaps specified. No model available.'</span><span class="p">)</span>
+
+        <span class="c1"># Calculation of the directivity function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 16</span>
+        <span class="n">D_tef</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_flaps</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span>
+            <span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_flaps</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+            <span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Strouhal number</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 19</span>
+        <span class="n">S_tef</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_S_f</span> <span class="o">/</span> <span class="p">(</span><span class="n">M_0</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_f</span> <span class="o">*</span> <span class="n">c_0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span>
+        <span class="c1"># Calculation of the spectral function</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 17-18</span>
+        <span class="c1"># if ac.af_s &lt; 3:</span>
+        <span class="c1">#     if S_tef &lt; 2:</span>
+        <span class="c1">#         F_tef = 0.0480 * S_tef</span>
+        <span class="c1">#     elif 2 &lt;= S_tef &lt;= 20:</span>
+        <span class="c1">#         F_tef = 0.1406 * S_tef ** (-0.55)</span>
+        <span class="c1">#     else:</span>
+        <span class="c1">#         F_tef = 216.49 * S_tef ** (-3)</span>
+        <span class="c1"># elif ac.af_s == 3:</span>
+        <span class="c1">#     if S_tef &lt; 2:</span>
+        <span class="c1">#         F_tef = 0.0257 * S_tef</span>
+        <span class="c1">#     elif 2 &lt;= S_tef &lt;= 75:</span>
+        <span class="c1">#         F_tef = 0.0536 * S_tef ** (-0.0625)</span>
+        <span class="c1">#     else:</span>
+        <span class="c1">#         F_tef = 17078 * S_tef ** (-3)</span>
+        <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_s</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">F_tef</span> <span class="o">=</span> <span class="mf">216.49</span> <span class="o">*</span> <span class="n">S_tef</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">F_tef</span><span class="p">[</span><span class="n">S_tef</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0480</span> <span class="o">*</span> <span class="n">S_tef</span><span class="p">)[</span><span class="n">S_tef</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">F_tef</span><span class="p">[(</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">S_tef</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">S_tef</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1406</span> <span class="o">*</span> <span class="n">S_tef</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.55</span><span class="p">))[(</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">S_tef</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">S_tef</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_s</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">F_tef</span> <span class="o">=</span> <span class="mi">17078</span> <span class="o">*</span> <span class="n">S_tef</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">F_tef</span><span class="p">[</span><span class="n">S_tef</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0257</span> <span class="o">*</span> <span class="n">S_tef</span><span class="p">)[</span><span class="n">S_tef</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">F_tef</span><span class="p">[(</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">S_tef</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">S_tef</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0536</span> <span class="o">*</span> <span class="n">S_tef</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.0625</span><span class="p">))[(</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">S_tef</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">S_tef</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid number of flaps specified. No model available.'</span><span class="p">)</span>
+
+        <span class="c1"># Calculate msap</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1</span>
+        <span class="n">r_s_star_af</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">r_0</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span>
+        <span class="n">msap_tef</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r_s_star_af</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Pi_star_tef</span> <span class="o">*</span> <span class="n">D_tef</span> <span class="o">*</span> <span class="n">F_tef</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">msap_tef</span></div>
+
+<div class="viewcode-block" id="Airframe.landing_gear"><a class="viewcode-back" href="../airframe.html#airframe.Airframe.landing_gear">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">landing_gear</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">M_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">c_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">I_landing_gear</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute landing gear mean-square acoustic pressure (msap)</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Dict[str, Any]</span>
+<span class="sd">        :param ac: aircraft parameters</span>
+<span class="sd">        :type ac: Dict[str, Any]</span>
+<span class="sd">        :param M_0: ambient Mach number [-]</span>
+<span class="sd">        :type M_0: np.float64</span>
+<span class="sd">        :param c_0: ambient speed of sound [m/s]</span>
+<span class="sd">        :type c_0: np.float64</span>
+<span class="sd">        :param theta: polar directivity angle [deg]</span>
+<span class="sd">        :type theta: np.float64</span>
+<span class="sd">        :param phi: azimuthal directivity angle [deg]</span>
+<span class="sd">        :type phi: np.float64</span>
+<span class="sd">        :param I_landing_gear: landing gear deflection (0/1) [-]</span>
+<span class="sd">        :type I_landing_gear: np.int64</span>
+<span class="sd">        :param freq: 1/3rd octave frequency [Hz]</span>
+<span class="sd">        :type freq: np.ndarray [settings.N_f]</span>
+
+<span class="sd">        :return: msap_lg</span>
+<span class="sd">        :rtype: np.ndarray [settings.N_f]</span>
+<span class="sd">        """</span>
+
+        <span class="c1">### ---------------- Landing-gear noise ----------------</span>
+        <span class="k">if</span> <span class="n">I_landing_gear</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Calculate nose-gear noise</span>
+            <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 29</span>
+            <span class="n">S_ng</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_d_ng</span> <span class="o">/</span> <span class="p">(</span><span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span>
+            <span class="c1"># Calculate noise power and spectral distribution function</span>
+            <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 20-21-22-25-26-27-28</span>
+            <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_ng</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_ng</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">Pi_star_ng_w</span> <span class="o">=</span> <span class="mf">4.349e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_ng</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="n">Pi_star_ng_s</span> <span class="o">=</span> <span class="mf">2.753e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_l_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_d_ng</span><span class="p">)</span>
+                <span class="n">F_ng_w</span> <span class="o">=</span> <span class="mf">13.59</span> <span class="o">*</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">12.5</span> <span class="o">+</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.25</span><span class="p">)</span>
+                <span class="n">F_ng_s</span> <span class="o">=</span> <span class="mf">5.32</span> <span class="o">*</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">30</span> <span class="o">+</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">8</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_ng</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">Pi_star_ng_w</span> <span class="o">=</span> <span class="mf">3.414</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_ng</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="n">Pi_star_ng_s</span> <span class="o">=</span> <span class="mf">2.753e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_l_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_d_ng</span><span class="p">)</span>
+                <span class="n">F_ng_w</span> <span class="o">=</span> <span class="mf">0.0577</span> <span class="o">*</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">)</span>
+                <span class="n">F_ng_s</span> <span class="o">=</span> <span class="mf">1.28</span> <span class="o">*</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.06</span> <span class="o">+</span> <span class="n">S_ng</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid number of nose landing gear systems. Specify 1/2/4.'</span><span class="p">)</span>
+
+            <span class="c1"># Calculate main-gear noise</span>
+            <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 29</span>
+            <span class="n">S_mg</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_d_mg</span> <span class="o">/</span> <span class="p">(</span><span class="n">M_0</span> <span class="o">*</span> <span class="n">c_0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span>
+            <span class="c1"># Calculate noise power and spectral distribution function</span>
+            <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 20-21-22-25-26-27-28</span>
+            <span class="k">if</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_mg</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_mg</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">Pi_star_mg_w</span> <span class="o">=</span> <span class="mf">4.349e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_mg</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_mg</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="n">Pi_star_mg_s</span> <span class="o">=</span> <span class="mf">2.753e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_mg</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_l_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_d_mg</span><span class="p">)</span>
+                <span class="n">F_mg_w</span> <span class="o">=</span> <span class="mf">13.59</span> <span class="o">*</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">12.5</span> <span class="o">+</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.25</span><span class="p">)</span>
+                <span class="n">F_mg_s</span> <span class="o">=</span> <span class="mf">5.32</span> <span class="o">*</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">30</span> <span class="o">+</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">8</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_mg</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">Pi_star_mg_w</span> <span class="o">=</span> <span class="mf">3.414e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_n_mg</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_mg</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="n">Pi_star_mg_s</span> <span class="o">=</span> <span class="mf">2.753e-4</span> <span class="o">*</span> <span class="n">M_0</span> <span class="o">**</span> <span class="mi">6</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_d_mg</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">af_l_ng</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_d_mg</span><span class="p">)</span>
+                <span class="n">F_mg_w</span> <span class="o">=</span> <span class="mf">0.0577</span> <span class="o">*</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">)</span>
+                <span class="n">F_mg_s</span> <span class="o">=</span> <span class="mf">1.28</span> <span class="o">*</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.06</span> <span class="o">+</span> <span class="n">S_mg</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid number of main landing gear systems. Specify 1/2/4.'</span><span class="p">)</span>
+
+            <span class="c1"># Directivity function</span>
+            <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 23-24</span>
+            <span class="n">D_w</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="n">D_s</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="c1"># Calculate msap</span>
+            <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1</span>
+            <span class="c1"># If landing gear is down</span>
+            <span class="n">r_s_star_af</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">r_0</span> <span class="o">/</span> <span class="n">ac</span><span class="o">.</span><span class="n">af_b_w</span>
+            <span class="n">msap_lg</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r_s_star_af</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">M_0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">))</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span>
+                                  <span class="n">ac</span><span class="o">.</span><span class="n">af_N_ng</span> <span class="o">*</span> <span class="p">(</span><span class="n">Pi_star_ng_w</span> <span class="o">*</span> <span class="n">F_ng_w</span> <span class="o">*</span> <span class="n">D_w</span> <span class="o">+</span> <span class="n">Pi_star_ng_s</span> <span class="o">*</span> <span class="n">F_ng_s</span> <span class="o">*</span> <span class="n">D_s</span><span class="p">)</span> <span class="o">+</span>
+                                  <span class="n">ac</span><span class="o">.</span><span class="n">af_N_mg</span> <span class="o">*</span> <span class="p">(</span><span class="n">Pi_star_mg_w</span> <span class="o">*</span> <span class="n">F_mg_w</span> <span class="o">*</span> <span class="n">D_w</span> <span class="o">+</span> <span class="n">Pi_star_mg_s</span> <span class="o">*</span> <span class="n">F_mg_s</span> <span class="o">*</span> <span class="n">D_s</span><span class="p">))</span>
+
+        <span class="c1"># If landing gear is up</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msap_lg</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">theta</span><span class="o">**</span><span class="mi">0</span> <span class="o">*</span> <span class="n">phi</span><span class="o">**</span><span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">msap_lg</span></div>
+
+<div class="viewcode-block" id="Airframe.airframe"><a class="viewcode-back" href="../airframe.html#airframe.Airframe.airframe">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">airframe</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">default_vector</span><span class="o">.</span><span class="n">DefaultVector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute airframe noise mean-square acoustic pressure (msap).</span>
+
+<span class="sd">        :param source: pyNA component computing noise sources</span>
+<span class="sd">		:type source: Source</span>
+<span class="sd">        :param inputs: unscaled, dimensional input variables read via inputs[key]</span>
+<span class="sd">        :type inputs: openmdao.vectors.default_vector.DefaultVector</span>
+
+<span class="sd">        :return: msap_af</span>
+<span class="sd">        :rtype: np.ndarray [n_t, settings.N_f]</span>
+<span class="sd">        """</span>
+        <span class="c1"># Load options</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'settings'</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span>
+        <span class="n">ac</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'ac'</span><span class="p">]</span>
+        <span class="n">n_t</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'n_t'</span><span class="p">]</span>
+
+        <span class="c1"># Extract inputs</span>
+        <span class="n">theta_flaps</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'theta_flaps'</span><span class="p">]</span>
+        <span class="n">I_landing_gear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">'I_landing_gear'</span><span class="p">])</span>
+        <span class="n">M_0</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'M_0'</span><span class="p">]</span>
+        <span class="n">c_0</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'c_0'</span><span class="p">]</span>
+        <span class="n">rho_0</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'rho_0'</span><span class="p">]</span>
+        <span class="n">mu_0</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">'mu_0'</span><span class="p">]</span>
+
+        <span class="c1"># Initialize solution</span>
+        <span class="n">msap_af</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_t</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">))</span>
+
+        <span class="c1"># Compute airframe</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_t</span><span class="p">):</span>
+
+            <span class="c1"># Calculate msap when the aircraft is not at standstill</span>
+            <span class="k">if</span> <span class="n">M_0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="c1"># Apply HSR-era airframe calibration levels</span>
+                <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">hsr_calibration</span><span class="p">:</span>
+                    <span class="c1"># Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)</span>
+                    <span class="n">supp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">supp_af_f</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">,</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">supp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+
+                <span class="c1"># Add airframe noise components</span>
+                <span class="n">msap_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">'wing'</span> <span class="ow">in</span> <span class="n">ac</span><span class="o">.</span><span class="n">comp_lst</span><span class="p">:</span>
+                    <span class="n">msap_w</span> <span class="o">=</span> <span class="n">Airframe</span><span class="o">.</span><span class="n">trailing_edge_wing</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">M_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rho_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mu_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+                    <span class="n">msap_j</span> <span class="o">=</span> <span class="n">msap_j</span> <span class="o">+</span> <span class="n">msap_w</span> <span class="o">*</span> <span class="n">supp</span>
+                <span class="k">if</span> <span class="s1">'tail_v'</span> <span class="ow">in</span> <span class="n">ac</span><span class="o">.</span><span class="n">comp_lst</span><span class="p">:</span>
+                    <span class="n">msap_v</span> <span class="o">=</span> <span class="n">Airframe</span><span class="o">.</span><span class="n">trailing_edge_vertical_tail</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">M_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rho_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mu_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+                    <span class="n">msap_j</span> <span class="o">=</span> <span class="n">msap_j</span> <span class="o">+</span> <span class="n">msap_v</span> <span class="o">*</span> <span class="n">supp</span>
+                <span class="k">if</span> <span class="s1">'tail_h'</span> <span class="ow">in</span> <span class="n">ac</span><span class="o">.</span><span class="n">comp_lst</span><span class="p">:</span>
+                    <span class="n">msap_h</span> <span class="o">=</span> <span class="n">Airframe</span><span class="o">.</span><span class="n">trailing_edge_horizontal_tail</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">M_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rho_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mu_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+                    <span class="n">msap_j</span> <span class="o">=</span> <span class="n">msap_j</span> <span class="o">+</span> <span class="n">msap_h</span> <span class="o">*</span> <span class="n">supp</span>
+                <span class="k">if</span> <span class="s1">'les'</span> <span class="ow">in</span> <span class="n">ac</span><span class="o">.</span><span class="n">comp_lst</span><span class="p">:</span>
+                    <span class="n">msap_les</span> <span class="o">=</span> <span class="n">Airframe</span><span class="o">.</span><span class="n">leading_edge_slat</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">M_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rho_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mu_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+                    <span class="n">msap_j</span> <span class="o">=</span> <span class="n">msap_j</span> <span class="o">+</span> <span class="n">msap_les</span> <span class="o">*</span> <span class="n">supp</span>
+                <span class="k">if</span> <span class="s1">'tef'</span> <span class="ow">in</span> <span class="n">ac</span><span class="o">.</span><span class="n">comp_lst</span><span class="p">:</span>
+                    <span class="n">msap_tef</span> <span class="o">=</span> <span class="n">Airframe</span><span class="o">.</span><span class="n">trailing_edge_flap</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">M_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta_flaps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+                    <span class="n">msap_j</span> <span class="o">=</span> <span class="n">msap_j</span> <span class="o">+</span> <span class="n">msap_tef</span> <span class="o">*</span> <span class="n">supp</span>
+                <span class="k">if</span> <span class="s1">'lg'</span> <span class="ow">in</span> <span class="n">ac</span><span class="o">.</span><span class="n">comp_lst</span><span class="p">:</span>
+                    <span class="n">msap_lg</span> <span class="o">=</span> <span class="n">Airframe</span><span class="o">.</span><span class="n">landing_gear</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">M_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c_0</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">I_landing_gear</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+                    <span class="n">msap_j</span> <span class="o">=</span> <span class="n">msap_j</span> <span class="o">+</span> <span class="n">msap_lg</span> <span class="o">*</span> <span class="n">supp</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msap_j</span> <span class="o">=</span> <span class="mf">1e-99</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span> <span class="o">*</span> <span class="n">theta_flaps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">0</span>
+
+            <span class="c1"># Normalize msap by reference pressure</span>
+            <span class="n">msap_af</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">msap_j</span> <span class="o">/</span> <span class="n">settings</span><span class="o">.</span><span class="n">p_ref</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">msap_af</span></div></div>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

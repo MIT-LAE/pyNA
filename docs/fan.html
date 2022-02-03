@@ -1,0 +1,570 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="geometry" href="geometry.html" /><link rel="prev" title="epnl" href="epnl.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>fan - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="fan">
+<h1>fan<a class="headerlink" href="#fan" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-fan">
+<span id="class-description"></span><h2>class description<a class="headerlink" href="#module-fan" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="fan.Fan">
+<em class="property">class </em><code class="sig-prename descclassname">fan.</code><code class="sig-name descname">Fan</code><a class="reference internal" href="_modules/fan.html#Fan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="fan.Fan.calculate_cutoff">
+<em class="property">static </em><code class="sig-name descname">calculate_cutoff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">M_tip_tan</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">B_fan</span><span class="p">:</span> <span class="n">numpy.int64</span></em>, <em class="sig-param"><span class="n">V_fan</span><span class="p">:</span> <span class="n">numpy.int64</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/fan.html#Fan.calculate_cutoff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.calculate_cutoff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute if the fan is in cut-off condition (0/1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>M_tip_tan</strong> (<em>np.float64</em>) – tangential (i.e., radius*omega) tip Mach number [-]</p></li>
+<li><p><strong>B_fan</strong> (<em>np.int64</em>) – fan blade number [-]</p></li>
+<li><p><strong>V_fan</strong> (<em>np.int64</em>) – fan vane number [-]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>i_cut</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.int64</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="fan.Fan.calculate_harmonics">
+<em class="property">static </em><code class="sig-name descname">calculate_harmonics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">tonlv_I</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">tonlv_X</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">i_cut</span><span class="p">:</span> <span class="n">numpy.int64</span></em>, <em class="sig-param"><span class="n">M_tip</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">bpf</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">comp</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> → Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="_modules/fan.html#Fan.calculate_harmonics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.calculate_harmonics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute fan tone harmonics for inlet (dp) and discharge (dpx).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>freq</strong> (<em>np.float64</em>) – 1/3rd octave frequency bands [Hz]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>tonlv_I</strong> (<em>np.float64</em>) – inlet tone level [-]</p></li>
+<li><p><strong>tonlv_X</strong> (<em>np.float64</em>) – discharge tone level [-]</p></li>
+<li><p><strong>i_cut</strong> (<em>np.int64</em>) – cut-off parameter (0/1)</p></li>
+<li><p><strong>M_tip</strong> (<em>np.float64</em>) – relative (i.e., helical) tip Mach number [-]</p></li>
+<li><p><strong>bpf</strong> – blade pass frequency</p></li>
+<li><p><strong>comp</strong> (<em>str</em>) – fan component (fan_inlet / fan_discharge)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dp, dpx</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [settings.N_f], np.ndarray [settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="fan.Fan.combination_tones">
+<em class="property">static </em><code class="sig-name descname">combination_tones</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">freq</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_tip</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">bpf</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">tsqem</span><span class="p">:</span> <span class="n">numpy.float64</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/fan.html#Fan.combination_tones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.combination_tones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the combination tone component of the fan mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>freq</strong> (<em>np.float64</em>) – 1/3rd octave frequency bands [Hz]</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>M_tip</strong> (<em>np.float64</em>) – relative (i.e., helical) tip Mach number [-]</p></li>
+<li><p><strong>bpf</strong> (<em>np.float64</em>) – blade pass frequency</p></li>
+<li><p><strong>tsqem</strong> (<em>np.float64</em>) – tone temperature-flow power base term [-]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dcp</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="fan.Fan.discharge_broadband">
+<em class="property">static </em><code class="sig-name descname">discharge_broadband</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_tip</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">tsqem</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_d_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">RSS_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/fan.html#Fan.discharge_broadband"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.discharge_broadband" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the broadband component of the fan discharge mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>M_tip</strong> (<em>np.float64</em>) – relative (i.e., helical) tip Mach number [-]</p></li>
+<li><p><strong>tsqem</strong> (<em>np.float64</em>) – broadband temperature-flow power base term [-]</p></li>
+<li><p><strong>M_d_fan</strong> (<em>np.float64</em>) – fan rotor relative tip Mach number at design [-]</p></li>
+<li><p><strong>RSS_fan</strong> (<em>np.float64</em>) – fan rotor-stator spacing [%]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>bblv_D</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="fan.Fan.discharge_tones">
+<em class="property">static </em><code class="sig-name descname">discharge_tones</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_tip</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">tsqem</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_d_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">RSS_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/fan.html#Fan.discharge_tones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.discharge_tones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the tone component of the fan discharge mean-square acoustic pressure (msap)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>M_tip</strong> (<em>np.float64</em>) – relative (i.e., helical) tip Mach number [-]</p></li>
+<li><p><strong>tsqem</strong> (<em>np.float64</em>) – broadband temperature-flow power base term [-]</p></li>
+<li><p><strong>M_d_fan</strong> (<em>np.float64</em>) – fan rotor relative tip Mach number at design [-]</p></li>
+<li><p><strong>RSS_fan</strong> – fan rotor-stator spacing [%]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tonlv_X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="fan.Fan.fan">
+<em class="property">static </em><code class="sig-name descname">fan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">theta</span></em>, <em class="sig-param"><span class="n">shield</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao.vectors.default_vector.DefaultVector</span></em>, <em class="sig-param"><span class="n">comp</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="_modules/fan.html#Fan.fan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.fan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates fan noise mean-square acoustic pressure (msap) using Berton’s implementation of the fan noise method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – pyNA component computing noise sources
+:type source: Source</p></li>
+<li><p><strong>inputs</strong> (<em>openmdao.vectors.default_vector.DefaultVector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
+<li><p><strong>comp</strong> (<em>str</em>) – fan component (fan_inlet / fan_discharge)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>msap_fan</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray [n_t, settings.N_f]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="fan.Fan.inlet_broadband">
+<em class="property">static </em><code class="sig-name descname">inlet_broadband</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_tip</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">tsqem</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_d_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">RSS_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/fan.html#Fan.inlet_broadband"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.inlet_broadband" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the broadband component of the fan inlet mean-square acoustic pressure (msap).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings.</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>M_tip</strong> (<em>np.float64</em>) – relative (i.e., helical) tip Mach number [-]</p></li>
+<li><p><strong>tsqem</strong> (<em>np.float64</em>) – broadband temperature-flow power base term [-]</p></li>
+<li><p><strong>M_d_fan</strong> (<em>np.float64</em>) – fan rotor relative tip Mach number at design [-]</p></li>
+<li><p><strong>RSS_fan</strong> (<em>np.float64</em>) – fan rotor-stator spacing [%]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>bblv_I</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="fan.Fan.inlet_tones">
+<em class="property">static </em><code class="sig-name descname">inlet_tones</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_tip</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">tsqem</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">M_d_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em>, <em class="sig-param"><span class="n">RSS_fan</span><span class="p">:</span> <span class="n">numpy.float64</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/fan.html#Fan.inlet_tones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fan.Fan.inlet_tones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the tone component of the fan inlet mean-square acoustic pressure (msap)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – pyna settings</p></li>
+<li><p><strong>theta</strong> (<em>np.float64</em>) – polar directivity angle [deg]</p></li>
+<li><p><strong>M_tip</strong> (<em>np.float64</em>) – relative (i.e., helical) tip Mach number [-]</p></li>
+<li><p><strong>tsqem</strong> (<em>np.float64</em>) – tone temperature-flow power base term [-]</p></li>
+<li><p><strong>M_d_fan</strong> (<em>np.float64</em>) – fan rotor relative tip Mach number at design [-]</p></li>
+<li><p><strong>RSS_fan</strong> – fan rotor-stator spacing [%]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tonlv_I</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="theory">
+<h2>theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>The Heidmann method with GEAE revision is used to assess the single-stage fan broadband noise. Single-stage fan rotor-stator interaction tones are assessed using the Heidmann method with the Allied Signal revision. The aforementioned methods distinguish between forward radiated noise (i.e. inlet noise) and rearward radiated noise (i.e. discharge noise), resulting in 4 noise components to be estimated: inlet broadband, inlet tones, discharge broadband and discharge tones. The broadband level, bblv, and tone level, tonlv, of these components is computed using:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+bblv_{comp} =&amp; \ T + F_1 + F_2 + F_3 + C + F_{\textrm{freq}}\\
+tonlv_{comp} =&amp; \ T + F_1 + F_2 + F_3 + C \\
+\end{aligned}\end{split}\]</div></div>
+<p>where the term, <span class="math notranslate nohighlight">\(T\)</span>, accounting for the effects of fan temperature rise, fan mass flow as well as the Doppler effect (<span class="math notranslate nohighlight">\((1-M_0 cos\theta)\)</span>), is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[T = 10\log_{10} \left[ \frac{1}{\rho_{sl}^2 c_{sl}^4} \frac{(1.8 \Delta T_{fan}^* T_0)^2}{(r_s^*)^2} \frac{(2.20462\ \dot{m}^* \rho_0 c_0 A_e)}{(1 - M_0 \cos \theta )^4 } \right]\]</div></div>
+<p>The tip Mach number correction term, <span class="math notranslate nohighlight">\(F_{1}\)</span>, the rotor-stator spacing correction term, <span class="math notranslate nohighlight">\(F_{2}\)</span>, the polar directivity correction term, <span class="math notranslate nohighlight">\(F_{3}:math:\)</span>, the inlet guide vane correction term, <span class="math notranslate nohighlight">\(C\)</span>, and the broadband frequency dependent term, <span class="math notranslate nohighlight">\(F_{\textrm{freq}}\)</span>, are defined for the different noise components in the following sections. The tip Mach number <span class="math notranslate nohighlight">\(M_{tip} = \sqrt{ M_{flow}^2 + M_{tip,tan}^2}\)</span> where <span class="math notranslate nohighlight">\(M_{flow} = \frac{\dot{m}^*}{A^*}\)</span> and <span class="math notranslate nohighlight">\(M_{tip,tan} = \pi N^*\)</span>. Note that the coefficients in the equation above are used for changes of units of the temperature and mass flow terms (1.8 to transform from K to R and 2.20462 from kg/s to lbm/s).</p>
+<div class="section" id="inlet-broadband-ib-noise-component">
+<h3>Inlet broadband (IB) noise component<a class="headerlink" href="#inlet-broadband-ib-noise-component" title="Permalink to this headline">¶</a></h3>
+<p>The tip Mach number dependent term for the inlet broadband noise component is defined by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}F_{1,IB} =
+\begin{cases}
+58.5 &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} \leq 0.9$} \\
+58.5 - 50 \log_{10} \left(\frac{M_{tip}}{0.9}\right) &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} &gt; 0.9$}\\
+58.5 + 20 \log_{10} \left(\frac{M_{tip,des}}{0.9}\right) &amp; \textrm{if $M_{tip,des} &gt; 1$ and $M_{tip} \leq 0.9$}\\
+58.5 + 20 \log_{10} \left(\frac{M_{tip,des}}{0.9}\right) - 50\log_{10}\left(\frac{M_{tip}}{0.9}\right) &amp; \textrm{if $M_{tip,des} &gt; 1$ and $M_{tip} &gt; 0.9$}\\
+\end{cases}\end{split}\]</div></div>
+<p>The rotor-stator spacing correction term for inlet broadband noise <span class="math notranslate nohighlight">\(F_{3,IB} = 0\)</span>. The <span class="math notranslate nohighlight">\(\theta\)</span>-correction term, <span class="math notranslate nohighlight">\(F_{3,IB}\)</span>, is tabulated online. The inlet guide vane correction term C = 0dB. The spectral distribution function for fan inlet noise is given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[F_{\textrm{freq, inlet}} = 10 \log_{10} \left[ \exp \left[ -0.5 \left(\frac{\log \frac{f}{2.5f_b}}{\log 2.2} \right)^2 \right] \right] = -3.49299 \left(\log \frac{f}{2.5 f_b} \right)^2\]</div></div>
+</div>
+<div class="section" id="discharge-broadband-db-noise-component">
+<h3>Discharge broadband (DB) noise component<a class="headerlink" href="#discharge-broadband-db-noise-component" title="Permalink to this headline">¶</a></h3>
+<p>The tip Mach number dependent term for the inlet broadband noise component is defined by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}F_{1,DB} =
+\begin{cases}
+63.0 &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} \leq 1$} \\
+63.0 - 30 \log_{10} \left(M_{tip}\right)  &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} &gt; 1$}\\
+63.0 + 20 \log_{10} \left(M_{tip,des}\right)  &amp; \textrm{if $M_{tip,des} &gt; 1$ and $M_{tip} \leq 1$}\\
+63.0 + 20 \log_{10} \left(M_{tip,des}\right) - 30\log_{10}\left(M_{tip}\right) &amp; \textrm{if $M_{tip,des} &gt; 1$ and $M_{tip} &gt; 1$}\\
+\end{cases}\end{split}\]</div></div>
+<p>The rotor-stator spacing correction term is given by <span class="math notranslate nohighlight">\(F_{2,IB} = -5 \log_{10}\left( \frac{RSS}{300} \right)\)</span>. The <span class="math notranslate nohighlight">\(\theta\)</span>-correction term (<span class="math notranslate nohighlight">\(F_{3,DB})\)</span> is tabulated online. If the fan stage has inlet guide vanes, the correction term  C = 3dB. The spectral distribution function for fan discharge noise is given by the same equation as for inlet broadband noise.</p>
+</div>
+<div class="section" id="inlet-tones-it-noise-component">
+<h3>Inlet tones (IT) noise component<a class="headerlink" href="#inlet-tones-it-noise-component" title="Permalink to this headline">¶</a></h3>
+<p>The tip Mach number dependent term for the inlet tones noise component is defined by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}F_{1,IT}  =
+\begin{cases}
+54.5 &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} \leq 0.72$} \\
+\min\left[54.5 + 50 \log_{10} \left(\frac{M_{tip}}{0.72}\right) , 53.5 + 80 \log_{10} \left(\frac{1}{M_{tip}}\right) \right]  &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} &gt; 0.72$}\\
+54.5 + 20 \log_{10} \left(M_{tip,des}\right)  &amp; \textrm{if $M_{tip,des} &gt; 1$ and $M_{tip} \leq 0.72$}\\
+\min\Bigl[54.5 + 20 \log_{10} \left(M_{tip}\right) + 50\log_{10}\left(\frac{M_{tip}}{0.72}\right) , &amp; \\ 53.5 + 80 \log_{10} \left(\frac{M_{tip,des}}{M_{tip}}\right) \Bigr]  &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} &gt; 0.72$}\\
+\end{cases}\end{split}\]</div></div>
+<p>The rotor-stator spacing correction term is given by <span class="math notranslate nohighlight">\(F_{2,TI} = -10 \log_{10}\left( \frac{RSS}{300} \right)\)</span>. The <span class="math notranslate nohighlight">\(\theta\)</span> correction term (<span class="math notranslate nohighlight">\(F_{3,IT}\)</span>) is tabulated online. The inlet guide vane correction term C = 0dB.</p>
+</div>
+<div class="section" id="discharge-tones-dt-noise-component">
+<h3>Discharge tones (DT) noise component<a class="headerlink" href="#discharge-tones-dt-noise-component" title="Permalink to this headline">¶</a></h3>
+<p>The tip Mach number dependent term for the inlet tones noise component is defined by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}F_{1,DT} =
+\begin{cases}
+59.0 &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} \leq 1$} \\
+59.0 - 20 \log_{10} \left(M_{tip}\right)  &amp; \textrm{if $M_{tip,des} \leq 1$ and $M_{tip} &gt; 1$}\\
+59.0 + 20 \log_{10} \left(M_{tip,des}\right)  &amp; \textrm{if $M_{tip,des} &gt; 1$ and $M_{tip} \leq 1$}\\
+59.0 + 20 \log_{10} \left(M_{tip,des}\right) - 20\log_{10}\left(M_{tip}\right) &amp; \textrm{if $M_{tip,des} &gt; 1$ and $M_{tip} &gt; 1$}\\
+\end{cases}\end{split}\]</div></div>
+<p>The rotor-stator spacing correction term is given by <span class="math notranslate nohighlight">\(F_{2,DT} = -10 \log_{10}\left( \frac{RSS}{300} \right)\)</span>. The <span class="math notranslate nohighlight">\(\theta\)</span> correction term (<span class="math notranslate nohighlight">\(F_{3,DT}\)</span>) is tabulated online. If the fan stage has inlet guide vanes, the correction term  C = 6dB.</p>
+</div>
+<div class="section" id="harmonics">
+<h3>Harmonics<a class="headerlink" href="#harmonics" title="Permalink to this headline">¶</a></h3>
+<p>The fundamental fan tone occurs at the blade pass frequency (bfp), given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[bpf = \frac{N_f^* c_0 B_f}{d_f(1 - M_0 \cos\theta)}\]</div></div>
+<p>where <span class="math notranslate nohighlight">\(B_f\)</span> is the number of rotor blades, <span class="math notranslate nohighlight">\(d_f\)</span> is the fan diameter and <span class="math notranslate nohighlight">\((1 - M_0 \cos\theta)\)</span> is the Doppler correction factor. The level of the fundamental tone harmonics are determined by the harmonic fall-off rates. These fall-off rates are driven by the fan cut-off phenomenon. The fundamental cutoff factor, <span class="math notranslate nohighlight">\(\delta\)</span>, at which the magnitude of the fan tones is attenuated is determined by the ratio between the number of stator vanes, <span class="math notranslate nohighlight">\(V_f\)</span>, and rotor blades, <span class="math notranslate nohighlight">\(B_f\)</span>:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\delta =  \frac{M_{tip}}{|1 - \frac{V_f}{B_f}|}\]</div></div>
+<p>The cut-off index, <span class="math notranslate nohighlight">\(i_{cut}\)</span>, is computed by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+i_{cut} = 1 \quad &amp; \textrm{if}\ \quad \delta &lt; 1.05 \ \textrm{and}\ M_{tip, tan} &lt; 1  \\
+i_{cut} = 0 \quad &amp; \textrm{if}\ \quad \textrm{otherwise} \\
+\end{cases}\end{split}\]</div></div>
+<p>The fall-off rates for the k-th harmonic of the inlet and discharge tones are given by:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+L_{\textrm{fall}} = 8 &amp; \textrm{if}\ i_{cut} = 1\ \textrm{and}\ k = 1 \\
+L_{\textrm{fall}} = 0 &amp; \textrm{if}\ i_{cut} = 0\ \textrm{and}\ k = 1 \\
+L_{\textrm{fall}} = 9.2 &amp; \textrm{if}\ k = 2 \\
+L_{\textrm{fall}} = 3k + 1.8 &amp; \textrm{if}\ k \geq 3 \\
+\end{cases}\end{split}\]</div></div>
+<p>The fall-off rate for each harmonic is subtracted from the tone level of each harmonic <span class="math notranslate nohighlight">\(k \in [1, N_{harmonics}]\)</span>. Subsequently, the tone-level of each of the harmonics have to be added to correct one-third octave frequency band. A one-third octave frequency band extends between <span class="math notranslate nohighlight">\([2^{-1/6}f_c, 2^{1/6}f_c]\)</span> and <span class="math notranslate nohighlight">\(T_{D}\)</span>.</p>
+</div>
+<div class="section" id="combining-of-the-fan-noise-components">
+<h3>Combining of the fan noise components<a class="headerlink" href="#combining-of-the-fan-noise-components" title="Permalink to this headline">¶</a></h3>
+<p>The fan inlet and discharge mean-square acoustic pressure is computed by combining the broadband spectrum and rotor-stator interaction tones:</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+&lt;p^2&gt;^*_{\textrm{inlet}} &amp; = bblv_I + T_I \\
+&lt;p^2&gt;^*_{\textrm{discharge}} &amp; = bblv_D + T_D \\
+\end{aligned}\end{split}\]</div></div>
+</div>
+<div class="section" id="fan-liner-noise-suppression">
+<h3>Fan liner noise suppression<a class="headerlink" href="#fan-liner-noise-suppression" title="Permalink to this headline">¶</a></h3>
+<p>The effect of fan liner treatment on the overall fan noise is assessed using the NASA CR-202309 method. The fan suppression tables for inlet and discharge noise are tabulated online as a function of frequency, <span class="math notranslate nohighlight">\(f\)</span>, and polar directivity angle, <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<div class="math-wrapper"><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    &lt;p^2&gt;^*_{\textrm{inlet, supp.}} &amp; = \quad f_{supp, inlet}(\theta, f) &lt;p^2&gt;^*_{\textrm{inlet}} \\
+    &lt;p^2&gt;^*_{\textrm{discharge, supp.}} &amp; = \quad f_{supp, discharge}(\theta, f) &lt;p^2&gt;^*_{\textrm{discharge}} \\
+\end{aligned}\end{split}\]</div></div>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="geometry.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">geometry</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="epnl.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">epnl</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/fan.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">fan</a><ul>
+<li><a class="reference internal" href="#module-fan">class description</a></li>
+<li><a class="reference internal" href="#theory">theory</a><ul>
+<li><a class="reference internal" href="#inlet-broadband-ib-noise-component">Inlet broadband (IB) noise component</a></li>
+<li><a class="reference internal" href="#discharge-broadband-db-noise-component">Discharge broadband (DB) noise component</a></li>
+<li><a class="reference internal" href="#inlet-tones-it-noise-component">Inlet tones (IT) noise component</a></li>
+<li><a class="reference internal" href="#discharge-tones-dt-noise-component">Discharge tones (DT) noise component</a></li>
+<li><a class="reference internal" href="#harmonics">Harmonics</a></li>
+<li><a class="reference internal" href="#combining-of-the-fan-noise-components">Combining of the fan noise components</a></li>
+<li><a class="reference internal" href="#fan-liner-noise-suppression">Fan liner noise suppression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

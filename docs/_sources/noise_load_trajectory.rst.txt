@@ -1,0 +1,41 @@
+noise\_load\_trajectory
+=======================
+
+This run file computes the noise signature based on a trajectory that is supplied by the user. A ``.csv`` file should be provided in the case trajectory directory. The trajectory dataframe contains the following variables: 
+
+=================== ======================================== ======
+Variable            Description                              Unit
+=================== ======================================== ======
+t_source            Source time                              s
+X                   Aircraft x-position                      m
+Y                   Aircraft y-position                      m
+Z                   Aircraft z-position                      m
+V                   Aircraft velocity                        m/s
+M_0                 Ambient Mach number                      \-
+TS                  Thrust-setting                           \-
+c_0                 Ambient speed of sound                   m/s
+T_0                 Ambient temperature                      K
+p_0                 Ambient pressure                         Pa
+rho_0               Ambient density                          kg/m3
+mu_0                Ambient dynamic viscosity                kg/ms
+alpha               Aircraft angle of attack                 rad
+climb_angle         Aircraft climb climb_angle               rad
+Airframe LG         Aircraft landing gear extraction         \-
+Airframe delta_f    Aircraft flap angle                      deg
+=================== ======================================== ======
+
+N2 diagram
+----------
+The N2 diagram of the model is shown below:
+
+.. image:: ./_images/n2_load_trajectory.png
+   :width: 900
+
+
+Module contents
+---------------
+.. automodule:: noise_load_trajectory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

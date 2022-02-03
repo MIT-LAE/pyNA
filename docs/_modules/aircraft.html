@@ -1,0 +1,539 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>aircraft - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for aircraft</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pdb</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">pyNA.src.settings</span> <span class="kn">import</span> <span class="n">Settings</span>
+
+
+<div class="viewcode-block" id="Aircraft"><a class="viewcode-back" href="../aircraft.html#aircraft.Aircraft">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Aircraft</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Aircraft class containing vehicle constants.</span>
+
+<span class="sd">    """</span>
+
+    <span class="c1"># Vehicle parameters</span>
+    <span class="n">mtow</span> <span class="p">:</span> <span class="nb">float</span>                <span class="c1"># Max. take-off weight [kg]</span>
+    <span class="n">n_eng</span> <span class="p">:</span> <span class="nb">int</span>                 <span class="c1"># Number of engines installed on the aircraft [-]</span>
+    <span class="n">comp_lst</span> <span class="p">:</span> <span class="nb">list</span>             <span class="c1"># List of airframe components to include in noise analysis [-]</span>
+
+    <span class="c1"># Airframe parameters</span>
+    <span class="n">af_S_h</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Horizontal tail area (0.0 ft2) [m2]</span>
+    <span class="n">af_S_v</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Vertical tail area (361.8 ft2) [m2]</span>
+    <span class="n">af_S_w</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Wing area (3863.0 ft2) [m2]</span>
+    <span class="n">af_b_f</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Flap span (25.74 ft) [m]</span>
+    <span class="n">af_b_h</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Horizontal tail span (0. ft) [m]</span>
+    <span class="n">af_b_v</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Vertical tail span (57.17 ft) [m]</span>
+    <span class="n">af_b_w</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Wing span (94.43 ft) [m]</span>
+
+    <span class="c1"># High-lift devices</span>
+    <span class="n">theta_flaps</span> <span class="p">:</span> <span class="nb">float</span>         <span class="c1"># Flap deflection angle [deg]</span>
+    <span class="n">theta_slats</span><span class="p">:</span> <span class="nb">float</span>          <span class="c1"># Slat deflection angle [deg]</span>
+    <span class="n">af_S_f</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Flap area (120.0 ft2) [m2]</span>
+    <span class="n">af_s</span> <span class="p">:</span> <span class="nb">int</span>                  <span class="c1"># Number of slots for trailing-edge flaps (min. is 1) [-]</span>
+
+    <span class="c1"># Landing gear</span>
+    <span class="n">af_d_mg</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Tire diameter of main landing gear (3.08 ft) [m]</span>
+    <span class="n">af_d_ng</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Tire diameter of nose landing gear (3.71 ft) [m]</span>
+    <span class="n">af_l_mg</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Main landing-gear strut length (7.5 ft) [m]</span>
+    <span class="n">af_l_ng</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Nose landing-gear strut length (6.0 ft) [m]</span>
+    <span class="n">af_n_mg</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Number of wheels per main landing gear [-]</span>
+    <span class="n">af_n_ng</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Number of wheels per nose landing gear [-]</span>
+    <span class="n">af_N_mg</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Number of main landing gear [-]</span>
+    <span class="n">af_N_ng</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Number of nose landing gear [-]</span>
+    <span class="n">mu_r</span> <span class="p">:</span> <span class="nb">float</span>                <span class="c1"># Rolling resistance coefficient [-]</span>
+
+    <span class="c1"># Engine parameters</span>
+    <span class="n">B_fan</span> <span class="p">:</span> <span class="nb">int</span>                <span class="c1"># Number of fan blades [-]</span>
+    <span class="n">V_fan</span> <span class="p">:</span> <span class="nb">int</span>                <span class="c1"># Number of fan vanes [-]</span>
+    <span class="n">RSS_fan</span> <span class="p">:</span> <span class="nb">float</span>            <span class="c1"># Rotor-stator spacing [%]</span>
+    <span class="n">M_d_fan</span> <span class="p">:</span> <span class="nb">float</span>            <span class="c1"># Relative tip Mach number of fan at design [-]</span>
+
+    <span class="n">inc_F_n</span> <span class="p">:</span> <span class="nb">float</span>            <span class="c1"># Thrust inclination angle [deg]</span>
+    <span class="n">TS_lower</span> <span class="p">:</span> <span class="nb">float</span>           <span class="c1"># Min. power setting [-]</span>
+    <span class="n">TS_upper</span> <span class="p">:</span> <span class="nb">float</span>           <span class="c1"># Max. power setting [-]</span>
+
+    <span class="c1"># Airframe configuration</span>
+    <span class="n">af_clean_w</span> <span class="p">:</span> <span class="nb">bool</span>          <span class="c1"># Clean wing (1: yes / 0: no)</span>
+    <span class="n">af_clean_h</span> <span class="p">:</span> <span class="nb">bool</span>          <span class="c1"># Clean horizontal tail (1: yes / 0: no)</span>
+    <span class="n">af_clean_v</span><span class="p">:</span> <span class="nb">bool</span>           <span class="c1"># Clean vertical tail (1: yes / 0: no)</span>
+    <span class="n">af_delta_wing</span> <span class="p">:</span> <span class="nb">bool</span>       <span class="c1"># Delta wing (1: yes / 0: no)</span>
+
+    <span class="c1"># Aerodynamics and flight performance</span>
+    <span class="n">cl_max</span> <span class="p">:</span> <span class="nb">float</span>             <span class="c1"># Max. lift coefficient [-]</span>
+    <span class="n">alpha_0</span> <span class="p">:</span> <span class="nb">float</span>            <span class="c1"># Wing mounting angle [deg]</span>
+    <span class="n">alpha_rot</span> <span class="p">:</span> <span class="nb">float</span>          <span class="c1"># Estimate of rotation angle of attack [deg]</span>
+    <span class="n">k_rot</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Rotation coefficient (v_rot/v_stall) [-]</span>
+    <span class="n">v_max</span> <span class="p">:</span> <span class="nb">float</span>              <span class="c1"># Maximum climb-out velocity [m/s]</span>
+    <span class="n">z_max</span><span class="p">:</span> <span class="nb">float</span>               <span class="c1"># Maximum climb-out altitude [m]</span>
+    <span class="n">gamma_rot</span> <span class="p">:</span> <span class="nb">float</span>          <span class="c1"># Initial climb angle [deg]</span>
+
+<div class="viewcode-block" id="Aircraft.__init__"><a class="viewcode-back" href="../aircraft.html#aircraft.Aircraft.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Initialize Aircraft class.</span>
+
+<span class="sd">        :param name: aircraft name</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Initialize aircraft name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="c1"># Initialize aerodynamics deck and flight performance parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aero</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_stall</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_rot</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="c1"># Load aircraft parameters</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/aircraft/'</span> <span class="o">+</span>  <span class="n">settings</span><span class="o">.</span><span class="n">ac_name</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">ac_name</span> <span class="o">+</span> <span class="s1">'.json'</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">Aircraft</span><span class="o">.</span><span class="n">set_aircraft_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Aircraft.set_aircraft_parameters"><a class="viewcode-back" href="../aircraft.html#aircraft.Aircraft.set_aircraft_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_aircraft_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mtow</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">n_eng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">comp_lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">af_S_h</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+                                <span class="n">af_S_v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_S_w</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_b_f</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_b_h</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_b_v</span><span class="p">:</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_b_w</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta_flaps</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">theta_slats</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+                                <span class="n">af_S_f</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">af_d_mg</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_d_ng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_l_mg</span><span class="p">:</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_l_ng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_n_mg</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_n_ng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_N_mg</span><span class="p">:</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_N_ng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">mu_r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">B_fan</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">V_fan</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
+                                <span class="n">RSS_fan</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">M_d_fan</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">inc_F_n</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">TS_lower</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+                                <span class="n">TS_upper</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">af_clean_w</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">af_clean_h</span><span class="p">:</span><span class="nb">bool</span><span class="p">,</span> <span class="n">af_clean_v</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                                <span class="n">af_delta_wing</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">cl_max</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">alpha_0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">alpha_rot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+                                <span class="n">k_rot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">v_max</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">z_max</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">gamma_rot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Set the aircraft parameters in the aircraft class.</span>
+
+<span class="sd">        :param mtow: Max. take-off weight [kg]</span>
+<span class="sd">        :type mtow: np.float64</span>
+<span class="sd">        :param n_eng: Number of engines installed on the aircraft [-]</span>
+<span class="sd">        :type n_eng: np.int64</span>
+<span class="sd">        :param comp_lst: List of airframe components to include [-]</span>
+<span class="sd">        :type comp_lst: list</span>
+<span class="sd">        :param af_S_h: Horizontal tail area [m2]</span>
+<span class="sd">        :type af_S_h: np.float64</span>
+<span class="sd">        :param af_S_v: Vertical tail area [m2]</span>
+<span class="sd">        :type af_S_v: np.float64</span>
+<span class="sd">        :param af_S_w: Wing area [m2]</span>
+<span class="sd">        :type af_S_w: np.float64</span>
+<span class="sd">        :param af_b_f: Flap span [m]</span>
+<span class="sd">        :type af_b_f: np.float64</span>
+<span class="sd">        :param af_b_h: Horizontal tail span [m]</span>
+<span class="sd">        :type af_b_h: np.float64</span>
+<span class="sd">        :param af_b_v: Vertical tail span [m]</span>
+<span class="sd">        :type af_b_v: np.float64</span>
+<span class="sd">        :param af_b_w: Wing span [m]</span>
+<span class="sd">        :type af_b_w: np.float64</span>
+<span class="sd">        :param theta_flaps: Flap deflection angle [deg]</span>
+<span class="sd">        :type theta_flaps: np.float64</span>
+<span class="sd">        :param theta_slats: Slat deflection angle [deg]</span>
+<span class="sd">        :type theta_slats: np.float64</span>
+<span class="sd">        :param af_S_f: Flap area [m2]</span>
+<span class="sd">        :type af_S_f: np.float64</span>
+<span class="sd">        :param af_s: Number of slots for trailing-edge flaps (min. is 1) [-]</span>
+<span class="sd">        :type af_s: np.int64</span>
+<span class="sd">        :param af_d_mg: Tire diameter of main landing gear [m]</span>
+<span class="sd">        :type af_d_mg: np.float64</span>
+<span class="sd">        :param af_d_ng: Tire diameter of nose landing gear [m]</span>
+<span class="sd">        :type af_d_ng: np.float64</span>
+<span class="sd">        :param af_l_mg: Main landing-gear strut length [m]</span>
+<span class="sd">        :type af_l_mg: np.float64</span>
+<span class="sd">        :param af_l_ng: Nose landing-gear strut length [m]</span>
+<span class="sd">        :type af_l_ng: np.float64</span>
+<span class="sd">        :param af_n_mg: Number of wheels per main landing gear [-]</span>
+<span class="sd">        :type af_n_mg: np.int64</span>
+<span class="sd">        :param af_n_ng: Number of wheels per nose landing gear [-]</span>
+<span class="sd">        :type af_n_ng: np.int64</span>
+<span class="sd">        :param af_N_mg: Number of main landing gear [-]</span>
+<span class="sd">        :type af_N_mg: np.int64</span>
+<span class="sd">        :param af_N_ng: Number of nose landing gear [-]</span>
+<span class="sd">        :type af_N_ng: np.int64</span>
+<span class="sd">        :param mu_r: Rolling resistance coefficient [-]</span>
+<span class="sd">        :type mu_r: np.float64</span>
+<span class="sd">        :param B_fan: Number of fan blades [-]</span>
+<span class="sd">        :type B_fan: np.int64</span>
+<span class="sd">        :param V_fan: Number of fan vanes [-]</span>
+<span class="sd">        :type V_fan: np.int64</span>
+<span class="sd">        :param RSS_fan: Rotor-stator spacing [%]</span>
+<span class="sd">        :type RSS_fan: np.float64</span>
+<span class="sd">        :param M_d_fan: Relative tip Mach number of fan at design [-]</span>
+<span class="sd">        :type M_d_fan: np.float64</span>
+<span class="sd">        :param inc_F_n: Thrust inclination angle [deg]</span>
+<span class="sd">        :type inc_F_n: np.float64</span>
+<span class="sd">        :param TS_lower: Min. power setting [-]</span>
+<span class="sd">        :type TS_lower: np.float64</span>
+<span class="sd">        :param TS_upper: Max. power setting [-]</span>
+<span class="sd">        :type TS_upper: np.float64</span>
+<span class="sd">        :param af_clean_w: Flag for clean wing configuration [-]</span>
+<span class="sd">        :type af_clean_w: bool</span>
+<span class="sd">        :param af_clean_h: Flag for clean horizontal tail configuration [-]</span>
+<span class="sd">        :type af_clean_h: bool</span>
+<span class="sd">        :param af_clean_v: Flag for clean vertical tail configuration [-]</span>
+<span class="sd">        :type af_clean_v: bool</span>
+<span class="sd">        :param af_delta_wing: Flag for delta wing configuration [-]</span>
+<span class="sd">        :type af_delta_wing: bool</span>
+<span class="sd">        :param cl_max: Max. lift coefficient [-]</span>
+<span class="sd">        :type cl_max: np.float64</span>
+<span class="sd">        :param alpha_0: Wing mounting angle [deg]</span>
+<span class="sd">        :type alpha_0: np.float64</span>
+<span class="sd">        :param alpha_rot: Estimate of rotation angle of attack [deg]</span>
+<span class="sd">        :type alpha_rot: np.float64</span>
+<span class="sd">        :param k_rot: Rotation coefficient (v_rot/v_stall) [-]</span>
+<span class="sd">        :type k_rot: np.float64</span>
+<span class="sd">        :param v_max: Maximum climb-out velocity [m/s]</span>
+<span class="sd">        :type v_max: np.float64</span>
+<span class="sd">        :param z_max: Maximum climb-out altitude [m]</span>
+<span class="sd">        :type z_max: np.float64</span>
+<span class="sd">        :param gamma_rot: Initial climb angle [deg]</span>
+<span class="sd">        :type gamma_rot: np.float64</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mtow</span> <span class="o">=</span> <span class="n">mtow</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_eng</span> <span class="o">=</span> <span class="n">n_eng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comp_lst</span> <span class="o">=</span> <span class="n">comp_lst</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_S_h</span> <span class="o">=</span> <span class="n">af_S_h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_S_v</span> <span class="o">=</span> <span class="n">af_S_v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_S_w</span> <span class="o">=</span> <span class="n">af_S_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_b_f</span> <span class="o">=</span> <span class="n">af_b_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_b_h</span> <span class="o">=</span> <span class="n">af_b_h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_b_v</span> <span class="o">=</span> <span class="n">af_b_v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_b_w</span> <span class="o">=</span> <span class="n">af_b_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_flaps</span> <span class="o">=</span> <span class="n">theta_flaps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_slats</span> <span class="o">=</span> <span class="n">theta_slats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_S_f</span> <span class="o">=</span> <span class="n">af_S_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_s</span> <span class="o">=</span> <span class="n">af_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_d_mg</span> <span class="o">=</span> <span class="n">af_d_mg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_d_ng</span> <span class="o">=</span> <span class="n">af_d_ng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_l_mg</span> <span class="o">=</span> <span class="n">af_l_mg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_l_ng</span> <span class="o">=</span> <span class="n">af_l_ng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_n_mg</span> <span class="o">=</span> <span class="n">af_n_mg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_n_ng</span> <span class="o">=</span> <span class="n">af_n_ng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_N_mg</span> <span class="o">=</span> <span class="n">af_N_mg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_N_ng</span> <span class="o">=</span> <span class="n">af_N_ng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_r</span> <span class="o">=</span> <span class="n">mu_r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B_fan</span> <span class="o">=</span> <span class="n">B_fan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V_fan</span> <span class="o">=</span> <span class="n">V_fan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RSS_fan</span> <span class="o">=</span> <span class="n">RSS_fan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M_d_fan</span> <span class="o">=</span> <span class="n">M_d_fan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inc_F_n</span> <span class="o">=</span> <span class="n">inc_F_n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TS_lower</span> <span class="o">=</span> <span class="n">TS_lower</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TS_upper</span> <span class="o">=</span> <span class="n">TS_upper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_clean_w</span> <span class="o">=</span> <span class="n">af_clean_w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_clean_h</span> <span class="o">=</span> <span class="n">af_clean_h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_clean_v</span> <span class="o">=</span> <span class="n">af_clean_v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_delta_wing</span> <span class="o">=</span> <span class="n">af_delta_wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cl_max</span> <span class="o">=</span> <span class="n">cl_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_0</span> <span class="o">=</span> <span class="n">alpha_0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_rot</span> <span class="o">=</span> <span class="n">alpha_rot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_rot</span> <span class="o">=</span> <span class="n">k_rot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_max</span> <span class="o">=</span> <span class="n">v_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_max</span> <span class="o">=</span> <span class="n">z_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma_rot</span> <span class="o">=</span> <span class="n">gamma_rot</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Aircraft.load_aerodynamics"><a class="viewcode-back" href="../aircraft.html#aircraft.Aircraft.load_aerodynamics">[docs]</a>    <span class="k">def</span> <span class="nf">load_aerodynamics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Load aerodynamic data from aerodynamics deck.</span>
+
+<span class="sd">        :param settings: pyNA settings</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Load aerodynamics deck</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ac_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'stca'</span><span class="p">,</span> <span class="s1">'stca_verification'</span><span class="p">]:</span>
+            <span class="c1"># Load data </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'alpha'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">,</span> <span class="mf">15.</span><span class="p">,</span> <span class="mf">18.</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_flaps'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">,</span> <span class="mf">14.</span><span class="p">,</span> <span class="mf">16.</span><span class="p">,</span> <span class="mf">18.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">22.</span><span class="p">,</span> <span class="mf">24.</span><span class="p">,</span> <span class="mf">26.</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_slats'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">26.</span><span class="p">,</span> <span class="o">-</span><span class="mf">24.</span><span class="p">,</span> <span class="o">-</span><span class="mf">22.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">18.</span><span class="p">,</span> <span class="o">-</span><span class="mf">16.</span><span class="p">,</span> <span class="o">-</span><span class="mf">14.</span><span class="p">,</span> <span class="o">-</span><span class="mf">12.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span>  <span class="o">-</span><span class="mf">8.</span><span class="p">,</span>  <span class="o">-</span><span class="mf">6.</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.</span><span class="p">,</span>  <span class="o">-</span><span class="mf">2.</span><span class="p">,</span>   <span class="mf">0.</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'CL'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/aircraft/cl_stca.npy'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'CD'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/aircraft/cd_stca.npy'</span><span class="p">)</span>
+
+            <span class="c1"># Find minimum drag </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_flaps_cdmin'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_flaps'</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_slats_cdmin'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_slats'</span><span class="p">][</span><span class="mi">13</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">ac_name</span> <span class="o">==</span> <span class="s1">'a10'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'alpha'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_flaps'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">8.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">,</span> <span class="mf">14.</span><span class="p">,</span> <span class="mf">16.</span><span class="p">,</span> <span class="mf">18.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">22.</span><span class="p">,</span> <span class="mf">24.</span><span class="p">,</span> <span class="mf">26.</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'theta_slats'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">26.</span><span class="p">,</span> <span class="o">-</span><span class="mf">24.</span><span class="p">,</span> <span class="o">-</span><span class="mf">22.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">18.</span><span class="p">,</span> <span class="o">-</span><span class="mf">16.</span><span class="p">,</span> <span class="o">-</span><span class="mf">14.</span><span class="p">,</span> <span class="o">-</span><span class="mf">12.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="o">-</span><span class="mf">8.</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'CL'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/aircraft/cl_'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">ac_name</span> <span class="o">+</span> <span class="s1">'.npy'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="p">[</span><span class="s1">'CD'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/aircraft/cd_'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">ac_name</span> <span class="o">+</span> <span class="s1">'.npy'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid aircraft name specified.'</span><span class="p">)</span>
+
+        <span class="c1"># Compute characteristic velocities: stall speed and rotation speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_stall</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtow</span> <span class="o">*</span> <span class="mf">9.80665</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">af_S_w</span> <span class="o">*</span> <span class="mf">1.225</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cl_max</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_rot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_rot</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_stall</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Aircraft.generate_aerodeck_from_csv"><a class="viewcode-back" href="../aircraft.html#aircraft.Aircraft.generate_aerodeck_from_csv">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_aerodeck_from_csv</span><span class="p">(</span><span class="n">filename_cl</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">filename_cd</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">savename_cl</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">savename_cd</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Generate a CL-CD aerodynamics deck from a .csv data file.</span>
+
+<span class="sd">        :param filename_cl: File name with cl data as function of alpha, theta_flap, theta_slat</span>
+<span class="sd">        :type filename_cl: str</span>
+<span class="sd">        :param filename_cd: File name with cd data as function of alpha, theta_flap, theta_slat</span>
+<span class="sd">        :type filename_cd: str</span>
+<span class="sd">        :param savename_cl: Save file name of CL-aerodynamics deck</span>
+<span class="sd">        :type savename_cl: str</span>
+<span class="sd">        :param savename_cd: Save file name of CD-aerodynamics deck</span>
+<span class="sd">        :type savename_cd: str</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Load data</span>
+        <span class="n">data_cl</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename_cl</span><span class="p">)</span>
+        <span class="n">data_cd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename_cd</span><span class="p">)</span>
+
+        <span class="c1"># Extract angles</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">data_cl</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">theta_slats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_cl</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:])</span>
+        <span class="n">theta_flaps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data_cl</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:])</span>
+
+        <span class="c1"># Extract CL-CD in matrices</span>
+        <span class="n">CL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_flaps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_slats</span><span class="p">)))</span>
+        <span class="n">CD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_flaps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_slats</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">alpha</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_slats</span><span class="p">)):</span>
+                <span class="n">CL</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span>
+                    <span class="n">data_cl</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_flaps</span><span class="p">):</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_flaps</span><span class="p">)])</span>
+                <span class="n">CD</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span>
+                    <span class="n">data_cd</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_flaps</span><span class="p">):</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta_flaps</span><span class="p">)])</span>
+
+        <span class="c1"># Save aero deck</span>
+        <span class="k">if</span> <span class="n">savename_cl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">savename_cl</span><span class="p">,</span> <span class="n">CL</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">savename_cd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">savename_cd</span><span class="p">,</span> <span class="n">CD</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div></div>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

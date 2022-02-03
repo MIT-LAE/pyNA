@@ -1,0 +1,686 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>data - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for data</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+<span class="kn">from</span> <span class="nn">pyNA.src.settings</span> <span class="kn">import</span> <span class="n">Settings</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">import</span> <span class="nn">pdb</span>
+
+
+<div class="viewcode-block" id="Data"><a class="viewcode-back" href="../data.html#data.Data">[docs]</a><span class="nd">@dataclass</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">Data</span><span class="p">:</span>
+
+    <span class="sd">"""</span>
+<span class="sd">    Data class containing the following parameters:</span>
+
+<span class="sd">    * ``f``:                  1/3-rd octave frequency bands [Hz]</span>
+<span class="sd">    * ``f_sb``:               sub-bands of the 1/3rd octave frequency bands [Hz]</span>
+
+<span class="sd">    * ``abs``:                table with atmospheric absorption coefficients</span>
+<span class="sd">    * ``abs_freq``:           frequencies of atmospheric absorption coefficient table</span>
+<span class="sd">    * ``abs_alt``:            altitudes of atmospheric absorption coefficient table</span>
+<span class="sd">    * ``abs_f``:              interpolation function for atmospheric absorption coefficient</span>
+
+<span class="sd">    * ``jet_D``:              table with jet mixing noise directivity dependency</span>
+<span class="sd">    * ``jet_D_angles``:       table with jet mixing noise directivity dependency: directivity angles</span>
+<span class="sd">    * ``jet_D_velocity``:     table with jet mixing noise directivity dependency: jet velocity ratio</span>
+<span class="sd">    * ``jet_D_f``:            interpolation function for jet mixing noise directivity dependency</span>
+<span class="sd">    * ``jet_xi``:             table with jet mixing noise Strouhal number correction factor</span>
+<span class="sd">    * ``jet_xi_angles``:      table with jet mixing noise Strouhal number correction factor: directivity angles</span>
+<span class="sd">    * ``jet_xi_velocity``:    table with jet mixing noise Strouhal number correction factor: jet velocity ratio</span>
+<span class="sd">    * ``jet_xi_f``:           interpolation function for jet mixing noise Strouhal number correction factor</span>
+<span class="sd">    * ``jet_F``:              table with jet mixing noise spectral dependency</span>
+<span class="sd">    * ``jet_F_angles``:       table with jet mixing noise spectral dependency: directivity angles</span>
+<span class="sd">    * ``jet_F_temperature``:  table with jet mixing noise spectral dependency: jet temperature ratio</span>
+<span class="sd">    * ``jet_F_velocity``:     table with jet mixing noise spectral dependency: jet velocity ratio</span>
+<span class="sd">    * ``jet_F_strouhal``:     table with jet mixing noise spectral dependency: Strouhal number</span>
+<span class="sd">    * ``jet_F_f``:            interpolation function for jet mixing noise spectral dependency</span>
+
+<span class="sd">    * ``Faddeeva_itau_re``:</span>
+<span class="sd">    * ``Faddeeva_itau_im``:</span>
+<span class="sd">    * ``Faddeeva_real``:</span>
+<span class="sd">    * ``Faddeeva_imag``:</span>
+
+<span class="sd">    * ``noy_spl``:</span>
+<span class="sd">    * ``noy_freq``:</span>
+<span class="sd">    * ``noy``:</span>
+<span class="sd">    * ``noy_f``:</span>
+
+<span class="sd">    * ``supp_fi``:            table with suppression factors for fan inlet noise</span>
+<span class="sd">    * ``supp_fi_angles``:     directivity angles of suppression factors for fan inlet noise table</span>
+<span class="sd">    * ``supp_fi_freq``:       frequencies of suppression factors for fan inlet noise table</span>
+<span class="sd">    * ``supp_fi_f``:          interpolation function for fan inlet noise suppression coefficient</span>
+<span class="sd">    * ``supp_fd``:            table with suppression factors for fan discharge noise</span>
+<span class="sd">    * ``supp_fd_angles``:     directivity angles of suppression factors for fan discharge noise table</span>
+<span class="sd">    * ``supp_fd_freq``:       frequencies of suppression factors for fan discharge noise table</span>
+<span class="sd">    * ``supp_fd_f``:          interpolation function for fan discharge noise suppression coefficient</span>
+<span class="sd">    * ``supp_af``:            table with HSR suppression factors for airframe noise</span>
+<span class="sd">    * ``supp_af_angles``:     directivity angles of suppression factors for airframe noise table</span>
+<span class="sd">    * ``supp_af_freq``:       frequencies of suppression factors for airframe noise table</span>
+<span class="sd">    * ``supp_af_f``:          interpolation function for HSR airframe noise suppression coefficient</span>
+
+<span class="sd">    * ``shield_l``:</span>
+<span class="sd">    * ``shield_f``:</span>
+<span class="sd">    * ``shield_a``:</span>
+
+<span class="sd">    """</span>
+
+    <span class="c1"># Frequency spectrum</span>
+    <span class="n">f</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">f_sb</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+
+    <span class="nb">abs</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">abs_freq</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">abs_alt</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">abs_f</span> <span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span>
+
+    <span class="n">jet_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_D_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_D_velocity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_D_f</span><span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span>
+    <span class="n">jet_xi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_xi_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_xi_velocity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_xi_f</span><span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span>
+    <span class="n">jet_F</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_F_angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_F_temperature</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_F_velocity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_F_strouhal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">jet_F_f</span><span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">RegularGridInterpolator</span>
+
+    <span class="n">Faddeeva_itau_re</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">Faddeeva_itau_im</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">Faddeeva_real</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">Faddeeva_imag</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+
+    <span class="n">noy_spl</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">noy_freq</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">noy</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">noy_f</span> <span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span>
+
+    <span class="n">supp_fi</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_fi_angles</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_fi_freq</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_fi_f</span><span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span>
+    <span class="n">supp_fd</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_fd_angles</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_fd_freq</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_fd_f</span><span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span>
+    <span class="n">supp_af</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_af_angles</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_af_freq</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">supp_af_f</span><span class="p">:</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span>
+
+    <span class="n">shield_l</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">shield_f</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">shield_a</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+
+<div class="viewcode-block" id="Data.__init__"><a class="viewcode-back" href="../data.html#data.Data.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Initialize Data class.</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Load data tables</span>
+        <span class="n">Data</span><span class="o">.</span><span class="n">compute_frequency_bands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
+        <span class="n">Data</span><span class="o">.</span><span class="n">load_propagation_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
+        <span class="n">Data</span><span class="o">.</span><span class="n">load_suppression_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
+        <span class="n">Data</span><span class="o">.</span><span class="n">load_jet_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
+        <span class="n">Data</span><span class="o">.</span><span class="n">load_noy_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
+        <span class="n">Data</span><span class="o">.</span><span class="n">load_shielding_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
+
+        <span class="c1"># Initialize verification data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Data.compute_frequency_bands"><a class="viewcode-back" href="../data.html#data.Data.compute_frequency_bands">[docs]</a>    <span class="k">def</span> <span class="nf">compute_frequency_bands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Compute the 1/3rd order frequency bands and with sub-bands.</span>
+<span class="sd">            * f:    1/3rd order frequency bands</span>
+<span class="sd">            * f_sb: frequency sub-bands</span>
+
+<span class="sd">        :param settings: pyna settings.</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Load 1/3rd order frequency bands</span>
+        <span class="c1"># Generate 1/3rd octave frequency bands [Hz]</span>
+        <span class="n">l_i</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># Starting no. of the frequency band [-]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">l_i</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">))</span>
+
+        <span class="c1"># Calculate subband frequencies [Hz]</span>
+        <span class="c1"># Source: Zorumski report 1982 part 1. Chapter 5.1 Equation 6-7</span>
+        <span class="c1"># Source: Berton 2021 Simultaneous use of Ground Reflection and Lateral Attenuation Noise Models Appendix A Eq. 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f_sb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_b</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_b</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_b</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">f_sb</span><span class="p">[</span><span class="n">k</span> <span class="o">*</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_b</span> <span class="o">+</span> <span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span> <span class="o">**</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Data.load_propagation_tables"><a class="viewcode-back" href="../data.html#data.Data.load_propagation_tables">[docs]</a>    <span class="k">def</span> <span class="nf">load_propagation_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Load atmospheric absorption coefficient table.</span>
+
+<span class="sd">        :param settings: pyna settings.</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Load atmospheric absorption coefficient table</span>
+        <span class="c1"># Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/isa/atmospheric_absorption.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abs_freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/isa/atmospheric_absorption.csv'</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abs_alt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/isa/atmospheric_absorption.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abs_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abs_freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs_alt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+
+        <span class="c1"># Load Faddeeva tables</span>
+        <span class="n">faddeeva_data_real</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/propagation/Faddeeva_real_small.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">faddeeva_data_imag</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/propagation/Faddeeva_imag_small.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Faddeeva_itau_re</span> <span class="o">=</span> <span class="n">faddeeva_data_real</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Faddeeva_itau_im</span> <span class="o">=</span> <span class="n">faddeeva_data_real</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Faddeeva_real</span> <span class="o">=</span> <span class="n">faddeeva_data_real</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Faddeeva_imag</span> <span class="o">=</span> <span class="n">faddeeva_data_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Data.load_suppression_tables"><a class="viewcode-back" href="../data.html#data.Data.load_suppression_tables">[docs]</a>    <span class="k">def</span> <span class="nf">load_suppression_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Load the noise suppression tables for:</span>
+<span class="sd">            * fan inlet source noise suppression</span>
+<span class="sd">            * fan discharge source noise suppression</span>
+<span class="sd">            * airframe noise suppression (high-speed research program)</span>
+
+<span class="sd">        :param settings: pyna settings.</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Load noise source suppression data</span>
+        <span class="c1"># Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/fan/liner_inlet_suppression.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fi_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/fan/liner_inlet_suppression.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fi_freq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/fan/liner_inlet_suppression.csv'</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fi_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supp_fi_angles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supp_fi_freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supp_fi</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/fan/liner_discharge_suppression.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fd_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/fan/liner_discharge_suppression.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fd_freq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/fan/liner_discharge_suppression.csv'</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_fd_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supp_fd_angles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supp_fd_freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supp_fd</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_af</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/airframe/hsr_suppression.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_af_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/airframe/hsr_suppression.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_af_freq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/sources/airframe/hsr_suppression.csv'</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supp_af_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supp_af_angles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supp_af_freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supp_af</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Data.load_jet_data"><a class="viewcode-back" href="../data.html#data.Data.load_jet_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_jet_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Load the jet source noise model data.</span>
+
+<span class="sd">        :param settings: pyna settings</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Polar directivity level D</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.4 Table IV</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_D</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/data/sources/jet/directivity_function.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_D_angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jet_D</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_D_velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jet_D</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jet_D</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_D_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jet_D_angles</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">jet_D_velocity</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">jet_D</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+
+        <span class="c1"># Strouhal number correction factor xi</span>
+        <span class="c1"># Source: Zorumski report 1982 part 2. Chapter 8.4 Table V</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/data/sources/jet/strouhal_correction.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi_angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi_velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jet_xi_angles</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi_velocity</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">jet_xi</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+
+        <span class="c1"># Spectral level F</span>
+        <span class="c1"># Source: Zorumski report 1982 part 1. Chapter 8.4 Table VI</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/data/sources/jet/spectral_function_extended_T.npy'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_temperature</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.175</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_strouhal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.15</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.824</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.699</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.602</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.398</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.301</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.222</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.477</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">RegularGridInterpolator</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">jet_F_angles</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_temperature</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_velocity</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">jet_F_strouhal</span><span class="p">),</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">jet_F</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Data.load_noy_data"><a class="viewcode-back" href="../data.html#data.Data.load_noy_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_noy_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Load noy tables for tone-corrected perceived noise level (pnlt) computation.</span>
+
+<span class="sd">        :param settings: pyna settings.</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Load noise level computation tabular data</span>
+        <span class="c1"># Source: ICAO Annex 16 Volume 1 (Edition 8) Table A2-3.</span>
+        <span class="c1"># self.Noy = pd.read_csv(settings.pyNA_directory+'/data/levels/pnlt_noy_weighting.csv')</span>
+
+        <span class="n">noy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/data/levels/spl_noy.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noy_spl</span> <span class="o">=</span> <span class="n">noy</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noy_freq</span> <span class="o">=</span> <span class="n">noy</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noy</span> <span class="o">=</span> <span class="n">noy</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">noy_f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noy_freq</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">noy_spl</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">noy</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Data.load_trajectory_verification_data"><a class="viewcode-back" href="../data.html#data.Data.load_trajectory_verification_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_trajectory_verification_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Loads the verification data of the NASA STCA noise assessment (Berton et al., 2019).</span>
+
+<span class="sd">        :param settings: pyNA settings</span>
+<span class="sd">        :type settings: Settings</span>
+
+<span class="sd">        :return: data_val</span>
+<span class="sd">        :rtype: pd.DataFrame</span>
+
+<span class="sd">        """</span>
+
+        <span class="c1"># Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">==</span> <span class="s1">'NASA STCA Standard'</span><span class="p">:</span>
+            <span class="c1"># Check if all sources</span>
+            <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">all_sources</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">observer</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/55t-Depart-Standard-Total.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'approach'</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Approach Levels.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'total'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+
+            <span class="c1"># Check if individual components</span>
+            <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">jet_mixing</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">observer</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/55t-Depart-Standard-Jet CaseA-D.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'approach'</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Approach Levels.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'jet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">core</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">observer</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/55t-Depart-Standard-Core CaseA-D.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'approach'</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Approach Levels.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'core'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">airframe</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">observer</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/55t-Depart-Standard-Airframe CaseA-D.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'approach'</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Approach Levels.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'airframe'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">fan_inlet</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">observer</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/55t-Depart-Standard-Fan Inlet CaseA-D.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'approach'</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Approach Levels.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'fan inlet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">fan_discharge</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">observer</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'lateral'</span><span class="p">,</span> <span class="s1">'flyover'</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/55t-Depart-Standard-Fan Discharge CaseA-D.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'approach'</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">verification_trajectory</span><span class="p">[</span><span class="n">observer</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Approach Levels.xlsx'</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'fan discharge'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"openpyxl"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid noise component for trajectory validation. Specify core/jet mixing/fan inlet/fan discharge/airframe'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'No validation data available for this case name. Specify NASA STCA Standard.'</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Data.load_source_verification_data"><a class="viewcode-back" href="../data.html#data.Data.load_source_verification_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_source_verification_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">components</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Load verification data for noise source spectral and directional distributions.</span>
+
+<span class="sd">        :param settings: pyNA settings</span>
+<span class="sd">        :type settings: Settings</span>
+<span class="sd">        :param components: list of components to run</span>
+<span class="sd">        :type components: list</span>
+
+<span class="sd">        :return: (data_val, data_val_s)</span>
+<span class="sd">        :rtype: (dict, dict)</span>
+<span class="sd">        """</span>
+
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'core'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Core Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Full'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Core Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Suppressed'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'jet_mixing'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Jet Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Full'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Jet Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Suppressed'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'inlet_BB'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Full Inlet BB'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Suppressed Inlet BB'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'discharge_BB'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Full Discharge BB'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Suppressed Discharge BB'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'inlet_RS'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Full Inlet RS'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Suppressed Inlet RS'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'discharge_RS'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Full Discharge RS'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Suppressed Discharge RS'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'fan_inlet'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Fan Inlet Full'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Fan Inlet Suppressed'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'fan_discharge'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Fan Discharge Full'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Fan Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Fan Discharge Suppressed'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+            <span class="k">elif</span> <span class="n">comp</span> <span class="o">==</span> <span class="s1">'airframe'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Airframe Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Full'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">verification_source_supp</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span> <span class="o">+</span> <span class="s1">'/cases/'</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/validation/Airframe Module Source.xlsx'</span><span class="p">,</span>
+                    <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Suppressed'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Data.load_shielding_time_series"><a class="viewcode-back" href="../data.html#data.Data.load_shielding_time_series">[docs]</a>    <span class="k">def</span> <span class="nf">load_shielding_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">shield_l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shield_f</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shield_a</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">==</span> <span class="s1">'NASA STCA Standard'</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'lateral'</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shield_l</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/cases/'</span><span class="o">+</span><span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/shielding/shielding_l.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+
+                <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'flyover'</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shield_f</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/cases/'</span><span class="o">+</span><span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/shielding/shielding_f.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+
+                <span class="k">elif</span> <span class="n">observer</span> <span class="o">==</span> <span class="s1">'approach'</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shield_a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">pyNA_directory</span><span class="o">+</span><span class="s1">'/cases/'</span><span class="o">+</span><span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">+</span> <span class="s1">'/shielding/shielding_a.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span></div></div>
+
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

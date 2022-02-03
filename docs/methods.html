@@ -1,0 +1,410 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="openmdao" href="openmdao.html" /><link rel="prev" title="how to use pyNA?" href="how_to_use.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>methods - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script defer="defer" src="_static/jquery.js"></script>
+    <script defer="defer" src="_static/underscore.js"></script>
+    <script defer="defer" src="_static/doctools.js"></script>
+    <script defer="defer" src="_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="methods">
+<span id="theory-file"></span><h1>methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h1>
+<p>pyNA is developed based on the 1982 theoretical manuals from the Aircraft NOise Prediction Program (ANOPP) by Zorumski <a class="reference internal" href="#zorumski-1982" id="id1"><span>[Zorumski-1982]</span></a>. The following methods from literature are used in the different pyNA modules:</p>
+<div class="section" id="noise-source-modules">
+<h2>noise source modules<a class="headerlink" href="#noise-source-modules" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 31%"/>
+<col style="width: 69%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Noise source module</p></th>
+<th class="head"><p>Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fan broadband and tones (inlet and discharge)</p></td>
+<td><dl class="simple">
+<dt>Heidmann method NASA TM X-71763 <a class="reference internal" href="#heidman-1975" id="id2"><span>[Heidman-1975]</span></a>;</dt><dd><ul class="simple">
+<li><p>with GEAE revision NASA CR-195480 for BB <a class="reference internal" href="#kontos-1996a" id="id3"><span>[Kontos-1996a]</span></a>,</p></li>
+<li><p>with AlliedSignal revision for RS tones <a class="reference internal" href="#hough-1996" id="id4"><span>[Hough-1996]</span></a>,</p></li>
+<li><p>with fan treatment NASA CR-202309 <a class="reference internal" href="#kontos-1996b" id="id5"><span>[Kontos-1996b]</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Combustor</p></td>
+<td><p>Emmerling method FAA-RD-74-125 <a class="reference internal" href="#emmerling-1976" id="id6"><span>[Emmerling-1976]</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Jet mixing</p></td>
+<td><p>Single-stream, shock-free, circular jet mixing noise <a class="reference internal" href="#sae-2012" id="id7"><span>[SAE-2012]</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Jet shock</p></td>
+<td><p>Single-stream, circular jet shock cell noise (SAE ARP876-2012).</p></td>
+</tr>
+<tr class="row-even"><td><p>Airframe</p></td>
+<td><dl class="simple">
+<dt>Fink method FAA RD-77-29 <a class="reference internal" href="#fink-1977" id="id8"><span>[Fink-1977]</span></a>;</dt><dd><ul class="simple">
+<li><p>with HSR calibration NASA CR-2004-213014 <a class="reference internal" href="#rawls-2004" id="id9"><span>[Rawls-2004]</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="noise-propagation-modules">
+<h2>noise propagation modules<a class="headerlink" href="#noise-propagation-modules" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 38%"/>
+<col style="width: 62%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Noise propagation module</p></th>
+<th class="head"><p>Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Spherical spreading</p></td>
+<td><p>R-squared law</p></td>
+</tr>
+<tr class="row-odd"><td><p>Characteristic impedance effect</p></td>
+<td><p>Characteristic impedance ratio.</p></td>
+</tr>
+<tr class="row-even"><td><p>Atmospheric absorption</p></td>
+<td><p>Exponential decay from source based on absorption coefficient.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ground reflection and attenuation</p></td>
+<td><p>Chien-Soroka method <a class="reference internal" href="#chien-1975" id="id10"><span>[Chien-1975]</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Lateral attenuation and engine installation</p></td>
+<td><p>Berton method <a class="reference internal" href="#berton-2021" id="id11"><span>[Berton-2021]</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wing shielding module</p></td>
+<td><p>Maekawa method <a class="reference internal" href="#maekawa-1968" id="id12"><span>[Maekawa-1968]</span></a>.</p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="noise-levels-modules">
+<h2>noise levels modules<a class="headerlink" href="#noise-levels-modules" title="Permalink to this headline">¶</a></h2>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 38%"/>
+<col style="width: 62%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Noise level module</p></th>
+<th class="head"><p>Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Perceived noise level, tone corrected (PNLT)</p></td>
+<td><p>ICAO Annex 16 Volume I: Aircraft noise App. 2-13 <a class="reference internal" href="#icao-2017" id="id13"><span>[ICAO-2017]</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Effective perceived noise level (EPNL)</p></td>
+<td><p>ICAO Annex 16 Volume I: Aircraft noise App. 2-13 <a class="reference internal" href="#icao-2017" id="id14"><span>[ICAO-2017]</span></a>.</p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="citation">
+<dt class="label" id="heidman-1975"><span class="brackets"><a class="fn-backref" href="#id2">Heidman-1975</a></span></dt>
+<dd><p>Heidmann, M.F., <em>Interim prediction method for fan and compressor source noise (NASA-TM-X71763)</em>, 1975.</p>
+</dd>
+<dt class="label" id="kontos-1996a"><span class="brackets"><a class="fn-backref" href="#id3">Kontos-1996a</a></span></dt>
+<dd><p>Kontos, K.B., Janardan,B., and Gliebe,P., <em>Improved NASA-ANOPP noise prediction computer code for advanced subsonic propulsion systems. Volume 1: ANOPP Evaluation and Fan Noise Model Improvement (NASA CR-195480)</em>, 1996.</p>
+</dd>
+<dt class="label" id="hough-1996"><span class="brackets"><a class="fn-backref" href="#id4">Hough-1996</a></span></dt>
+<dd><p>Hough, J.W., and Weir, D.S., <em>Aircraft noise prediction program (ANOPP) fan noise prediction for small engines (NASA-CR- 198300)</em>, 1996.</p>
+</dd>
+<dt class="label" id="kontos-1996b"><span class="brackets"><a class="fn-backref" href="#id5">Kontos-1996b</a></span></dt>
+<dd><p>Kontos, K. B., Kraft, R. E., and Gliebe, P. R., <em>Improved NASA-ANOPP Noise Prediction Computer Code for Advanced Subsonic Propulsion Systems. Volume 2: Fan Suppression Model Development (NASA-CR-202309)</em>, 1996.</p>
+</dd>
+<dt class="label" id="emmerling-1976"><span class="brackets"><a class="fn-backref" href="#id6">Emmerling-1976</a></span></dt>
+<dd><p>Emmerling, J., Kazin, S., and Matta, R., <em>Core Engine Noise Program. Volume III. Prediction Methods–Supplement I.-Extension of Prediction Methods</em>, Tech. rep., General Electric Co Cincinnati OH Aircraft Engine Business Group, 1976.</p>
+</dd>
+<dt class="label" id="sae-2012"><span class="brackets"><a class="fn-backref" href="#id7">SAE-2012</a></span></dt>
+<dd><p>Society of Automotive Engineers, <em>ARP-876: Gas Turbine Jet Exhaust Noise Prediction</em>, SAE, 1994.</p>
+</dd>
+<dt class="label" id="fink-1977"><span class="brackets"><a class="fn-backref" href="#id8">Fink-1977</a></span></dt>
+<dd><p>Fink, M.R., <em>Airframe noise prediction method</em>, Technical report, United Technologies Research Center East Hartford, CT, 1977.</p>
+</dd>
+<dt class="label" id="rawls-2004"><span class="brackets"><a class="fn-backref" href="#id9">Rawls-2004</a></span></dt>
+<dd><p>Rawls, J.W., Yeager, J.C., <em>High Speed Research Noise Prediction Code (HSRNOISE) User’s and Theoretical Manual (NASA CR-2004-213014)</em>, 2004.</p>
+</dd>
+<dt class="label" id="chien-1975"><span class="brackets"><a class="fn-backref" href="#id10">Chien-1975</a></span></dt>
+<dd><p>Chien, C., and Soroka, W., <em>Sound propagation along an impedance plane</em>, Journal of Sound and Vibration, Vol.43, No.1, 1975, pp. 9–20.</p>
+</dd>
+<dt class="label" id="maekawa-1968"><span class="brackets"><a class="fn-backref" href="#id12">Maekawa-1968</a></span></dt>
+<dd><p>Maekawa, Z., <em>Noise reduction by screens</em>, Applied Acoustics, Vol.1, No.3, 1968, pp.157–173.</p>
+</dd>
+<dt class="label" id="icao-2017"><span class="brackets">ICAO-2017</span><span class="fn-backref">(<a href="#id13">1</a>,<a href="#id14">2</a>)</span></dt>
+<dd><p>Annex 16 to the Convention on International Civil Aviation Environmental Protection Volume I: Aircraft Noise*, (2017).</p>
+</dd>
+<dt class="label" id="zorumski-1982"><span class="brackets"><a class="fn-backref" href="#id1">Zorumski-1982</a></span></dt>
+<dd><p>Zorumski, William E. <em>Aircraft noise prediction program theoretical manual, part 1-2.</em>, (1982).</p>
+</dd>
+<dt class="label" id="berton-2021"><span class="brackets"><a class="fn-backref" href="#id11">Berton-2021</a></span></dt>
+<dd><p>Berton. <em>Simultaneous use of Ground Reflection and Lateral Attenuation Noise Models</em>. (2021).</p>
+</dd>
+</dl>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="openmdao.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">openmdao</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="how_to_use.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">how to use pyNA?</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/methods.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">methods</a><ul>
+<li><a class="reference internal" href="#noise-source-modules">noise source modules</a></li>
+<li><a class="reference internal" href="#noise-propagation-modules">noise propagation modules</a></li>
+<li><a class="reference internal" href="#noise-levels-modules">noise levels modules</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

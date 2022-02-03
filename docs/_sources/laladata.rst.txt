@@ -1,0 +1,166 @@
+.. _data_file:
+
+data
+====
+
+The data dictionary contains the following data files used in the pyNA object:
+
+
+:mod:`f`
+	:description: 		1/3rd octave frequency bands.
+	:units:	 			[Hz]
+	:type:				np.ndarray
+	:size: 				``settings['N_f']``
+
+:mod:`f_sb`
+	:description: 		Subbands of 1/3rd frequency bands using ``settings['N_b']`` subbands. 
+	:units:	 			[Hz]
+	:type:				np.ndarray
+	:size: 				``settings['N_f']*settings['N_b']``
+
+:mod:`atm`
+	:description: 		Atmospheric properties table.		
+	:type: 				pd.DataFrame
+	:link: 				:ref:`atmosphere_file`
+
+:mod:`abs`
+	:description: 		Atmospheric absorption coefficient table.
+	:units:	 			[dB/m]
+	:type:				np.ndarray
+
+:mod:`abs_bar`
+	:description: 		Average atmospheric absorption coefficient between source and observer table.
+	:units:	 			[dB/m]
+	:type:				np.ndarray
+
+:mod:`abs_bar`
+	:description: 		Atmospheric absorption coefficient table.
+	:units:	 			[dB/m]
+	:type:				np.ndarray
+
+:mod:`abs_bar_f`
+	:description: 		Interpolation function for atmospheric absorption coefficient; abs_bar_f = f(alt,frequency).
+	:units:	 			[dB/m]
+	:type:				scipy.interpolate.interpolate.interp2d
+
+:mod:`abs_freq`
+	:description: 		x-axis (frequency) of data['abs'] table.
+	:units:				[Hz]
+	:type: 				np.ndarray
+
+:mod:`abs_alt`
+	:description: 		y-axis (altitude) of data['abs'] table.
+	:units:				[m]
+	:type: 				np.ndarray
+
+:mod:`abs_f`
+	:description: 		Interpolation function for atmospheric absorption coefficient; abs_f = f(alt,frequency).
+	:units:				[dB/m]
+	:type: 				scipy.interpolate.interpolate.interp2d
+
+:mod:`data_val`
+	:description: 		Validation data (if available).
+	:units:				[-]
+	:type: 				pd.DataFrame
+
+:mod:`supp_fi`
+	:description: 		Fan inlet suppression table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_fi_angles`
+	:description: 		x-axis (frequency) of data['supp_fi'] table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_fi_freq`
+	:description: 		y-axis (frequency) of data['supp_fi'] table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_fd`
+	:description: 		Fan inlet suppression table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_fd_angles`
+	:description: 		x-axis (frequency) of data['supp_fd'] table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_fd_freq`
+	:description: 		y-axis (frequency) of data['supp_fd'] table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_af`
+	:description: 		Fan inlet suppression table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_af_angles`
+	:description: 		x-axis (frequency) of data['supp_af'] table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`supp_af_freq`
+	:description: 		y-axis (frequency) of data['supp_af'] table.
+	:units:				[-]
+	:type: 				np.ndarray
+
+:mod:`jet_D`
+	:description: 		Jet directivity function table.
+	:units:				[-]
+	:type:				np.ndarray
+
+:mod:`jet_Df`
+	:description: 		Interpolation function for jet directivity function; jet_D = f(theta,log10V*).
+	:units:				[-]
+	:type:				scipy.interpolate.interpolate.interp2d
+
+:mod:`jet_xi`
+	:description: 		Strouhal number correction factor.
+	:units:				[-]
+	:type:				np.ndarray
+
+:mod:`jet_xif`
+	:description: 		Interpolation function for jet directivity function; jet_xi = f(theta,log10V*).
+	:units:				[-]
+	:type:				scipy.interpolate.interpolate.interp2d
+
+:mod:`jet_F`
+	:description: 		Jet spectral distribution function.
+	:units:				[-]
+	:type:				np.ndarray
+
+:mod:`jet_Fx1`
+	:description: 		Jet spectral distribution function input variable 1; polar directivity angle.
+	:units:				[deg]
+	:type:				np.ndarray
+
+:mod:`jet_Fx2`	
+	:description: 		Jet spectral distribution function input variable 2; jet total temperature ratio Tt*.
+	:units:				[-]
+	:type:				np.ndarray
+
+:mod:`jet_Fx3`
+	:description: 		Jet spectral distribution function input variable 3; jet velocity log10V*.
+	:units:				[-]
+	:type:				np.ndarray
+
+:mod:`jet_Fx4`
+	:description: 		Jet spectral distribution function input variable 4; Strouhal number.
+	:units: 			[-]
+	:type:				np.ndarray
+
+:mod:`Noy`
+	:description:		Noy weight factors.
+	:units:				[-]
+	:type: 				pd.DataFrame
+
+:mod:`shielding`
+	:description:		Shielding data.
+	:units:				[dB]
+	:type: 				pd.DataFrame
+
+

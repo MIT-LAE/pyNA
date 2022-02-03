@@ -1,0 +1,7 @@
+observer
+========
+
+.. automodule:: observer
+   :members:
+   :undoc-members:
+   :show-inheritance:

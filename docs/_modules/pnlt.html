@@ -1,0 +1,407 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
+        <title>pnlt - pyNA 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/language_data.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">pyNA 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Theory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../openmdao.html">openmdao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">pyNA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aircraft.html">aircraft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../emissions.html">emissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine.html">engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings.html">settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyNA.html">pyna</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Noise</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../epnl.html">epnl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ground_reflections.html">ground reflections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ioaspl.html">ioaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipnlt.html">ipnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../levels.html">levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise.html">noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../noise_model.html">noise_model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../normalization_engine_variables.html">normalization_engine_variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../oaspl.html">oaspl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pnlt.html">pnlt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propagation.html">propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../shielding.html">shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source.html">source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spl.html">spl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../split_subbands.html">split subbands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trajectory</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../atmosphere.html">atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clcd.html">clcd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flight_dynamics.html">flight_dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mux.html">mux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../propulsion.html">propulsion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory.html">trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectory_ode.html">trajectory_ode</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for pnlt</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<div class="viewcode-block" id="pnlt"><a class="viewcode-back" href="../pnlt.html#pnlt.pnlt">[docs]</a><span class="k">def</span> <span class="nf">pnlt</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">spl</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Compute perceived noise level, tone corrected [PNdB]</span>
+
+<span class="sd">    :param levels: pyNA component computing noise levels</span>
+<span class="sd">    :type levels: Levels</span>
+<span class="sd">    :param spl: sound pressure level [dB]</span>
+<span class="sd">    :type spl: np.ndarray [n_t, settings.N_f]</span>
+
+<span class="sd">    :return: pnlt, C</span>
+<span class="sd">    :rtype: np.ndarray [n_t], np.ndarray [n_t, settings.N_f]</span>
+<span class="sd">    """</span>
+    <span class="c1"># Load data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'settings'</span><span class="p">]</span>
+    <span class="n">n_t</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'n_t'</span><span class="p">]</span>
+
+    <span class="c1"># Initialize solution matrices</span>
+    <span class="n">pnlt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_t</span><span class="p">)</span>
+    <span class="n">noy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_t</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">))</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_t</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_t</span><span class="p">):</span>
+        <span class="n">spl_k</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># Compute noy</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.2 Step 1</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="c1"># Source: ICAO Annex 16 Appendix 2 Table A2-3 (Noy tables)</span>
+            <span class="n">spl_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">91.</span> <span class="p">,</span> <span class="mf">85.9</span><span class="p">,</span> <span class="mf">87.3</span><span class="p">,</span> <span class="mf">79.</span> <span class="p">,</span> <span class="mf">79.8</span><span class="p">,</span> <span class="mf">76.</span> <span class="p">,</span> <span class="mf">74.</span> <span class="p">,</span> <span class="mf">74.9</span><span class="p">,</span> <span class="mf">94.6</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span> <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span>  <span class="mf">1e8</span><span class="p">,</span> <span class="mf">44.3</span><span class="p">,</span> <span class="mf">50.7</span><span class="p">])</span>
+            <span class="n">spl_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">64</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">37</span><span class="p">])</span>
+            <span class="n">spl_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">52</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">37</span><span class="p">])</span>
+            <span class="n">spl_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">49</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">21</span><span class="p">])</span>
+            <span class="n">spl_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">55</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">])</span>
+            <span class="n">m_b</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.043478</span><span class="p">,</span> <span class="mf">0.04057</span> <span class="p">,</span> <span class="mf">0.036831</span><span class="p">,</span> <span class="mf">0.036831</span><span class="p">,</span> <span class="mf">0.035336</span><span class="p">,</span> <span class="mf">0.033333</span><span class="p">,</span> <span class="mf">0.033333</span><span class="p">,</span> <span class="mf">0.032051</span><span class="p">,</span> <span class="mf">0.030675</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.042285</span><span class="p">,</span> <span class="mf">0.042285</span><span class="p">])</span>
+            <span class="n">m_c</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span> <span class="mf">0.030103</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span>      <span class="mf">1e8</span><span class="p">,</span> <span class="mf">0.02996</span> <span class="p">,</span> <span class="mf">0.02996</span> <span class="p">])</span>
+            <span class="n">m_d</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.07952</span> <span class="p">,</span> <span class="mf">0.06816</span> <span class="p">,</span> <span class="mf">0.06816</span> <span class="p">,</span> <span class="mf">0.05964</span> <span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.05964</span> <span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.047712</span><span class="p">,</span> <span class="mf">0.047712</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.053013</span><span class="p">,</span> <span class="mf">0.06816</span> <span class="p">,</span> <span class="mf">0.07952</span> <span class="p">,</span> <span class="mf">0.05964</span> <span class="p">])</span>
+            <span class="n">m_e</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.058098</span><span class="p">,</span> <span class="mf">0.058098</span><span class="p">,</span> <span class="mf">0.052288</span><span class="p">,</span> <span class="mf">0.047534</span><span class="p">,</span> <span class="mf">0.043573</span><span class="p">,</span> <span class="mf">0.043573</span><span class="p">,</span> <span class="mf">0.040221</span><span class="p">,</span> <span class="mf">0.037349</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.040221</span><span class="p">,</span> <span class="mf">0.037349</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.034859</span><span class="p">,</span> <span class="mf">0.037349</span><span class="p">,</span> <span class="mf">0.037349</span><span class="p">,</span> <span class="mf">0.043573</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">spl_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">m_c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">spl_c</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="n">spl_b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spl_a</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">m_b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">spl_b</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="n">spl_e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spl_b</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">m_e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">spl_e</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="n">spl_d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">spl_e</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">m_d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">spl_d</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Generate function N(SPL) that is always 0 for any SPL</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">0</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.2 Step 2</span>
+        <span class="n">noy</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="n">n_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">n_t</span> <span class="o">=</span> <span class="n">n_max</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_max</span><span class="p">)</span>
+
+        <span class="c1"># Compute perceived noise level (pnl)</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.2 Step 3</span>
+        <span class="k">if</span> <span class="n">n_t</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+            <span class="n">pnl</span> <span class="o">=</span> <span class="n">n_t</span> <span class="o">**</span> <span class="mi">0</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pnl</span> <span class="o">=</span> <span class="mi">40</span> <span class="o">+</span> <span class="mf">10.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">n_t</span><span class="p">)</span>
+
+        <span class="c1"># Spectral irregularities correction</span>
+        <span class="c1"># Step 1: Compute the slope of SPL</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 1</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="c1"># Up to the 3th band the table has no value</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="c1"># Start at the 4th band</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Step 2: Compute the absolute value of the slope and compare to 5</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 2</span>
+        <span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="n">slope_large</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="c1"># Compute the absolute value of the slope</span>
+            <span class="n">slope</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Check if slope is larger than 5</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">slope</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">slope_large</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Step 3: Compute the encircled values of SPL</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 3</span>
+        <span class="n">spl_large</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="c1"># Check if value of slope is encircled</span>
+            <span class="k">if</span> <span class="n">slope_large</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Check if value of slope is positive and greater than previous slope</span>
+                <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">spl_large</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">spl_large</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Step 4: Compute new adjusted sound pressure levels SPL'</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 4</span>
+        <span class="n">spl_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">spl_large</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">spl_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">spl_large</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">22</span><span class="p">:</span>
+                    <span class="n">spl_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">spl_k</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">23</span><span class="p">:</span>
+                    <span class="n">spl_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_k</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span>
+
+        <span class="c1"># Step 5: Recompute the slope s'</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 5</span>
+        <span class="n">s_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">),</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="c1"># From 4th band onwards</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">s_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">spl_p</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># At the 3rd band</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">s_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_p</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Compute 25th imaginary band</span>
+        <span class="n">s_p</span><span class="p">[</span><span class="mi">24</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_p</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span>
+
+        <span class="c1"># Step 6: Compute arithmetic average of the 3 adjacent slopes</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 6</span>
+        <span class="n">s_bar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">s_bar</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">*</span> <span class="p">(</span><span class="n">s_p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">s_p</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">s_p</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
+
+        <span class="c1"># Step 7: Compute final 1/3 octave-band sound pressure level</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 7</span>
+        <span class="n">spl_pp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">spl_pp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">spl_pp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_pp</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">s_bar</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Step 8: Compute the difference between SPL and SPL_pp</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 8</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="c1"># Compute the difference and limit at 1.5</span>
+            <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl_k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">spl_pp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1"># Check values larger than 3 (ICAO Appendix 2-16)</span>
+            <span class="k">if</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1.5</span><span class="p">:</span>
+                <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Step 9: Compute the correction factor C</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 9</span>
+        <span class="n">C_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">N_f</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># Frequency in [50,500[</span>
+                <span class="k">if</span> <span class="mf">1.5</span> <span class="o">&lt;=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">-</span> <span class="mf">0.5</span>
+                <span class="k">elif</span> <span class="mf">3.</span> <span class="o">&lt;=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">20.</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">6.</span>
+                <span class="k">elif</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">20.</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">3.</span>
+            <span class="k">elif</span> <span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>  <span class="c1"># Frequency in [500,5000]</span>
+                <span class="k">if</span> <span class="mf">1.5</span> <span class="o">&lt;=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">3.</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">-</span> <span class="mf">1.0</span>
+                <span class="k">elif</span> <span class="mi">3</span> <span class="o">&lt;=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">3.</span>
+                <span class="k">elif</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">6.</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">/</span> <span class="mf">3.</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">:</span>  <span class="c1"># Frequency in ]5000,10000]</span>
+                <span class="k">if</span> <span class="mf">1.5</span> <span class="o">&lt;=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">3.</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">-</span> <span class="mf">0.5</span>
+                <span class="k">elif</span> <span class="mf">3.</span> <span class="o">&lt;=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">20.</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">6.</span>
+                <span class="k">elif</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">20.</span><span class="p">:</span>
+                    <span class="n">C_j</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span> <span class="o">+</span> <span class="mf">1.</span> <span class="o">/</span> <span class="mf">3.</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">C_j</span>
+
+        <span class="c1"># Step 10: Compute the largest of the tone correction</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 10</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">TCF800</span><span class="p">:</span>
+            <span class="n">c_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">C_j</span><span class="p">[</span><span class="mi">13</span><span class="p">:])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">C_j</span><span class="p">)</span>
+
+        <span class="c1"># Compute tone-corrected perceived noise level (pnlt)</span>
+        <span class="c1"># Source: ICAO Annex 16 Appendix 2 section 4.3 Step 10</span>
+        <span class="n">pnlt</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pnl</span> <span class="o">+</span> <span class="n">c_max</span>
+
+    <span class="k">return</span> <span class="n">pnlt</span><span class="p">,</span> <span class="n">C</span></div>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Laurens Voet
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

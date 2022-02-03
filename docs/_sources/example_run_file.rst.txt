@@ -1,0 +1,17 @@
+run_file
+========
+
+An example of a run file is shown below. 
+
+.. code-block::
+
+	# Initialize settings; look at the example settings file for more information
+	pyna_settings = dict() ...
+
+	# Initialize the pyNA class using the settings dictionary
+	pyNA = pyna(settings=pyna_settings)
+
+	# Run the pyNA module
+	pyNA.create_problem()
+	pyNA.run()
+
