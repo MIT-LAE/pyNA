@@ -113,17 +113,19 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption"><span class="caption-text">Theory</span></p>
+  <p class="caption"><span class="caption-text">Main</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">how to use pyNA?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../methods.html">methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../openmdao.html">openmdao</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../partials.html">partials</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Support</span></p>
+<p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help!.html">help!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_noise_time_series.html">Computing a noise time series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_noise_contours.html">Computing noise contours</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_noise_epnl_table.html">Computing a noise EPNL table</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_noise_source_distribution.html">Computing noise source distributions</a></li>
 </ul>
 <p class="caption"><span class="caption-text">pyNA</span></p>
 <ul>
@@ -479,7 +481,7 @@
 
         <span class="k">return</span> <span class="n">idx</span><span class="p">,</span> <span class="n">idx_src</span></div>
 
-<div class="viewcode-block" id="Noise.setup_time_series"><a class="viewcode-back" href="../noise.html#noise.Noise.setup_time_series">[docs]</a>    <span class="k">def</span> <span class="nf">setup_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">:</span><span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span><span class="n">Settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">:</span><span class="n">Aircraft</span><span class="p">,</span> <span class="n">n_t</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">optimization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Noise.setup_time_series"><a class="viewcode-back" href="../noise.html#noise.Noise.setup_time_series">[docs]</a>    <span class="k">def</span> <span class="nf">setup_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">:</span><span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span><span class="n">Settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">:</span><span class="n">Aircraft</span><span class="p">,</span> <span class="n">n_t</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">control_optimization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Setup model for computing noise of predefined trajectory time_series.</span>
 
@@ -491,8 +493,8 @@
 <span class="sd">        :type ac: Aircraft</span>
 <span class="sd">        :param n_t: Number of time steps in trajectory</span>
 <span class="sd">        :type n_t: Dict[str, Any]</span>
-<span class="sd">        :param optimization: flag to run trajectory optimization</span>
-<span class="sd">        :type optimization: bool</span>
+<span class="sd">        :param control_optimization: flag to run optimization for trajectory controls</span>
+<span class="sd">        :type control_optimization: bool</span>
 
 <span class="sd">        :return: None</span>
 <span class="sd">        """</span>
@@ -510,7 +512,7 @@
         
         <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">'julia'</span><span class="p">:</span>
             <span class="n">problem</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_subsystem</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'noise'</span><span class="p">,</span>
-                                        <span class="n">subsys</span><span class="o">=</span><span class="n">make_component</span><span class="p">(</span><span class="n">julia</span><span class="o">.</span><span class="n">Noise</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">n_t</span><span class="p">,</span>  <span class="n">idx</span><span class="p">,</span> <span class="n">idx_src</span><span class="p">,</span> <span class="n">optimization</span><span class="p">)),</span>
+                                        <span class="n">subsys</span><span class="o">=</span><span class="n">make_component</span><span class="p">(</span><span class="n">julia</span><span class="o">.</span><span class="n">Noise</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">n_t</span><span class="p">,</span>  <span class="n">idx</span><span class="p">,</span> <span class="n">idx_src</span><span class="p">,</span> <span class="n">control_optimization</span><span class="p">)),</span>
                                         <span class="n">promotes_inputs</span><span class="o">=</span><span class="p">[],</span>
                                         <span class="n">promotes_outputs</span><span class="o">=</span><span class="p">[])</span>
 
@@ -684,7 +686,7 @@
 
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Noise.setup_trajectory_noise"><a class="viewcode-back" href="../noise.html#noise.Noise.setup_trajectory_noise">[docs]</a>    <span class="k">def</span> <span class="nf">setup_trajectory_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">:</span> <span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">n_t</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">optimization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Noise.setup_trajectory_noise"><a class="viewcode-back" href="../noise.html#noise.Noise.setup_trajectory_noise">[docs]</a>    <span class="k">def</span> <span class="nf">setup_trajectory_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">:</span> <span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">ac</span><span class="p">:</span> <span class="n">Aircraft</span><span class="p">,</span> <span class="n">n_t</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">control_optimization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Setup model for computing noise along computed trajectory.</span>
 
@@ -696,8 +698,8 @@
 <span class="sd">        :type ac: Aircraft</span>
 <span class="sd">        :param n_t: number of time steps in trajectory</span>
 <span class="sd">        :type n_t: np.int</span>
-<span class="sd">        :param optimization: flag to run trajectory optimization</span>
-<span class="sd">        :type optimization: bool</span>
+<span class="sd">        :param control_optimization: flag to run optimization for trajectory controls</span>
+<span class="sd">        :type control_optimization: bool</span>
 
 <span class="sd">        :return: None</span>
 <span class="sd">        """</span>
@@ -705,7 +707,7 @@
         <span class="n">idx</span><span class="p">,</span> <span class="n">idx_src</span> <span class="o">=</span> <span class="n">Noise</span><span class="o">.</span><span class="n">get_indices_noise_input_vector</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">n_t</span><span class="o">=</span><span class="n">n_t</span><span class="p">)</span>
 
         <span class="n">problem</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_subsystem</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'noise'</span><span class="p">,</span>
-                                    <span class="n">subsys</span><span class="o">=</span><span class="n">make_component</span><span class="p">(</span><span class="n">julia</span><span class="o">.</span><span class="n">Noise</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">n_t</span><span class="p">,</span>  <span class="n">idx</span><span class="p">,</span> <span class="n">idx_src</span><span class="p">,</span> <span class="n">optimization</span><span class="p">)),</span>
+                                    <span class="n">subsys</span><span class="o">=</span><span class="n">make_component</span><span class="p">(</span><span class="n">julia</span><span class="o">.</span><span class="n">Noise</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">ac</span><span class="p">,</span> <span class="n">n_t</span><span class="p">,</span>  <span class="n">idx</span><span class="p">,</span> <span class="n">idx_src</span><span class="p">,</span> <span class="n">control_optimization</span><span class="p">)),</span>
                                     <span class="n">promotes_inputs</span><span class="o">=</span><span class="p">[],</span>
                                     <span class="n">promotes_outputs</span><span class="o">=</span><span class="p">[])</span>
 
@@ -769,7 +771,7 @@
             <span class="n">problem</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">'engine.d_f'</span><span class="p">,</span> <span class="s1">'noise.d_f'</span><span class="p">)</span>
 
         <span class="c1"># Add objective for trajectory model</span>
-        <span class="k">if</span> <span class="n">optimization</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">control_optimization</span><span class="p">:</span>
             <span class="n">problem</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_objective</span><span class="p">(</span><span class="s1">'noise.'</span><span class="o">+</span><span class="n">settings</span><span class="o">.</span><span class="n">levels_int_metric</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 

@@ -3,13 +3,13 @@
 how to use pyNA?
 ================
 
-settings dictionary
+Settings dictionary
 -------------------
 
 The operation of pyNA is controlled using the ``settings`` class. An example of a settings dictionary can be found :ref:`here<settings>`. 
 
 
-case folder structure
+Case folder structure
 ---------------------
 
 pyNA uses a specific folder structure for each analysis: all files related to the case named ``settings['case_name']`` are saved in a directory organized as follows: 
@@ -25,7 +25,7 @@ Finally, the *trajectory* folder contains trajectory time series (``trajectory.c
 
 .. _model_structure:
 
-pyna structure
+pyNA structure
 --------------
 
 An example pyna noise model structure is illustrated using the following N2 diagram. More information about the N2 diagram can be found on the `Openmdao <http://openmdao.org/twodocs/versions/latest/features/model_visualization/n2_basics.html#n2-basics>`_ website. An interactive version of the N2 diagram of pyNA can be found `here <_static/n2.html>`_.
@@ -40,7 +40,7 @@ From the N2diagram, you can see the components in the model, as well as how spec
 	import openmdao.api as om
 	om.n2(py.problem)
 
-choosing a programming language
+Choosing a programming language
 -------------------------------
 
 The noise modules in pyNA are developed in two programming languages: python and julia. The default language is python. When doing trajectory optimizations, pyNA makes use of the Julia ForwardDiff module to compute acoustic objective function sensitivities. You can choose which language to use by setting a python environment variable to ``'python'`` or ``'julia'``:
@@ -50,7 +50,7 @@ The noise modules in pyNA are developed in two programming languages: python and
 	import os
 	os.environ['pyna_language'] = 'julia'
 
-initializating and running a pyNA model
+Initializating and running a pyNA model
 ---------------------------------------
 
 To start up pyNA, load the ``pyna_settings`` class and initialize the model: 
@@ -78,3 +78,15 @@ Save and load results from a file
 
 The OpenMDAO models can be saved by setting ``settings['save_results'] = True``. Results can be read from the recorded output file using the ``pyna.load_results(self, filename, casename)`` function. Specify the file name in the output folder of the ``settings["case_directory"]`` directory using *filename* and specify the case reader casename. To view the names of the cases in an OpenMDAO case recorder, use ``case.list_cases()``. Finally, To save a time series .csv file from an OpenMDAO model, use ``pyna.save_timeseries`` command.
 
+
+Further support
+---------------
+
+.. raw:: html
+   :file: _static/mailto.html
+
+If you have any comments or feedback for the pyNA tema, feel free to file a `github issue <https://github.com/MIT-LAE/pyNA/issues/new>`_ or open a github `pull request <https://github.com/MIT-LAE/pyNA/pulls>`_. 
+
+You can also suggest `new projects <https://github.com/MIT-LAE/pyNA/projects/new>`_ we can add to pyNA.
+
+We are looking forward to working with you!

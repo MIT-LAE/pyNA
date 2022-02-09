@@ -113,17 +113,19 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption"><span class="caption-text">Theory</span></p>
+  <p class="caption"><span class="caption-text">Main</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
 <li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Support</span></p>
+<p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_time_series.html">Computing a noise time series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_contours.html">Computing noise contours</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_epnl_table.html">Computing a noise EPNL table</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_source_distribution.html">Computing noise source distributions</a></li>
 </ul>
 <p class="caption"><span class="caption-text">pyNA</span></p>
 <ul>
@@ -189,43 +191,63 @@
 <p><strong>pyNA</strong> is the <em>python Noise Assessment</em> tool to assess the aircraft noise during take-off operations. The tool estimates the mean-square acoustic pressure level for different engine noise sources, propagates the source noise to an observer on the ground and calculates the noise levels as defined in ICAO Annex 16 Environmental Protection, Volume I: Aircraft Noise.</p>
 <div class="section" id="welcome-to-pyna-s-documentation">
 <h1>Welcome to pyNA’s documentation!<a class="headerlink" href="#welcome-to-pyna-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="python-version-of-pyna">
+<h3>Python version of pyNA<a class="headerlink" href="#python-version-of-pyna" title="Permalink to this headline">¶</a></h3>
+<p>Get pyNA from a cloned repository from <a class="reference external" href="https://github.com/MIT-LAE/pyNA">Github</a>:</p>
+<blockquote>
+<div><p>git clone <a class="reference external" href="mailto:git%40github.mit.edu">git<span>@</span>github<span>.</span>mit<span>.</span>edu</a>:lvoet/pyNA.git</p>
+</div></blockquote>
+<p>Use pip to install pyNA:</p>
+<blockquote>
+<div><p>pip install -e .</p>
+</div></blockquote>
+<p>The python version is default in pyNA. To enable this mode, set a python environment variable to julia:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'pyna_language'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'python'</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="julia-version-of-pyna">
+<h3>Julia version of pyNA<a class="headerlink" href="#julia-version-of-pyna" title="Permalink to this headline">¶</a></h3>
+<p>To enable fast computation of sensitivities of acoustic objective functions in pyNA, an installation of Julia is required since the modules <em>geometry, source, propagation and levels</em> are using Julia’s ForwardDiff. Install <a class="reference external" href="https://julialang.org">Julia</a>. To enable this mode, set a python environment variable to julia:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'pyna_language'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'julia'</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h2>
+<p>If you utilize pyNA in your work, please reference it using the following citation:</p>
+<div class="highlight-latex notranslate"><div class="highlight"><pre><span></span>@unpublished<span class="nb">{</span>Voet2022,
+  author = <span class="nb">{</span>Laurens J. A. Voet and Prashanth Prakash and Raymond L. Speth and Jayant S. Sabnis and Choon S. Tan and Steven R. H. Barret<span class="nb">}</span>,
+  title = <span class="nb">{</span>Sensitivities of aircraft acoustic metrics to engine design and control variables for multi-disciplinary optimization<span class="nb">}</span>,
+  journal = <span class="nb">{</span>AIAA Journal (manuscript under review)<span class="nb">}</span>,
+  year = <span class="nb">{</span>2022<span class="nb">}</span>,
+<span class="nb">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Theory</span></p>
+<p class="caption"><span class="caption-text">Main</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="how_to_use.html#settings-dictionary">settings dictionary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_use.html#case-folder-structure">case folder structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_use.html#pyna-structure">pyna structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_use.html#choosing-a-programming-language">choosing a programming language</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_use.html#initializating-and-running-a-pyna-model">initializating and running a pyNA model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="how_to_use.html#save-and-load-results-from-a-file">Save and load results from a file</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="methods.html#noise-source-modules">noise source modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="methods.html#noise-propagation-modules">noise propagation modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="methods.html#noise-levels-modules">noise levels modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="methods.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="openmdao.html#creating-an-openmdao-problem">creating an openMDAO problem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="openmdao.html#n2-diagram">N2 diagram</a></li>
-<li class="toctree-l2"><a class="reference internal" href="openmdao.html#accessing-variables">accessing variables</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
 <li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Support</span></p>
+<p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#python-version-of-pyna">Python version of pyNA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#julia-version-of-pyna">Julia version of pyNA</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_time_series.html">Computing a noise time series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_contours.html">Computing noise contours</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_epnl_table.html">Computing a noise EPNL table</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_source_distribution.html">Computing noise source distributions</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -233,18 +255,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="aircraft.html">aircraft</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="emissions.html#module-emissions">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="emissions.html#theory">theory</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="emissions.html">emissions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="engine.html">engine</a></li>
 <li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="settings.html#module-settings">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="settings.html#sample-settings-file">sample settings file</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">settings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyNA.html">pyna</a></li>
 </ul>
@@ -252,134 +266,37 @@
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Noise</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="airframe.html#theory">theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="airframe.html#wing-trailing-edge-noise">Wing trailing edge noise</a></li>
-<li class="toctree-l3"><a class="reference internal" href="airframe.html#leading-edge-slat">Leading edge slat</a></li>
-<li class="toctree-l3"><a class="reference internal" href="airframe.html#trailing-edge-flaps">Trailing edge flaps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="airframe.html#landing-gear">Landing gear</a></li>
-<li class="toctree-l3"><a class="reference internal" href="airframe.html#combining-the-aircraft-noise-components">Combining the aircraft noise components</a></li>
-<li class="toctree-l3"><a class="reference internal" href="airframe.html#hsr-suppression">HSR suppression</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="core.html">core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-core">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#theory">theory</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="airframe.html">airframe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="epnl.html">epnl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="fan.html#module-fan">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fan.html#theory">theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="fan.html#inlet-broadband-ib-noise-component">Inlet broadband (IB) noise component</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fan.html#discharge-broadband-db-noise-component">Discharge broadband (DB) noise component</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fan.html#inlet-tones-it-noise-component">Inlet tones (IT) noise component</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fan.html#discharge-tones-dt-noise-component">Discharge tones (DT) noise component</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fan.html#harmonics">Harmonics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fan.html#combining-of-the-fan-noise-components">Combining of the fan noise components</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fan.html#fan-liner-noise-suppression">Fan liner noise suppression</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geometry.html#module-geometry">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geometry.html#theory">theory</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ground_reflections.html#module-ground_reflections">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ground_reflections.html#theory">theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ground_reflections.html#ground-absorption-and-reflection-effects">Ground absorption and reflection effects}</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="fan.html">fan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ground_reflections.html">ground reflections</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ioaspl.html">ioaspl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ipnlt.html">ipnlt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jet.html#module-jet">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="jet.html#theory">theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="jet.html#jet-mixing-noise">Jet mixing noise</a></li>
-<li class="toctree-l3"><a class="reference internal" href="jet.html#jet-shock-cell-noise">Jet shock-cell noise</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lateral_attenuation.html#module-lateral_attenuation">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lateral_attenuation.html#theory">theory</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="levels_int.html#module-levels_int">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="levels_int.html#theory">theory</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="levels.html#module-levels">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="levels.html#theory">theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="levels.html#sound-pressure-level">Sound pressure level</a></li>
-<li class="toctree-l3"><a class="reference internal" href="levels.html#overall-sound-pressure-level">Overall sound pressure level</a></li>
-<li class="toctree-l3"><a class="reference internal" href="levels.html#tone-corrected-perceived-noise-level">Tone-corrected perceived noise level</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lateral_attenuation.html">lateral attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels_int.html">levels_int</a></li>
+<li class="toctree-l1"><a class="reference internal" href="levels.html">levels</a></li>
 <li class="toctree-l1"><a class="reference internal" href="noise.html">noise</a></li>
 <li class="toctree-l1"><a class="reference internal" href="noise_model.html">noise_model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="normalization_engine_variables.html#module-normalization_engine_variables">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="normalization_engine_variables.html#theory">theory</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="normalization_engine_variables.html">normalization_engine_variables</a></li>
 <li class="toctree-l1"><a class="reference internal" href="oaspl.html">oaspl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pnlt.html">pnlt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="propagation.html#module-propagation">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="propagation.html#theory">theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="propagation.html#spherical-spreading-and-characteristic-impedance-effect">Spherical spreading and characteristic impedance effect</a></li>
-<li class="toctree-l3"><a class="reference internal" href="propagation.html#atmospheric-absorption-effects">Atmospheric absorption effects</a></li>
-<li class="toctree-l3"><a class="reference internal" href="propagation.html#combination-of-sub-bands">Combination of sub-bands</a></li>
-<li class="toctree-l3"><a class="reference internal" href="propagation.html#shielding-module">Shielding module</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="propagation.html">propagation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="shielding.html">shielding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source.html">source</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source.html#module-source">class description</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">source</a></li>
 <li class="toctree-l1"><a class="reference internal" href="spl.html">spl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="split_subbands.html#module-split_subbands">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="split_subbands.html#theory">theory</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="split_subbands.html">split subbands</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Trajectory</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="aerodynamics.html#module-aerodynamics">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="aerodynamics.html#theory">theory</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="atmosphere.html#module-atmosphere">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmosphere.html#theory">theory</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="aerodynamics.html">aerodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">atmosphere</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clcd.html">clcd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="flight_dynamics.html#module-flight_dynamics">class description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_dynamics.html#theory">theory</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="flight_dynamics.html">flight_dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mux.html">mux</a></li>
 <li class="toctree-l1"><a class="reference internal" href="propulsion.html">propulsion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trajectory.html">trajectory</a></li>
@@ -387,32 +304,6 @@
 </ul>
 </div>
 </div>
-<div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>Look at the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">installation</span></a> page for detailed instructions to get pyNA working on your machine.</p>
-</div>
-<div class="section" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<p>Look at the <em>examples</em> section for examples of a settings file, a run file and a post-processing file.</p>
-</div>
-<div class="section" id="citation">
-<h1>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h1>
-<p>If you utilize pyNA in your work, please reference it using the following citation:</p>
-<div class="highlight-latex notranslate"><div class="highlight"><pre><span></span>@unpublished<span class="nb">{</span>Voet2021,
-   author = <span class="nb">{</span>Laurens. J. A. Voet, Raymond L. Speth, Jayant S. Sabnis, Choon S. Tan and Steven R. H. Barrett<span class="nb">}</span>,
-   title = <span class="nb">{</span>Development of optimal control framework to design variable noise reduction systems for take-off operations of civil supersonic transport aircraft (work in progress).<span class="nb">}</span>,
-   year = <span class="nb">{</span>2021<span class="nb">}</span>,
-<span class="nb">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </div>
 
       </article>
@@ -460,12 +351,17 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Welcome to pyNA’s documentation!</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#python-version-of-pyna">Python version of pyNA</a></li>
+<li><a class="reference internal" href="#julia-version-of-pyna">Julia version of pyNA</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#getting-started">Getting started</a></li>
 <li><a class="reference internal" href="#citation">Citation</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a><ul>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
           </div>

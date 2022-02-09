@@ -1,10 +1,10 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="help!" href="help!.html" /><link rel="prev" title="partials" href="partials.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Computing a noise EPNL table" href="example_noise_epnl_table.html" /><link rel="prev" title="Computing a noise time series" href="example_noise_time_series.html" />
 
     <meta name="generator" content="sphinx-3.1.1, furo 2020.12.30.beta24"/>
-        <title>installation - pyNA 1.0.0 documentation</title>
+        <title>Computing noise contours - pyNA 1.0.0 documentation</title>
       <link rel="stylesheet" href="_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
     <link rel="stylesheet" href="_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
@@ -95,7 +95,7 @@
       <a href="index.html"><div class="brand">pyNA 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
     </div>
@@ -121,9 +121,16 @@
 <li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Support</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">installation</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example_noise_time_series.html">Computing a noise time series</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Computing noise contours</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_epnl_table.html">Computing a noise EPNL table</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_source_distribution.html">Computing noise source distributions</a></li>
 </ul>
 <p class="caption"><span class="caption-text">pyNA</span></p>
 <ul>
@@ -182,34 +189,35 @@
   <main class="main">
     <div class="content">
       <article role="main">
-        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="installation">
-<span id="id1"></span><h1>installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="python-version-of-pyna">
-<h2>Python version of pyNA<a class="headerlink" href="#python-version-of-pyna" title="Permalink to this headline">¶</a></h2>
-<p>Get pyNA from a cloned repository from <a class="reference external" href="https://github.mit.edu/lvoet/pyNA">Github</a>:</p>
-<blockquote>
-<div><p>git clone <a class="reference external" href="mailto:git%40github.mit.edu">git<span>@</span>github<span>.</span>mit<span>.</span>edu</a>:lvoet/pyNA.git</p>
-</div></blockquote>
-<p>Use pip to install pyNA:</p>
-<blockquote>
-<div><p>pip install -e .</p>
-</div></blockquote>
-<p>The python version is default in pyNA. To enable this mode, set a python environment variable to julia:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'pyna_language'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'python'</span>
+        <div class="section" id="computing-noise-contours">
+<span id="examplenoisecontours"></span><h1>Computing noise contours<a class="headerlink" href="#computing-noise-contours" title="Permalink to this headline">¶</a></h1>
+<p>This example shows how to compute ground level noise contours around an existing trajectory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pdb</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">openmdao.api</span> <span class="k">as</span> <span class="nn">om</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"pyna_language"</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'python'</span>
+<span class="kn">from</span> <span class="nn">pyNA.pyna</span> <span class="kn">import</span> <span class="n">pyna</span>
+
+<span class="c1"># Load default pyna settings</span>
+<span class="n">pyna_settings</span> <span class="o">=</span> <span class="n">pyna</span><span class="o">.</span><span class="n">load_settings</span><span class="p">(</span><span class="n">case_name</span> <span class="o">=</span> <span class="s1">'nasa_stca_standard'</span><span class="p">)</span>
+<span class="n">pyna_settings</span><span class="o">.</span><span class="n">save_results</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Compute noise contours</span>
+<span class="n">x_lst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15000</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">y_lst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">py</span> <span class="o">=</span> <span class="n">pyna</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">pyna_settings</span><span class="p">)</span>
+<span class="n">py</span><span class="o">.</span><span class="n">compute_noise_contours</span><span class="p">(</span><span class="n">x_lst</span><span class="o">=</span><span class="n">x_lst</span><span class="p">,</span> <span class="n">y_lst</span><span class="o">=</span><span class="n">y_lst</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">py</span><span class="o">.</span><span class="n">plot_noise_contours</span><span class="p">()</span>
 </pre></div>
-</div>
-</div>
-<div class="section" id="julia-version-of-pyna">
-<h2>Julia version of pyNA<a class="headerlink" href="#julia-version-of-pyna" title="Permalink to this headline">¶</a></h2>
-<p>To enable fast computation of sensitivities of acoustic objective functions in pyNA, an installation of Julia is required since the modules <em>geometry, source, propagation and levels</em> are using Julia’s ForwardDiff. Install <a class="reference external" href="https://julialang.org">Julia</a>. To enable this mode, set a python environment variable to julia:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'pyna_language'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'julia'</span>
-</pre></div>
-</div>
 </div>
 </div>
 
@@ -217,23 +225,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="help!.html">
+          <a class="next-page" href="example_noise_epnl_table.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">help!</div>
+                <div class="title">Computing a noise EPNL table</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="partials.html">
+          <a class="prev-page" href="example_noise_time_series.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">partials</div>
+                <div class="title">Computing a noise time series</div>
                 
               </div>
             </a>
@@ -247,7 +255,7 @@
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
             |
-            <a class="muted-link" href="_sources/installation.rst.txt"
+            <a class="muted-link" href="_sources/example_noise_contours.rst.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -255,28 +263,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">installation</a><ul>
-<li><a class="reference internal" href="#python-version-of-pyna">Python version of pyNA</a></li>
-<li><a class="reference internal" href="#julia-version-of-pyna">Julia version of pyNA</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

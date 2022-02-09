@@ -14,9 +14,59 @@
 Welcome to pyNA's documentation!
 --------------------------------
 
+Installation
+^^^^^^^^^^^^
+
+Python version of pyNA
+""""""""""""""""""""""
+
+Get pyNA from a cloned repository from `Github <https://github.com/MIT-LAE/pyNA>`_:
+
+   git clone git@github.mit.edu:lvoet/pyNA.git 
+
+Use pip to install pyNA:
+
+   pip install -e .
+
+The python version is default in pyNA. To enable this mode, set a python environment variable to julia:
+
+.. code-block::
+   
+   import os
+   os.environ['pyna_language'] = 'python'
+
+Julia version of pyNA
+"""""""""""""""""""""
+
+To enable fast computation of sensitivities of acoustic objective functions in pyNA, an installation of Julia is required since the modules *geometry, source, propagation and levels* are using Julia's ForwardDiff. Install `Julia <https://julialang.org>`_. To enable this mode, set a python environment variable to julia:
+
+.. code-block::
+   
+   import os
+   os.environ['pyna_language'] = 'julia'
+
+
+Citation
+^^^^^^^^^^^^
+If you utilize pyNA in your work, please reference it using the following citation:
+
+.. code-block:: latex
+
+   @unpublished{Voet2022,
+     author = {Laurens J. A. Voet and Prashanth Prakash and Raymond L. Speth and Jayant S. Sabnis and Choon S. Tan and Steven R. H. Barret},
+     title = {Sensitivities of aircraft acoustic metrics to engine design and control variables for multi-disciplinary optimization},
+     journal = {AIAA Journal (manuscript under review)},
+     year = {2022},
+   }
+
+
+
+Indices and tables
+^^^^^^^^^^^^^^^^^^
+
 .. toctree::
-   :maxdepth: 4
-   :caption: Theory
+   :maxdepth: 1
+   :caption: Main
 
    how_to_use
    methods
@@ -24,14 +74,16 @@ Welcome to pyNA's documentation!
    partials
 
 .. toctree::
-   :maxdepth: 4
-   :caption: Support
+   :maxdepth: 1
+   :caption:  Examples
 
-   installation
-   help!
+   example_noise_time_series
+   example_noise_contours
+   example_noise_epnl_table
+   example_noise_source_distribution
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: pyNA
 
    aircraft
@@ -44,7 +96,7 @@ Welcome to pyNA's documentation!
    pyNA
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: Noise
 
    airframe
@@ -71,7 +123,7 @@ Welcome to pyNA's documentation!
    split_subbands
    
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: Trajectory
 
    aerodynamics
@@ -82,31 +134,3 @@ Welcome to pyNA's documentation!
    propulsion
    trajectory
    trajectory_ode
-
-
-Installation
-------------
-Look at the :ref:`installation` page for detailed instructions to get pyNA working on your machine. 
-
-Getting started
----------------
-Look at the *examples* section for examples of a settings file, a run file and a post-processing file.
-
-Citation
---------
-If you utilize pyNA in your work, please reference it using the following citation:
-
-.. code-block:: latex
-
-   @unpublished{Voet2021,
-      author = {Laurens. J. A. Voet, Raymond L. Speth, Jayant S. Sabnis, Choon S. Tan and Steven R. H. Barrett},
-      title = {Development of optimal control framework to design variable noise reduction systems for take-off operations of civil supersonic transport aircraft (work in progress).},
-      year = {2021},
-   }
-
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

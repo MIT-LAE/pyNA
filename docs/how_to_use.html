@@ -113,17 +113,19 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption"><span class="caption-text">Theory</span></p>
+  <p class="caption"><span class="caption-text">Main</span></p>
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">how to use pyNA?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
 <li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Support</span></p>
+<p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_time_series.html">Computing a noise time series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_contours.html">Computing noise contours</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_epnl_table.html">Computing a noise EPNL table</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_noise_source_distribution.html">Computing noise source distributions</a></li>
 </ul>
 <p class="caption"><span class="caption-text">pyNA</span></p>
 <ul>
@@ -188,11 +190,11 @@
         <div class="section" id="how-to-use-pyna">
 <span id="how-to-use"></span><h1>how to use pyNA?<a class="headerlink" href="#how-to-use-pyna" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="settings-dictionary">
-<h2>settings dictionary<a class="headerlink" href="#settings-dictionary" title="Permalink to this headline">¶</a></h2>
+<h2>Settings dictionary<a class="headerlink" href="#settings-dictionary" title="Permalink to this headline">¶</a></h2>
 <p>The operation of pyNA is controlled using the <code class="docutils literal notranslate"><span class="pre">settings</span></code> class. An example of a settings dictionary can be found <a class="reference internal" href="settings.html#settings"><span class="std std-ref">here</span></a>.</p>
 </div>
 <div class="section" id="case-folder-structure">
-<h2>case folder structure<a class="headerlink" href="#case-folder-structure" title="Permalink to this headline">¶</a></h2>
+<h2>Case folder structure<a class="headerlink" href="#case-folder-structure" title="Permalink to this headline">¶</a></h2>
 <p>pyNA uses a specific folder structure for each analysis: all files related to the case named <code class="docutils literal notranslate"><span class="pre">settings['case_name']</span></code> are saved in a directory organized as follows:</p>
 <a class="reference internal image-reference" href="_images/folder_structure.jpg"><img alt="_images/folder_structure.jpg" src="_images/folder_structure.jpg" style="width: 400px;"/></a>
 <p>The <em>aircraft</em> subfolder contains all aircraft parameters (<code class="docutils literal notranslate"><span class="pre">aircraft.json</span></code>), the raw aircraft aerodynamics data (<code class="docutils literal notranslate"><span class="pre">aerodeck_cl.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">aerodeck_cd.csv</span></code>) and the aerodynamics deck used in the trajectory computations (<code class="docutils literal notranslate"><span class="pre">cl_aircraft.npy</span></code>, <code class="docutils literal notranslate"><span class="pre">cd_aircraft.npy</span></code>).
@@ -202,7 +204,7 @@ A temporary <em>shielding</em> folder is used for a shielding coefficient time s
 Finally, the <em>trajectory</em> folder contains trajectory time series (<code class="docutils literal notranslate"><span class="pre">trajectory.csv</span></code>).</p>
 </div>
 <div class="section" id="pyna-structure">
-<span id="model-structure"></span><h2>pyna structure<a class="headerlink" href="#pyna-structure" title="Permalink to this headline">¶</a></h2>
+<span id="model-structure"></span><h2>pyNA structure<a class="headerlink" href="#pyna-structure" title="Permalink to this headline">¶</a></h2>
 <p>An example pyna noise model structure is illustrated using the following N2 diagram. More information about the N2 diagram can be found on the <a class="reference external" href="http://openmdao.org/twodocs/versions/latest/features/model_visualization/n2_basics.html#n2-basics">Openmdao</a> website. An interactive version of the N2 diagram of pyNA can be found <a class="reference external" href="_static/n2.html">here</a>.</p>
 <a class="reference internal image-reference" href="_images/pyNA_N2.png"><img alt="_images/pyNA_N2.png" src="_images/pyNA_N2.png" style="width: 900px;"/></a>
 <p>From the N2diagram, you can see the components in the model, as well as how specific outputs are fed as inputs into different components. If you want to make an N2-diagram of your own model, you can use:</p>
@@ -212,7 +214,7 @@ Finally, the <em>trajectory</em> folder contains trajectory time series (<code c
 </div>
 </div>
 <div class="section" id="choosing-a-programming-language">
-<h2>choosing a programming language<a class="headerlink" href="#choosing-a-programming-language" title="Permalink to this headline">¶</a></h2>
+<h2>Choosing a programming language<a class="headerlink" href="#choosing-a-programming-language" title="Permalink to this headline">¶</a></h2>
 <p>The noise modules in pyNA are developed in two programming languages: python and julia. The default language is python. When doing trajectory optimizations, pyNA makes use of the Julia ForwardDiff module to compute acoustic objective function sensitivities. You can choose which language to use by setting a python environment variable to <code class="docutils literal notranslate"><span class="pre">'python'</span></code> or <code class="docutils literal notranslate"><span class="pre">'julia'</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'pyna_language'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'julia'</span>
@@ -220,7 +222,7 @@ Finally, the <em>trajectory</em> folder contains trajectory time series (<code c
 </div>
 </div>
 <div class="section" id="initializating-and-running-a-pyna-model">
-<h2>initializating and running a pyNA model<a class="headerlink" href="#initializating-and-running-a-pyna-model" title="Permalink to this headline">¶</a></h2>
+<h2>Initializating and running a pyNA model<a class="headerlink" href="#initializating-and-running-a-pyna-model" title="Permalink to this headline">¶</a></h2>
 <p>To start up pyNA, load the <code class="docutils literal notranslate"><span class="pre">pyna_settings</span></code> class and initialize the model:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyNA</span> <span class="kn">import</span> <span class="n">pyna</span>
 <span class="n">py</span> <span class="o">=</span> <span class="n">pyna</span><span class="p">(</span><span class="n">pyna_settings</span><span class="p">)</span>
@@ -240,6 +242,12 @@ Finally, the <em>trajectory</em> folder contains trajectory time series (<code c
 <div class="section" id="save-and-load-results-from-a-file">
 <h2>Save and load results from a file<a class="headerlink" href="#save-and-load-results-from-a-file" title="Permalink to this headline">¶</a></h2>
 <p>The OpenMDAO models can be saved by setting <code class="docutils literal notranslate"><span class="pre">settings['save_results']</span> <span class="pre">=</span> <span class="pre">True</span></code>. Results can be read from the recorded output file using the <code class="docutils literal notranslate"><span class="pre">pyna.load_results(self,</span> <span class="pre">filename,</span> <span class="pre">casename)</span></code> function. Specify the file name in the output folder of the <code class="docutils literal notranslate"><span class="pre">settings["case_directory"]</span></code> directory using <em>filename</em> and specify the case reader casename. To view the names of the cases in an OpenMDAO case recorder, use <code class="docutils literal notranslate"><span class="pre">case.list_cases()</span></code>. Finally, To save a time series .csv file from an OpenMDAO model, use <code class="docutils literal notranslate"><span class="pre">pyna.save_timeseries</span></code> command.</p>
+</div>
+<div class="section" id="further-support">
+<h2>Further support<a class="headerlink" href="#further-support" title="Permalink to this headline">¶</a></h2>
+<p>For more support, just send me an email at <a class="reference external" href="mailto:lvoet%40mit.edu?subject=pyNA support: &lt;topic&gt;&amp;body=Hi,%0d%0a%0d%0aI like more information about ... %0d%0a%0d%0a Github link to code line/block: %0d%0a%0d%0aThanks!">lvoet<span>@</span>mit<span>.</span>edu</a>.</p><p>If you have any comments or feedback for the pyNA tema, feel free to file a <a class="reference external" href="https://github.com/MIT-LAE/pyNA/issues/new">github issue</a> or open a github <a class="reference external" href="https://github.com/MIT-LAE/pyNA/pulls">pull request</a>.</p>
+<p>You can also suggest <a class="reference external" href="https://github.com/MIT-LAE/pyNA/projects/new">new projects</a> we can add to pyNA.</p>
+<p>We are looking forward to working with you!</p>
 </div>
 </div>
 
@@ -298,12 +306,13 @@ Finally, the <em>trajectory</em> folder contains trajectory time series (<code c
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">how to use pyNA?</a><ul>
-<li><a class="reference internal" href="#settings-dictionary">settings dictionary</a></li>
-<li><a class="reference internal" href="#case-folder-structure">case folder structure</a></li>
-<li><a class="reference internal" href="#pyna-structure">pyna structure</a></li>
-<li><a class="reference internal" href="#choosing-a-programming-language">choosing a programming language</a></li>
-<li><a class="reference internal" href="#initializating-and-running-a-pyna-model">initializating and running a pyNA model</a></li>
+<li><a class="reference internal" href="#settings-dictionary">Settings dictionary</a></li>
+<li><a class="reference internal" href="#case-folder-structure">Case folder structure</a></li>
+<li><a class="reference internal" href="#pyna-structure">pyNA structure</a></li>
+<li><a class="reference internal" href="#choosing-a-programming-language">Choosing a programming language</a></li>
+<li><a class="reference internal" href="#initializating-and-running-a-pyna-model">Initializating and running a pyNA model</a></li>
 <li><a class="reference internal" href="#save-and-load-results-from-a-file">Save and load results from a file</a></li>
+<li><a class="reference internal" href="#further-support">Further support</a></li>
 </ul>
 </li>
 </ul>

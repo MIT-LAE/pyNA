@@ -296,7 +296,7 @@
 </dd></dl>
 <dl class="py method">
 <dt id="noise.Noise.setup_time_series">
-<code class="sig-name descname">setup_time_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">n_t</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">optimization</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.setup_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.setup_time_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setup_time_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">n_t</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">control_optimization</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.setup_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.setup_time_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup model for computing noise of predefined trajectory time_series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -305,7 +305,7 @@
 <li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
 <li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
 <li><p><strong>n_t</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Number of time steps in trajectory</p></li>
-<li><p><strong>optimization</strong> (<em>bool</em>) – flag to run trajectory optimization</p></li>
+<li><p><strong>control_optimization</strong> (<em>bool</em>) – flag to run optimization for trajectory controls</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -315,7 +315,7 @@
 </dd></dl>
 <dl class="py method">
 <dt id="noise.Noise.setup_trajectory_noise">
-<code class="sig-name descname">setup_trajectory_noise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">n_t</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">optimization</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.setup_trajectory_noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.setup_trajectory_noise" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setup_trajectory_noise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">n_t</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">control_optimization</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/noise.html#Noise.setup_trajectory_noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.setup_trajectory_noise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup model for computing noise along computed trajectory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -324,7 +324,7 @@
 <li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
 <li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
 <li><p><strong>n_t</strong> (<em>np.int</em>) – number of time steps in trajectory</p></li>
-<li><p><strong>optimization</strong> (<em>bool</em>) – flag to run trajectory optimization</p></li>
+<li><p><strong>control_optimization</strong> (<em>bool</em>) – flag to run optimization for trajectory controls</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
