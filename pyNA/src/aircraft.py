@@ -9,7 +9,7 @@ import scipy
 @dataclass
 class Aircraft:
     """
-    Aircraft class containing vehicle constants.
+    Aircraft class containing vehicle constants and aerodynamics data.
 
     """
 
@@ -68,12 +68,14 @@ class Aircraft:
     z_max: float               # Maximum climb-out altitude [m]
     gamma_rot : float          # Initial climb angle [deg]
 
-    def __init__(self, name: str, settings: Settings) -> None:
+    def __init__(self, name: str, version: str, settings: Settings) -> None:
         """
         Initialize Aircraft class.
 
         :param name: aircraft name
         :type name: str
+        :param version: aircraft version
+        :type version: str
         :param settings: pyna settings
         :type settings: Settings
 
@@ -82,6 +84,7 @@ class Aircraft:
 
         # Initialize aircraft name
         self.name = name
+        self.version = version
 
         # Initialize aerodynamics deck and flight performance parameters
         self.aero = dict()
@@ -89,7 +92,7 @@ class Aircraft:
         # self.v_rot: float
 
         # Load aircraft parameters
-        path = settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/' + settings.ac_name + '_' + settings.ac_version + '.json'
+        path = settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/' + self.name + '_' + self.version + '.json'
         with open(path) as f:
             params = json.load(f)
         Aircraft.set_aircraft_parameters(self, **params)
@@ -175,8 +178,6 @@ class Aircraft:
         :type af_clean_v: bool
         :param af_delta_wing: Flag for delta wing configuration [-]
         :type af_delta_wing: bool
-        :param c_l_max: Max. lift coefficient [-]
-        :type c_l_max: np.float64
         :param alpha_0: Wing mounting angle [deg]
         :type alpha_0: np.float64
         :param k_rot: Rotation coefficient (v_rot/v_stall) [-]
@@ -265,26 +266,8 @@ class Aircraft:
 
         return None
 
-    def compute_characteristic_speeds(self, settings: Settings) -> None:
-
-        # Create interpolation functions for aerodynamic coefficients
-        f_c_l = scipy.interpolate.RegularGridInterpolator((self.aero['alpha'], self.aero['theta_flaps'], self.aero['theta_slats']), self.aero['c_l'])
-        f_c_d = scipy.interpolate.RegularGridInterpolator((self.aero['alpha'], self.aero['theta_flaps'], self.aero['theta_slats']), self.aero['c_d'])
-
-        # Compute aerodynamic coefficients for input flap/slat deflection angles
-        c_l_hld = f_c_l((self.aero['alpha'], settings.theta_flaps, settings.theta_slats))
-        c_d_hld = f_c_d((self.aero['alpha'], settings.theta_flaps, settings.theta_slats))
-        self.c_l_max = np.max(c_l_hld)
-
-        # Compute characteristic velocities: stall speed and rotation speed
-        # self.v_stall = np.sqrt(2 * self.mtow * 9.80665 / (self.af_S_w * 1.225 * self.c_l_max))
-        # self.v_rot = self.k_rot * self.v_stall
-
-        return None
-        
-
     @staticmethod
-    def generate_aerodeck_from_csv(filename_c_l:str, filename_cd:str, savename_c_l:str=None, savename_cd:str=None) -> None:
+    def generate_aerodeck_from_csv(filename_c_l:str, filename_c_d:str, savename_c_l:str=None, savename_cd:str=None) -> None:
         """
         Generate a CL-CD aerodynamics deck from a .csv data file.
 
@@ -324,6 +307,6 @@ class Aircraft:
         if savename_c_l is not None:
             np.save(savename_c_l, c_l)
         if savename_cd is not None:
-            np.save(savename_cd, cd)
+            np.save(savename_cd, c_d)
 
         return None

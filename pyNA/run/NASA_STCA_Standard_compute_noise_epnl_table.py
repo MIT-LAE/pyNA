@@ -9,9 +9,12 @@ os.environ["pyna_language"] = 'python'
 from pyNA.pyna import pyna
 
 # Load default pyna settings
-pyna_settings = pyna.load_settings(case_name = 'NASA STCA Standard')
+pyna_settings = pyna.load_settings(case_name = 'nasa_stca_standard')
 pyna_settings.save_results = True
 
 # Run pyna
 py = pyna(settings=pyna_settings)
-py.compute_noise_epnl_table(validation=True)
+table = py.compute_noise_epnl_table()
+
+# Print table
+print(table)

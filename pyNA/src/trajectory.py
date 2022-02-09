@@ -29,7 +29,7 @@ class Trajectory:
         self.n_t = np.int
 
         # Initialize phases
-        self.phase_name_lst = ['groundroll', 'rotation', 'climb', 'vnrs']#, 'cutback']
+        self.phase_name_lst = ['groundroll', 'rotation', 'climb', 'vnrs', 'cutback']
         self.phases = dict()
 
         # Compute transcription for the phases
@@ -39,7 +39,7 @@ class Trajectory:
         self.phase_size = []
         for i, phase in enumerate(self.phase_name_lst):
             if phase == 'groundroll':
-                self.num_segments.append(5)
+                self.num_segments.append(7)
             elif phase == 'rotation':
                 self.num_segments.append(3)
             elif phase == 'climb':
@@ -264,20 +264,21 @@ class Trajectory:
         problem.driver.opt_settings['print_level'] = 5
         problem.driver.opt_settings['max_iter'] = settings.max_iter
         problem.driver.opt_settings['nlp_scaling_method'] = 'gradient-based'
-        
+        # problem.driver.opt_settings['mu_strategy'] = 'adaptive'
+
         problem.driver.declare_coloring(tol=1e-12)
         problem.model.linear_solver = om.LinearRunOnce()
         problem.driver.opt_settings['tol'] = 1e-6
-        problem.driver.opt_settings['acceptable_tol'] = 1e-3
+        problem.driver.opt_settings['acceptable_tol'] = 1e-2
         if settings.output_file_name.find('/') == -1:
             problem.driver.opt_settings['output_file'] = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/IPOPT_trajectory_convergence.out'
         else:
             problem.driver.opt_settings['output_file'] = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_file_name[:settings.output_file_name.find('/')] + '/IPOPT_trajectory_convergence.out'
 
-        if control_optimization:
-            problem.driver.opt_settings['dual_inf_tol'] = 1e1
-            problem.driver.opt_settings['acceptable_tol'] = 1e1
-            problem.driver.opt_settings['tol'] = 1e1
+        # if control_optimization:
+            # problem.driver.opt_settings['dual_inf_tol'] = 1e1
+            # problem.driver.opt_settings['acceptable_tol'] = 1e1
+            # problem.driver.opt_settings['tol'] = 1e1
 
         # Setup trajectory and initialize trajectory transcription and compute number of points per phase
         traj = dm.Trajectory()
@@ -305,7 +306,7 @@ class Trajectory:
             # PHLD
             if control_optimization and settings.PHLD:
                 # self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
-                self.phases['groundroll'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, ref=10.)
+                self.phases['groundroll'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, rate_continuity_scaler=10., ref=10.)
             else:
                 self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -320,13 +321,12 @@ class Trajectory:
             self.phases['rotation'].set_time_options(initial_bounds=(10, 60), duration_bounds=(1, 60), initial_ref=100., duration_ref=100.)
             self.phases['rotation'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=False, ref=1000., defect_ref=10.)
             self.phases['rotation'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=False, ref=100.)
-            self.phases['rotation'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=True, fix_final=False, ref=100., defect_ref=10.)
+            self.phases['rotation'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100., defect_ref=10.)
             self.phases['rotation'].add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
             self.phases['rotation'].add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=-2., upper=18., ref=10., defect_ref=10.)
             # PHLD
             if control_optimization and settings.PHLD:
-                # self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
-                self.phases['rotation'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, ref=10.)
+                self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
             else:
                 self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['rotation'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -355,8 +355,7 @@ class Trajectory:
                 self.phases['climb'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                # self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
-                self.phases['climb'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, ref=10.)
+                self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
             else:
                 self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['climb'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -386,7 +385,8 @@ class Trajectory:
                 self.phases['vnrs'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_vnrs, dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                self.phases['vnrs'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, ref=10.)
+                # self.phases['vnrs'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, rate_continuity_scaler=100., ref=10.)
+                self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
             else:
                 self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['vnrs'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -412,7 +412,7 @@ class Trajectory:
                 self.phases['cutback'].add_parameter('TS', targets='propulsion.TS', units=None, val=TS_min, dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                self.phases['cutback'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                self.phases['cutback'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
             else:
                 self.phases['cutback'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['cutback'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -455,22 +455,28 @@ class Trajectory:
             traj.link_phases(phases=['groundroll', 'rotation'], vars=['time', 'x', 'v', 'z', 'alpha'])
             if control_optimization and settings.PHLD:
                 traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+        
         if 'climb' in self.phase_name_lst:
             traj.link_phases(phases=['rotation', 'climb'], vars=['time', 'x', 'z', 'v', 'alpha', 'gamma'])
-            # if control_optimization and settings.PHLD:
-                # traj.add_linkage_constraint(phase_a='rotation', phase_b='climb', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+            if control_optimization and settings.PHLD:
+                traj.add_linkage_constraint(phase_a='rotation', phase_b='climb', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+        
         if 'vnrs' in self.phase_name_lst:
-            traj.link_phases(phases=['climb', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma', 'theta_flaps'])
+            traj.link_phases(phases=['climb', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
             if control_optimization and settings.PTCB:
                 traj.add_linkage_constraint(phase_a='climb', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
-            if control_optimization and settings.PHLD:
-                traj.add_linkage_constraint(phase_a='climb', phase_b='vnrs', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+            # if control_optimization and settings.PHLD:
+                # traj.add_linkage_constraint(phase_a='climb', phase_b='vnrs', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+        
         if 'cutback' in self.phase_name_lst:
-            traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'z', 'v', 'alpha', 'gamma'])
-            if control_optimization and settings.PTCB:
-                traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
-            if control_optimization and settings.PHLD:
-                traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+            if control_optimization:
+                traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'z', 'v', 'alpha', 'gamma'])
+            else:
+                traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
+                if settings.PTCB:
+                    traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+                if control_optimization and settings.PHLD:
+                    traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
         # Mux trajectory variables
         mux_t = problem.model.add_subsystem(name='trajectory', subsys=Mux(size_inputs=np.array(self.phase_size), size_output=self.trajectory_size))
@@ -524,10 +530,10 @@ class Trajectory:
             elif var[i] in ['theta_flaps']:
                 if control_optimization and settings.PHLD:
                     for j, phase_name in enumerate(self.phase_name_lst):
-                        if phase_name in ['groundroll', 'rotation', 'climb', 'cutback']:
-                            # problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
-                            problem.model.connect('phases.' + phase_name + '.interpolated.controls:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
+                        if phase_name in ['rotation', 'climb', 'vnrs', 'cutback']:
+                            problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                         else:
+                            # problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                             problem.model.connect('phases.' + phase_name + '.interpolated.controls:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                 else:
                     for j, phase_name in enumerate(self.phase_name_lst):
@@ -570,7 +576,7 @@ class Trajectory:
 
         # Add objective for trajectory model
         if control_optimization:
-            if objective == 'r_flyover':
+            if objective == 'noise_surrogate':
                 x_observer = np.array([6500., 0., 0.3048*4.])
                 problem.model.add_subsystem('noise', SurrogateNoise(num_nodes=self.trajectory_size, x_observer=x_observer), promotes_outputs=['noise'])
                 problem.model.connect('trajectory.x', 'noise.x')
@@ -583,6 +589,14 @@ class Trajectory:
             elif objective == 'x_end':
                 problem.model.add_objective('trajectory.x', index=-1, scaler=0.001)
 
+            elif objective == 'combined':
+                problem.model.add_subsystem('combined', om.ExecComp('objective = (x_to - 2148.63)/2148.63 + (x_end - 7017.72)/7017.72', 
+                                                                    x_to={'value': 0., 'units': 'm'},
+                                                                    x_end={'value': 0., 'units': 'm'}), 
+                                                                    promotes=['objective'])
+                problem.model.connect('phases.climb.timeseries.states:x' , 'combined.x_to', src_indices=[-1])
+                problem.model.connect('trajectory.x', 'combined.x_end', src_indices=[-1])
+                problem.model.add_objective('objective', scaler=10.)
             else: 
                 raise ValueError('Invalid control objective specified.')
         else:
@@ -606,6 +620,7 @@ class Trajectory:
                 problem['phases.groundroll.states:z'] = self.phases[self.phase_name_lst[0]].interp(ys=[0, 0], nodes='state_input')
                 problem['phases.groundroll.states:v'] = self.phases[self.phase_name_lst[0]].interp(ys=[0.0, 100], nodes='state_input')
                 problem['phases.groundroll.states:alpha'] = self.phases[self.phase_name_lst[0]].interp(ys=[ac.alpha_0, ac.alpha_0], nodes='state_input')
+                problem['phases.groundroll.controls:theta_flaps'] = self.phases[self.phase_name_lst[0]].interp(ys=[4., 4.], nodes='control_input')                
 
             # Phase 2: rotation
             if 'rotation' in self.phase_name_lst:

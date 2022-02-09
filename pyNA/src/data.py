@@ -35,15 +35,15 @@ class Data:
     * ``jet_F_strouhal``:     table with jet mixing noise spectral dependency: Strouhal number
     * ``jet_F_f``:            interpolation function for jet mixing noise spectral dependency
 
-    * ``Faddeeva_itau_re``:
-    * ``Faddeeva_itau_im``:
-    * ``Faddeeva_real``:
-    * ``Faddeeva_imag``:
+    * ``Faddeeva_itau_re``:   table with real part of the input to the Faddeeva function (for julia ground reflections)
+    * ``Faddeeva_itau_im``:   table with imaginary part of the input to the Faddeeva function (for julia ground reflections)
+    * ``Faddeeva_real``:      table with real part of the Faddeeva function (for julia ground reflections)
+    * ``Faddeeva_imag``:      table with imaginary part of the Faddeeva function (for julia ground reflections)
 
-    * ``noy_spl``:
-    * ``noy_freq``:
-    * ``noy``:
-    * ``noy_f``:
+    * ``noy_spl``:            sound pressure levels of noy table
+    * ``noy_freq``:           1/3-rd octave frequency bands of noy table
+    * ``noy``:                noy table
+    * ``noy_f``:              inteprolation function for the noy table
 
     * ``supp_fi``:            table with suppression factors for fan inlet noise
     * ``supp_fi_angles``:     directivity angles of suppression factors for fan inlet noise table
@@ -58,9 +58,9 @@ class Data:
     * ``supp_af_freq``:       frequencies of suppression factors for airframe noise table
     * ``supp_af_f``:          interpolation function for HSR airframe noise suppression coefficient
 
-    * ``shield_l``:
-    * ``shield_f``:
-    * ``shield_a``:
+    * ``shield_l``:           lateral microphone airframe shielding delta dB [dB]
+    * ``shield_f``:           flyover microphone airframe shielding delta dB [dB]
+    * ``shield_a``:           approach microphone airframe shielding delta dB [dB]
 
     """
 

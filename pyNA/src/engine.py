@@ -31,7 +31,7 @@ class Engine:
         :param engine_file_name: File name of engine time series
         :type engine_file_name: str
 
-        :return:
+        :return: None
         """
 
         # Load raw inputs from .csv file
@@ -51,7 +51,7 @@ class Engine:
         :param engine_file_name: File name of engine time series
         :type engine_file_name: str
 
-        :return:
+        :return: None
         """
 
         # Load raw inputs from .csv file

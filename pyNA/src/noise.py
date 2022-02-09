@@ -4,7 +4,7 @@ import dymos as dm
 import numpy as np
 import os
 import openmdao.api as om
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from pyNA.src.data import Data
 from pyNA.src.settings import Settings
 from pyNA.src.aircraft import Aircraft
@@ -44,9 +44,17 @@ class Noise:
         self.epnl_table = pd.DataFrame()
 
     @staticmethod
-    def get_indices_noise_input_vector(settings, n_t):
+    def get_indices_noise_input_vector(settings: Settings, n_t: np.int) -> Union[Dict, Dict]:
         """
-        Get (julia) indices for input vector noise model.
+        Get indices for input vector of noise model.
+
+        :param settings: pyna settings
+        :type settings: Settings
+        :param n_t: number of time steps in trajectory
+        :type n_t: np.int
+
+        :return: idx, idx_src
+
         """
 
         # Initialize indices dictionary
@@ -283,7 +291,7 @@ class Noise:
 
         return idx, idx_src
 
-    def setup_time_series(self, problem:om.Problem, settings:Settings, ac:Aircraft, n_t:np.int, mode:str, optimization=False) -> None:
+    def setup_time_series(self, problem:om.Problem, settings:Settings, ac:Aircraft, n_t:np.int, mode:str, control_optimization=False) -> None:
         """
         Setup model for computing noise of predefined trajectory time_series.
 
@@ -295,8 +303,8 @@ class Noise:
         :type ac: Aircraft
         :param n_t: Number of time steps in trajectory
         :type n_t: Dict[str, Any]
-        :param optimization: flag to run trajectory optimization
-        :type optimization: bool
+        :param control_optimization: flag to run optimization for trajectory controls
+        :type control_optimization: bool
 
         :return: None
         """
@@ -314,7 +322,7 @@ class Noise:
         
         elif settings.language == 'julia':
             problem.model.add_subsystem(name='noise',
-                                        subsys=make_component(julia.Noise(settings, self.data, ac, n_t,  idx, idx_src, optimization)),
+                                        subsys=make_component(julia.Noise(settings, self.data, ac, n_t,  idx, idx_src, control_optimization)),
                                         promotes_inputs=[],
                                         promotes_outputs=[])
 
@@ -488,7 +496,7 @@ class Noise:
 
         return
 
-    def setup_trajectory_noise(self, problem: om.Problem, settings: Settings, ac: Aircraft, n_t:np.int, optimization=False) -> None:
+    def setup_trajectory_noise(self, problem: om.Problem, settings: Settings, ac: Aircraft, n_t:np.int, control_optimization=False) -> None:
         """
         Setup model for computing noise along computed trajectory.
 
@@ -498,10 +506,10 @@ class Noise:
         :type settings: Settings
         :param ac: aircraft parameters
         :type ac: Aircraft
-        :param n_t: Number of time steps in trajectory
+        :param n_t: number of time steps in trajectory
         :type n_t: np.int
-        :param optimization: flag to run trajectory optimization
-        :type optimization: bool
+        :param control_optimization: flag to run optimization for trajectory controls
+        :type control_optimization: bool
 
         :return: None
         """
@@ -509,7 +517,7 @@ class Noise:
         idx, idx_src = Noise.get_indices_noise_input_vector(settings=settings, n_t=n_t)
 
         problem.model.add_subsystem(name='noise',
-                                    subsys=make_component(julia.Noise(settings, self.data, ac, n_t,  idx, idx_src, optimization)),
+                                    subsys=make_component(julia.Noise(settings, self.data, ac, n_t,  idx, idx_src, control_optimization)),
                                     promotes_inputs=[],
                                     promotes_outputs=[])
 
@@ -573,7 +581,7 @@ class Noise:
             problem.model.connect('engine.d_f', 'noise.d_f')
 
         # Add objective for trajectory model
-        if optimization:
+        if control_optimization:
             problem.model.add_objective('noise.'+settings.levels_int_metric, ref=1.)
         return None
 

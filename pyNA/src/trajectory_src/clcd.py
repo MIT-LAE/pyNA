@@ -18,7 +18,7 @@ class CLCD(om.MetaModelStructuredComp):
     The *CLCD* component computes the following outputs:
 
     * ``outputs['c_l']``:                aircraft lift coefficient [-]
-    * ``outputs['c_l_max'];              maximum aircraft lift coefficient [-]
+    * ``outputs['c_l_max']``:            maximum aircraft lift coefficient [-]
     * ``outputs['c_d']``:                aircraft drag coefficient [-]
     
     """

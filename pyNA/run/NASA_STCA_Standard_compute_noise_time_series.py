@@ -9,7 +9,7 @@ os.environ["pyna_language"] = 'python'
 from pyNA.pyna import pyna
 
 # Load default pyna settings
-pyna_settings = pyna.load_settings(case_name = 'NASA STCA Standard')
+pyna_settings = pyna.load_settings(case_name ='nasa_stca_standard')
 pyna_settings.save_results = True
 
 # Run pyna

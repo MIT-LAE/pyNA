@@ -57,7 +57,7 @@ class Emissions(om.ExplicitComponent):
         T3 = inputs['Tti_c']
         P3 = inputs['Pti_c']
 
-        # Curve fit for EINOx (P3 in Pa and T3 in K)
+        # Curve fit for EINOx for CFM56-5B3 engine from EDB (P3 in Pa and T3 in K)
         a = 6.25528852e-08
         b = -1.17064467e-04
         c = 7.36953400e-02
@@ -73,7 +73,7 @@ class Emissions(om.ExplicitComponent):
         T3 = inputs['Tti_c']
         P3 = inputs['Pti_c']
 
-        # Curve fit for EINOx (P3 in Pa and T3 in K)
+        # Curve fit for EINOx for CFM56-5B3 engine from EDB (P3 in Pa and T3 in K)
         a = 6.25528852e-08
         b = -1.17064467e-04
         c = 7.36953400e-02

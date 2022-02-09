@@ -9,12 +9,12 @@ os.environ["pyna_language"] = 'python'
 from pyNA.pyna import pyna
 
 # Load default pyna settings
-pyna_settings = pyna.load_settings(case_name = 'NASA STCA Standard')
+pyna_settings = pyna.load_settings(case_name = 'nasa_stca_standard')
 pyna_settings.save_results = True
 
 # Compute noise contours
-x_lst = np.linspace(0, 15000, 5)
-y_lst = np.linspace(0, 4000, 2)
+x_lst = np.linspace(0, 15000, 16)
+y_lst = np.linspace(0, 4000, 5)
 py = pyna(settings=pyna_settings)
 py.compute_noise_contours(x_lst=x_lst, y_lst=y_lst)
 

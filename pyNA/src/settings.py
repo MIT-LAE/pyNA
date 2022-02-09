@@ -276,7 +276,7 @@ class Settings(FrozenClass):
         # Freeze self.settings
         self._freeze()
 
-    def check(self):
+    def check(self) -> None:
 
         """
         Check the pyNA settings before a run.
