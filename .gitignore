@@ -11,4 +11,4 @@ cases/*
 
 wg3/
 
-utils/*.ipynb
+*.ipynb
