@@ -236,7 +236,7 @@
         <span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'settings'</span><span class="p">]</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NASA STCA Standard"</span><span class="p">,</span> <span class="s2">"stca_enginedesign_standard"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">shielding</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"nasa_stca_standard"</span><span class="p">,</span> <span class="s2">"stca_enginedesign_standard"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">shielding</span><span class="p">:</span>
                 
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">)):</span>
 

@@ -202,6 +202,8 @@
 </li>
           <li><a href="engine.html#engine.Engine.__init__">(engine.Engine method)</a>
 </li>
+          <li><a href="mux.html#mux.Mux.__init__">(mux.Mux method)</a>
+</li>
           <li><a href="noise.html#noise.Noise.__init__">(noise.Noise method)</a>
 </li>
           <li><a href="pyNA.html#pyNA.pyna.pyna.__init__">(pyNA.pyna.pyna method)</a>
@@ -304,8 +306,6 @@
 </li>
         <li><a href="aircraft.html#aircraft.Aircraft.alpha_0">alpha_0 (aircraft.Aircraft attribute)</a>
 </li>
-        <li><a href="aircraft.html#aircraft.Aircraft.alpha_rot">alpha_rot (aircraft.Aircraft attribute)</a>
-</li>
         <li>
     atmosphere
 
@@ -333,6 +333,8 @@
   <h2>C</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="aircraft.html#aircraft.Aircraft.c_l_max">c_l_max (aircraft.Aircraft attribute)</a>
+</li>
         <li><a href="fan.html#fan.Fan.calculate_cutoff">calculate_cutoff() (fan.Fan static method)</a>
 </li>
         <li><a href="fan.html#fan.Fan.calculate_harmonics">calculate_harmonics() (fan.Fan static method)</a>
@@ -340,8 +342,6 @@
         <li><a href="settings.html#settings.Settings.check">check() (settings.Settings method)</a>
 </li>
         <li><a href="trajectory.html#trajectory.Trajectory.check_convergence">check_convergence() (trajectory.Trajectory static method)</a>
-</li>
-        <li><a href="aircraft.html#aircraft.Aircraft.cl_max">cl_max (aircraft.Aircraft attribute)</a>
 </li>
         <li>
     clcd
@@ -405,11 +405,15 @@
         <ul>
           <li><a href="atmosphere.html#atmosphere.Atmosphere.compute_partials">(atmosphere.Atmosphere method)</a>
 </li>
+          <li><a href="emissions.html#emissions.Emissions.compute_partials">(emissions.Emissions method)</a>
+</li>
           <li><a href="flight_dynamics.html#flight_dynamics.FlightDynamics.compute_partials">(flight_dynamics.FlightDynamics method)</a>
 </li>
           <li><a href="mux.html#mux.Mux.compute_partials">(mux.Mux method)</a>
 </li>
         </ul></li>
+        <li><a href="trajectory.html#trajectory.Trajectory.compute_size_output_mux">compute_size_output_mux() (trajectory.Trajectory method)</a>
+</li>
         <li><a href="noise.html#noise.Noise.compute_source_distribution">compute_source_distribution() (noise.Noise static method)</a>
 </li>
         <li><a href="noise.html#noise.Noise.compute_time_series">compute_time_series() (noise.Noise static method)</a>
@@ -559,8 +563,6 @@
         <li><a href="trajectory.html#trajectory.Trajectory.get_engine_variables">get_engine_variables() (trajectory.Trajectory static method)</a>
 </li>
         <li><a href="noise.html#noise.Noise.get_indices_noise_input_vector">get_indices_noise_input_vector() (noise.Noise static method)</a>
-</li>
-        <li><a href="trajectory.html#trajectory.Trajectory.get_minimum_TS_OEI">get_minimum_TS_OEI() (trajectory.Trajectory static method)</a>
 </li>
         <li>
     ground_reflections
@@ -741,7 +743,7 @@
 </li>
         <li><a href="aircraft.html#aircraft.Aircraft.load_aerodynamics">load_aerodynamics() (aircraft.Aircraft method)</a>
 </li>
-        <li><a href="engine.html#engine.Engine.load_engine_deck">load_engine_deck() (engine.Engine method)</a>
+        <li><a href="engine.html#engine.Engine.load_deck">load_deck() (engine.Engine method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
@@ -757,7 +759,7 @@
         </ul></li>
         <li><a href="data.html#data.Data.load_propagation_tables">load_propagation_tables() (data.Data method)</a>
 </li>
-        <li><a href="pyNA.html#pyNA.pyna.pyna.load_results">load_results() (pyNA.pyna.pyna static method)</a>
+        <li><a href="pyNA.html#pyNA.pyna.pyna.load_results">load_results() (pyNA.pyna.pyna method)</a>
 </li>
         <li><a href="pyNA.html#pyNA.pyna.pyna.load_settings">load_settings() (pyNA.pyna.pyna static method)</a>
 </li>
@@ -959,7 +961,9 @@
 </li>
         <li><a href="pyNA.html#pyNA.pyna.pyna.plot_noise_time_series">plot_noise_time_series() (pyNA.pyna.pyna method)</a>
 </li>
-        <li><a href="pyNA.html#pyNA.pyna.pyna.plot_trajectory">plot_trajectory() (pyNA.pyna.pyna static method)</a>
+        <li><a href="pyNA.html#pyNA.pyna.pyna.plot_optimizer_convergence_data">plot_optimizer_convergence_data() (pyNA.pyna.pyna static method)</a>
+</li>
+        <li><a href="pyNA.html#pyNA.pyna.pyna.plot_trajectory">plot_trajectory() (pyNA.pyna.pyna method)</a>
 </li>
         <li>
     pnlt
@@ -970,6 +974,8 @@
         </ul></li>
         <li><a href="pnlt.html#pnlt.pnlt">pnlt() (in module pnlt)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     propagation
 
@@ -977,8 +983,6 @@
           <li><a href="propagation.html#module-propagation">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="propagation.html#propagation.Propagation">Propagation (class in propagation)</a>
 </li>
         <li>

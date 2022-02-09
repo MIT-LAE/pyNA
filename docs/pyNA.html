@@ -237,7 +237,7 @@ variables.</p>
 </dd></dl>
 <dl class="py method">
 <dt id="pyNA.pyna.pyna.compute_noise_epnl_table">
-<code class="sig-name descname">compute_noise_epnl_table</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">validation</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/pyNA/pyna.html#pyna.compute_noise_epnl_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.compute_noise_epnl_table" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_noise_epnl_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span> → pandas.core.frame.DataFrame<a class="reference internal" href="_modules/pyNA/pyna.html#pyna.compute_noise_epnl_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.compute_noise_epnl_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute table of epnl for individual noise sources and observers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -270,11 +270,14 @@ variables.</p>
 </dd></dl>
 <dl class="py method">
 <dt id="pyNA.pyna.pyna.compute_trajectory">
-<code class="sig-name descname">compute_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/pyNA/pyna.html#pyna.compute_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.compute_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">control_optimization</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">objective</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> → bool<a class="reference internal" href="_modules/pyNA/pyna.html#pyna.compute_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.compute_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute aircraft take-off trajectory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
+<dd class="field-odd"><p>converged</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -293,7 +296,7 @@ variables.</p>
 </dd></dl>
 <dl class="py method">
 <dt id="pyNA.pyna.pyna.load_results">
-<em class="property">static </em><code class="sig-name descname">load_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">case_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyNA/pyna.html#pyna.load_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.load_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">case_name</span><span class="o">=</span><span class="default_value">'final'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyNA/pyna.html#pyna.load_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.load_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load model .sql results file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -313,7 +316,7 @@ variables.</p>
 <dd><p>Load default pyna settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>case_name</strong> (<em>str</em>) – Name of the case to load in the results-file.</p>
+<dd class="field-odd"><p><strong>case_name</strong> (<em>str</em>) – name of the case to load</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pyna settings</p>
@@ -330,7 +333,7 @@ variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_sideline</strong> (<em>int</em>) – Number of sideline microphones to use in the optimization</p></li>
+<li><p><strong>n_sideline</strong> (<em>int</em>) – Number of sideline microphones to use in the control optimization</p></li>
 <li><p><strong>init_traj_name</strong> (<em>str</em>) – Name of initialization trajectory (in output folder of case).</p></li>
 </ul>
 </dd>
@@ -367,8 +370,21 @@ variables.</p>
 </dl>
 </dd></dl>
 <dl class="py method">
+<dt id="pyNA.pyna.pyna.plot_optimizer_convergence_data">
+<em class="property">static </em><code class="sig-name descname">plot_optimizer_convergence_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyNA/pyna.html#pyna.plot_optimizer_convergence_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.plot_optimizer_convergence_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the convergence data of the optimization across iterates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – name of the IPOPT output file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt id="pyNA.pyna.pyna.plot_trajectory">
-<em class="property">static </em><code class="sig-name descname">plot_trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">problem_verify</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyNA/pyna.html#pyna.plot_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.plot_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">problem_verify</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyNA/pyna.html#pyna.plot_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyNA.pyna.pyna.plot_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py method">
 <dt id="pyNA.pyna.pyna.save_time_series">

@@ -196,8 +196,8 @@
 <p>Computes aerodynamic forces and Mach number along the trajectory.</p>
 <p>The <em>Aerodynamics</em> component requires the following inputs:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">inputs['CL']</span></code>:      aircraft lift coefficient [-]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">inputs['CD']</span></code>:      aircraft drag coefficient [-]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['c_l']</span></code>:     aircraft lift coefficient [-]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputs['c_d']</span></code>:     aircraft drag coefficient [-]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">inputs['rho_0']</span></code>:   ambient density [kg/m3]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">inputs['c_0']</span></code>:     ambient speed of sound [m/s]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">inputs['v']</span></code>:       aircraft velocity [m/s]</p></li>
@@ -216,8 +216,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> (<em>Vector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
-<li><p><strong>outputs</strong> (<em>Vector</em>) – unscaled, dimensional output variables read via outputs[key]</p></li>
+<li><p><strong>inputs</strong> (<em>Vector</em>) – Unscaled, dimensional input variables read via inputs[key].</p></li>
+<li><p><strong>outputs</strong> (<em>Vector</em>) – Unscaled, dimensional output variables read via outputs[key].</p></li>
 <li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
 <li><p><strong>discrete_outputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete output values.</p></li>
 </ul>
@@ -231,8 +231,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> (<em>Vector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
-<li><p><strong>partials</strong> (<em>Jacobian</em>) – sub-jac components written to partials[output_name, input_name]</p></li>
+<li><p><strong>inputs</strong> (<em>Vector</em>) – Unscaled, dimensional input variables read via inputs[key].</p></li>
+<li><p><strong>partials</strong> (<em>Jacobian</em>) – Sub-jac components written to partials[output_name, input_name]..</p></li>
 <li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
 </ul>
 </dd>

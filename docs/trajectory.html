@@ -218,7 +218,7 @@
 </dd></dl>
 <dl class="py method">
 <dt id="trajectory.Trajectory.compute">
-<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">run_driver</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">init_trajectory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">noise_optimization</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/trajectory.html#Trajectory.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">run_driver</span><span class="p">:</span> <span class="n">bool</span></em>, <em class="sig-param"><span class="n">init_trajectory</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">control_optimization</span><span class="p">:</span> <span class="n">bool</span></em>, <em class="sig-param"><span class="n">objective</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/trajectory.html#Trajectory.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run trajectory initial guess with minimal time to climb.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,7 +228,8 @@
 <li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
 <li><p><strong>run_driver</strong> (<em>bool</em>) – flag to enable run_driver setting for dymos run_model function</p></li>
 <li><p><strong>init_trajectory</strong> (<em>om.Problem</em>) – initialization trajectory</p></li>
-<li><p><strong>noise_optimization</strong> (<em>bool</em>) – flag to enable noise optimization</p></li>
+<li><p><strong>control_optimization</strong> (<em>bool</em>) – flag to enable trajectory control_optimization</p></li>
+<li><p><strong>objective</strong> (<em>str</em>) – objective for the trajectory control optimization</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -239,42 +240,11 @@
 <dl class="py method">
 <dt id="trajectory.Trajectory.compute_minimum_TS">
 <em class="property">static </em><code class="sig-name descname">compute_minimum_TS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">pyNA.src.engine.Engine</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/trajectory.html#Trajectory.compute_minimum_TS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.compute_minimum_TS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute minimum cutback thrust-setting meeting the 4%CG and one-engine-inoperative (OEI) airworthiness requirements.
-:param settings: pyNA settings
-:type settings: Settings
-:param ac: aircraft parameters
-:type ac: Aircraft
-:param engine: engine parameters
-:param engine: Engine
-:return: TS_max
-:rtype: np.float64</p>
-</dd></dl>
-<dl class="py method">
-<dt id="trajectory.Trajectory.get_engine_variables">
-<em class="property">static </em><code class="sig-name descname">get_engine_variables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">noise_calcs</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span> → list<a class="reference internal" href="_modules/trajectory.html#Trajectory.get_engine_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.get_engine_variables" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the engine parameters to compute during the trajectory computations.</p>
+<dd><p>Compute minimum cutback thrust-setting meeting the 4%CG and one-engine-inoperative (OEI) airworthiness requirements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
-<li><p><strong>noise_calcs</strong> (<em>bool</em>) – flag for loading an initialization trajectory</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(engine_var, engine_var_units)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(list, list)</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt id="trajectory.Trajectory.get_minimum_TS_OEI">
-<em class="property">static </em><code class="sig-name descname">get_minimum_TS_OEI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">pyNA.src.engine.Engine</span></em><span class="sig-paren">)</span> → numpy.float64<a class="reference internal" href="_modules/trajectory.html#Trajectory.get_minimum_TS_OEI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.get_minimum_TS_OEI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute minimum cutback thrust-setting meeting the one-engine-inoperative (OEI) airworthiness regulations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyNA settings</p></li>
 <li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
 <li><p><strong>engine</strong> – engine parameters</p></li>
 <li><p><strong>engine</strong> – Engine</p></li>
@@ -289,14 +259,43 @@
 </dl>
 </dd></dl>
 <dl class="py method">
+<dt id="trajectory.Trajectory.compute_size_output_mux">
+<code class="sig-name descname">compute_size_output_mux</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trajectory.html#Trajectory.compute_size_output_mux"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.compute_size_output_mux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute vector size of the muxed trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>size_inputs</strong> (<em>np.ndarray</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="trajectory.Trajectory.get_engine_variables">
+<em class="property">static </em><code class="sig-name descname">get_engine_variables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">engine_mode</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> → list<a class="reference internal" href="_modules/trajectory.html#Trajectory.get_engine_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.get_engine_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the engine parameters to compute during the trajectory computations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
+<li><p><strong>engine_mode</strong> (<em>str</em>) – mode for engine model in trajectory calculations: “trajectory” / “noise”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(engine_var, engine_var_units)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(list, list)</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt id="trajectory.Trajectory.load_operating_point">
-<code class="sig-name descname">load_operating_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">time_step</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/trajectory.html#Trajectory.load_operating_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.load_operating_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_operating_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">time_step</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/trajectory.html#Trajectory.load_operating_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.load_operating_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads predefined trajectory timeseries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
-<li><p><strong>time_step</strong> – </p></li>
+<li><p><strong>time_step</strong> (<em>int</em>) – time step of the operating point in the trajectory time series</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -319,7 +318,7 @@
 </dd></dl>
 <dl class="py method">
 <dt id="trajectory.Trajectory.setup">
-<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">pyNA.src.engine.Engine</span></em>, <em class="sig-param"><span class="n">noise_calcs</span><span class="p">:</span> <span class="n">bool</span></em>, <em class="sig-param"><span class="n">noise_optimization</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/trajectory.html#Trajectory.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.setup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span><span class="p">:</span> <span class="n">openmdao.core.problem.Problem</span></em>, <em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">pyNA.src.aircraft.Aircraft</span></em>, <em class="sig-param"><span class="n">engine</span><span class="p">:</span> <span class="n">pyNA.src.engine.Engine</span></em>, <em class="sig-param"><span class="n">engine_mode</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">control_optimization</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span> → None<a class="reference internal" href="_modules/trajectory.html#Trajectory.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trajectory.Trajectory.setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup take-off trajectory module using the following phases:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Ground</span> <span class="pre">roll</span></code>:  acceleration from V=0 to V=kVstall;</p></li>
@@ -336,7 +335,7 @@
 <li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
 <li><p><strong>engine</strong> – engine parameters</p></li>
 <li><p><strong>engine</strong> – Engine</p></li>
-<li><p><strong>noise_calcs</strong> (<em>bool</em>) – Flag to compute engine operating variables for noise calculations.</p></li>
+<li><p><strong>engine_mode</strong> (<em>str</em>) – mode for engine model in trajectory calculations: “trajectory” / “noise”</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

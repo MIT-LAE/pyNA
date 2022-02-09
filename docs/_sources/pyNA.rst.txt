@@ -8,6 +8,7 @@ The pyna class contains the methods to run the following noise analyses:
 	* Computing noise for a predefined trajectory time series
 	* Computing a take-off trajectory
 	* Computing a take-off trajectory and its noise 
+	
 The class also contains methods to plot the results of these analyses.
 
 .. automodule:: pyNA.pyna

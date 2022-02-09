@@ -327,7 +327,7 @@
 
                 <span class="c1"># Compute azimuthal directivity angle</span>
                 <span class="c1"># Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 27</span>
-                <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NASA STCA Standard"</span><span class="p">,</span> <span class="s2">"stca_enginedesign_standard"</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"nasa_stca_standard"</span><span class="p">,</span> <span class="s2">"stca_enginedesign_standard"</span><span class="p">]:</span>
                     <span class="n">outputs</span><span class="p">[</span><span class="s1">'phi'</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_t</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">phi</span> <span class="o">=</span> <span class="o">-</span><span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">n_vcr_s_1</span><span class="p">,</span> <span class="n">n_vcr_s_2</span><span class="p">)</span>

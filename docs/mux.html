@@ -193,6 +193,11 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">openmdao.core.explicitcomponent.ExplicitComponent</span></code></p>
 <p>Mux trajectory phases.</p>
 <dl class="py method">
+<dt id="mux.Mux.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mux.html#Mux.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mux.Mux.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate Mux and populate private members.</p>
+</dd></dl>
+<dl class="py method">
 <dt id="mux.Mux.add_var">
 <code class="sig-name descname">add_var</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">val</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">desc</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mux.html#Mux.add_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mux.Mux.add_var" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add variable to the mux component.</p>
@@ -217,8 +222,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> (<em>Vector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
-<li><p><strong>outputs</strong> (<em>Vector</em>) – unscaled, dimensional output variables read via outputs[key]</p></li>
+<li><p><strong>inputs</strong> (<em>Vector</em>) – Unscaled, dimensional input variables read via inputs[key].</p></li>
+<li><p><strong>outputs</strong> (<em>Vector</em>) – Unscaled, dimensional output variables read via outputs[key].</p></li>
 <li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
 <li><p><strong>discrete_outputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete output values.</p></li>
 </ul>
@@ -232,8 +237,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> (<em>Vector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
-<li><p><strong>partials</strong> (<em>Jacobian</em>) – sub-jac components written to partials[output_name, input_name]</p></li>
+<li><p><strong>inputs</strong> (<em>Vector</em>) – Unscaled, dimensional input variables read via inputs[key].</p></li>
+<li><p><strong>partials</strong> (<em>Jacobian</em>) – Sub-jac components written to partials[output_name, input_name]..</p></li>
 <li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
 </ul>
 </dd>

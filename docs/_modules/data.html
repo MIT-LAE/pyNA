@@ -223,15 +223,15 @@
 <span class="sd">    * ``jet_F_strouhal``:     table with jet mixing noise spectral dependency: Strouhal number</span>
 <span class="sd">    * ``jet_F_f``:            interpolation function for jet mixing noise spectral dependency</span>
 
-<span class="sd">    * ``Faddeeva_itau_re``:</span>
-<span class="sd">    * ``Faddeeva_itau_im``:</span>
-<span class="sd">    * ``Faddeeva_real``:</span>
-<span class="sd">    * ``Faddeeva_imag``:</span>
+<span class="sd">    * ``Faddeeva_itau_re``:   table with real part of the input to the Faddeeva function (for julia ground reflections)</span>
+<span class="sd">    * ``Faddeeva_itau_im``:   table with imaginary part of the input to the Faddeeva function (for julia ground reflections)</span>
+<span class="sd">    * ``Faddeeva_real``:      table with real part of the Faddeeva function (for julia ground reflections)</span>
+<span class="sd">    * ``Faddeeva_imag``:      table with imaginary part of the Faddeeva function (for julia ground reflections)</span>
 
-<span class="sd">    * ``noy_spl``:</span>
-<span class="sd">    * ``noy_freq``:</span>
-<span class="sd">    * ``noy``:</span>
-<span class="sd">    * ``noy_f``:</span>
+<span class="sd">    * ``noy_spl``:            sound pressure levels of noy table</span>
+<span class="sd">    * ``noy_freq``:           1/3-rd octave frequency bands of noy table</span>
+<span class="sd">    * ``noy``:                noy table</span>
+<span class="sd">    * ``noy_f``:              inteprolation function for the noy table</span>
 
 <span class="sd">    * ``supp_fi``:            table with suppression factors for fan inlet noise</span>
 <span class="sd">    * ``supp_fi_angles``:     directivity angles of suppression factors for fan inlet noise table</span>
@@ -246,9 +246,9 @@
 <span class="sd">    * ``supp_af_freq``:       frequencies of suppression factors for airframe noise table</span>
 <span class="sd">    * ``supp_af_f``:          interpolation function for HSR airframe noise suppression coefficient</span>
 
-<span class="sd">    * ``shield_l``:</span>
-<span class="sd">    * ``shield_f``:</span>
-<span class="sd">    * ``shield_a``:</span>
+<span class="sd">    * ``shield_l``:           lateral microphone airframe shielding delta dB [dB]</span>
+<span class="sd">    * ``shield_f``:           flyover microphone airframe shielding delta dB [dB]</span>
+<span class="sd">    * ``shield_a``:           approach microphone airframe shielding delta dB [dB]</span>
 
 <span class="sd">    """</span>
 
@@ -497,7 +497,7 @@
 <span class="sd">        """</span>
 
         <span class="c1"># Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)</span>
-        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">==</span> <span class="s1">'NASA STCA Standard'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">==</span> <span class="s1">'nasa_stca_standard'</span><span class="p">:</span>
             <span class="c1"># Check if all sources</span>
             <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">all_sources</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
@@ -544,7 +544,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid noise component for trajectory validation. Specify core/jet mixing/fan inlet/fan discharge/airframe'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'No validation data available for this case name. Specify NASA STCA Standard.'</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'No validation data available for this case name. Specify nasa_stca_standard.'</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -642,7 +642,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">shield_f</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shield_a</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">==</span> <span class="s1">'NASA STCA Standard'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">case_name</span> <span class="o">==</span> <span class="s1">'nasa_stca_standard'</span><span class="p">:</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">observer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">observer_lst</span><span class="p">):</span>
 

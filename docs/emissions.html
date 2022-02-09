@@ -215,10 +215,24 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> (<em>Vector</em>) – unscaled, dimensional input variables read via inputs[key]</p></li>
-<li><p><strong>outputs</strong> (<em>Vector</em>) – unscaled, dimensional output variables read via outputs[key]</p></li>
+<li><p><strong>inputs</strong> (<em>Vector</em>) – Unscaled, dimensional input variables read via inputs[key].</p></li>
+<li><p><strong>outputs</strong> (<em>Vector</em>) – Unscaled, dimensional output variables read via outputs[key].</p></li>
 <li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
 <li><p><strong>discrete_outputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete output values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="emissions.Emissions.compute_partials">
+<code class="sig-name descname">compute_partials</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em>, <em class="sig-param"><span class="n">partials</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/emissions.html#Emissions.compute_partials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emissions.Emissions.compute_partials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute sub-jacobian parts. The model is assumed to be in an unscaled state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<em>Vector</em>) – Unscaled, dimensional input variables read via inputs[key].</p></li>
+<li><p><strong>partials</strong> (<em>Jacobian</em>) – Sub-jac components written to partials[output_name, input_name]..</p></li>
+<li><p><strong>discrete_inputs</strong> (<em>dict</em><em> or </em><em>None</em>) – If not None, dict containing discrete input values.</p></li>
 </ul>
 </dd>
 </dl>

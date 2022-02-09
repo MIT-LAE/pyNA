@@ -260,8 +260,19 @@
 </dd></dl>
 <dl class="py method">
 <dt id="noise.Noise.get_indices_noise_input_vector">
-<em class="property">static </em><code class="sig-name descname">get_indices_noise_input_vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span></em>, <em class="sig-param"><span class="n">n_t</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/noise.html#Noise.get_indices_noise_input_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.get_indices_noise_input_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get (julia) indices for input vector noise model.</p>
+<em class="property">static </em><code class="sig-name descname">get_indices_noise_input_vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">settings</span><span class="p">:</span> <span class="n">pyNA.src.settings.Settings</span></em>, <em class="sig-param"><span class="n">n_t</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/noise.html#Noise.get_indices_noise_input_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#noise.Noise.get_indices_noise_input_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get indices for input vector of noise model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
+<li><p><strong>n_t</strong> (<em>np.int</em>) – number of time steps in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>idx, idx_src</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt id="noise.Noise.setup_source_distribution">
@@ -312,7 +323,7 @@
 <li><p><strong>problem</strong> (<em>om.Problem</em>) – openmdao problem</p></li>
 <li><p><strong>settings</strong> (<a class="reference internal" href="settings.html#settings.Settings" title="settings.Settings"><em>Settings</em></a>) – pyna settings</p></li>
 <li><p><strong>ac</strong> (<a class="reference internal" href="aircraft.html#aircraft.Aircraft" title="aircraft.Aircraft"><em>Aircraft</em></a>) – aircraft parameters</p></li>
-<li><p><strong>n_t</strong> (<em>np.int</em>) – Number of time steps in trajectory</p></li>
+<li><p><strong>n_t</strong> (<em>np.int</em>) – number of time steps in trajectory</p></li>
 <li><p><strong>optimization</strong> (<em>bool</em>) – flag to run trajectory optimization</p></li>
 </ul>
 </dd>

@@ -213,14 +213,14 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">jet_F_velocity</span></code>:     table with jet mixing noise spectral dependency: jet velocity ratio</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">jet_F_strouhal</span></code>:     table with jet mixing noise spectral dependency: Strouhal number</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">jet_F_f</span></code>:            interpolation function for jet mixing noise spectral dependency</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_itau_re</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_itau_im</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_real</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_imag</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">noy_spl</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">noy_freq</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">noy</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">noy_f</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_itau_re</span></code>:   table with real part of the input to the Faddeeva function (for julia ground reflections)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_itau_im</span></code>:   table with imaginary part of the input to the Faddeeva function (for julia ground reflections)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_real</span></code>:      table with real part of the Faddeeva function (for julia ground reflections)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Faddeeva_imag</span></code>:      table with imaginary part of the Faddeeva function (for julia ground reflections)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">noy_spl</span></code>:            sound pressure levels of noy table</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">noy_freq</span></code>:           1/3-rd octave frequency bands of noy table</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">noy</span></code>:                noy table</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">noy_f</span></code>:              inteprolation function for the noy table</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">supp_fi</span></code>:            table with suppression factors for fan inlet noise</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">supp_fi_angles</span></code>:     directivity angles of suppression factors for fan inlet noise table</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">supp_fi_freq</span></code>:       frequencies of suppression factors for fan inlet noise table</p></li>
@@ -233,9 +233,9 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">supp_af_angles</span></code>:     directivity angles of suppression factors for airframe noise table</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">supp_af_freq</span></code>:       frequencies of suppression factors for airframe noise table</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">supp_af_f</span></code>:          interpolation function for HSR airframe noise suppression coefficient</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">shield_l</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">shield_f</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">shield_a</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shield_l</span></code>:           lateral microphone airframe shielding delta dB [dB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shield_f</span></code>:           flyover microphone airframe shielding delta dB [dB]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shield_a</span></code>:           approach microphone airframe shielding delta dB [dB]</p></li>
 </ul>
 <dl class="py attribute">
 <dt id="data.Data.Faddeeva_imag">

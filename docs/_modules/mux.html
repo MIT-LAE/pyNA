@@ -198,15 +198,23 @@
 
 <span class="sd">    """</span>
 
+<div class="viewcode-block" id="Mux.__init__"><a class="viewcode-back" href="../mux.html#mux.Mux.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Instantiate Mux and populate private members.</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_names</span> <span class="o">=</span> <span class="p">{}</span></div>
+
 <div class="viewcode-block" id="Mux.initialize"><a class="viewcode-back" href="../mux.html#mux.Mux.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        Declare options.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'mux_num'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Number of arrays to be muxed.'</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'gauss_transcription_order'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'transcription_order'</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'shapes'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Size of arrays to be muxed.'</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'_vars'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'_input_names'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span></div>
+
+        <span class="c1"># self.options.declare('gauss_transcription_order', default=3, desc='transcription_order')</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'size_inputs'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Size of input arrays to be muxed'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s1">'size_output'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Size of the muxed array'</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Mux.add_var"><a class="viewcode-back" href="../mux.html#mux.Mux.add_var">[docs]</a>    <span class="k">def</span> <span class="nf">add_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">''</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -225,47 +233,47 @@
 <span class="sd">        """</span>
 
         <span class="c1"># Load options</span>
-        <span class="n">gauss_transcription_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'gauss_transcription_order'</span><span class="p">]</span>
-        <span class="n">shapes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'shapes'</span><span class="p">]</span>
+        <span class="n">size_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'size_inputs'</span><span class="p">]</span>
+        <span class="n">size_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'size_output'</span><span class="p">]</span>
+        <span class="n">mux_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_vars'</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'val'</span><span class="p">:</span> <span class="n">val</span><span class="p">,</span> <span class="s1">'units'</span><span class="p">:</span> <span class="n">units</span><span class="p">,</span> <span class="s1">'desc'</span><span class="p">:</span> <span class="n">desc</span><span class="p">}</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_vars'</span><span class="p">][</span><span class="n">name</span><span class="p">]</span>
-        <span class="n">kwgs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'val'</span><span class="p">:</span> <span class="n">val</span><span class="p">,</span> <span class="s1">'units'</span><span class="p">:</span> <span class="n">units</span><span class="p">,</span> <span class="s1">'desc'</span><span class="p">:</span> <span class="n">desc</span><span class="p">}</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">kwgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
         <span class="c1"># Add inputs for the number of arrays to be muxed for the variable name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_input_names'</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">size_output</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'mux_num'</span><span class="p">]):</span>
-
-            <span class="n">in_name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_names</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="n">n_output</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mux_num</span><span class="p">):</span>
             <span class="c1"># Add input names to options dict</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_input_names'</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span>
+            <span class="n">in_name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_input_names</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span>
             
             <span class="c1"># Add inputs to component</span>
-            <span class="n">size_input</span> <span class="o">=</span> <span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">in_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">size_input</span><span class="p">,),</span> <span class="o">**</span><span class="n">kwgs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">in_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">],),</span> <span class="o">**</span><span class="n">kwgs</span><span class="p">)</span>
 
             <span class="c1"># Add partials</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'mux_num'</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">ro</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_output</span><span class="p">,</span> <span class="n">size_output</span> <span class="o">+</span> <span class="n">size_input</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mux_num</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">ro</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_output</span><span class="p">,</span> <span class="n">n_output</span> <span class="o">+</span> <span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">ro</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_output</span><span class="p">,</span> <span class="n">size_output</span> <span class="o">+</span> <span class="n">size_input</span><span class="p">)</span>
+                <span class="n">ro</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_output</span><span class="p">,</span> <span class="n">n_output</span> <span class="o">+</span> <span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
             <span class="c1"># Delete duplicates</span>
             <span class="c1"># cols = np.arange(shapes[i])</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'mux_num'</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">co</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_input</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mux_num</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">co</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">co</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_input</span><span class="p">)</span>
+                <span class="n">co</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
+            <span class="c1"># Declare partials</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">wrt</span><span class="o">=</span><span class="n">in_name</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">ro</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="n">co</span><span class="p">)</span>
 
-            <span class="c1"># Compute output size</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'mux_num'</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">size_output</span> <span class="o">=</span> <span class="n">size_output</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_input</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># Add to output size</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mux_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">n_output</span> <span class="o">=</span> <span class="n">n_output</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">size_output</span> <span class="o">=</span> <span class="n">size_output</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_input</span><span class="p">)</span>
+                <span class="n">n_output</span> <span class="o">=</span> <span class="n">n_output</span> <span class="o">+</span> <span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
         <span class="c1"># Add output variable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
@@ -276,27 +284,25 @@
 <div class="viewcode-block" id="Mux.compute"><a class="viewcode-back" href="../mux.html#mux.Mux.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">openmdao</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">default_vector</span><span class="o">.</span><span class="n">DefaultVector</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">openmdao</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">default_vector</span><span class="o">.</span><span class="n">DefaultVector</span><span class="p">):</span>
 
         <span class="c1"># Load options</span>
-        <span class="n">gauss_transcription_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'gauss_transcription_order'</span><span class="p">]</span>
-        <span class="n">shapes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'shapes'</span><span class="p">]</span>
+        <span class="n">size_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'size_inputs'</span><span class="p">]</span>
+        <span class="n">mux_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">)</span>
 
         <span class="c1"># Iterate over the variables in the mux component</span>
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_vars'</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars</span><span class="p">:</span>
 
             <span class="c1"># Select input variable name </span>
-            <span class="n">invar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_input_names'</span><span class="p">][</span><span class="n">var</span><span class="p">]</span>
+            <span class="n">invar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_names</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
 
             <span class="c1"># Append inputs of same variable name to vals</span>
             <span class="n">output_vals</span><span class="o">=</span><span class="p">[]</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'mux_num'</span><span class="p">]):</span>    
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mux_num</span><span class="p">):</span>    
                 <span class="c1"># Extract input array</span>
                 <span class="n">input_array</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">invar</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
 
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'mux_num'</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mux_num</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">output_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_array</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-                <span class="n">output_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_array</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
+                    <span class="n">output_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_array</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
 
             <span class="c1"># Write stack of vals to outputs</span>
             <span class="n">outputs</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">output_vals</span><span class="p">)</span></div>
@@ -304,23 +310,20 @@
 <div class="viewcode-block" id="Mux.compute_partials"><a class="viewcode-back" href="../mux.html#mux.Mux.compute_partials">[docs]</a>    <span class="k">def</span> <span class="nf">compute_partials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span><span class="n">openmdao</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">default_vector</span><span class="o">.</span><span class="n">DefaultVector</span><span class="p">,</span> <span class="n">partials</span><span class="p">:</span> <span class="n">openmdao</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">default_vector</span><span class="o">.</span><span class="n">DefaultVector</span><span class="p">):</span>
 
         <span class="c1"># Load options</span>
-        <span class="n">gauss_transcription_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'gauss_transcription_order'</span><span class="p">]</span>
+        <span class="n">size_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'size_inputs'</span><span class="p">]</span>
+        <span class="n">mux_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_vars'</span><span class="p">]:</span>
-            <span class="n">invar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'_input_names'</span><span class="p">][</span><span class="n">var</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars</span><span class="p">:</span>
+            <span class="n">invar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_names</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
 
-            <span class="n">size_output</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">iv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">invar</span><span class="p">):</span>
 
-                <span class="n">in_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'shapes'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">n_seg</span> <span class="o">=</span> <span class="n">in_shape</span> <span class="o">/</span> <span class="n">gauss_transcription_order</span>
-
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'mux_num'</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="n">size_output</span> <span class="o">=</span> <span class="n">size_output</span> <span class="o">+</span> <span class="n">n_seg</span> <span class="o">*</span> <span class="n">gauss_transcription_order</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mux_num</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">partials</span><span class="p">[</span><span class="n">var</span><span class="p">,</span> <span class="n">iv</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">size_output</span> <span class="o">=</span> <span class="n">size_output</span> <span class="o">+</span> <span class="n">n_seg</span> <span class="o">*</span> <span class="n">gauss_transcription_order</span>
+                    <span class="n">partials</span><span class="p">[</span><span class="n">var</span><span class="p">,</span> <span class="n">iv</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">size_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div></div>
 
-                <span class="n">partials</span><span class="p">[</span><span class="n">var</span><span class="p">,</span> <span class="n">iv</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">size_output</span><span class="p">))</span></div></div>
+                
 
 
 </pre></div>
