@@ -47,7 +47,7 @@ class pyna:
         self.noise = Noise(settings=self.settings)
 
         # Initialize aircraft configuration
-        self.ac = Aircraft(name=self.settings.ac_name, settings=self.settings)
+        self.ac = Aircraft(name=self.settings.ac_name, version=settings.ac_version, settings=self.settings)
         
         # Initialize engine configuration
         self.engine = Engine()
