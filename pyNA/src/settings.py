@@ -24,6 +24,7 @@ class Settings(FrozenClass):
                 pyNA_directory = '.', 
                 engine_file_name = 'Engine_to.csv', 
                 trajectory_file_name = 'Trajectory_to.csv',
+                output_directory_name = '',
                 output_file_name = 'Trajectory_stca.sql', 
                 ac_name = 'stca', 
                 ac_version = 'verification',
@@ -92,6 +93,8 @@ class Settings(FrozenClass):
         :type engine_file_name: str
         :param trajectory_file_name: File name of the take-off trajectory [-]
         :type trajectory_file_name: str
+        :param output_directory_name: Name of the directory of output .sql file [-]
+        :type output_directory_name: str
         :param output_file_name: Name of the output .sql file [-]
         :type output_file_name: str
         :param ac_name: Name of the aircraft [-]
@@ -210,6 +213,7 @@ class Settings(FrozenClass):
         self.pyNA_directory = pyNA_directory
         self.engine_file_name = engine_file_name
         self.trajectory_file_name = trajectory_file_name
+        self.output_directory_name = output_directory_name
         self.output_file_name = output_file_name
         self.ac_name = ac_name
         self.ac_version = ac_version
@@ -292,9 +296,11 @@ class Settings(FrozenClass):
         if type(self.case_name) != str:
             raise TypeError(self.case_name, "does not have the correct type for the engine file name. type(settings.case_name) must be str.")
         if type(self.engine_file_name) != str:
-            raise TypeError(self.engine_file_name, "does not have the correct type for the engine file name. type(settings.output_file_name) must be str.")
+            raise TypeError(self.engine_file_name, "does not have the correct type for the engine file name. type(settings.engine_file_name) must be str.")
         if type(self.trajectory_file_name) != str:
             raise TypeError(self.trajectory_file_name, "does not have the correct type for the trajectory file name. type(settings.trajectory_file_name) must be str.")
+        if type(self.output_directory_name) != str:
+            raise TypeError(self.output_directory_name, "does not have the correct type for the output file name. type(settings.output_directory_name) must be str.")
         if type(self.output_file_name) != str:
             raise TypeError(self.output_file_name, "does not have the correct type for the output file name. type(settings.output_file_name) must be str.")
         if self.ac_name not in ['stca', 'a10']:
@@ -369,11 +375,11 @@ class Settings(FrozenClass):
         # Values
         if type(self.N_shock) not in [int, np.int32, np.int64]:
             raise TypeError(self.N_shock, "does not have the correct type. type(settings.N_shock) must be [int, np.int32, np.int64]")
-        if type(self.dT) not in [float, np.float32, np.float64]:
+        if type(self.dT) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.dT, "does not have the correct type. type(settings.dT) must be [float, np.float32, np.float64]")
-        if type(self.sigma) not in [float, np.float32, np.float64]:
+        if type(self.sigma) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.sigma, "does not have the correct type. type(settings.sigma) must be [float, np.float32, np.float64]")
-        if type(self.a_coh) not in [float, np.float32, np.float64]:
+        if type(self.a_coh) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.a_coh, "does not have the correct type. type(settings.a_coh) must be [float, np.float32, np.float64]")
         if type(self.N_f) not in [int, np.int32, np.int64]:
             raise TypeError(self.N_f, "does not have the correct type. type(settings.N_f) must be [int, np.int32, np.int64]")
@@ -385,13 +391,13 @@ class Settings(FrozenClass):
             raise TypeError(self.n_altitude_absorption, "does not have the correct type. type(settings.n_altitude_absorption) must be [int, np.int32, np.int64]")
         if type(self.n_harmonics) not in [int, np.int32, np.int64]:
             raise TypeError(self.n_harmonics, "does not have the correct type. type(settings.n_harmonics) must be [int, np.int32, np.int64]")
-        if type(self.A_e) not in [float, np.float32, np.float64]:
+        if type(self.A_e) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.A_e, "does not have the correct type. type(settings.A_e) must be [float, np.float32, np.float64]")
-        if type(self.dt_epnl) not in [float, np.float32, np.float64]:
+        if type(self.dt_epnl) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.dt_epnl, "does not have the correct type. type(settings.dt_epnl) must be [float, np.float32, np.float64]")
-        if type(self.r_0) not in [float, np.float32, np.float64]:
+        if type(self.r_0) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.r_0, "does not have the correct type. type(settings.r_0) must be [float, np.float32, np.float64]")
-        if type(self.p_ref) not in [float, np.float32, np.float64]:
+        if type(self.p_ref) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.p_ref, "does not have the correct type. type(settings.p_ref) must be [float, np.float32, np.float64]")
 
         if type(self.x_observer_array) != np.ndarray:
@@ -402,18 +408,18 @@ class Settings(FrozenClass):
                 raise ValueError("Shape of the x_observer_array must be (2, 3); instead shape is ", np.shape(self.x_observer_array))
 
         # Trajectory options
-        if type(self.TS_to) not in [float, np.float32, np.float64]:
+        if type(self.TS_to) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.TS_to, "does not have the correct type. type(settings.TS_to) must be in [float, np.float32, np.float64]")
-        if type(self.TS_vnrs) not in [float, np.float32, np.float64]:
+        if type(self.TS_vnrs) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.TS_vnrs, "does not have the correct type. type(settings.TS_vnrs) must be in [float, np.float32, np.float64]")
         NoneType = type(None)
-        if type(self.TS_cutback) not in [NoneType, float, np.float32, np.float64]:
+        if type(self.TS_cutback) not in [NoneType, float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.TS_cutback, "does not have the correct type. type(settings.TS_cutback) must be in [float, np.float32, np.float64]")
-        if type(self.z_cutback) not in [float, np.float32, np.float64]:
+        if type(self.z_cutback) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.z_cutback, "does not have the correct type. type(settings.z_cutback) must be in [float, np.float32, np.float64]")
-        if type(self.theta_flaps) not in [float, np.float32, np.float64]:
+        if type(self.theta_flaps) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.theta_flaps, "does not have the correct type. type(settings.theta_flaps) must be np.ndarray")
-        if type(self.theta_slats) not in [float, np.float32, np.float64]:
+        if type(self.theta_slats) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.theta_slats, "does not have the correct type. type(settings.theta_slats) must be np.ndarray")
         if type(self.n_segments_vnrs) not in [int, np.int32, np.int64]:
             raise TypeError(self.n_segments_vnrs, "does not have the correct type. type(settings.n_segments_vnrs) must be in [int, np.int32, np.int64]")

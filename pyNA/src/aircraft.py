@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from dataclasses import dataclass
 from pyNA.src.settings import Settings
-import scipy
+from scipy import interpolate
 
 @dataclass
 class Aircraft:
@@ -253,6 +253,14 @@ class Aircraft:
             self.aero['c_l'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_l_stca.npy')
             self.aero['c_l_max'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_l_max_' + settings.ac_name + '.npy')
             self.aero['c_d'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_d_stca.npy')
+
+            # Compute minimum drag flap angle during groundroll 
+            f_c_d = interpolate.RegularGridInterpolator((self.aero['alpha'], self.aero['theta_flaps'], self.aero['theta_slats']), self.aero['c_d'])
+            c_d_flaps = np.zeros(50)
+            theta_flaps_lst = np.linspace(self.aero['theta_flaps'][0], self.aero['theta_flaps'][-1], 50)
+            for i, theta in enumerate(theta_flaps_lst):
+                c_d_flaps[i] = f_c_d((-0.85, theta, settings.theta_slats))    
+            self.aero['theta_flaps_c_d_min_gr'] = theta_flaps_lst[np.argmin(c_d_flaps)]
 
         elif settings.ac_name == 'a10':
             self.aero['alpha'] = np.array([-2., -1., 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])

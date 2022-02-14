@@ -1,12 +1,11 @@
-from multiprocessing.sharedctypes import Value
 import pdb
 import os
 import pandas as pd
 import dymos as dm
 import numpy as np
 import datetime as dt
-import openmdao.api as om
 from typing import Union
+import openmdao.api as om
 from pyNA.src.settings import Settings
 from pyNA.src.aircraft import Aircraft
 from pyNA.src.trajectory_src.atmosphere import Atmosphere
@@ -268,17 +267,13 @@ class Trajectory:
 
         problem.driver.declare_coloring(tol=1e-12)
         problem.model.linear_solver = om.LinearRunOnce()
-        problem.driver.opt_settings['tol'] = 1e-6
-        problem.driver.opt_settings['acceptable_tol'] = 1e-2
-        if settings.output_file_name.find('/') == -1:
-            problem.driver.opt_settings['output_file'] = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/IPOPT_trajectory_convergence.out'
-        else:
-            problem.driver.opt_settings['output_file'] = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_file_name[:settings.output_file_name.find('/')] + '/IPOPT_trajectory_convergence.out'
+        problem.driver.opt_settings['output_file'] = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_directory_name + 'IPOPT_trajectory_convergence.out'
 
-        # if control_optimization:
-            # problem.driver.opt_settings['dual_inf_tol'] = 1e1
-            # problem.driver.opt_settings['acceptable_tol'] = 1e1
-            # problem.driver.opt_settings['tol'] = 1e1
+        problem.driver.opt_settings['tol'] = 1e-4
+        problem.driver.opt_settings['acceptable_tol'] = 1e-2
+        problem.driver.opt_settings['dual_inf_tol'] = 1e-4
+        problem.driver.opt_settings['acceptable_dual_inf_tol'] = 1e-2
+        problem.driver.opt_settings['acceptable_iter'] = 5
 
         # Setup trajectory and initialize trajectory transcription and compute number of points per phase
         traj = dm.Trajectory()
@@ -305,8 +300,7 @@ class Trajectory:
             self.phases['groundroll'].add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                # self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
-                self.phases['groundroll'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, rate_continuity_scaler=10., ref=10.)
+                self.phases['groundroll'].add_control('theta_flaps', targets='theta_flaps', units='deg', val=ac.theta_flaps, opt=False, rate_continuity=True, rate_continuity_scaler=10.)
             else:
                 self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -355,11 +349,10 @@ class Trajectory:
                 self.phases['climb'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
+                self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)                
             else:
                 self.phases['climb'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['climb'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
-            # self.phases['climb'].add_path_constraint(name='gamma', upper=ac.gamma_max, units='deg')
 
         # # Phase 4: vnrs phase
         if 'vnrs' in self.phase_name_lst:
@@ -385,7 +378,6 @@ class Trajectory:
                 self.phases['vnrs'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_vnrs, dynamic=True, include_timeseries=True)
             # PHLD
             if control_optimization and settings.PHLD:
-                # self.phases['vnrs'].add_control('theta_flaps', targets='theta_flaps', units='deg', lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], val=ac.theta_flaps, opt=True, rate_continuity=True, rate_continuity_scaler=100., ref=10.)
                 self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
             else:
                 self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
@@ -453,13 +445,13 @@ class Trajectory:
         # Link phases
         if 'rotation' in self.phase_name_lst:
             traj.link_phases(phases=['groundroll', 'rotation'], vars=['time', 'x', 'v', 'z', 'alpha'])
-            if control_optimization and settings.PHLD:
-                traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+            # if control_optimization and settings.PHLD:
+                # traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
         
         if 'climb' in self.phase_name_lst:
             traj.link_phases(phases=['rotation', 'climb'], vars=['time', 'x', 'z', 'v', 'alpha', 'gamma'])
-            if control_optimization and settings.PHLD:
-                traj.add_linkage_constraint(phase_a='rotation', phase_b='climb', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+            # if control_optimization and settings.PHLD:
+                # traj.add_linkage_constraint(phase_a='rotation', phase_b='climb', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
         
         if 'vnrs' in self.phase_name_lst:
             traj.link_phases(phases=['climb', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
@@ -475,8 +467,8 @@ class Trajectory:
                 traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
                 if settings.PTCB:
                     traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
-                if control_optimization and settings.PHLD:
-                    traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+                # if control_optimization and settings.PHLD:
+                    # traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
         # Mux trajectory variables
         mux_t = problem.model.add_subsystem(name='trajectory', subsys=Mux(size_inputs=np.array(self.phase_size), size_output=self.trajectory_size))
@@ -533,7 +525,6 @@ class Trajectory:
                         if phase_name in ['rotation', 'climb', 'vnrs', 'cutback']:
                             problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                         else:
-                            # problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                             problem.model.connect('phases.' + phase_name + '.interpolated.controls:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
                 else:
                     for j, phase_name in enumerate(self.phase_name_lst):
@@ -607,7 +598,7 @@ class Trajectory:
         
         # Attach a recorder to the problem to save model data
         if settings.save_results:
-            problem.add_recorder(om.SqliteRecorder(settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_file_name))
+            problem.add_recorder(om.SqliteRecorder(settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_directory_name + settings.output_file_name))
 
         # Set initial guess for the trajectory problem
         if init_trajectory is None:
@@ -620,7 +611,13 @@ class Trajectory:
                 problem['phases.groundroll.states:z'] = self.phases[self.phase_name_lst[0]].interp(ys=[0, 0], nodes='state_input')
                 problem['phases.groundroll.states:v'] = self.phases[self.phase_name_lst[0]].interp(ys=[0.0, 100], nodes='state_input')
                 problem['phases.groundroll.states:alpha'] = self.phases[self.phase_name_lst[0]].interp(ys=[ac.alpha_0, ac.alpha_0], nodes='state_input')
-                problem['phases.groundroll.controls:theta_flaps'] = self.phases[self.phase_name_lst[0]].interp(ys=[4., 4.], nodes='control_input')                
+                
+                # Compute theta_flaps control input
+                if control_optimization and settings.PHLD:
+                    theta_flaps_gr = ac.aero['theta_flaps_c_d_min_gr'] * np.ones((self.phase_size[0] - self.num_segments[0], ))
+                    n_before = 2
+                    theta_flaps_gr[-n_before:] = np.linspace(ac.aero['theta_flaps_c_d_min_gr'], 17.5, n_before+1)[1:]
+                    problem['phases.groundroll.controls:theta_flaps'] = theta_flaps_gr # self.phases[self.phase_name_lst[0]].interp(ys=[4., 10.], nodes='control_input')                
 
             # Phase 2: rotation
             if 'rotation' in self.phase_name_lst:
@@ -700,14 +697,11 @@ class Trajectory:
                 problem['phases.' + phase_name + '.controls:alpha'] = init_trajectory.get_val('phases.' + phase_name + '.controls:alpha')
 
         # Run problem
-        dm.run_problem(problem, run_driver=run_driver, solution_record_file=settings.pyNA_directory + '/cases/' + settings.case_name + '/output/dymos_solution.db')
+        dm.run_problem(problem, run_driver=run_driver)#, solution_record_file=settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_directory_name + 'dymos_solution.db')
 
         # Save the results
         if settings.save_results:
-            if control_optimization:
-                problem.record(case_name='control_optimization')
-            else:
-                problem.record(case_name='cutback')
+            problem.record(case_name=settings.ac_name)
 
         # Write output
         return None
@@ -728,30 +722,27 @@ class Trajectory:
 
         # Save convergence info for trajectory
         # Read IPOPT file
-        if settings.output_file_name.find('/') == -1:
-            file = open(settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + filename, 'r')
-            # cnvg_file_name = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/Convergence.csv'
-        else:
-            file = open(settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_file_name[:settings.output_file_name.find('/')] + '/' + filename, 'r')
-            # cnvg_file_name = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_file_name[:settings.output_file_name.find('/')] + '/Convergence.csv'
-        ipopt = file.readlines()
-        file.close()
+        file_ipopt = open(settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_directory_name + filename, 'r')
+        ipopt = file_ipopt.readlines()
+        file_ipopt.close()
 
         # Check if convergence summary excel file exists
-        # if not os.path.isfile(cnvg_file_name):
-        #     file = open(cnvg_file_name, 'w')
-        #     file.writelines("Trajectory name , Execution date/time,  Converged")
-        #     file.close()
+        cnvg_file_name = settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_directory_name + 'Convergence.csv'
+        if not os.path.isfile(cnvg_file_name):
+            file_cvg = open(cnvg_file_name, 'w')
+            file_cvg.writelines("Trajectory name , Execution date/time,  Converged")
+        else:
+            file_cvg = open(cnvg_file_name, 'a')
 
         # Write convergence output to file
         # file = open(cnvg_file_name, 'a')
         if ipopt[-1] in {'EXIT: Optimal Solution Found.\n', 'EXIT: Solved To Acceptable Level.\n'}:
-            # file.writelines("\n" + settings.output_file_name + ", " + str(dt.datetime.now()) + ", Converged")
+            file_cvg.writelines("\n" + settings.output_file_name + ", " + str(dt.datetime.now()) + ", Converged")
             converged = True
         else:
-            # file.writelines("\n" + settings.output_file_name + ", " + str(dt.datetime.now()) + ", Not converged")
+            file_cvg.writelines("\n" + settings.output_file_name + ", " + str(dt.datetime.now()) + ", Not converged")
             converged = False
-        file.close()
+        file_cvg.close()
 
         return converged
 
