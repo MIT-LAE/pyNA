@@ -16,6 +16,18 @@ The online documentation of **pyNA** is available at https://mit-lae.github.io/p
 
 # Installation
 
+Get pyNA from a cloned repository from Github: 
+
+```
+git clone git@github.com:MIT-LAE/pyNA.git
+```
+
+Change into the pyNA directory and install the package:
+
+```
+pip install -e .
+```
+
 
 
 # Citation
