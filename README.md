@@ -39,7 +39,7 @@ If you use pyNA in your work, please cite:
 @unpublished{Voet2022,
   author = {Laurens J. A. Voet and Prashanth Prakash and Raymond L. Speth and Jayant S. Sabnis and Choon S. Tan and Steven R. H. Barret},
   title = {Sensitivities of aircraft acoustic metrics to engine design and control variables for multi-disciplinary optimization},
-  journal = {AIAA Journal (manuscript under review)},
+  journal = {AIAA Journal},
   year = {2022},
 }
 ```
