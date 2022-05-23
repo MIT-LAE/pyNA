@@ -7,4 +7,3 @@ tqdm==4.47.0
 pandas==1.0.5
 matplotlib==3.2.2
 dataclasses==0.8
-ipython>=7.24.1
