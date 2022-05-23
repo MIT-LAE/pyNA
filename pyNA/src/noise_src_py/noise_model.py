@@ -105,7 +105,7 @@ class NoiseModel(om.Group):
             self.connect('normalize_engine.A_f_star', 'source.A_f_star')
             self.connect('normalize_engine.d_f_star', 'source.d_f_star')
 
-        if self.options['mode'] == 'time_series':
+        if self.options['mode'] == 'trajectory':
             # Propagation module
             self.add_subsystem(name='propagation',
                             subsys=Propagation(n_t=n_t, settings=settings, data=data),

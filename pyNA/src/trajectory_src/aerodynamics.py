@@ -29,6 +29,7 @@ class Aerodynamics(om.ExplicitComponent):
     def initialize(self):
         self.options.declare('num_nodes', types=int, desc='Number of nodes to be evaluated in the RHS')
         self.options.declare('ac', types=Aircraft)
+        self.options.declare('phase', types=str)
 
     def setup(self):
         # Load options
@@ -66,6 +67,7 @@ class Aerodynamics(om.ExplicitComponent):
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
         # Load options
         ac = self.options['ac']
+        phase_name = self.options['phase']
 
         # Dynamic pressure
         outputs['q'] = 0.5 * inputs['rho_0'] * inputs['v'] ** 2
@@ -75,11 +77,16 @@ class Aerodynamics(om.ExplicitComponent):
 
         # Forces
         outputs['L'] = outputs['q'] * ac.af_S_w * inputs['c_l']
-        outputs['D'] = outputs['q'] * ac.af_S_w * inputs['c_d']
+
+        if phase_name in {'groundroll', 'rotation', 'liftoff'}:
+            outputs['D'] = outputs['q'] * ac.af_S_w * (inputs['c_d'] + ac.c_d_g)
+        elif phase_name in {'vnrs', 'cutback'}:
+            outputs['D'] = outputs['q'] * ac.af_S_w * inputs['c_d']
 
     def compute_partials(self, inputs:openmdao.vectors.default_vector.DefaultVector, partials: openmdao.vectors.default_vector.DefaultVector):
         # Load options
         ac = self.options['ac']
+        phase_name = self.options['phase']
 
         # Compute dynamic pressure
         q = 0.5 * inputs['rho_0'] * inputs['v'] ** 2
@@ -92,10 +99,12 @@ class Aerodynamics(om.ExplicitComponent):
         partials['L', 'v'] = inputs['c_l'] * inputs['rho_0'] * inputs['v'] * ac.af_S_w
 
         partials['D', 'c_d'] = q * ac.af_S_w
-        partials['D', 'rho_0'] = inputs['c_d'] * 1/2. * inputs['v']**2 * ac.af_S_w
-        partials['D', 'v'] = inputs['c_d'] * inputs['rho_0'] * inputs['v'] * ac.af_S_w
+        if phase_name in {'groundroll', 'rotation', 'liftoff'}:
+            partials['D', 'rho_0'] = (inputs['c_d'] + ac.c_d_g) * 1/2. * inputs['v']**2 * ac.af_S_w
+            partials['D', 'v'] = (inputs['c_d'] + ac.c_d_g) * inputs['rho_0'] * inputs['v'] * ac.af_S_w
+        elif phase_name in {'vnrs', 'cutback'}:
+            partials['D', 'rho_0'] = inputs['c_d'] * 1/2. * inputs['v']**2 * ac.af_S_w
+            partials['D', 'v'] = inputs['c_d'] * inputs['rho_0'] * inputs['v'] * ac.af_S_w 
 
         partials['M_0', 'v'] = 1.0 / inputs['c_0']
         partials['M_0', 'c_0'] = -inputs['v'] / inputs['c_0'] ** 2
-
-

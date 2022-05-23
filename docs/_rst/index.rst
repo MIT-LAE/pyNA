@@ -20,7 +20,7 @@ Installation
 Python version of pyNA
 """"""""""""""""""""""
 
-Get pyNA from a cloned repository from `Github <https://github.com/MIT-LAE/pyNA>`_:
+Get pyNA from a cloned repository from `Github <https://github.com/MIT-LAE/pyNA.git>`_:
 
    git clone git@github.com:MIT-LAE/pyNA.git
 
@@ -28,7 +28,7 @@ Use pip to install pyNA:
 
    pip install -e .
 
-The python version is default in pyNA. To enable this mode, set the python environment variable ``pyna_language`` equal to 'python':
+The python version is default in pyNA. To enable this mode, set a python environment variable to julia:
 
 .. code-block::
    
@@ -38,7 +38,7 @@ The python version is default in pyNA. To enable this mode, set the python envir
 Julia version of pyNA
 """""""""""""""""""""
 
-To enable fast computation of sensitivities of acoustic objective functions in pyNA, an installation of Julia is required since the modules *geometry, source, propagation and levels* are using Julia's ForwardDiff. Install `Julia <https://julialang.org>`_. To enable this mode, set the python environment variable ``pyna_language`` equal to 'julia':
+To enable fast computation of sensitivities of acoustic objective functions in pyNA, an installation of Julia is required since the modules *geometry, source, propagation and levels* are using Julia's ForwardDiff. Install `Julia <https://julialang.org>`_. To enable this mode, set a python environment variable to julia:
 
 .. code-block::
    

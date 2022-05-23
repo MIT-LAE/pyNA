@@ -131,6 +131,7 @@ class Data:
         Data.load_suppression_tables(self, settings=settings)
         Data.load_jet_data(self, settings=settings)
         Data.load_noy_data(self, settings=settings)
+        Data.load_a_weighting_data(self)
         Data.load_shielding_time_series(self, settings=settings)
 
         # Initialize verification data
@@ -293,6 +294,22 @@ class Data:
         self.noy_f = interpolate.interp2d(self.noy_freq,
                                           self.noy_spl,
                                           self.noy, kind='linear')
+
+        return None
+
+
+    def load_a_weighting_data(self) -> None:
+        """
+        Load A-weighting coefficients for A-SPL computation.
+
+        :param settings: pyna settings.
+        :type settings: Settings
+
+        :return: None
+        """
+
+        self.aw_freq = np.array([10, 20, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000])
+        self.aw_db = np.array([-70.4, -50.4, -34.5, -30.2, -26.2, -22.5, -19.1, -16.1, -13.4, -10.9, -8.6, -6.6, -4.8, -3.2, -1.9, -0.8, 0, 0.6, 1.0, 1.2, 1.3, 1.2, 1.0, 0.5, -0.1, -1.1, -2.5, -4.3, -6.7, -9.3])
 
         return None
 

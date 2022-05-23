@@ -8,8 +8,6 @@
 "af_b_h" : 5.6388,
 "af_b_v" : 4.7244,
 "af_b_w" : 20.51304,
-"theta_flaps" : 10.0,
-"theta_slats" : -6.0,
 "af_S_f" : 11.1484,
 "af_s" : 1.0,
 "af_d_mg" : 0.9144,
@@ -20,6 +18,7 @@
 "af_n_ng" : 2.0,  
 "af_N_mg" : 2.0,  
 "af_N_ng" : 1.0,  
+"c_d_g" : 0.0240,
 "mu_r" : 0.0175,
 "B_fan" : 25,  
 "V_fan" : 48,  
@@ -33,10 +32,9 @@
 "af_clean_v" : true,  
 "af_delta_wing" : true, 
 "alpha_0" : -0.85,
-"k_rot" : 1.35,  
+"k_rot" : 1.29,  
 "v_max" : 128.6, 
-"z_max" : 1000.0, 
-"gamma_rot" : 10.0
+"z_max" : 1000.0
 }
 
 

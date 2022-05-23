@@ -1,8 +1,9 @@
 import pdb
 import openmdao
+import datetime as dt
 import numpy as np
 from openmdao.api import ExplicitComponent
-
+from pyNA.src.settings import Settings
 
 class FlightDynamics(ExplicitComponent):
     """
@@ -39,11 +40,15 @@ class FlightDynamics(ExplicitComponent):
 
     def initialize(self):
         self.options.declare('num_nodes', types=int)
+        self.options.declare('settings', types=Settings)
         self.options.declare('phase', types=str)
         self.options.declare('ac')
+        self.options.declare('objective')
 
     def setup(self):
         nn = self.options['num_nodes']
+        phase_name = self.options['phase']
+        ac = self.options['ac']
 
         # inputs
         self.add_input(name='x', val=np.ones(nn), desc='position along the trajectory', units='m')
@@ -58,6 +63,8 @@ class FlightDynamics(ExplicitComponent):
         self.add_input(name='c_0', val=np.ones(nn), desc='ambient speed of sound', units='m/s')
         self.add_input(name='drho_0_dz', val=np.ones(nn), desc='change in atmospheric density with change in altitude', units='kg/m**4')
         self.add_input(name='c_l_max', val=np.ones(nn), desc='maximum aircraft lift coefficient', units=None)
+        if phase_name == 'groundroll':
+            self.add_input(name='k_rot', val=ac.k_rot, desc='rotational speed parameter', units=None)
 
         # outputs
         self.add_output(name='x_dot', val=np.ones(nn), desc='Position rate along the ground', units='m/s')
@@ -66,11 +73,12 @@ class FlightDynamics(ExplicitComponent):
         self.add_output(name='gamma_dot', val=np.ones(nn), desc='rate of change of flight path angle', units='deg/s')
         self.add_output(name='v_dot', val=np.ones(nn), desc='Acceleration along the ground (assuming zero wind)', units='m/s**2')
         self.add_output(name='eas_dot', val=np.ones(nn), desc='acceleration of equivalent airspeed', units='m/s**2')
-        self.add_output(name='y', val=np.ones(nn), desc='Lateral position along the trajectory', units='m')
+        self.add_output(name='y', val=np.zeros(nn), desc='Lateral position along the trajectory', units='m')
         self.add_output(name='eas', val=np.ones(nn), desc='equivalent airspeed', units='m/s')
-        self.add_output(name='net_F_up', val=np.ones(nn), desc='net upward force', units='N')
+        self.add_output(name='n', val=np.ones(nn), desc='load factor', units=None)
         self.add_output(name='I_landing_gear', val=np.ones(nn), desc='flag for landing gear extraction', units=None)
-        self.add_output(name='v_rot_residual', val=np.ones(nn), desc='residual v - v_rot', units='m/s')
+        if phase_name == 'groundroll':
+            self.add_output(name='v_rot_residual', val=np.ones(nn), desc='residual v - v_rot', units='m/s')
 
         # Setup partials
         arange = np.arange(self.options['num_nodes'])
@@ -79,10 +87,8 @@ class FlightDynamics(ExplicitComponent):
         self.declare_partials(of='v_dot', wrt='gamma', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='v_dot', wrt='alpha', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='v_dot', wrt='L', rows=arange, cols=arange, val=1.0)
-
         self.declare_partials(of='eas', wrt='v', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='eas', wrt='rho_0', rows=arange, cols=arange, val=1.0)
-
         self.declare_partials(of='eas_dot', wrt='F_n', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='eas_dot', wrt='D', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='eas_dot', wrt='gamma', rows=arange, cols=arange, val=1.0)
@@ -91,33 +97,30 @@ class FlightDynamics(ExplicitComponent):
         self.declare_partials(of='eas_dot', wrt='rho_0', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='eas_dot', wrt='drho_0_dz', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='eas_dot', wrt='v', rows=arange, cols=arange, val=1.0)
-
         self.declare_partials(of='gamma_dot', wrt='F_n', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='gamma_dot', wrt='L', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='gamma_dot', wrt='gamma', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='gamma_dot', wrt='alpha', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='gamma_dot', wrt='v', rows=arange, cols=arange, val=1.0)
-
         self.declare_partials(of='x_dot', wrt='v', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='x_dot', wrt='gamma', rows=arange, cols=arange, val=1.0)
-
         self.declare_partials(of='z_dot', wrt='v', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='z_dot', wrt='gamma', rows=arange, cols=arange, val=1.0)
-
-        self.declare_partials(of='net_F_up', wrt='L', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='net_F_up', wrt='F_n', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='net_F_up', wrt='alpha', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='net_F_up', wrt='gamma', rows=arange, cols=arange, val=1.0)
-
+        self.declare_partials(of='n', wrt='L', rows=arange, cols=arange, val=1.0)
+        self.declare_partials(of='n', wrt='F_n', rows=arange, cols=arange, val=1.0)
+        self.declare_partials(of='n', wrt='alpha', rows=arange, cols=arange, val=1.0)
+        self.declare_partials(of='n', wrt='gamma', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='I_landing_gear', wrt='z', rows=arange, cols=arange, val=1.0)
-
-        self.declare_partials(of='v_rot_residual', wrt='v', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='v_rot_residual', wrt='rho_0', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='v_rot_residual', wrt='c_l_max', rows=arange, cols=arange, val=1.0)
+        if phase_name == 'groundroll':
+            self.declare_partials(of='v_rot_residual', wrt='v', rows=arange, cols=arange, val=1.0)
+            self.declare_partials(of='v_rot_residual', wrt='rho_0', rows=arange, cols=arange, val=1.0)
+            self.declare_partials(of='v_rot_residual', wrt='c_l_max', rows=arange, cols=arange, val=1.0)
+            self.declare_partials(of='v_rot_residual', wrt='k_rot', val=1.0)
 
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
         # Load options
         nn = self.options['num_nodes']
+        settings = self.options['settings']
         phase_name = self.options['phase']
         ac = self.options['ac']
         atm = dict()
@@ -141,14 +144,11 @@ class FlightDynamics(ExplicitComponent):
         cgamma = np.cos(gamma*np.pi/180.)
         sgamma = np.sin(gamma*np.pi/180.)
 
-        # Compute net upward force
-        outputs['net_F_up'] = F_n * salpha + L - ac.mtow * atm['g'] * cgamma
-
         # Acceleration dvdt
         if phase_name in {'groundroll', 'rotation'}:
             F_fric = ac.mu_r * (ac.mtow * atm['g'] - L)
             outputs['v_dot'] = (1.0 / ac.mtow) * (F_n * calpha - D - F_fric) - atm['g'] * sgamma
-        elif phase_name in {'climb', 'vnrs', 'cutback'}:
+        elif phase_name in {'liftoff', 'vnrs', 'cutback'}:
             outputs['v_dot'] = (1.0 / ac.mtow) * (F_n * calpha - D) - atm['g'] * sgamma
 
         # Change in position
@@ -162,25 +162,47 @@ class FlightDynamics(ExplicitComponent):
         # Climb angle
         if phase_name in {'groundroll', 'rotation'}:
             outputs['gamma_dot'] = np.zeros(nn)
-        elif phase_name in {'climb', 'vnrs', 'cutback'}:
+        elif phase_name in {'liftoff', 'vnrs', 'cutback'}:
             outputs['gamma_dot'] = ((F_n * salpha + L - ac.mtow * atm['g'] * cgamma) / (ac.mtow * v))*180/np.pi
 
+        # Compute net upward force
+        outputs['n'] = (F_n * salpha + L)/(ac.mtow * atm['g'] * cgamma)
+
         # Stick (alpha) controller
-        if phase_name == 'groundroll':
+        if phase_name in {'groundroll'}:
             outputs['alpha_dot'] = np.zeros(nn)
         elif phase_name == 'rotation':
             outputs['alpha_dot'] = 3.5 * np.ones(nn)
-        elif phase_name in {'climb', 'vnrs', 'cutback'}:
+        elif phase_name in {'liftoff', 'vnrs', 'cutback'}:
             outputs['alpha_dot'] = np.zeros(nn)
 
         # Landing gear extraction
-        if phase_name in {'groundroll', 'rotation', 'climb'}:
+        if phase_name in {'groundroll', 'rotation', 'liftoff'}:
             outputs['I_landing_gear'] = np.ones(nn)
-        elif phase_name in {'VNRS', 'cutback'}:
+        elif phase_name in {'vnrs', 'cutback'}:
             outputs['I_landing_gear'] = np.zeros(nn)
 
         # Compute rotation speed residual
-        outputs['v_rot_residual'] = v - (ac.k_rot * np.sqrt(2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)))
+        if phase_name == 'groundroll':
+            v_stall = np.sqrt(2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max))
+
+            print(c_l_max)
+            print(v_stall)
+
+            v_rot = inputs['k_rot'] * v_stall
+            outputs['v_rot_residual'] = v - v_rot
+
+        # Print to file
+        if self.options['objective'] == 'noise':
+            # Write k to file
+            if phase_name == 'groundroll':
+                f = open(settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_directory_name + '/' + 'inputs_k.txt' , 'a')
+                f.write(str(inputs['k_rot'][0]) + '\n')
+                f.close()
+
+        # Compute the thrust-setting residual
+        if self.options['objective'] == 'noise' and phase_name == 'vnrs':
+            print(inputs['x'][-1])
 
     def compute_partials(self, inputs:openmdao.vectors.default_vector.DefaultVector, partials: openmdao.vectors.default_vector.DefaultVector):
         # Load options
@@ -222,7 +244,7 @@ class FlightDynamics(ExplicitComponent):
             partials['v_dot', 'gamma'] = -atm['g'] * cgamma * np.pi/180.
             partials['v_dot', 'alpha'] = -F_n * salpha / ac.mtow * np.pi/180.
             partials['v_dot', 'L'] = ac.mu_r / ac.mtow
-        elif phase_name in {'climb', 'vnrs', 'cutback'}:
+        elif phase_name in {'liftoff', 'vnrs', 'cutback'}:
             vdot = (1.0 / ac.mtow) * (F_n * calpha - D) - atm['g'] * sgamma
             partials['v_dot', 'F_n'] = calpha / ac.mtow * ac.n_eng
             partials['v_dot', 'D'] = - 1.0 / ac.mtow
@@ -257,7 +279,7 @@ class FlightDynamics(ExplicitComponent):
             partials['gamma_dot', 'gamma'] = np.zeros(nn)
             partials['gamma_dot', 'alpha'] = np.zeros(nn)
             partials['gamma_dot', 'v'] = np.zeros(nn)
-        elif phase_name in {'climb', 'vnrs', 'cutback'}:
+        elif phase_name in {'liftoff', 'vnrs', 'cutback'}:
             partials['gamma_dot', 'F_n'] = (salpha / (ac.mtow * v))*180/np.pi * ac.n_eng
             partials['gamma_dot', 'L'] = (1.0 / (ac.mtow * v))*180/np.pi
             partials['gamma_dot', 'gamma'] = (atm['g'] * sgamma * np.pi/180. / v)*180/np.pi
@@ -265,17 +287,18 @@ class FlightDynamics(ExplicitComponent):
             partials['gamma_dot', 'v'] = (atm['g'] * cgamma / v ** 2 - (L + F_n * salpha) / (v ** 2 * ac.mtow))*180/np.pi
 
         # Net upward force
-        partials['net_F_up', 'L'] = 1.0
-        partials['net_F_up', 'F_n'] = salpha * ac.n_eng
-        partials['net_F_up', 'alpha'] = F_n * calpha * np.pi/180.
-        partials['net_F_up', 'gamma'] = ac.mtow * atm['g'] * sgamma * np.pi/180.
+        partials['n', 'L'] = 1.0 / (ac.mtow * atm['g'] * cgamma)
+        partials['n', 'F_n'] = salpha * ac.n_eng / (ac.mtow * atm['g'] * cgamma)
+        partials['n', 'alpha'] = F_n * calpha * (np.pi/180.) / (ac.mtow * atm['g'] * cgamma)
+        partials['n', 'gamma'] = (F_n * salpha + L) / (ac.mtow * atm['g']) / cgamma**2 * sgamma * (np.pi/180.)
 
         # Landing gear extraction
         partials['I_landing_gear', 'z'] = np.zeros(nn)
 
         # Compute rotation speed residual (v_residual = v - (ac.k_rot * v_stall))
-        v_stall = np.sqrt(2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max))
-
-        partials['v_rot_residual', 'v'] = np.ones(nn)
-        partials['v_rot_residual', 'rho_0'] = ac.k_rot / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * c_l_max)
-        partials['v_rot_residual', 'c_l_max'] = ac.k_rot / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * rho_0)
+        if phase_name == 'groundroll':
+            v_stall = np.sqrt(2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max))
+            partials['v_rot_residual', 'v'] = np.ones(nn)
+            partials['v_rot_residual', 'rho_0'] = ac.k_rot / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * c_l_max)
+            partials['v_rot_residual', 'c_l_max'] = ac.k_rot / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * rho_0)
+            partials['v_rot_residual', 'k_rot'] = - v_stall

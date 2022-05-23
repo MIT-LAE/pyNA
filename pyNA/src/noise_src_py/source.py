@@ -10,7 +10,7 @@ from pyNA.src.noise_src_py.jet import Jet
 from pyNA.src.noise_src_py.fan import Fan
 from pyNA.src.noise_src_py.core import Core
 from pyNA.src.noise_src_py.airframe import Airframe
-
+from tqdm import tqdm
 
 class Source(om.ExplicitComponent):
     """

@@ -28,8 +28,6 @@ class Aircraft:
     af_b_w : float              # Wing span (94.43 ft) [m]
 
     # High-lift devices
-    theta_flaps : float         # Flap deflection angle [deg]
-    theta_slats: float          # Slat deflection angle [deg]
     af_S_f : float              # Flap area (120.0 ft2) [m2]
     af_s : int                  # Number of slots for trailing-edge flaps (min. is 1) [-]
 
@@ -61,12 +59,10 @@ class Aircraft:
     af_delta_wing : bool       # Delta wing (1: yes / 0: no)
 
     # Aerodynamics and flight performance
-    c_l_max : float             # Max. lift coefficient [-]
     alpha_0 : float            # Wing mounting angle [deg]
     k_rot : float              # Rotation coefficient (v_rot/v_stall) [-]
     v_max : float              # Maximum climb-out velocity [m/s]
     z_max: float               # Maximum climb-out altitude [m]
-    gamma_rot : float          # Initial climb angle [deg]
 
     def __init__(self, name: str, version: str, settings: Settings) -> None:
         """
@@ -92,21 +88,21 @@ class Aircraft:
         # self.v_rot: float
 
         # Load aircraft parameters
-        path = settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/' + self.name + '_' + self.version + '.json'
+        if len(self.version) != 0:
+            path = settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/' + self.name + '_' + self.version + '.json'
+        else:
+            path = settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/' + self.name + '.json'
         with open(path) as f:
             params = json.load(f)
         Aircraft.set_aircraft_parameters(self, **params)
 
-    def set_aircraft_parameters(self, mtow: np.float64, n_eng: np.int64, comp_lst: list, af_S_h: np.float64,
-                                af_S_v: np.float64, af_S_w: np.float64, af_b_f: np.float64, af_b_h: np.float64, af_b_v:
-                                np.float64, af_b_w: np.float64, theta_flaps: np.float64, theta_slats: np.float64,
-                                af_S_f: np.float64, af_s: np.int64, af_d_mg: np.float64, af_d_ng: np.float64, af_l_mg:
-                                np.float64, af_l_ng: np.float64, af_n_mg: np.float64, af_n_ng: np.float64, af_N_mg:
-                                np.float64, af_N_ng: np.float64, mu_r: np.float64, B_fan: np.int64, V_fan: np.int64,
-                                RSS_fan: np.float64, M_d_fan: np.float64, inc_F_n: np.float64, TS_lower: np.float64,
-                                TS_upper: np.float64, af_clean_w: bool, af_clean_h:bool, af_clean_v: bool,
-                                af_delta_wing: bool, alpha_0: np.float64, k_rot: np.float64, v_max: np.float64, 
-                                z_max: np.float64, gamma_rot: np.float64) -> None:
+    def set_aircraft_parameters(self, mtow: np.float64, n_eng: np.int64, comp_lst: list, af_S_h: np.float64, af_S_v: np.float64, 
+                                af_S_w: np.float64, af_b_f: np.float64, af_b_h: np.float64, af_b_v: np.float64, af_b_w: np.float64, 
+                                af_S_f: np.float64, af_s: np.int64, af_d_mg: np.float64,  af_d_ng: np.float64, af_l_mg:np.float64, 
+                                af_l_ng: np.float64, af_n_mg: np.float64,  af_n_ng: np.float64, af_N_mg: np.float64, af_N_ng: np.float64, 
+                                c_d_g: np.float64, mu_r: np.float64,  B_fan: np.int64,  V_fan: np.int64, RSS_fan: np.float64, M_d_fan: np.float64, 
+                                inc_F_n: np.float64,  TS_lower: np.float64, TS_upper: np.float64, af_clean_w: bool, af_clean_h:bool, af_clean_v: bool, 
+                                af_delta_wing: bool,  alpha_0: np.float64, k_rot: np.float64, v_max: np.float64, z_max: np.float64) -> None:
         """
         Set the aircraft parameters in the aircraft class.
 
@@ -130,10 +126,6 @@ class Aircraft:
         :type af_b_v: np.float64
         :param af_b_w: Wing span [m]
         :type af_b_w: np.float64
-        :param theta_flaps: Flap deflection angle [deg]
-        :type theta_flaps: np.float64
-        :param theta_slats: Slat deflection angle [deg]
-        :type theta_slats: np.float64
         :param af_S_f: Flap area [m2]
         :type af_S_f: np.float64
         :param af_s: Number of slots for trailing-edge flaps (min. is 1) [-]
@@ -154,6 +146,8 @@ class Aircraft:
         :type af_N_mg: np.int64
         :param af_N_ng: Number of nose landing gear [-]
         :type af_N_ng: np.int64
+        :param: c_d_g: Landing gear drag coefficient [-]
+        :type c_d_g; np.float64 
         :param mu_r: Rolling resistance coefficient [-]
         :type mu_r: np.float64
         :param B_fan: Number of fan blades [-]
@@ -186,8 +180,6 @@ class Aircraft:
         :type v_max: np.float64
         :param z_max: Maximum climb-out altitude [m]
         :type z_max: np.float64
-        :param gamma_rot: Initial climb angle [deg]
-        :type gamma_rot: np.float64
 
         :return: None
         """
@@ -202,8 +194,6 @@ class Aircraft:
         self.af_b_h = af_b_h
         self.af_b_v = af_b_v
         self.af_b_w = af_b_w
-        self.theta_flaps = theta_flaps
-        self.theta_slats = theta_slats
         self.af_S_f = af_S_f
         self.af_s = af_s
         self.af_d_mg = af_d_mg
@@ -214,6 +204,7 @@ class Aircraft:
         self.af_n_ng = af_n_ng
         self.af_N_mg = af_N_mg
         self.af_N_ng = af_N_ng
+        self.c_d_g = c_d_g       
         self.mu_r = mu_r
         self.B_fan = B_fan
         self.V_fan = V_fan
@@ -230,7 +221,6 @@ class Aircraft:
         self.k_rot = k_rot
         self.v_max = v_max
         self.z_max = z_max
-        self.gamma_rot = gamma_rot
 
         return None
 
@@ -239,15 +229,15 @@ class Aircraft:
         Load aerodynamic data from aerodynamics deck.
 
         :param settings: pyNA settings
-        :type settings: Settings
+        :type settings: Settingps
 
         :return: None
         """
 
         # Load aerodynamics deck
-        if settings.ac_name in ['stca', 'stca_verification']:
+        if settings.ac_name == 'stca':
             # Load data 
-            self.aero['alpha'] = np.array([-2.,  0.,  2.,  4.,  6.,  8., 10., 12., 15., 18.])
+            self.aero['alpha'] = np.array([-2.,  0.,  2.,  4.,  6.,  8., 10., 12., 15., 18., 21., 23., 25.])
             self.aero['theta_flaps'] = np.array([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22., 24., 26.])
             self.aero['theta_slats'] = np.array([-26., -24., -22., -20., -18., -16., -14., -12., -10.,  -8.,  -6., -4.,  -2.,   0.])
             self.aero['c_l'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_l_stca.npy')
@@ -263,12 +253,13 @@ class Aircraft:
             self.aero['theta_flaps_c_d_min_gr'] = theta_flaps_lst[np.argmin(c_d_flaps)]
 
         elif settings.ac_name == 'a10':
-            self.aero['alpha'] = np.array([-2., -1., 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
-            self.aero['theta_flaps'] = np.array([0., 2., 4., 6., 8., 10., 12., 14., 16., 18., 20., 22., 24., 26.])
-            self.aero['theta_slats'] = np.array([-26., -24., -22., -20., -18., -16., -14., -12., -10., -8., -6., -4., -2., 0.])
+            self.aero['alpha'] = np.array([-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+            self.aero['theta_flaps'] = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0])
+            self.aero['theta_slats'] = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0])
             self.aero['c_l'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_l_' + settings.ac_name + '.npy')
             self.aero['c_l_max'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_l_max_' + settings.ac_name + '.npy')
             self.aero['c_d'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_d_' + settings.ac_name + '.npy')
+            
         else:
             raise ValueError('Invalid aircraft name specified.')
 

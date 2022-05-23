@@ -1,4 +1,4 @@
-function inlet_broadband(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
+function inlet_broadband(settings::PyObject, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
 
     T = eltype(M_tip)
     # Fan inlet broadband noise component:
@@ -123,7 +123,7 @@ function inlet_broadband(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
 
     return spl_IB
 end
-function discharge_broadband(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
+function discharge_broadband(settings::PyObject, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
 
     T = eltype(M_tip)
     # Fan discharge broadband noise component:
@@ -257,7 +257,7 @@ function discharge_broadband(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
 
     return spl_DB
 end
-function inlet_tones(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
+function inlet_tones(settings::PyObject, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
     
     T = eltype(M_tip)
     # Fan inlet discrete tone noise component:
@@ -416,7 +416,7 @@ function inlet_tones(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
 
     return tonlv_I
 end
-function discharge_tones(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
+function discharge_tones(settings::PyObject, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
 
     T = eltype(M_tip)
     # Fan discharge discrete tone noise component:
@@ -542,7 +542,7 @@ function discharge_tones(settings, theta, M_tip, tsqem, M_d_fan, RSS_fan)
 
     return tonlv_X
 end
-function combination_tones(settings, freq, theta, M_tip, bpf, tsqem)
+function combination_tones(settings::PyObject, freq::Array{Float64, 1}, theta, M_tip, bpf, tsqem)
     
     # Combination tone (multiple pure tone or buzzsaw) calculations:
     # Note the original Heidmann reference states that MPTs should be computed if
@@ -697,7 +697,7 @@ function combination_tones(settings, freq, theta, M_tip, bpf, tsqem)
 
     return dcp
 end    
-function calculate_harmonics(settings, freq, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf, comp)
+function calculate_harmonics(settings::PyObject, freq::Array{Float64, 1}, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf, comp::String)
 
     # Assign discrete interaction tones at bpf and harmonics to proper bins (see figures 8 and 9):
     # Initialize solution matrices
@@ -1017,7 +1017,7 @@ function calculate_harmonics(settings, freq, theta, tonlv_I, tonlv_X, i_cut, M_t
 
     return dp, dpx
 end
-function calculate_cutoff(M_tip_tan, B_fan, V_fan)
+function calculate_cutoff(M_tip_tan, B_fan::Int64, V_fan::Int64)
     
     # Vane/blade ratio parameter:
     vane_blade_ratio = 1 - V_fan / B_fan
@@ -1042,22 +1042,11 @@ function calculate_cutoff(M_tip_tan, B_fan, V_fan)
 
     return i_cut
 end
-function fan(settings, data, ac, n_t, shielding, idx_src, input_src, comp)
 
-    # Extract inputs
-    DTt_f_star = input_src[idx_src["DTt_f_star"][1]:idx_src["DTt_f_star"][2]]
-    mdot_f_star = input_src[idx_src["mdot_f_star"][1]:idx_src["mdot_f_star"][2]]
-    N_f_star = input_src[idx_src["N_f_star"][1]:idx_src["N_f_star"][2]]
-    A_f_star = input_src[idx_src["A_f_star"][1]:idx_src["A_f_star"][2]]
-    d_f_star = input_src[idx_src["d_f_star"][1]:idx_src["d_f_star"][2]]
-    M_0 = input_src[idx_src["M_0"][1]:idx_src["M_0"][2]]
-    c_0 = input_src[idx_src["c_0"][1]:idx_src["c_0"][2]]
-    T_0 = input_src[idx_src["T_0"][1]:idx_src["T_0"][2]]
-    rho_0 = input_src[idx_src["rho_0"][1]:idx_src["rho_0"][2]]
-    theta = input_src[idx_src["theta"][1]:idx_src["theta"][2]]
+function fan(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, shielding::Array{Float64, 2}, M_0, c_0, T_0, rho_0, theta, DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star, comp::String)
 
     # Initialize solution
-    T = eltype(input_src)
+    T = eltype(DTt_f_star)
     msap_fan = zeros(T, (n_t, settings.N_f))
 
     for i in range(1, n_t, step=1)
@@ -1094,7 +1083,7 @@ function fan(settings, data, ac, n_t, shielding, idx_src, input_src, comp)
         end
                 
         if settings.combination_tones
-            dcp = combination_tones(settings, data.f, theta[i], M_tip, bpf, tsqem)
+            dcp = combination_tones(settings,  data.f, theta[i], M_tip, bpf, tsqem)
         else
             dcp = zeros(T, settings.N_f)
         end

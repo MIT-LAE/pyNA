@@ -1,4 +1,7 @@
-function f_ioaspl(settings, n_t, oaspl, t_o)
+function f_ioaspl(t_o, oaspl)
+
+    # Number of time steps
+    n_t = size(t_o)[1]
 
     # Interpolate time, oaspl and C
     dt = 0.5

@@ -1,4 +1,4 @@
-function lateral_attenuation(settings, beta, x_obs)
+function lateral_attenuation(settings::PyObject, beta, x_obs)
     # Depression angle: phi_d = beta (elevation angle) + epsilon (aircraft bank angle = 0)
     # Note: beta is in degrees
     T = eltype(beta)

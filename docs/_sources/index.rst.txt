@@ -22,7 +22,7 @@ Python version of pyNA
 
 Get pyNA from a cloned repository from `Github <https://github.com/MIT-LAE/pyNA>`_:
 
-   git clone git@github.com:MIT-LAE/pyNA.git
+   git clone git@github.mit.edu:lvoet/pyNA.git 
 
 Use pip to install pyNA:
 

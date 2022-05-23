@@ -45,7 +45,7 @@ function source(settings, data, ac, shielding, n_t, idx_src, input_src)
         msap_af = airframe(settings, data, ac, n_t, idx_src, input_src)
         msap_source = msap_source .+ msap_af
     end
-    
+
     return msap_source
 end
 

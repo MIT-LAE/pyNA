@@ -1,4 +1,7 @@
-function f_ipnlt(settings, n_t, pnlt, t_o)
+function f_ipnlt(t_o, pnlt)
+
+    # Number of time steps
+    n_t = size(t_o)[1]
 
     # Interpolate time, pnlt and C
     dt = 0.5

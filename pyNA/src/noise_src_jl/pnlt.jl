@@ -1,6 +1,9 @@
 # Perceived noise level, tone-corrected  
-function f_noy(settings, n_t, spl)
+function f_noy(settings::PyObject, spl)
     
+    # Number of time steps
+    n_t = size(spl)[1]
+
     # Get type of input vector
     T = eltype(spl)
 
@@ -50,23 +53,27 @@ function f_noy(settings, n_t, spl)
     return N
 end
 
-function f_pnl(n_t, N)
+function f_pnl(N)
 
+    # Number of time steps
+    n_t = size(N)[1]
+
+    # Compute perceived noise level
     pnl = zeros(eltype(N), n_t)
-
     n_max = maximum(N, dims=2)
-
     n = n_max .+ 0.15*(sum(N, dims=2) .- n_max)
-    
     pnl = 40. .+ 10. / log10(2) * log10.(n)
 
     # Remove all PNL below 0
     pnl = clamp.(pnl, 0, Inf)
     
-    return pnl
+    return reshape(pnl, (n_t, ))
 end
 
-function f_tone_corrections(settings, n_t, spl)
+function f_tone_corrections(settings::PyObject, spl)
+
+    # Number of time steps
+    n_t = size(spl)[1]
 
     # Get type of input vector
     T = eltype(spl)
@@ -136,19 +143,23 @@ function f_tone_corrections(settings, n_t, spl)
     return C
 end
 
-function f_pnlt(settings, data, n_t, spl)
+function f_pnlt(settings::PyObject, data::PyObject, spl)
+
+    # Number of time steps
+    n_t = size(spl)[1]
 
     # Compute noy
     T = eltype(spl)
     func_noy = LinearInterpolation((data.noy_spl, data.noy_freq), data.noy)
+
     N = func_noy.(spl, reshape(data.f, (1,settings.N_f)).*ones(T, (n_t,1)))
     # N = f_noy(settings, n_t, spl)
 
     # Compute pnl
-    pnl = f_pnl(n_t, N)
+    pnl = f_pnl(N)
     
     # Compute the correction factor C
-    C = f_tone_corrections(settings, n_t, spl)
+    C = f_tone_corrections(settings, spl)
     
     # Step 10: Compute the largest of the tone correction
     if settings.TCF800
@@ -160,5 +171,5 @@ function f_pnlt(settings, data, n_t, spl)
     # Compute PNLT    
     pnlt = pnl + c_max
 
-    return pnlt, C
+    return reshape(pnlt, (n_t,)), C
 end

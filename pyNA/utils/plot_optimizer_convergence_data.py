@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from io import StringIO
 
 def plot_optimizer_convergence_data(file_name: str):
     """

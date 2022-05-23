@@ -1,118 +1,95 @@
-function jet_mixing(settings, data, ac, n_t, idx_src, input_src)
-
-    # Extract inputs
-    V_j_star = input_src[idx_src["V_j_star"][1]:idx_src["V_j_star"][2]]
-    rho_j_star = input_src[idx_src["rho_j_star"][1]:idx_src["rho_j_star"][2]]
-    A_j_star = input_src[idx_src["A_j_star"][1]:idx_src["A_j_star"][2]]
-    Tt_j_star = input_src[idx_src["Tt_j_star"][1]:idx_src["Tt_j_star"][2]]
-    M_0 = input_src[idx_src["M_0"][1]:idx_src["M_0"][2]]
-    c_0 = input_src[idx_src["c_0"][1]:idx_src["c_0"][2]]
-    theta = input_src[idx_src["theta"][1]:idx_src["theta"][2]]
+function jet_mixing(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, M_0, c_0, theta, V_j_star, rho_j_star, A_j_star, Tt_j_star)
 
     # Initialize solution
-    T = eltype(input_src)
+    T = eltype(V_j_star)
     msap_jet_mixing = zeros(T, (n_t, settings.N_f))
     
     r_s_star = 0.3048/sqrt(settings.A_e)
     jet_delta = 0.
 
-    # Calculate jet mixing
-    log10Vja0 = log10.(V_j_star)
+    # Step through all time steps
+    for i in 1:n_t
 
-    # Calculate density exponent (omega)
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Table II
-    # Source: Hoch - Studies of the influence of density on jet noise: extend the 
-    array_1 = range(-0.45, 0.6, step=0.05)
-    array_2 = [-1.0, -0.9, -0.76, -0.58, -0.41, -0.22, 0.0, 0.22, 0.5, 0.77, 1.07, 1.39, 1.74, 1.95, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
-    if any(x->x<-0.45, log10Vja0) || any(x->x>0.6, log10Vja0)
-        throw(DomainError(x," log10(V_jet/c_0) contains value outside the interpolation range of the jet density exponent, omega."))
-    end
-    f_omega = PCHIPInterpolation.Interpolator(array_1, array_2)    
-    omega = reshape(f_omega.(log10Vja0), (n_t, 1))
-    
+        # Calculate jet mixing
+        log10Vja0 = log10.(V_j_star[i])
 
-    # Calculate power deviation factor (P)
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Table III
-    array_1 = range(-0.45, 0.4, step=0.05)
-    array_2 = [-0.13, -0.13, -0.13, -0.13, -0.13, -0.13, -0.12, -0.1, -0.05, 0.0, 0.1, 0.21, 0.32, 0.41, 0.43, 0.41,0.31, 0.14]
-    if any(x->x<-0.4, log10Vja0) || any(x->x>0.4, log10Vja0)
-        throw(DomainError(x," log10(V_jet/c_0) contains value outside the interpolation range of the power deviation factor, P."))
-    end
-    f_log10P = PCHIPInterpolation.Interpolator(array_1, array_2)
-    log10P = f_log10P.(log10Vja0)
-    P_function = 10 .^log10P
-    
-    # Calculate acoustic power (Pi_star)
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Equation 3
-    K = 6.67e-5
-    Pi_star = reshape(K * rho_j_star .^omega .* V_j_star.^8 .* P_function, (n_t,1))
-
-    # Calculate directivity function (D)
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Table IV
-    f_log10D = LinearInterpolation((data.jet_D_velocity, data.jet_D_angles), data.jet_D)
-    log10D = f_log10D.(theta, log10Vja0)
-    D_function = reshape(10 .^log10D, (n_t,1))
+        # Calculate density exponent (omega)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Table II
+        # Source: Hoch - Studies of the influence of density on jet noise: extend the 
+        array_1 = range(-0.45, 0.6, step=0.05)
+        array_2 = [-1.0, -0.9, -0.76, -0.58, -0.41, -0.22, 0.0, 0.22, 0.5, 0.77, 1.07, 1.39, 1.74, 1.95, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
+        if any(x->x<-0.45, log10Vja0) || any(x->x>0.6, log10Vja0)
+            throw(DomainError(x," log10(V_jet/c_0) contains value outside the interpolation range of the jet density exponent, omega."))
+        end
+        f_omega = PCHIPInterpolation.Interpolator(array_1, array_2)    
+        omega = f_omega(log10Vja0)
         
-    # Calculate Strouhal frequency adjustment factor (xi)
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Table V
-    # Note: added extra lines in the table for V_j_star = 0, to not have set_index
-    f_xi = LinearInterpolation((data.jet_xi_velocity, data.jet_xi_angles), data.jet_xi)
-    xi = reshape(f_xi.(V_j_star, theta), (n_t, 1))
+        # Calculate power deviation factor (P)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Table III
+        array_1 = range(-0.45, 0.4, step=0.05)
+        array_2 = [-0.13, -0.13, -0.13, -0.13, -0.13, -0.13, -0.12, -0.1, -0.05, 0.0, 0.1, 0.21, 0.32, 0.41, 0.43, 0.41,0.31, 0.14]
+        if any(x->x<-0.4, log10Vja0) || any(x->x>0.4, log10Vja0)
+            throw(DomainError(x," log10(V_jet/c_0) contains value outside the interpolation range of the power deviation factor, P."))
+        end
+        f_log10P = PCHIPInterpolation.Interpolator(array_1, array_2)
+        log10P = f_log10P(log10Vja0)
+        P_function = 10^log10P
+        
+        # Calculate acoustic power (Pi_star)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Equation 3
+        K = 6.67e-5
+        Pi_star = K * rho_j_star[i]^omega * V_j_star[i]^8 * P_function
 
-    # Calculate Strouhal number (St)
-    D_j_star = sqrt.(4 * A_j_star / π)  # Jet diamater [-] (rel. to sqrt(settings.A_e))
-    f_star = reshape(data.f, (1, settings.N_f)) .* sqrt(settings.A_e) ./ reshape(c_0, (n_t,1))
-    St = (f_star .* reshape(D_j_star, (n_t,1))) ./ reshape(xi .* (V_j_star .- M_0), (n_t,1))
-    log10St = log10.(St)
+        # Calculate directivity function (D)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Table IV
+        f_log10D = LinearInterpolation((data.jet_D_velocity, data.jet_D_angles), data.jet_D)
+        log10D = f_log10D(theta[i], log10Vja0)
+        D_function = 10 ^log10D
+            
+        # Calculate Strouhal frequency adjustment factor (xi)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Table V
+        # Note: added extra lines in the table for V_j_star = 0, to not have set_index
+        f_xi = LinearInterpolation((data.jet_xi_velocity, data.jet_xi_angles), data.jet_xi)
+        xi = f_xi(V_j_star[i], theta[i])
 
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Table VI
-    # Note: extended the data table temperature range ([1, 2, 2.5, 3, 3.5]) with linearly extrapolated values ([0, 1, 2, 2.5, 3, 3.5, 4, 5, 6, 7]) to avoid set_index for backward_diff
-    f_log10F = LinearInterpolation((data.jet_F_angles, data.jet_F_temperature, data.jet_F_velocity, data.jet_F_strouhal), data.jet_F)
-    #mlog10F_a_lg = f_log10F.(theta.*ones(1, settings.N_f), 3.5*ones(n_t, settings.N_f), log10Vja0*ones(1, settings.N_f), log10St)
-    #mlog10F_b_lg = f_log10F.(theta.*ones(1, settings.N_f), 3.4*ones(n_t, settings.N_f), log10Vja0*ones(1, settings.N_f), log10St)
-    #mlog10F_a_sm = f_log10F.(theta.*ones(1, settings.N_f), 1.1*ones(n_t, settings.N_f), log10Vja0*ones(1, settings.N_f), log10St)
-    #mlog10F_b_sm = f_log10F.(theta.*ones(1, settings.N_f), 1.0*ones(n_t, settings.N_f), log10Vja0*ones(1, settings.N_f), log10St)    
-    
-    # Linear extrapolation from the data table
-    mlog10F = f_log10F.(theta.*ones(1, settings.N_f), Tt_j_star.*ones(1, settings.N_f), log10Vja0 .*ones(1, settings.N_f), log10St)
-    #mlog10F[findall(Tt_j_star.*ones(1, settings.N_f) .> 3.5)] = ((mlog10F_a_lg .- mlog10F_b_lg) / (0.1) .* (Tt_j_star .- 3.5) .+ mlog10F_a_lg)[findall(Tt_j_star.*ones(1, settings.N_f) .> 3.5)]
-    #mlog10F[findall(Tt_j_star.*ones(1, settings.N_f) .< 1)] = ((mlog10F_a_sm .- mlog10F_b_sm) / (0.1) .* (Tt_j_star .- 1.0) .+ mlog10F_b_sm)[findall(Tt_j_star.*ones(1, settings.N_f) .< 1)]
-    F_function = 10 .^(-mlog10F / 10)
+        # Calculate Strouhal number (St)
+        D_j_star = sqrt(4 * A_j_star[i] / π)  # Jet diamater [-] (rel. to sqrt(settings.A_e))
+        f_star = reshape(data.f, (1, settings.N_f)) * sqrt(settings.A_e) / c_0[i]
+        St = (f_star * D_j_star) ./ (xi * (V_j_star[i] - M_0[i]))
+        log10St = log10.(St)
 
-    # Calculate forward velocity index (m_theta)
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Table VII
-    array_1 = range(0, 180, step=10)
-    array_2 = [3, 1.65, 1.1, 0.5, 0.2, 0, 0, 0.1, 0.4, 1, 1.9, 3, 4.7, 7, 8.5, 8.5, 8.5, 8.5, 8.5]
-    f_m_theta = PCHIPInterpolation.Interpolator(array_1, array_2)
-    m_theta = f_m_theta.(theta)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Table VI
+        # Note: extended the data table temperature range ([1, 2, 2.5, 3, 3.5]) with linearly extrapolated values ([0, 1, 2, 2.5, 3, 3.5, 4, 5, 6, 7]) to avoid set_index for backward_diff
+        f_log10F = LinearInterpolation((data.jet_F_angles, data.jet_F_temperature, data.jet_F_velocity, data.jet_F_strouhal), data.jet_F)
+            
+        # Linear extrapolation from the data table
+        mlog10F = f_log10F.(theta[i]*ones(1, settings.N_f), Tt_j_star[i]*ones(1, settings.N_f), log10Vja0 *ones(1, settings.N_f), log10St)
+        F_function = 10 .^(-mlog10F / 10)
 
-    # Calculate mean-square acoustic pressure (msap)
-    # Source: Zorumski report 1982 part 2. Chapter 8.4 Equation 8
-    msap_j = Pi_star .* reshape(A_j_star,(n_t,1)) / (4 * π * r_s_star^2) .* D_function .* F_function ./ reshape((1 .- M_0 .* cos.(π / 180. * (theta .- jet_delta))), (n_t, 1)) .* reshape(((V_j_star .- M_0) ./ V_j_star) .^ m_theta, (n_t,1))
+        # Calculate forward velocity index (m_theta)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Table VII
+        array_1 = range(0, 180, step=10)
+        array_2 = [3, 1.65, 1.1, 0.5, 0.2, 0, 0, 0.1, 0.4, 1, 1.9, 3, 4.7, 7, 8.5, 8.5, 8.5, 8.5, 8.5]
+        f_m_theta = PCHIPInterpolation.Interpolator(array_1, array_2)
+        m_theta = f_m_theta(theta[i])
 
-    # Multiply with number of engines
-    msap_j = msap_j * ac.n_eng
+        # Calculate mean-square acoustic pressure (msap)
+        # Source: Zorumski report 1982 part 2. Chapter 8.4 Equation 8
+        # Multiply with number of engines
+        # Normalize msap by reference pressure
+        msap_jet_mixing[i,:] = Pi_star * A_j_star[i] / (4 * π * r_s_star^2) * D_function * F_function ./ (1 - M_0[i] * cos(π / 180. * (theta[i] - jet_delta))) * ((V_j_star[i] - M_0[i]) / V_j_star[i])^m_theta * ac.n_eng / settings.p_ref^2
 
-    # Normalize msap by reference pressure
-    msap_jet_mixing = msap_j/settings.p_ref^2
+    end
 
     return msap_jet_mixing
 end
 
 # Function 
-function jet_shock(settings, data, ac, n_t, idx_src, input_src)
-
-    # Extract inputs
-    V_j_star = input_src[idx_src["V_j_star"][1]:idx_src["V_j_star"][2]]
-    M_j = input_src[idx_src["M_j"][1]:idx_src["M_j"][2]]
-    A_j_star = input_src[idx_src["A_j_star"][1]:idx_src["A_j_star"][2]]
-    Tt_j_star = input_src[idx_src["Tt_j_star"][1]:idx_src["Tt_j_star"][2]]
-    M_0 = input_src[idx_src["M_0"][1]:idx_src["M_0"][2]]
-    c_0 = input_src[idx_src["c_0"][1]:idx_src["c_0"][2]]
-    theta = input_src[idx_src["theta"][1]:idx_src["theta"][2]]
+function jet_shock(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, M_0, c_0, theta, V_j_star, M_j, A_j_star, Tt_j_star)
 
     # Get elements of jet Mach number vector larger than 1
-    msap_jet_shock = zeros(eltype(input_src), (n_t, settings.N_f))
+    T = eltype(V_j_star)
+    msap_jet_shock = zeros(T, (n_t, settings.N_f))
     
     for i in range(1, n_t, step=1)
                 
@@ -150,8 +127,8 @@ function jet_shock(settings, data, ac, n_t, idx_src, input_src)
             # Calculate correlation coefficient spectrum (C-function)
             # Source: Zorumski report 1982 part 2. Chapter 8.5 Table II
             # Note: extended array for log10sigma > 2 and log10sigma < -0.7
-            array_1_c = range(-2.5, 3.5, step=0.1)
-            array_2_c = [0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.71,0.714,0.719,0.724,0.729,0.735,0.74,0.74,0.74,0.735,0.714,0.681,0.635,0.579,0.52,0.46,0.4,0.345,0.29,0.235,0.195,0.15,0.1,0.06,0.03,0.015,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            array_1_c = range(-3.5, 3.5, step=0.1)
+            array_2_c = [0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.71,0.714,0.719,0.724,0.729,0.735,0.74,0.74,0.74,0.735,0.714,0.681,0.635,0.579,0.52,0.46,0.4,0.345,0.29,0.235,0.195,0.15,0.1,0.06,0.03,0.015,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             f_C = PCHIPInterpolation.Interpolator(array_1_c, array_2_c)
             C = f_C.(log10sigma)
                 
@@ -185,13 +162,10 @@ function jet_shock(settings, data, ac, n_t, idx_src, input_src)
             
             # Calculate mean-square acoustic pressure (msap)
             # Source: Zorumski report 1982 part 2. Chapter 8.5 Equation 1
-            msap_j = 1.92e-3 * A_j_star[i] / (4 * π * r_s_star^2) .* (1 .+ W) ./ (1 .- M_0[i] .* cos.(π / 180. * (theta[i] .- jet_delta))).^4 .* beta.^eta .* (10 .^log10H)
-            
             # Multiply with number of engines
-            msap_j = msap_j * ac.n_eng
-
             # Normalize msap by reference pressure
-            msap_jet_shock[i,:] = msap_j/settings.p_ref^2
+            msap_jet_shock[i,:] = 1.92e-3 * A_j_star[i] / (4 * π * r_s_star^2) .* (1 .+ W) ./ (1 .- M_0[i] .* cos.(π / 180. * (theta[i] .- jet_delta))).^4 .* beta.^eta .* (10 .^log10H) * ac.n_eng/settings.p_ref^2
+
         end
     end
     

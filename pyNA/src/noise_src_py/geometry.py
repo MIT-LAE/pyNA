@@ -34,7 +34,7 @@ class Geometry(om.ExplicitComponent):
 
     * ``settings``:                 pyna settings
     * ``n_t``:                      number of time steps in the noise time series
-    * ``mode``:                     mode for geometry calculations: "time_series" / "distribution"
+    * ``mode``:                     mode for geometry calculations: "trajectory" / "distribution"
 
     """
 
@@ -57,8 +57,8 @@ class Geometry(om.ExplicitComponent):
         self.add_input('x', val=np.ones(n_t), units='m', desc='aircraft x-position [m]')
         self.add_input('y', val=np.ones(n_t), units='m', desc='aircraft y-position [m]')
         self.add_input('z', val=np.ones(n_t), units='m', desc='aircraft z-position [m]')
-        self.add_input('alpha', val=np.ones(n_t), units='rad', desc='aircraft angle of attack [deg]')
-        self.add_input('gamma', val=np.ones(n_t), units='rad', desc='aircraft climb angle [deg]')
+        self.add_input('alpha', val=np.ones(n_t), units='deg', desc='aircraft angle of attack [deg]')
+        self.add_input('gamma', val=np.ones(n_t), units='deg', desc='aircraft climb angle [deg]')
         self.add_input('c_0', val=np.ones(n_t), units='m/s', desc='ambient speed of sound [m/s]')
         self.add_input('T_0', val=np.ones(n_t), units='K', desc='ambient temperature [K]')
         self.add_input('t_s', val=np.ones(n_t), units='s', desc='source time [s]')
@@ -90,7 +90,7 @@ class Geometry(om.ExplicitComponent):
         c_0 = inputs['c_0']
         T_0 = inputs['T_0']
 
-        if mode == 'time_series':
+        if mode == 'trajectory':
             # Iterate over observers
             for i in np.arange(n_obs):
 

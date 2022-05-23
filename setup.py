@@ -13,7 +13,7 @@ setup(
 	install_requires=[
 		'dataclasses==0.6',
 		'dymos>=1.4.0',
-		'ipython>=7.31.1',
+		'ipython==7.24.1',
 		'json5==0.9.5',
 		'julia==0.5.6',
 		'matplotlib==3.2.2',

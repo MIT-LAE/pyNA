@@ -1,4 +1,8 @@
-function split_subbands(settings, n_t, msap_in)
+function split_subbands(settings::PyObject, msap_in)
+    
+    # Number of time steps
+    n_t = size(msap_in)[1]
+    
     # Integer for subband calculation
     m = Int64((settings.N_b - 1) / 2)
 

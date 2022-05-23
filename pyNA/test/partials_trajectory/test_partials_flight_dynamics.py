@@ -13,11 +13,11 @@ from pyNA.src.trajectory_src.flight_dynamics import FlightDynamics
 # Load settings and aircraft
 settings = pyna.load_settings(case_name="nasa_stca_standard")
 settings.pyNA_directory = '.'
-ac = Aircraft(name=settings.ac_name, settings=settings)
+ac = Aircraft(name=settings.ac_name, version=settings.ac_version, settings=settings)
 
 # Inputs
 nn = 20
-phase_name = 'climb'
+phase_name = 'flapsdown'
 
 x = np.linspace(1,100,nn)
 z = np.linspace(1,100,nn)

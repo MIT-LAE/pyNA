@@ -1,3 +1,4 @@
+from ast import Not
 from dataclasses import dataclass
 import numpy as np
 import os
@@ -27,7 +28,7 @@ class Settings(FrozenClass):
                 output_directory_name = '',
                 output_file_name = 'Trajectory_stca.sql', 
                 ac_name = 'stca', 
-                ac_version = 'verification',
+                ac_version = '',
                 save_results = False, 
                 fan_inlet = False, 
                 fan_discharge = False,
@@ -71,16 +72,19 @@ class Settings(FrozenClass):
                 p_ref= 2e-5, 
                 x_observer_array = np.array([[12325.*0.3048, 450., 4*0.3048], [21325.*0.3048, 0., 4*0.3048]]),
                 noise_optimization = False, 
+                noise_constraint_lateral = 200.,
                 PTCB = False, 
                 PHLD = False, 
+                PKROT = False,
                 TS_to = 1.0, 
                 TS_vnrs = 1.0, 
                 TS_cutback = None, 
                 z_cutback = 500., 
                 theta_flaps = 10.,
                 theta_slats = -6., 
-                n_segments_vnrs = 10, 
-                max_iter = 200):
+                n_order = 3,
+                max_iter = 200, 
+                tol = 1e-4):
 
         """
         Initialize pyNA settings class
@@ -185,10 +189,14 @@ class Settings(FrozenClass):
         :type p_ref: float
         :param noise_optimization: Flag to noise-optimize the trajectory [-]
         :type noise_optimization: bool
+        :param noise_constraint_lateral: Constraint on the lateral noise [EPNdB]
+        :type noise_constraint_lateral: float
         :param PTCB: Enable PTCB [-]
         :type PTCB: bool
         :param PHLD: Enable PHLD [-]
         :type PHLD: bool
+        :param PKROT: Enable PKROT [-]
+        :type PKROT: bool
         :param TS_to: Engine TO thrust-setting (values < 1 denote APR) [-]
         :type TS_to: float
         :param TS_vnrs: Engine VNRS thrust-setting [-]
@@ -201,10 +209,10 @@ class Settings(FrozenClass):
         :type theta_flaps: float
         :param theta_slats: Slat deflection angles [deg]
         :type theta_slats: float
-        :param n_segments_vnrs: List with phase number of segments [-]
-        :type n_segments_vnrs: int
         :param max_iter: Maximum number of iterations for trajectory computations [-]
         :type max_iter: int
+        :param tol: Tolerance for trajectory computations [-]
+        :type tol: float
 
         """
 
@@ -266,16 +274,19 @@ class Settings(FrozenClass):
         self.p_ref = p_ref
 
         self.noise_optimization = noise_optimization
+        self.noise_constraint_lateral = noise_constraint_lateral
         self.PTCB = PTCB
         self.PHLD = PHLD
+        self.PKROT = PKROT
         self.TS_to = TS_to
         self.TS_vnrs = TS_vnrs
         self.TS_cutback = TS_cutback
         self.z_cutback = z_cutback
         self.theta_flaps = theta_flaps
         self.theta_slats = theta_slats
-        self.n_segments_vnrs = n_segments_vnrs
+        self.n_order = n_order
         self.max_iter = max_iter
+        self.tol = tol
 
         # Freeze self.settings
         self._freeze()
@@ -353,10 +364,17 @@ class Settings(FrozenClass):
             raise TypeError(self.TCF800, "does not have the correct type. type(settings.TCF800) must be bool.")
         if type(self.combination_tones) != bool:
             raise TypeError(self.combination_tones, "does not have the correct type. type(settings.combination_tones) must be bool.")
+        if type(self.noise_optimization) != bool:
+            raise TypeError(self.noise_optimization, "does not have the correct type. type(settings.noise_optimization) must be bool.")
+        if type(self.noise_constraint_lateral) not in [float, np.float32, np.float64]:
+            raise TypeError(self.noise_constraint_lateral, "does not have the correct type. type(settings.noise_constraint_lateral) must be [float, np.float32, np.float64]")
+
         if type(self.PTCB) != bool:
             raise TypeError(self.PTCB, "does not have the correct type. type(settings.PTCB) must be bool.")
         if type(self.PHLD) != bool:
             raise TypeError(self.PHLD, "does not have the correct type. type(settings.PHLD) must be bool.")
+        if type(self.PKROT) != bool:
+            raise TypeError(self.PKROT, "does not have the correct type. type(settings.PKROT) must be bool.")
 
         # Methods
         if self.method_core_turb not in ['GE', 'PW']:
@@ -367,8 +385,8 @@ class Settings(FrozenClass):
             raise ValueError(self.fan_RS_method, "is not a valid option for the fan rotor-stator interation method. Specify: 'original'/'allied_signal'/'geae'/'kresja'.")
         if self.ge_flight_cleanup not in ['none', 'takeoff', 'approach']:
             raise ValueError(self.ge_flight_cleanup, "is not a valid option for the GE flight clean-up effects method. Specify: 'none'/'takeoff'/'approach'.")
-        if self.levels_int_metric not in ['epnl', 'ipnlt', 'ioaspl']:
-            raise ValueError(self.levels_int_metric, "is not a valid option for the integrated noise levels metric. Specify: 'epnl'/'ipnlt'/'ioaspl'.")
+        if self.levels_int_metric not in ['epnl', 'ipnlt', 'ioaspl', 'sel']:
+            raise ValueError(self.levels_int_metric, "is not a valid option for the integrated noise levels metric. Specify: 'epnl'/'ipnlt'/'ioaspl'/'sel'.")
         if self.engine_mounting not in ['fuselage', 'underwing', 'none']:
             raise ValueError(self.engine_mounting, "is not a valid option for the engine mounting description. Specify: 'fuselage', 'underwing', 'none'.")
 
@@ -421,15 +439,17 @@ class Settings(FrozenClass):
             raise TypeError(self.theta_flaps, "does not have the correct type. type(settings.theta_flaps) must be np.ndarray")
         if type(self.theta_slats) not in [float, np.float32, np.float64, int, np.int32, np.int64]:
             raise TypeError(self.theta_slats, "does not have the correct type. type(settings.theta_slats) must be np.ndarray")
-        if type(self.n_segments_vnrs) not in [int, np.int32, np.int64]:
-            raise TypeError(self.n_segments_vnrs, "does not have the correct type. type(settings.n_segments_vnrs) must be in [int, np.int32, np.int64]")
+        if type(self.n_order) not in [int, np.int32, np.int64]:
+            raise TypeError(self.n_order, "does not have the correct type. type(settings.n_order) must be in [int, np.int32, np.int64]")
         if type(self.max_iter) not in [int, np.int32, np.int64]:
             raise TypeError(self.max_iter, "does not have the correct type. type(settings.max_iter) must be in [int, np.int32, np.int64]")
+        if type(self.tol) not in [float, np.float32, np.float64]:
+            raise TypeError(self.tol, "does not have the correct type. type(settings.tol) must be in [float, np.float32, np.float64]")
 
         # Observer list
         for observer in self.observer_lst:
-            if observer not in ['lateral','flyover', 'approach', 'contours']:
-                raise ValueError(observer, "is not a valid option for the observer list. Specify any from 'lateral'/'flyover'/'approach'/'contours'")
+            if observer not in ['lateral','flyover', 'approach', 'contours', 'optimization']:
+                raise ValueError(observer, "is not a valid option for the observer list. Specify any from 'lateral'/'flyover'/'approach'/'contours'/'optimization'")
 
         # Language to use to solve components (julia/python)
         if self.language not in ['python', 'julia']:

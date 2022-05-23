@@ -21,6 +21,7 @@ class Engine:
         # Initialization
         self.time_series = dict()
         self.deck = dict()
+        self.TS_limit = dict()
 
     def load_time_series(self, settings, engine_file_name='Engine_to.csv') -> None:
         """
@@ -36,7 +37,7 @@ class Engine:
 
         # Load raw inputs from .csv file
         # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
-        self.time_series = pd.read_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + engine_file_name)
+        self.time_series = pd.read_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + settings.output_directory_name + '/' + engine_file_name)
 
         return None
 
@@ -56,7 +57,7 @@ class Engine:
 
         # Load raw inputs from .csv file
         # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
-        self.time_series = pd.read_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + engine_file_name)
+        self.time_series = pd.read_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + settings.output_directory_name + '/' + engine_file_name)
 
         # Select operating point
         cols = self.time_series.columns
@@ -127,8 +128,7 @@ class Engine:
                     self.deck['Tti_c'][i, j, k] = data['core_Tt_in [K]'].values[cntr]
                     self.deck['Ttj_c'][i, j, k] = data['core_Tt_out [K]'].values[cntr]
                     self.deck['Pti_c'][i, j, k] = data['core_Pt_in [Pa]'].values[cntr]
-                    self.deck['DTt_des_c'][i, j, k] = data['core_Tt_out [K]'].values[0] - \
-                                                   data['core_Tt_in [K]'].values[0]
+                    self.deck['DTt_des_c'][i, j, k] = data['core_Tt_out [K]'].values[0] - data['core_Tt_in [K]'].values[0]
                     self.deck['rho_te_c'][i, j, k] = data['core_LPT_rho_out [kg/m3]'].values[cntr]
                     self.deck['rho_ti_c'][i, j, k] = data['core_HPT_rho_in [kg/m3]'].values[cntr]
                     self.deck['c_te_c'][i, j, k] = data['core_LPT_c_out [m/s]'].values[cntr]
@@ -140,5 +140,11 @@ class Engine:
                     self.deck['A_f'][i, j, k] = data['fan_A [m2]'].values[cntr]
                     self.deck['d_f'][i, j, k] = data['fan_d [m]'].values[cntr]
                     self.deck['M_d_f'][i, j, k] = data['fan_M_d [-]'].values[cntr]
+
+        # Load minimum thrust setting
+        # self.TS_limit['z'] = np.linspace(0, 1500, 17)
+        # self.TS_limit['v'] = np.linspace(80, 130, 21)
+        # self.TS_limit['theta_flaps'] = np.linspace(0, 26, 14)
+        # self.TS_limit['TS_min'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/TS_min.npy')
 
         return None

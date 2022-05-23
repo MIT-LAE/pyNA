@@ -23,8 +23,5 @@ This example shows how to compute a noise EPNL table for all noise sources for a
 
 	# Run pyna
 	py = pyna(settings=pyna_settings)
-	table = py.compute_noise_epnl_table()
-
-	# Print table
-	print(table)
+	py.compute_noise_epnl_table(validation=True)
 

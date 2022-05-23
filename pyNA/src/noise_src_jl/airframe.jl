@@ -1,4 +1,4 @@
-function trailing_edge_wing(settings, ac, M_0, c_0, rho_0, mu_0, theta, phi, freq)
+function trailing_edge_wing(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
     
     ### ---------------- Wing trailing-edge noise ----------------
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 5
@@ -35,7 +35,7 @@ function trailing_edge_wing(settings, ac, M_0, c_0, rho_0, mu_0, theta, phi, fre
     #Write output
     return msap_w
 end
-function trailing_edge_horizontal_tail(settings, ac, M_0, c_0, rho_0, mu_0, theta, phi, freq)
+function trailing_edge_horizontal_tail(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
 
     # ---------------- Horizontal tail trailing-edge noise ----------------
     # Trailing edge noise of the horizontal tail
@@ -67,7 +67,7 @@ function trailing_edge_horizontal_tail(settings, ac, M_0, c_0, rho_0, mu_0, thet
 
     return msap_h
 end  
-function trailing_edge_vertical_tail(settings, ac, M_0, c_0, rho_0, mu_0, theta, phi, freq)
+function trailing_edge_vertical_tail(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
 
     ### ---------------- Vertical tail trailing-edge noise ----------------
     delta_v_star = 0.37 * (ac.af_S_v / ac.af_b_v^2) * (rho_0 * M_0 * c_0 * ac.af_S_v / (mu_0 * ac.af_b_v))^(-0.2)
@@ -99,7 +99,7 @@ function trailing_edge_vertical_tail(settings, ac, M_0, c_0, rho_0, mu_0, theta,
 
     return msap_v
 end
-function leading_edge_slat(settings, ac, M_0, c_0, rho_0, mu_0, theta, phi, freq)
+function leading_edge_slat(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
 
     ### ---------------- Slat noise ----------------
     delta_w_star = 0.37 * (ac.af_S_w / ac.af_b_w^2) * (rho_0 * M_0 * c_0 * ac.af_S_w / (mu_0 * ac.af_b_w))^(-0.2)
@@ -127,7 +127,7 @@ function leading_edge_slat(settings, ac, M_0, c_0, rho_0, mu_0, theta, phi, freq
 
     return msap_les
 end
-function trailing_edge_flap(settings, ac, M_0, c_0, theta, phi, theta_flaps, freq)
+function trailing_edge_flap(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, theta, phi, theta_flaps)
 
     ### ---------------- Flap noise ----------------
     # Calculate noise power
@@ -178,7 +178,7 @@ function trailing_edge_flap(settings, ac, M_0, c_0, theta, phi, theta_flaps, fre
 
     return msap_tef
 end
-function landing_gear(settings, ac, M_0, c_0, theta, phi, I_landing_gear, freq)
+function landing_gear(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, theta, phi, I_landing_gear)
 
     ### ---------------- Landing-gear noise ----------------
     if I_landing_gear == 1
@@ -237,20 +237,10 @@ function landing_gear(settings, ac, M_0, c_0, theta, phi, I_landing_gear, freq)
     return msap_lg
 end
 
-function airframe(settings, data, ac, n_t, idx_src, input_src)
-
-    # Extract inputs
-    theta_flaps = input_src[idx_src["theta_flaps"][1]:idx_src["theta_flaps"][2]]
-    I_landing_gear = input_src[idx_src["I_landing_gear"][1]:idx_src["I_landing_gear"][2]]
-    M_0 = input_src[idx_src["M_0"][1]:idx_src["M_0"][2]]
-    mu_0 = input_src[idx_src["mu_0"][1]:idx_src["mu_0"][2]]
-    c_0 = input_src[idx_src["c_0"][1]:idx_src["c_0"][2]]
-    rho_0 = input_src[idx_src["rho_0"][1]:idx_src["rho_0"][2]]
-    theta = input_src[idx_src["theta"][1]:idx_src["theta"][2]]
-    phi = input_src[idx_src["phi"][1]:idx_src["phi"][2]]
+function airframe(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, M_0, mu_0, c_0, rho_0, theta, phi, theta_flaps, I_landing_gear)
 
     # Initialize solution
-    T = eltype(input_src)
+    T = eltype(theta_flaps)
     msap_af = zeros(T, (n_t, settings.N_f))
             
     for i in range(1, n_t, step=1)
@@ -274,27 +264,27 @@ function airframe(settings, data, ac, n_t, idx_src, input_src)
             # Add airframe noise components
             msap_j = zeros(T, (settings.N_f, ))
             if "wing" in ac.comp_lst
-                msap_w = trailing_edge_wing(settings, ac, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i], data.f)
+                msap_w = trailing_edge_wing(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
                 msap_j = msap_j .+ msap_w .* supp
             end
             if "tail_v" in ac.comp_lst
-                msap_v = trailing_edge_vertical_tail(settings, ac, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i], data.f)
+                msap_v = trailing_edge_vertical_tail(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
                 msap_j = msap_j .+ msap_v .* supp
             end
             if "tail_h" in ac.comp_lst
-                msap_h = trailing_edge_horizontal_tail(settings, ac, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i], data.f)
+                msap_h = trailing_edge_horizontal_tail(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
                 msap_j = msap_j .+ msap_h .* supp
             end
             if "les" in ac.comp_lst
-                msap_les = leading_edge_slat(settings, ac, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i], data.f)
+                msap_les = leading_edge_slat(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
                 msap_j = msap_j .+ msap_les .* supp
             end
             if "tef" in ac.comp_lst
-                msap_tef = trailing_edge_flap(settings, ac, M_0[i], c_0[i], theta[i], phi[i], theta_flaps[i], data.f)
+                msap_tef = trailing_edge_flap(settings, ac, data.f, M_0[i], c_0[i], theta[i], phi[i], theta_flaps[i])
                 msap_j = msap_j .+ msap_tef .* supp
             end
             if "lg" in ac.comp_lst
-                msap_lg = landing_gear(settings, ac, M_0[i], c_0[i], theta[i], phi[i], I_landing_gear[i], data.f)
+                msap_lg = landing_gear(settings, ac, data.f, M_0[i], c_0[i], theta[i], phi[i], I_landing_gear[i])
                 msap_j = msap_j .+ msap_lg .* supp
             end
 

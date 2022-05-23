@@ -41,8 +41,8 @@ class pyna:
         self.settings.language = os.environ['pyna_language']
 
         # Initialize trajectory
-        self.trajectory = Trajectory(n_segments_vnrs=self.settings.n_segments_vnrs)
-
+        self.trajectory = Trajectory(n_order=self.settings.n_order)
+        
         # Initialize noise
         self.noise = Noise(settings=self.settings)
 
@@ -56,6 +56,7 @@ class pyna:
         self.problem_init = om.Problem()
         self.problem = om.Problem()
 
+    # --- Noise-only methods --------------------------------------------------------------------------------
     @staticmethod
     def load_settings(case_name: str) -> Settings:
         """
@@ -70,41 +71,9 @@ class pyna:
 
         return Settings(case_name)
 
-    def compute_trajectory(self, control_optimization=False, objective=None) -> bool:
-        """
-        Compute aircraft take-off trajectory.
-
-        :return: converged
-        :rtype: bool 
-
-        """
-
-        # Load aircraft and engine deck
-        self.ac.load_aerodynamics(settings=self.settings)
-        self.ac.compute_characteristic_speeds(settings=self.settings)
-        self.engine.load_deck(settings=self.settings)
-
-        # Create trajectory
-        self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/coloring_files/')
-        self.trajectory.setup(problem=self.problem, settings=self.settings, ac=self.ac, engine=self.engine, engine_mode='trajectory', control_optimization=control_optimization)
-        self.trajectory.compute(problem=self.problem, settings=self.settings, ac=self.ac, run_driver=True, init_trajectory=None, control_optimization=control_optimization, objective=objective)
-
-        # Check convergence
-        converged = self.trajectory.check_convergence(settings=self.settings, filename='IPOPT_trajectory_convergence.out')
-
-        # # If not converged, rerun the trajectory with slight perturbation in the controls
-        # if not converged:
-        #     self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/coloring_files/')
-        #     self.settings.theta_flaps = self.settings.theta_flaps*1.001
-        #     self.trajectory.setup(problem=self.problem, settings=self.settings, ac=self.ac, engine=self.engine, engine_mode='trajectory', control_optimization=control_optimization)
-        #     self.trajectory.compute(problem=self.problem, settings=self.settings, ac=self.ac, run_driver=True, init_trajectory=None, control_optimization=control_optimization, objective=objective)
-        #     converged = self.trajectory.check_convergence(settings=self.settings, filename='IPOPT_trajectory_convergence.out')
-
-        return converged
-
     def compute_noise_time_series(self) -> None:
         """
-        Compute noise for a predefined trajectory.
+        Compute noise for a predefined trajectory from .csv files.
 
         :return: None
         """
@@ -117,8 +86,8 @@ class pyna:
 
         # Create noise
         self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
-        self.noise.setup_time_series(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, mode='time_series', control_optimization=False)
-        self.noise.compute_time_series(problem=self.problem, settings=self.settings, path=self.trajectory.path, engine=self.engine.time_series, mode='time_series')
+        self.noise.setup_time_series(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, mode='trajectory', objective='time_series')
+        self.noise.compute_time_series(problem=self.problem, settings=self.settings, path=self.trajectory.path, engine=self.engine.time_series, mode='trajectory')
 
         return None
 
@@ -151,14 +120,14 @@ class pyna:
                 self.settings.x_observer_array[cntr, 2] = 4*0.3048
 
         self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
-        self.noise.setup_time_series(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, mode='time_series', control_optimization=False)
-        self.noise.compute_time_series(problem=self.problem, settings=self.settings, path=self.trajectory.path, engine=self.engine.time_series, mode='time_series')
+        self.noise.setup_time_series(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, mode='trajectory', objective='contours')
+        self.noise.compute_time_series(problem=self.problem, settings=self.settings, path=self.trajectory.path, engine=self.engine.time_series, mode='trajectory')
 
         # Extract the contour
         self.noise.contour['x_lst'] = x_lst
         self.noise.contour['y_lst'] = np.hstack((-np.flip(y_lst[1:]), y_lst))
         self.noise.contour['X'], self.noise.contour['Y'] = np.meshgrid(self.noise.contour['x_lst'], self.noise.contour['y_lst'])
-
+        
         # Initialize contour solution matrix
         epnl_contour = np.zeros((np.size(y_lst), np.size(x_lst)))
         cntr = -1
@@ -261,15 +230,42 @@ class pyna:
 
         # Create noise
         self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
-        self.noise.setup_time_series(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, mode='distribution', control_optimization=False)
+        self.noise.setup_time_series(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, mode='distribution', objective=None)
         self.noise.compute_time_series(problem=self.problem, settings=self.settings, path=self.trajectory.path, engine=self.engine.time_series, mode='distribution')
 
         return None
 
-    def compute_trajectory_noise(self, init_traj_name=None) -> None:
+    # --- Trajectory-only methods ---------------------------------------------------------------------------
+    def compute_trajectory(self, trajectory_mode='cutback', objective='t_end') -> bool:
         """
-        Compute aircraft take-off trajectory and noise signature.
+        Compute aircraft take-off trajectory.
 
+        :return: converged
+        :rtype: bool 
+
+        """
+
+        # Load aircraft and engine deck
+        self.ac.load_aerodynamics(settings=self.settings)
+        self.engine.load_deck(settings=self.settings)
+
+        # Create trajectory
+        self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/' + self.settings.output_directory_name + '/' + 'coloring_files/')
+        self.trajectory.setup(problem=self.problem, settings=self.settings, ac=self.ac, engine=self.engine, trajectory_mode=trajectory_mode, objective=objective)
+        self.trajectory.compute(problem=self.problem, settings=self.settings, ac=self.ac, run_driver=True, init_trajectory=None, trajectory_mode=trajectory_mode, objective=objective)
+
+        # Check convergence
+        converged = self.trajectory.check_convergence(settings=self.settings, filename='IPOPT_trajectory_convergence.out')
+
+        return converged
+
+    # --- Noise-trajectory methods --------------------------------------------------------------------------
+    def compute_trajectory_noise(self, objective='t_end', trajectory_mode='cutback', init_traj_name=None) -> None:
+        """
+        Compute aircraft take-off trajectory and noise.
+        
+        :param objective: optimization objective
+        :type objective: str
         :param init_traj_name: Name of initialization trajectory (in output folder of case).
         :type init_traj_name: str
 
@@ -278,36 +274,41 @@ class pyna:
 
         # Load aircraft and engine deck
         self.ac.load_aerodynamics(settings=self.settings)
-        self.ac.compute_characteristic_speeds(settings=self.settings)
         self.engine.load_deck(settings=self.settings)
 
         # Create initialization trajectory
         if not init_traj_name:
-            self.problem_init = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
-            self.trajectory.setup(problem=self.problem_init, settings=self.settings, ac=self.ac, engine=self.engine, engine_mode='trajectory', control_optimization=False)
-            self.trajectory.compute(problem=self.problem_init, settings=self.settings, ac=self.ac)
+            # Compute trajectory
+            self.problem_init = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/' + self.settings.output_directory_name + '/coloring_files/')
+            self.trajectory.setup(problem=self.problem_init, settings=self.settings, ac=self.ac, engine=self.engine, trajectory_mode=trajectory_mode, objective=objective)
+            self.trajectory.compute(problem=self.problem_init, settings=self.settings, ac=self.ac, run_driver=True, init_trajectory=None, trajectory_mode=trajectory_mode, objective=objective)
+
+            # Check convergence
+            converged = self.trajectory.check_convergence(settings=self.settings, filename='IPOPT_trajectory_convergence.out')
         else:
-            self.problem_init = pyna.load_results(self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/' + init_traj_name, 'final')
+            # Load trajectory
+            self.problem_init = pyna.load_results(self, init_traj_name, 'final')
+
+            # Convergence
+            converged = True
 
         # Setup trajectory for noise computations
-        self.trajectory.n_t = np.size(self.problem_init.get_val('trajectory.t_s'))
-        self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
-        self.trajectory.setup(problem=self.problem, settings=self.settings, ac=self.ac, engine=self.engine, engine_mode='noise', control_optimization=False)
-        self.noise.setup_trajectory_noise(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, control_optimization=False)
+        if converged:
+            self.trajectory.n_t = np.size(self.problem_init.get_val('trajectory.t_s'))
+            self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
+            self.trajectory.setup(problem=self.problem, settings=self.settings, ac=self.ac, engine=self.engine, trajectory_mode=trajectory_mode, objective=None)
+            self.noise.setup_trajectory_noise(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, objective='noise')
 
-        # Run the noise calculations
-        self.trajectory.compute(problem=self.problem, settings=self.settings, ac=self.ac, run_driver=False, init_trajectory=self.problem_init)
-
-        # Check convergence
-        converged = self.trajectory.check_convergence(settings=self.settings, filename='IPOPT_Traj_init.out')
-        if not converged:
+            # Run the noise calculations
+            self.trajectory.compute(problem=self.problem, settings=self.settings, ac=self.ac, run_driver=False, init_trajectory=self.problem_init, trajectory_mode=trajectory_mode, objective=None)
+        else:
             print('Trajectory did not converge.')
 
         return None
 
-    def optimize_trajectory_takeoff_noise(self, n_sideline=1, init_traj_name=None) -> None:
+    def optimize_trajectory_noise(self, n_sideline=1, init_traj_name=None) -> None:
         """
-        Compute aircraft take-off trajectory and noise signature.
+        Optimize aircraft take-off trajectory for minimum noise signature.
 
         :param n_sideline: Number of sideline microphones to use in the control optimization
         :type n_sideline: int
@@ -319,42 +320,40 @@ class pyna:
 
         # Load aircraft and engine deck
         self.ac.load_aerodynamics(settings=self.settings)
-        self.ac.compute_characteristic_speeds(settings=self.settings)
         self.engine.load_deck(settings=self.settings)
 
         # Create initialization trajectory
         if not init_traj_name:
-            self.problem_init = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
-            self.trajectory.setup(problem=self.problem_init, settings=self.settings, ac=self.ac, engine=self.engine, engine_mode='trajectory', control_optimization=False)
-            self.trajectory.compute(problem=self.problem_init, settings=self.settings, ac=self.ac)
+            self.problem_init = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/' + self.settings.output_directory_name + '/coloring_files/')
+            self.trajectory.setup(problem=self.problem_init, settings=self.settings, ac=self.ac, engine=self.engine, trajectory_mode='flyover', objective='t_end')
+            self.trajectory.compute(problem=self.problem_init, settings=self.settings, ac=self.ac, run_driver=True, init_trajectory=None, trajectory_mode='flyover', objective='t_end') 
         else:
-            self.problem_init = pyna.load_results(self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/' + init_traj_name, 'final')
+            self.problem_init = pyna.load_results(self, init_traj_name, 'final')
 
         # Get list of observers
         self.settings.x_observer_array = np.zeros((n_sideline+1, 3))
-        self.settings.x_observer_array[:-1, 0] = np.linspace(2000, 4000, n_sideline)
+        self.settings.x_observer_array[:-1, 0] = np.linspace(1000, 5500, n_sideline)
         self.settings.x_observer_array[:-1, 1] = 450.
         self.settings.x_observer_array[:-1, 2] = 4 * 0.3048
         self.settings.x_observer_array[-1, 0] = 6500.
         self.settings.x_observer_array[-1, 1] = 0.
         self.settings.x_observer_array[-1, 2] = 4 * 0.3048
+        
+        # Set k_rot
+        self.ac.k_rot = self.problem_init.get_val('phases.groundroll.parameters:k_rot')
 
         # Setup trajectory for noise computations
         self.trajectory.n_t = np.size(self.problem_init.get_val('trajectory.t_s'))
         self.problem = om.Problem(coloring_dir=self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/coloring_files/')
-        self.trajectory.setup(problem=self.problem, settings=self.settings, ac=self.ac, engine=self.engine, engine_mode='noise', control_optimization=True)
-        self.noise.setup_trajectory_noise(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, control_optimization=True)
+        self.trajectory.setup(problem=self.problem, settings=self.settings, ac=self.ac, engine=self.engine, trajectory_mode='flyover', objective='noise')
+        self.noise.setup_trajectory_noise(problem=self.problem, settings=self.settings, ac=self.ac, n_t=self.trajectory.n_t, objective='noise')
 
         # Run the trajectory
-        self.trajectory.compute(problem=self.problem, settings=self.settings, ac=self.ac, run_driver=True, init_trajectory=self.problem_init, control_optimization=True)
-
-        # Check convergence
-        converged = self.trajectory.check_convergence(settings=self.settings, filename='IPOPT_Traj_init.out')
-        if not converged:
-            print('Trajectory did not converge.')
+        self.trajectory.compute(problem=self.problem, settings=self.settings, ac=self.ac, run_driver=True, init_trajectory=self.problem_init, trajectory_mode='flyover', objective='noise')
 
         return None
-
+    
+    # --- Post-processing of the results --------------------------------------------------------------------
     @staticmethod
     def save_time_series(problem: om.Problem, settings: Settings, ac: Dict[str, Any], path_save_name: str, engine_save_name: str) -> None:
         """
@@ -402,65 +401,32 @@ class pyna:
         engine = pd.DataFrame()
         engine['t_source [s]'] = t_intp
         engine['Ne [-]'] = ac.n_eng * np.ones(np.size(t_intp))
-        if settings.core:
-            engine['Core mdot [kg/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.mdoti_c'))
-            engine['Core Pt [Pa]'] = np.interp(t_intp, t_source, problem.get_val('engine.Pti_c'))
-            engine['Core Tti [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Tti_c'))
-            engine['Core Ttj [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Ttj_c'))
-            engine['Core DT_t [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.DTt_des_c'))
-        else:
-            engine['Core mdot [kg/s]'] = np.zeros(np.size(t_intp))
-            engine['Core Pt [Pa]'] = np.zeros(np.size(t_intp))
-            engine['Core Tti [K]'] = np.zeros(np.size(t_intp))
-            engine['Core Ttj [K]'] = np.zeros(np.size(t_intp))
-            engine['Core DT_t [K]'] = np.zeros(np.size(t_intp))
+        
+        engine['Core mdot [kg/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.mdoti_c'))
+        engine['Core Pt [Pa]'] = np.interp(t_intp, t_source, problem.get_val('engine.Pti_c'))
+        engine['Core Tti [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Tti_c'))
+        engine['Core Ttj [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Ttj_c'))
+        engine['Core DT_t [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.DTt_des_c'))
         engine['LPT rho_e [kg/m3]'] = np.zeros(np.size(t_intp))
         engine['LPT c_e [m/s]'] = np.zeros(np.size(t_intp))
         engine['HPT rho_i [kg/m3]'] = np.zeros(np.size(t_intp))
         engine['HPT c_i [m/s]'] = np.zeros(np.size(t_intp))
-        if settings.jet_mixing and not settings.jet_shock:
-            engine['Jet A [m2]'] = np.interp(t_intp, t_source, problem.get_val('engine.A_j'))
-            engine['Jet rho [kg/m3]'] = np.interp(t_intp, t_source, problem.get_val('engine.rho_j'))
-            engine['Jet Tt [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Tt_j'))
-            engine['Jet V [m/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.V_j'))
-            engine['Jet M [-]'] = np.zeros(np.size(t_intp))
-        elif not settings.jet_mixing and settings.jet_shock:
-            engine['Jet A [m2]'] = np.interp(t_intp, t_source, problem.get_val('engine.A_j'))
-            engine['Jet rho [kg/m3]'] = np.zeros(np.size(t_intp))
-            engine['Jet Tt [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Tt_j'))
-            engine['Jet V [m/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.V_j'))
-            engine['Jet M [-]'] = np.interp(t_intp, t_source, problem.get_val('engine.M_j'))    
-        elif settings.jet_mixing and settings.jet_shock:
-            engine['Jet A [m2]'] = np.interp(t_intp, t_source, problem.get_val('engine.A_j'))
-            engine['Jet rho [kg/m3]'] = np.interp(t_intp, t_source, problem.get_val('engine.rho_j'))
-            engine['Jet Tt [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Tt_j'))
-            engine['Jet V [m/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.V_j'))
-            engine['Jet M [-]'] = np.interp(t_intp, t_source, problem.get_val('engine.M_j'))
-        else:
-            engine['Jet A [m2]'] = np.zeros(np.size(t_intp))
-            engine['Jet rho [kg/m3]'] = np.zeros(np.size(t_intp))
-            engine['Jet Tt [K]'] = np.zeros(np.size(t_intp))
-            engine['Jet V [m/s]'] = np.zeros(np.size(t_intp))
-            engine['Jet M [-]'] = np.zeros(np.size(t_intp))
+        
+        engine['Jet A [m2]'] = np.interp(t_intp, t_source, problem.get_val('engine.A_j'))
+        engine['Jet rho [kg/m3]'] = np.interp(t_intp, t_source, problem.get_val('engine.rho_j'))
+        engine['Jet Tt [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Tt_j'))
+        engine['Jet V [m/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.V_j'))
+        engine['Jet M [-]'] = np.interp(t_intp, t_source, problem.get_val('engine.M_j'))
         engine['Jet delta [deg]'] = np.zeros(np.size(t_intp))
-        if settings.airframe:    
-            engine['Airframe LG [-]'] = np.interp(t_intp, t_source, problem.get_val('trajectory.I_landing_gear'))
-            engine['Airframe delta_f [deg]'] = np.interp(t_intp, t_source, problem.get_val('trajectory.theta_flaps'))
-        else:
-            engine['Airframe LG [-]'] = np.zeros(np.size(t_intp))
-            engine['Airframe delta_f [deg]'] = np.zeros(np.size(t_intp))
-        if settings.fan_inlet or settings.fan_discharge:
-            engine['Fan mdot in [kg/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.mdot_f'))
-            engine['Fan A [m2]'] = np.interp(t_intp, t_source, problem.get_val('engine.A_f'))
-            engine['Fan d [m]'] = np.interp(t_intp, t_source, problem.get_val('engine.d_f'))
-            engine['Fan N [rpm]'] = np.interp(t_intp, t_source, problem.get_val('engine.N_f'))
-            engine['Fan delta T [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.DTt_f'))
-        else:
-            engine['Fan mdot in [kg/s]'] = np.zeros(np.size(t_intp))
-            engine['Fan A [m2]'] = np.zeros(np.size(t_intp))
-            engine['Fan d [m]'] = np.zeros(np.size(t_intp))
-            engine['Fan N [rpm]'] = np.zeros(np.size(t_intp))
-            engine['Fan delta T [K]'] = np.zeros(np.size(t_intp))
+
+        engine['Airframe LG [-]'] = np.interp(t_intp, t_source, problem.get_val('trajectory.I_landing_gear'))
+        engine['Airframe delta_f [deg]'] = np.interp(t_intp, t_source, problem.get_val('trajectory.theta_flaps'))
+
+        engine['Fan mdot in [kg/s]'] = np.interp(t_intp, t_source, problem.get_val('engine.mdot_f'))
+        engine['Fan A [m2]'] = np.interp(t_intp, t_source, problem.get_val('engine.A_f'))
+        engine['Fan d [m]'] = np.interp(t_intp, t_source, problem.get_val('engine.d_f'))
+        engine['Fan N [rpm]'] = np.interp(t_intp, t_source, problem.get_val('engine.N_f'))
+        engine['Fan delta T [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.DTt_f'))
         engine['Fan B [-]'] = ac.B_fan * np.ones(np.size(t_intp))
         engine['Fan V [-]'] = ac.V_fan * np.ones(np.size(t_intp))
         engine['Fan RSS [%]'] = ac.RSS_fan * np.ones(np.size(t_intp))
@@ -468,67 +434,8 @@ class pyna:
         engine['Fan ID [-]'] = np.ones(np.size(t_intp))
 
         # Save data frames
-        path.to_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/trajectory/' + path_save_name)
-        engine.to_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + engine_save_name)
-
-        return None
-
-    def plot_trajectory(self, problem, *problem_verify):
-        # Check if problem_verify is empty
-        if problem_verify:
-            verification = True
-            problem_verify = problem_verify[0]
-        else:
-            verification = False
-        fig, ax = plt.subplots(3,2, figsize=(15, 8))
-        plt.style.use(self.settings.pyNA_directory + '/utils/' + 'plot.mplstyle')
-
-        ax[0,0].plot(problem.get_val('trajectory.x'), problem.get_val('trajectory.z'), '-o', label='Take-off trajectory module')
-        if verification:
-            ax[0,0].plot(problem_verify['X [m]'], problem_verify['Z [m]'], '--', label='NASA STCA (Berton)')
-        ax[0,0].set_xlabel('X [m]')
-        ax[0,0].set_ylabel('Z [m]')
-        ax[0,0].legend(fontsize=14, loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0, frameon=False)
-
-        ax[0,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.v'), '-o')
-        if verification:
-            ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton)')
-        ax[0,1].set_xlabel('t [s]')
-        ax[0,1].set_ylabel(r'$v$ [m/s]')
-
-        ax[1,0].plot(problem.get_val('trajectory.t_s'), 1 / 1000. * problem.get_val('trajectory.F_n'), '-o')
-        if verification:
-            ax[1,0].plot(problem_verify['t_source [s]'], 1 / 1000. * problem_verify['F_n [N]'], '--')
-        ax[1,0].set_xlabel('t [s]')
-        ax[1,0].set_ylabel(r'$F_n$ [kN]')
-
-        ax[1,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.TS'), '-o')
-        if verification:
-            ax[1,1].plot(problem_verify['t_source [s]'], problem_verify['TS [-]'], '--', label='NASA STCA (Berton)')
-        ax[1,1].set_xlabel('t [s]')
-        ax[1,1].set_ylabel(r'$TS$ [-]')
-        ax[1,1].set_ylim([-0.1, 1.1])
-
-        ax[2,0].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.alpha'), '-o', label=r'$\alpha$')
-        ax[2,0].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.gamma'), '-o', label=r'$\gamma$')
-        if verification:
-            ax[2,0].plot(problem_verify['t_source [s]'], problem_verify['alpha [deg]'], '--')
-            ax[2,0].plot(problem_verify['t_source [s]'], problem_verify['gamma [deg]'], '--')
-        ax[2,0].set_xlabel('t [s]')
-        ax[2,0].set_ylabel(r'$\alpha, \gamma$ [deg]')
-        ax[2,0].legend(fontsize=14, ncol=1, borderaxespad=0, frameon=False)
-
-        ax[2,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.theta_flaps'), '-o', label=r'$\theta_{flaps}$')
-        ax[2,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.theta_slats')/(-1), '-o', label=r'$\theta_{slats}$')
-        if verification:
-            ax[2,1].plot(problem_verify['t_source [s]'], problem_verify['Airframe delta_f [deg]'], '--')
-            # ax[2,1].plot(problem_verify['t_source [s]'], problem_verify['Airframe delta_s [deg]'], '--')
-        ax[2,1].set_xlabel('t [s]')
-        ax[2,1].set_ylabel(r'$\theta$ [deg]')
-        ax[2,1].set_ylim([-2, 28])
-        ax[2,1].legend(fontsize=14, ncol=1, borderaxespad=0, frameon=False)
- 
-        plt.subplots_adjust(hspace=0.4, wspace=0.3)
+        path.to_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/trajectory/' + settings.output_directory_name + '/' + path_save_name)
+        engine.to_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + settings.output_directory_name + '/' + engine_save_name)
 
         return None
 
@@ -545,10 +452,69 @@ class pyna:
         """
 
         # Create case reader
-        cr = om.CaseReader(self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/' + file_name)
+        cr = om.CaseReader(self.settings.pyNA_directory + '/cases/' + self.settings.case_name + '/output/' + self.settings.output_directory_name + '/' + file_name)
         results = cr.get_case(case_name)
 
         return results
+
+    # --- Plotting functions --------------------------------------------------------------------------------
+    def plot_trajectory(self, problem, *problem_verify):
+        # Check if problem_verify is empty
+        if problem_verify:
+            verification = True
+            problem_verify = problem_verify[0]
+        else:
+            verification = False
+        fig, ax = plt.subplots(2,3, figsize=(20, 8), dpi=100)
+        plt.style.use(self.settings.pyNA_directory + '/utils/' + 'plot.mplstyle')
+
+        ax[0,0].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.z'), '-', label='Take-off trajectory module')
+        if verification:
+            ax[0,0].plot(problem_verify['X [m]'], problem_verify['Z [m]'], '--', label='NASA STCA (Berton)')
+        ax[0,0].set_xlabel('t [s]')
+        ax[0,0].set_ylabel('Z [m]')
+        ax[0,0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0, frameon=False)
+
+        ax[0,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.v'), '-')
+        if verification:
+            ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton)')
+        ax[0,1].set_xlabel('t [s]')
+        ax[0,1].set_ylabel(r'$v$ [m/s]')
+
+        ax[0,2].plot(problem.get_val('trajectory.t_s'), (np.arctan(0.04)*180/np.pi)*np.ones(np.size(problem.get_val('trajectory.t_s'))), 'k--')
+        ax[0,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.gamma'), '-')
+        if verification:
+            ax[0,2].plot(problem_verify['t_source [s]'], problem_verify['gamma [deg]'], '--')
+        ax[0,2].set_xlabel('t [s]')
+        ax[0,2].set_ylabel(r'$\gamma$ [deg]')
+
+        ax[1,0].plot(problem.get_val('trajectory.t_s'), 1 / 1000. * problem.get_val('trajectory.F_n'), '-')
+        if verification:
+            ax[1,0].plot(problem_verify['t_source [s]'], 1 / 1000. * problem_verify['F_n [N]'], '--')
+        ax[1,0].set_xlabel('t [s]')
+        ax[1,0].set_ylabel(r'$F_n$ [kN]')
+
+        ax[1,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.alpha'), '-')
+        if verification:
+            ax[1,1].plot(problem_verify['t_source [s]'], problem_verify['alpha [deg]'], '--')
+        ax[1,1].set_xlabel('t [s]')
+        ax[1,1].set_ylabel(r'$\alpha$ [deg]')
+
+        colors=['tab:blue', 'tab:orange']
+        ax[1,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.theta_flaps'), '-', label=r'$\theta_{flaps}$', color=colors[0])
+        ax[1,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.theta_slats')/(-1), '-', label=r'$\theta_{slats}$', color=colors[1])
+        if verification:
+            ax[1,2].plot(problem_verify['t_source [s]'], problem_verify['Airframe delta_f [deg]'], '--', color=colors[0])
+            ax[1,2].plot(problem_verify['t_source [s]'], problem_verify['Airframe delta_s [deg]']/(-1), '--', color=colors[1])
+        ax[1,2].set_xlabel('t [s]')
+        ax[1,2].set_ylabel(r'$\theta$ [deg]')
+        ax[1,2].set_ylim([-2, 28])
+        ax[1,2].legend(ncol=1, borderaxespad=0, frameon=False)
+ 
+        plt.subplots_adjust(hspace=0.4, wspace=0.3)
+        plt.show()
+
+        return None
 
     def plot_noise_time_series(self, metric: str) -> None:
         """
@@ -561,7 +527,7 @@ class pyna:
         """
 
         # Create figure
-        fig, ax = plt.subplots(1, len(self.settings.observer_lst), figsize=(21, 4.3), dpi=100)
+        fig, ax = plt.subplots(1, len(self.settings.observer_lst), figsize=(20, 4.3), dpi=100)
         ax_zoom = copy.copy(ax)
         plt.style.use(self.settings.pyNA_directory + '/utils/' + 'plot.mplstyle')
 
@@ -577,15 +543,15 @@ class pyna:
             if metric == 'pnlt':
                 # Plot noise levels
                 if observer == 'lateral':
-                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2, label='pyNA', color=colors[0])
+                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
                 else:
-                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.pnlt')[i,:], linewidth=2, label='pyNA', color=colors[0])
+                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.pnlt')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
                 ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [105, 105], alpha=0.15,
                                 label='EPNL domain of dependence', color=colors[0])
                 if self.settings.validation:
                     self.noise.data.load_trajectory_verification_data(settings=self.settings)
                     ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
-                            self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2, label='NASA STCA (Berton)', color=colors[1])
+                            self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al. [25])', color=colors[1])
 
                 ax[i].grid(True)
                 ax[i].set_xlabel('Time after brake release [s]')
@@ -594,9 +560,9 @@ class pyna:
 
                 # Zoomed-in plots
                 ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
-                ax_zoom[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2, color=colors[0])
+                ax_zoom[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2.5, color=colors[0])
                 if self.settings.validation:
-                    ax_zoom[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'], self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2, color=colors[1])
+                    ax_zoom[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'], self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
                 ax_zoom[i].set_xticks([])
                 ax_zoom[i].set_yticks([])
                 ax_zoom[i].set_xlim([time_epnl[0], time_epnl[-1]])
@@ -604,13 +570,13 @@ class pyna:
                 mark_inset(ax[i], ax_zoom[i], loc1=1, loc2=3)                
 
             elif metric == 'oaspl':
-                ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.oaspl')[i,:], linewidth=2, label='pyNA')
+                ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.oaspl')[i,:], linewidth=2.5, label='pyNA')
                 ax[i].set_ylabel('$OASPL_{' + observer + '}$ [dB]')
                 if self.settings.validation:
                     self.noise.data.load_trajectory_verification_data(settings=self.settings)
                     ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
-                               self.noise.data.verification_trajectory[observer]['OASPL'], '--', linewidth=2,
-                               label='NASA STCA (Berton)')
+                               self.noise.data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
+                               label='NASA STCA (Berton et al. [25])')
 
             ax[i].grid(True)
             ax[i].set_xlabel('Time after brake release [s]')
@@ -619,10 +585,10 @@ class pyna:
 
         ax[0].set_title('Lateral')
         ax[1].set_title('Flyover')
-        ax[0].set_ylabel('$PNLT$ [PNdB]')
+        ax[0].set_ylabel('$PNLT$ [TPNdB]')
 
         # Set legend
-        ax[0].legend(fontsize=14, loc='lower left', bbox_to_anchor=(0.0, 1.09), ncol=3, borderaxespad=0, frameon=False)
+        ax[0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.09), ncol=1, borderaxespad=0, frameon=False)
         plt.subplots_adjust(wspace=0.1)
         plt.show()
 
@@ -648,15 +614,17 @@ class pyna:
         CS = plt.contour(self.noise.contour['X'], self.noise.contour['Y'], self.noise.contour['epnl'], levels=[60, 65, 70, 75, 80, 85, 90, 100, 110])
         plt.plot(self.trajectory.path['X [m]'], self.trajectory.path['Y [m]'], 'k-', linewidth=4, label='Trajectory')
 
-        plt.clabel(CS, [60, 65, 70, 75, 80, 85, 90, 100, 110], inline=True, fmt=fmt, fontsize=15)
+        plt.clabel(CS, [60, 65, 70, 75, 80, 85, 90, 100, 110], inline=True, fmt=fmt, fontsize=18)
         plt.xlim([np.min(self.noise.contour['X']), np.max(self.noise.contour['X'])])
         plt.xlabel('X [m]')
         plt.ylabel('Z [m]')
-        plt.legend(fontsize=14)
+        plt.legend()
+        plt.show()
 
         return None
 
     def plot_noise_source_distribution(self, time_step:np.int64, metric:str, components:list) -> None:
+        
         # Plot noise hemispheres 
         if metric == 'spl':
             fig, ax = plt.subplots(2, 3, subplot_kw={'projection': 'polar'}, figsize=(10, 10), dpi=100)
@@ -736,7 +704,7 @@ class pyna:
                 ax[irow,icol].set_ylim([60, 150])
                 ax[irow,icol].set_xticks(np.pi/180*np.array([0,45,90,135,180]))
                 ax[irow,icol].set_yticks([60,90,120,150])
-                ax[irow,icol].set_xlabel('SPL [dB]', fontsize=14)
+                ax[irow,icol].set_xlabel('SPL [dB]')
                 ax[irow,icol].xaxis.set_label_coords(0.93, 0.15)
 
             elif metric == 'oaspl':
@@ -753,17 +721,18 @@ class pyna:
         if self.settings.validation:
             ax[1,2].plot([0],[1], 'o', color='white', label='NASA STCA (Berton)')
         if metric == 'spl':
-            ax[0,0].legend(fontsize=14, loc='lower left', bbox_to_anchor=(2.5, -0.35), ncol=2, borderaxespad=0, frameon=False)
-        ax[1,2].legend(fontsize=14, loc='lower left', bbox_to_anchor=(0.035, 0.3), ncol=1, borderaxespad=0, frameon=False)
+            ax[0,0].legend(loc='lower left', bbox_to_anchor=(2.5, -0.35), ncol=2, borderaxespad=0, frameon=False)
+        ax[1,2].legend(loc='lower left', bbox_to_anchor=(0.035, 0.3), ncol=1, borderaxespad=0, frameon=False)
 
         # Turn off the unused frames
         ax[1,2].axis('off')
 
+        plt.show()
+
         return None
 
-
     @staticmethod
-    def plot_optimizer_convergence_data(file_name: str):
+    def plot_optimizer_convergence_data(file_name: str) -> None:
         """
         Plot the convergence data of the optimization across iterates.
 
@@ -805,48 +774,46 @@ class pyna:
         data = pd.read_csv(data, delim_whitespace=True)
 
         # Plot
-        fig, ax = plt.subplots(2, 3, figsize=(15, 8))
-        font_size = 14
+        fig, ax = plt.subplots(2, 3, figsize=(20, 8))
+        plt.style.use('../utils/' + 'plot.mplstyle')
 
         ax[0, 0].plot(data['iter'].values, data['objective'].values)
-        ax[0, 0].set_xlabel('Iterations', fontsize=font_size)
-        ax[0, 0].set_ylabel('Objective', fontsize=font_size)
-        ax[0, 0].tick_params(axis='both', labelsize=font_size)
-        ax[0, 0].grid()
+        ax[0, 0].set_xlabel('Iterations')
+        ax[0, 0].set_ylabel('Objective')
+        ax[0, 0].tick_params(axis='both')
+        ax[0, 0].grid(True)
 
-        ax[0, 1].semilogy(data['iter'].values, data['inf_pr'], label='inf_pr')
-        ax[0, 1].semilogy(data['iter'].values, data['inf_du'], label='inf_du')
-        ax[0, 1].set_xlabel('Iterations', fontsize=font_size)
-        ax[0, 1].set_ylabel('Infeasibility', fontsize=font_size)
-        ax[0, 1].tick_params(axis='both', labelsize=font_size)
-        ax[0, 1].grid()
-        ax[0, 1].legend(fontsize=font_size, loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0, frameon=False)
+        ax[0, 1].semilogy(data['iter'].values, data['inf_pr'], label='$inf_{pr}$')
+        ax[0, 1].semilogy(data['iter'].values, data['inf_du'], label='$inf_{du}$')
+        ax[0, 1].set_xlabel('Iterations')
+        ax[0, 1].set_ylabel('Infeasibility')
+        ax[0, 1].tick_params(axis='both')
+        ax[0, 1].grid(True)
+        ax[0, 1].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=2, borderaxespad=0, frameon=False)
 
-        ax[0, 2].plot(data['iter'].values, data['lg(mu)'], label='$log(\mu)$')
-        ax[0, 2].set_xlabel('Iterations', fontsize=font_size)
-        ax[0, 2].set_ylabel('Barrier parameter', fontsize=font_size)
-        ax[0, 2].tick_params(axis='both', labelsize=font_size)
-        ax[0, 2].grid()
-        ax[0, 2].legend(fontsize=font_size, loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0, frameon=False)
+        ax[0, 2].plot(data['iter'].values, data['lg(mu)'])
+        ax[0, 2].set_xlabel('Iterations')
+        ax[0, 2].set_ylabel('Barrier parameter')
+        ax[0, 2].tick_params(axis='both')
+        ax[0, 2].grid(True)
+        # ax[0, 2].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0, frameon=False)
 
         ax[1, 0].semilogy(data['iter'].values, data['||d||'].values)
-        ax[1, 0].set_xlabel('Iterations', fontsize=font_size)
-        ax[1, 0].set_ylabel('||d||', fontsize=font_size)
-        ax[1, 0].tick_params(axis='both', labelsize=font_size)
-        ax[1, 0].grid()
+        ax[1, 0].set_xlabel('Iterations')
+        ax[1, 0].set_ylabel('||d||')
+        ax[1, 0].tick_params(axis='both')
+        ax[1, 0].grid(True)
         ax[1, 0].set_ylim(1e-10, 1e3)
 
-        ax[1, 1].plot(data['iter'].values, data['alpha_pr'].values, label='alpha_pr')
-        ax[1, 1].plot(data['iter'].values, data['alpha_du'].values, label='alpha_du')
-        ax[1, 1].legend(fontsize=font_size, loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0,
-                        frameon=False)
-        ax[1, 1].set_xlabel('Iterations', fontsize=font_size)
-        ax[1, 1].set_ylabel('Stepsize', fontsize=font_size)
-        ax[1, 1].tick_params(axis='both', labelsize=font_size)
-        ax[1, 1].grid()
-        plt.subplots_adjust(hspace=0.4, wspace=0.4)
+        ax[1, 1].plot(data['iter'].values, data['alpha_pr'].values, label=r'$\alpha_{pr}$')
+        ax[1, 1].plot(data['iter'].values, data['alpha_du'].values, label=r'$\alpha_{du}$')
+        ax[1, 1].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=2, borderaxespad=0, frameon=False)
+        ax[1, 1].set_xlabel('Iterations')
+        ax[1, 1].set_ylabel('Stepsize')
+        ax[1, 1].tick_params(axis='both')
+        ax[1, 1].grid(True)
+        plt.subplots_adjust(hspace=0.45, wspace=0.4)
 
         fig.delaxes(ax[1, 2])
 
-        return None
-
+        return data

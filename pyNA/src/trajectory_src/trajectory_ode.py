@@ -6,6 +6,7 @@ from pyNA.src.settings import Settings
 from pyNA.src.trajectory_src.atmosphere import Atmosphere
 from pyNA.src.trajectory_src.flight_dynamics import FlightDynamics
 from pyNA.src.trajectory_src.clcd import CLCD
+from pyNA.src.trajectory_src.ts_limit import TSLimit
 from pyNA.src.trajectory_src.aerodynamics import Aerodynamics
 from pyNA.src.trajectory_src.propulsion import Propulsion
 from pyNA.src.emissions import Emissions
@@ -30,7 +31,7 @@ class TrajectoryODE(om.Group):
         self.options.declare('ac', types=Aircraft)
         self.options.declare('engine', types=Engine)
         self.options.declare('settings', types=Settings)
-        self.options.declare('engine_mode', types=str)
+        self.options.declare('objective', str)
 
     def setup(self):
         # Load options
@@ -39,7 +40,6 @@ class TrajectoryODE(om.Group):
         ac = self.options['ac']
         engine = self.options['engine']
         settings = self.options['settings']
-        engine_mode = self.options['engine_mode']
 
         # Atmosphere module
         self.add_subsystem(name='atmosphere',
@@ -54,7 +54,7 @@ class TrajectoryODE(om.Group):
                            promotes_outputs=[])
 
         self.add_subsystem(name='aerodynamics', 
-                           subsys=Aerodynamics(num_nodes=nn, ac=ac),
+                           subsys=Aerodynamics(num_nodes=nn, ac=ac, phase=phase_name),
                            promotes_inputs=['v', 'c_0', 'rho_0'],
                            promotes_outputs=[])
         self.connect('clcd.c_l', 'aerodynamics.c_l')
@@ -62,14 +62,14 @@ class TrajectoryODE(om.Group):
 
         # Propulsion module
         self.add_subsystem(name='propulsion',
-                           subsys=Propulsion(vec_size=nn, extrapolate=True, method='3D-lagrange3', settings=settings, engine=engine, engine_mode=engine_mode),
-                           promotes_inputs=['z'],
-                           promotes_outputs=[])
+                        subsys=Propulsion(vec_size=nn, extrapolate=True, method='3D-lagrange3', settings=settings, engine=engine),
+                        promotes_inputs=['z'],
+                        promotes_outputs=[])
         self.connect('aerodynamics.M_0', 'propulsion.M_0')
-
+        
         # flight dynamics module
         self.add_subsystem(name='flight_dynamics',
-                           subsys=FlightDynamics(num_nodes=nn, phase=phase_name, ac=ac),
+                           subsys=FlightDynamics(num_nodes=nn, settings=settings, phase=phase_name, ac=ac, objective=self.options['objective']),
                            promotes_inputs=['x', 'z', 'v', 'alpha', 'gamma', 'rho_0', 'c_0', 'drho_0_dz'],
                            promotes_outputs=[])
         self.connect('propulsion.F_n', 'flight_dynamics.F_n')

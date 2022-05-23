@@ -113,12 +113,17 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption"><span class="caption-text">Main</span></p>
+  <p class="caption"><span class="caption-text">Theory</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="how_to_use.html">how to use pyNA?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="methods.html">methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="openmdao.html">openmdao</a></li>
 <li class="toctree-l1"><a class="reference internal" href="partials.html">partials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Support</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help!.html">help!</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul class="current">
@@ -205,8 +210,8 @@
 <span class="n">pyna_settings</span><span class="o">.</span><span class="n">save_results</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="c1"># Compute noise contours</span>
-<span class="n">x_lst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15000</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
-<span class="n">y_lst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">x_lst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15000</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">y_lst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">py</span> <span class="o">=</span> <span class="n">pyna</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">pyna_settings</span><span class="p">)</span>
 <span class="n">py</span><span class="o">.</span><span class="n">compute_noise_contours</span><span class="p">(</span><span class="n">x_lst</span><span class="o">=</span><span class="n">x_lst</span><span class="p">,</span> <span class="n">y_lst</span><span class="o">=</span><span class="n">y_lst</span><span class="p">)</span>
 

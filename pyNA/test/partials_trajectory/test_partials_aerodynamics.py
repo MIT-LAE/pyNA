@@ -13,8 +13,8 @@ from pyNA.src.trajectory_src.aerodynamics import Aerodynamics
 
 # Load settings and aircraft
 settings = pyna.load_settings(case_name="nasa_stca_standard")
-settings.pyNA_directory = 'pyNA'
-ac = Aircraft(name=settings.ac_name, settings=settings)
+settings.pyNA_directory = '.'
+ac = Aircraft(name=settings.ac_name, version=settings.ac_version, settings=settings)
 
 # Inputs
 nn = 20
@@ -24,7 +24,7 @@ c_0 = 330.*np.ones(nn)
 
 # Create problem
 prob = om.Problem()
-comp = Aerodynamics(num_nodes=nn, ac=ac)
+comp = Aerodynamics(num_nodes=nn, ac=ac, phase='vnrs')
 prob.model.add_subsystem("a", comp)
 prob.setup(force_alloc_complex=True)
 
