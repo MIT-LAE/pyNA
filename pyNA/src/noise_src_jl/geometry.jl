@@ -41,43 +41,39 @@ function geometry(settings, x_obs::Array{Float64, 1}, x, y, z, alpha, gamma, t_s
     c_bar = zeros(T, n_t)
     t_o = zeros(T, n_t)
 
-    # Step through all time steps
-    for i in 1:n_t
+    # Compute body angles (psi_B, theta_B, phi_B): angle of body w.r.t. horizontal
+    theta_B = alpha .+ gamma
+    phi_B = zeros(T, n_t)
+    psi_B = zeros(T, n_t)
 
-        # Compute body angles (psi_B, theta_B, phi_B): angle of body w.r.t. horizontal
-        theta_B = alpha[i] .+ gamma[i]
-        phi_B = 0.
-        psi_B = 0.
+    # Compute the relative observer-aircraft position vector i.e. difference between observer and ac coordinate
+    r_1 =  x_obs[1] .- x
+    r_2 =  x_obs[2] .- y
+    r_3 = -x_obs[3] .+ z
 
-        # Compute the relative observer-aircraft position vector i.e. difference between observer and ac coordinate
-        r_1 =  x_obs[1] .- x[i]
-        r_2 =  x_obs[2] .- y[i]
-        r_3 = -x_obs[3] .+ z[i]
+    # Normalize the distance vector
+    r = sqrt.(r_1 .^2 .+ r_2 .^2 .+ r_3 .^2)
+    n_vcr_a_1 = r_1 ./ r
+    n_vcr_a_2 = r_2 ./ r
+    n_vcr_a_3 = r_3 ./ r
 
-        # Normalize the distance vector
-        r[i] = sqrt.(r_1 .^2 .+ r_2 .^2 .+ r_3 .^2)
-        n_vcr_a_1 = r_1 ./ r[i]
-        n_vcr_a_2 = r_2 ./ r[i]
-        n_vcr_a_3 = r_3 ./ r[i]
+    # Define elevation angle
+    beta = asind.(n_vcr_a_3)
 
-        # Define elevation angle
-        beta[i] = asind.(n_vcr_a_3)
+    # Transformation direction cosines (Euler angles) to the source coordinate system (i.e. take position of the aircraft into account)
+    n_vcr_s_1, n_vcr_s_2, n_vcr_s_3 = compute_euler_transformation(n_vcr_a_1, n_vcr_a_2, n_vcr_a_3, theta_B, phi_B, psi_B)
 
-        # Transformation direction cosines (Euler angles) to the source coordinate system (i.e. take position of the aircraft into account)
-        n_vcr_s_1, n_vcr_s_2, n_vcr_s_3 = compute_euler_transformation(n_vcr_a_1, n_vcr_a_2, n_vcr_a_3, theta_B, phi_B, psi_B)
+    # Define polar directivity angle
+    theta = acosd.(n_vcr_s_1)
 
-        # Define polar directivity angle
-        theta[i] = acosd.(n_vcr_s_1)
+    # Define azimuthal directivity angle
+    phi = -atand.(n_vcr_s_2, n_vcr_s_3)
 
-        # Define azimuthal directivity angle
-        phi[i] = -atand.(n_vcr_s_2, n_vcr_s_3)
+    # Average speed of sound
+    c_bar = compute_average_speed_of_sound(settings, z, c_0, T_0)
 
-        # Average speed of sound
-        c_bar[i] = compute_average_speed_of_sound(settings, z[i], c_0[i], T_0[i])
-
-        # Define observed time
-        t_o[i] = t_s[i] .+ r[i] ./ c_bar[i]
-    end    
+    # Define observed time
+    t_o = t_s .+ r ./ c_bar    
 
     return r, beta, theta, phi, c_bar, t_o
 end

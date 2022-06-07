@@ -186,9 +186,6 @@ class FlightDynamics(ExplicitComponent):
         if phase_name == 'groundroll':
             v_stall = np.sqrt(2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max))
 
-            print(c_l_max)
-            print(v_stall)
-
             v_rot = inputs['k_rot'] * v_stall
             outputs['v_rot_residual'] = v - v_rot
 
@@ -199,10 +196,6 @@ class FlightDynamics(ExplicitComponent):
                 f = open(settings.pyNA_directory + '/cases/' + settings.case_name + '/output/' + settings.output_directory_name + '/' + 'inputs_k.txt' , 'a')
                 f.write(str(inputs['k_rot'][0]) + '\n')
                 f.close()
-
-        # Compute the thrust-setting residual
-        if self.options['objective'] == 'noise' and phase_name == 'vnrs':
-            print(inputs['x'][-1])
 
     def compute_partials(self, inputs:openmdao.vectors.default_vector.DefaultVector, partials: openmdao.vectors.default_vector.DefaultVector):
         # Load options
