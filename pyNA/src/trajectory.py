@@ -135,7 +135,7 @@ class Trajectory:
         """
 
         # Initialize limiting cases
-        gamma_lst = np.array([0, 2.7])
+        gamma_lst = np.array([0, 2.3])
         nr_engine_lst = np.array([ac.n_eng - 1, ac.n_eng])
         
         alpha = np.zeros(2)
@@ -178,8 +178,12 @@ class Trajectory:
             # Print results
             print(case, 'engine thrust-setting requirement: ', np.round(TS_lst[cc], 3))
 
+            pdb.set_trace()
+
         # Compute TS_max
         TS_max = max(TS_lst)
+
+        pdb.set_trace()
 
         return TS_max
 

@@ -1,15 +1,11 @@
-function split_subbands(settings::PyObject, msap_in)
+function split_subbands(settings, msap_in)
     
     # Number of time steps
     n_t = size(msap_in)[1]
     
     # Integer for subband calculation
     m = Int64((settings.N_b - 1) / 2)
-
-#   # Divide msap_in by average
-#     msap_proc = zeros(eltype(msap_in), (n_t, settings.N_f))        
-#     msap_proc[findall(sum(msap_in, dims=2) .* ones(1, settings.N_f) .> 0)] = (msap_in ./ (sum(msap_in, dims=2) / settings.N_f))[findall(sum(msap_in, dims=2) .* ones(1, settings.N_f) .> 0)]
-    
+ 
     # Calculate slope of spectrum
     # Source: Zorumski report 1982 part 1. Chapter 5.1 Equation 8-9
     u = zeros(eltype(msap_in), (n_t, settings.N_f, 1))

@@ -1,5 +1,5 @@
 # Perceived noise level, tone-corrected  
-function f_noy(settings::PyObject, spl)
+function f_noy(settings, spl)
     
     # Number of time steps
     n_t = size(spl)[1]
@@ -70,7 +70,7 @@ function f_pnl(N)
     return reshape(pnl, (n_t, ))
 end
 
-function f_tone_corrections(settings::PyObject, spl)
+function f_tone_corrections(settings, spl)
 
     # Number of time steps
     n_t = size(spl)[1]
@@ -139,17 +139,18 @@ function f_tone_corrections(settings::PyObject, spl)
     cend[findall(3.0 .<= F[:,21:end] .< 20)] = @view(F[:,21:end][findall(3.0 .<= F[:,21:end] .< 20)])/6.  
     cend[findall(20. .<= F[:,21:end]      )] = @view(F[:,21:end][findall(20. .<= F[:,21:end]      )])*0. .+ (3. .+ 1/3.)  
     C = hcat(c0, c10, c20, cend)
-  
+      
     return C
 end
 
-function f_pnlt(settings::PyObject, data::PyObject, spl)
+function f_pnlt(settings, data, spl)
 
     # Number of time steps
     n_t = size(spl)[1]
 
     # Compute noy
     T = eltype(spl)
+
     func_noy = LinearInterpolation((data.noy_spl, data.noy_freq), data.noy)
 
     N = func_noy.(spl, reshape(data.f, (1,settings.N_f)).*ones(T, (n_t,1)))

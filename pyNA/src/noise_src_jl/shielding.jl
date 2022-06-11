@@ -1,6 +1,6 @@
-function shielding(settings::PyObject, n_t::Int64)
+function shielding(settings, n_t::Int64)
     
-    # Load shielding table
+    # Load shielding delta dB table
     # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
     shield = zeros((length(settings.x_observer_array), n_t, settings.N_f))
     if settings.shielding

@@ -25,8 +25,7 @@ include("spl.jl")
 include("oaspl.jl")
 include("pnlt.jl")
 include("epnl.jl")
-include("ipnlt.jl")
-include("ioaspl.jl")
+include("ilevel.jl")
 include("aspl.jl")
 include("sel.jl")
 include("smooth_max.jl")
@@ -128,15 +127,18 @@ function NoiseModel(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64
         pnlt, C = f_pnlt(settings, data, spl)
         aspl = f_aspl(data, spl)
 
+        println(t_o)
+        println(pnlt)
+
         # Compute integrated levels
         if settings.levels_int_metric == "ioaspl"
-            level_int = f_ioaspl(t_o, oaspl)
+            level_int = f_ilevel(t_o, oaspl)
         elseif settings.levels_int_metric == "ipnlt"
-            level_int = f_ipnlt(t_o, pnlt)
+            level_int = f_ilevel(t_o, pnlt)
         elseif settings.levels_int_metric == "epnl"
             level_int = f_epnl(t_o, pnlt)
         elseif settings.levels_int_metric == "sel"
-            level_int = f_sel(t_o, aspl)
+            level_int = f_ilevel(t_o, aspl)
         end
 
         # Write output

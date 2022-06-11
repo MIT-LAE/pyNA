@@ -1,7 +1,7 @@
 function compute_average_speed_of_sound(settings, z, c_0, T_0)
 
     n_intermediate = 11
-    dz = z ./ (n_intermediate-1)
+    dz = z ./ n_intermediate
     c_bar = c_0
     for k in 1:(n_intermediate-1)
         T_im = T_0 .+ settings.dT .- (z .- k .* dz) .* (-0.0065)
@@ -57,7 +57,7 @@ function geometry(settings, x_obs::Array{Float64, 1}, x, y, z, alpha, gamma, t_s
     n_vcr_a_2 = r_2 ./ r
     n_vcr_a_3 = r_3 ./ r
 
-    # Define elevation angle
+    # Define elevation angle (with respect to the horizontal plane of the microphone)
     beta = asind.(n_vcr_a_3)
 
     # Transformation direction cosines (Euler angles) to the source coordinate system (i.e. take position of the aircraft into account)

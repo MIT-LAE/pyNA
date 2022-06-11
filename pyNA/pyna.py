@@ -470,14 +470,14 @@ class pyna:
 
         ax[0,0].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.z'), '-', label='Take-off trajectory module')
         if verification:
-            ax[0,0].plot(problem_verify['X [m]'], problem_verify['Z [m]'], '--', label='NASA STCA (Berton)')
+            ax[0,0].plot(problem_verify['X [m]'], problem_verify['Z [m]'], '--', label='NASA STCA (Berton et al.)')
         ax[0,0].set_xlabel('t [s]')
         ax[0,0].set_ylabel('Z [m]')
         ax[0,0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0, frameon=False)
 
         ax[0,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.v'), '-')
         if verification:
-            ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton)')
+            ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton et al.)')
         ax[0,1].set_xlabel('t [s]')
         ax[0,1].set_ylabel(r'$v$ [m/s]')
 
@@ -551,7 +551,7 @@ class pyna:
                 if self.settings.validation:
                     self.noise.data.load_trajectory_verification_data(settings=self.settings)
                     ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
-                            self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al. [25])', color=colors[1])
+                            self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
 
                 ax[i].grid(True)
                 ax[i].set_xlabel('Time after brake release [s]')
@@ -576,7 +576,7 @@ class pyna:
                     self.noise.data.load_trajectory_verification_data(settings=self.settings)
                     ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
                                self.noise.data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
-                               label='NASA STCA (Berton et al. [25])')
+                               label='NASA STCA (Berton et al.)')
 
             ax[i].grid(True)
             ax[i].set_xlabel('Time after brake release [s]')
@@ -719,7 +719,7 @@ class pyna:
         # Set legend
         ax[1,2].plot([0],[1], 'k-', label='pyNA')
         if self.settings.validation:
-            ax[1,2].plot([0],[1], 'o', color='white', label='NASA STCA (Berton)')
+            ax[1,2].plot([0],[1], 'o', color='white', label='NASA STCA (Berton et al.)')
         if metric == 'spl':
             ax[0,0].legend(loc='lower left', bbox_to_anchor=(2.5, -0.35), ncol=2, borderaxespad=0, frameon=False)
         ax[1,2].legend(loc='lower left', bbox_to_anchor=(0.035, 0.3), ncol=1, borderaxespad=0, frameon=False)

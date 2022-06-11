@@ -1,4 +1,6 @@
-function ground_reflections(settings::PyObject, data::PyObject, x_obs::Array{Float64}, r, beta, c_bar, rho_0)
+using Interpolations
+
+function ground_reflections(settings, data, x_obs::Array{Float64}, r, beta, c_bar, rho_0)
     
     # Size of trajectory
     n_t = size(r)[1]
