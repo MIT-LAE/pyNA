@@ -534,20 +534,69 @@ class pyna:
         colors = plt.cm.magma(np.linspace(0,0.8,2))
 
         # Iterate over observer locations
-        for i, observer in enumerate(self.settings.observer_lst):
+        if self.settings.language == 'python':
+            for i, observer in enumerate(self.settings.observer_lst):
 
-            # Time range of epnl domain of dependence
-            time_epnl = self.problem.get_val('noise.t_o')[i,:][np.where(self.problem.get_val('noise.pnlt')[i,:] > max(self.problem.model.get_val('noise.pnlt')[i,:]) - 10.)]
+                # Time range of epnl domain of dependence
+                time_epnl = self.problem.get_val('noise.t_o')[i,:][np.where(self.problem.get_val('noise.pnlt')[i,:] > max(self.problem.model.get_val('noise.pnlt')[i,:]) - 10.)]
 
-            # Plot noise levels
-            if metric == 'pnlt':
+                # Plot noise levels
+                if metric == 'pnlt':
+                    # Plot noise levels
+                    if observer == 'lateral':
+                        ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
+                    else:
+                        ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.pnlt')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
+                    ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [105, 105], alpha=0.15,
+                                    label='EPNL domain of dependence', color=colors[0])
+                    if self.settings.validation:
+                        self.noise.data.load_trajectory_verification_data(settings=self.settings)
+                        ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
+                                self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
+
+                    ax[i].grid(True)
+                    ax[i].set_xlabel('Time after brake release [s]')
+                    ax[i].tick_params(axis='both')
+                    ax[i].set_ylim([-5, 105])
+
+                    # Zoomed-in plots
+                    ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
+                    ax_zoom[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2.5, color=colors[0])
+                    if self.settings.validation:
+                        ax_zoom[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'], self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
+                    ax_zoom[i].set_xticks([])
+                    ax_zoom[i].set_yticks([])
+                    ax_zoom[i].set_xlim([time_epnl[0], time_epnl[-1]])
+                    ax_zoom[i].set_ylim([np.max(self.problem.get_val('noise.pnlt')[i,:])-11, np.max(self.problem.get_val('noise.pnlt')[i,:])+1.5])
+                    mark_inset(ax[i], ax_zoom[i], loc1=1, loc2=3)                
+
+                elif metric == 'oaspl':
+                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.oaspl')[i,:], linewidth=2.5, label='pyNA')
+                    ax[i].set_ylabel('$OASPL_{' + observer + '}$ [dB]')
+                    if self.settings.validation:
+                        self.noise.data.load_trajectory_verification_data(settings=self.settings)
+                        ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
+                                self.noise.data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
+                                label='NASA STCA (Berton et al.)')
+
+                ax[i].grid(True)
+                ax[i].set_xlabel('Time after brake release [s]')
+                ax[i].tick_params(axis='both')
+                ax[i].set_ylim([-5, 105])
+
+        elif self.settings.language == 'julia':
+            # Iterate over observer locations
+            for i, observer in enumerate(self.settings.observer_lst):
+
+                # Time range of epnl domain of dependence
+                time_epnl = self.problem.get_val('noise.t_o')[i,:][np.where(self.problem.get_val('noise.level')[i,:] > max(self.problem.model.get_val('noise.level')[i,:]) - 10.)]
+
                 # Plot noise levels
                 if observer == 'lateral':
-                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
+                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.level')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
                 else:
-                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.pnlt')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
-                ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [105, 105], alpha=0.15,
-                                label='EPNL domain of dependence', color=colors[0])
+                    ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.level')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
+                ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [105, 105], alpha=0.15, label='EPNL domain of dependence', color=colors[0])
                 if self.settings.validation:
                     self.noise.data.load_trajectory_verification_data(settings=self.settings)
                     ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
@@ -560,28 +609,19 @@ class pyna:
 
                 # Zoomed-in plots
                 ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
-                ax_zoom[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2.5, color=colors[0])
+                ax_zoom[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.level')[i,:180], linewidth=2.5, color=colors[0])
                 if self.settings.validation:
                     ax_zoom[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'], self.noise.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
                 ax_zoom[i].set_xticks([])
                 ax_zoom[i].set_yticks([])
                 ax_zoom[i].set_xlim([time_epnl[0], time_epnl[-1]])
-                ax_zoom[i].set_ylim([np.max(self.problem.get_val('noise.pnlt')[i,:])-11, np.max(self.problem.get_val('noise.pnlt')[i,:])+1.5])
+                ax_zoom[i].set_ylim([np.max(self.problem.get_val('noise.level')[i,:])-11, np.max(self.problem.get_val('noise.level')[i,:])+1.5])
                 mark_inset(ax[i], ax_zoom[i], loc1=1, loc2=3)                
 
-            elif metric == 'oaspl':
-                ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.oaspl')[i,:], linewidth=2.5, label='pyNA')
-                ax[i].set_ylabel('$OASPL_{' + observer + '}$ [dB]')
-                if self.settings.validation:
-                    self.noise.data.load_trajectory_verification_data(settings=self.settings)
-                    ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
-                               self.noise.data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
-                               label='NASA STCA (Berton et al.)')
-
-            ax[i].grid(True)
-            ax[i].set_xlabel('Time after brake release [s]')
-            ax[i].tick_params(axis='both')
-            ax[i].set_ylim([-5, 105])
+                ax[i].grid(True)
+                ax[i].set_xlabel('Time after brake release [s]')
+                ax[i].tick_params(axis='both')
+                ax[i].set_ylim([-5, 105])
 
         ax[0].set_title('Lateral')
         ax[1].set_title('Flyover')

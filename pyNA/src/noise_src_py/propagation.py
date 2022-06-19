@@ -104,6 +104,7 @@ class Propagation(om.ExplicitComponent):
                 # Generate sub-banding
                 msap_prop_i = np.zeros(settings.N_f)
                 if settings.absorption or settings.groundeffects:
+
                     msap_sb = split_subbands(settings, msap_r)
 
                     # Initialize solution vectors
@@ -143,6 +144,7 @@ class Propagation(om.ExplicitComponent):
 
                     # Compute absorbed msap by adding up the msap at all the sub-band frequencies
                     # Source: Zorumski report 1982 part 1. Chapter 5.1 Equation 22
+
                     for j in np.arange(settings.N_f):
                         msap_prop_i[j] = np.sum(msap_sb[j*settings.N_b:(j+1)*settings.N_b])
 

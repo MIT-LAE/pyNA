@@ -1,6 +1,5 @@
-function trailing_edge_wing(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
+function trailing_edge_wing!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
     
-    ### ---------------- Wing trailing-edge noise ----------------
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 5
     delta_w_star = 0.37 * (ac.af_S_w / ac.af_b_w^2) * (rho_0 * M_0 * c_0 * ac.af_S_w / (mu_0 * ac.af_b_w))^(-0.2)
 
@@ -20,24 +19,26 @@ function trailing_edge_wing(settings::PyObject, ac::PyObject, freq::Array{Float6
 
     # Determine spectral distribution function
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 10-11-12
-    S_w = freq * delta_w_star * ac.af_b_w / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
+    S_w = f * delta_w_star * ac.af_b_w / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
     if ac.af_delta_wing == 1
         F_w = 0.613 * (10 * S_w).^4 .* ((10 * S_w).^1.35 .+ 0.5).^(-4)
     elseif ac.af_delta_wing == 0
         F_w = 0.485 * (10 * S_w).^4 .* ((10 * S_w).^1.5 .+ 0.5).^(-4)
     end
     
-    # Determine msap
+    # Add msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
-    msap_w = 1 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w)
 
-    #Write output
-    return msap_w
+    if settings.hsr_calibration
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w) * hsr_supp
+    else
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w)
+    end
+
 end
-function trailing_edge_horizontal_tail(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
+function trailing_edge_horizontal_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
 
-    # ---------------- Horizontal tail trailing-edge noise ----------------
     # Trailing edge noise of the horizontal tail
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 5
     delta_h_star = 0.37 * (ac.af_S_h / ac.af_b_h^2) * (rho_0 * M_0 * c_0 * ac.af_S_h / (mu_0 * ac.af_b_h))^(-0.2)
@@ -57,19 +58,20 @@ function trailing_edge_horizontal_tail(settings::PyObject, ac::PyObject, freq::A
     
     # Determine spectral distribution function
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 10-11-12
-    S_h = freq * delta_h_star * ac.af_b_h / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
+    S_h = f * delta_h_star * ac.af_b_h / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
     F_h = 0.485 * (10 * S_h).^4 .* ((10 * S_h).^1.5 .+ 0.5).^(-4)
     
-    # Determine msap
+    # Add msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
-    msap_h = 1. / (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h)
-
-    return msap_h
+    if settings.hsr_calibration
+        @. spl += 1/settings.p_ref^2 * (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h) * hsr_supp
+    else
+        @. spl += 1/settings.p_ref^2 * (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h)
+    end
 end  
-function trailing_edge_vertical_tail(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
+function trailing_edge_vertical_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
 
-    ### ---------------- Vertical tail trailing-edge noise ----------------
     delta_v_star = 0.37 * (ac.af_S_v / ac.af_b_v^2) * (rho_0 * M_0 * c_0 * ac.af_S_v / (mu_0 * ac.af_b_v))^(-0.2)
 
     # Trailing edge noise of the vertical tail
@@ -85,7 +87,7 @@ function trailing_edge_vertical_tail(settings::PyObject, ac::PyObject, freq::Arr
     D_v = 4 * sin(phi * π / 180.)^2 * cos(theta / 2 * π / 180.)^2
 
     # Determine spectral distribution function
-    S_v = freq * delta_v_star * ac.af_b_v / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
+    S_v = f * delta_v_star * ac.af_b_v / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
     
     if ac.af_delta_wing == 1
         F_v = 0.613 * (10 * S_v).^4 .* ((10 * S_v).^1.35 .+ 0.5).^(-4)
@@ -95,13 +97,15 @@ function trailing_edge_vertical_tail(settings::PyObject, ac::PyObject, freq::Arr
     
     # Determine msap
     r_s_star_af = settings.r_0 / ac.af_b_w
-    msap_v = 1. / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v)
-
-    return msap_v
+    if settings.hsr_calibration
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v) * hsr_supp
+    else
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v)
+    end
 end
-function leading_edge_slat(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, rho_0, mu_0, theta, phi)
+function leading_edge_slat!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
 
-    ### ---------------- Slat noise ----------------
+    # Trailing edge noise leading edge flap
     delta_w_star = 0.37 * (ac.af_S_w / ac.af_b_w^2) * (rho_0 * M_0 * c_0 * ac.af_S_w / (mu_0 * ac.af_b_w))^(-0.2)
 
     # Noise power
@@ -115,21 +119,22 @@ function leading_edge_slat(settings::PyObject, ac::PyObject, freq::Array{Float64
     
     # Determine spectral distribution function
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 10-12-13
-    S_les = freq * delta_w_star * ac.af_b_w / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
+    S_les = f * delta_w_star * ac.af_b_w / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
     
     F_les1 = 0.613 * (10 * S_les).^4 .* ((10. * S_les).^1.5 .+ 0.5).^(-4)
     F_les2 = 0.613 * (2.19 * S_les).^4 .* ((2.19 * S_les).^1.5 .+ 0.5).^(-4)
     
-    # Calculate msap
+    # Add msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
-    msap_les = 1 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2)
-
-    return msap_les
+    if settings.hsr_calibration
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2) * hsr_supp
+    else
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2)
+    end
 end
-function trailing_edge_flap(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, theta, phi, theta_flaps)
+function trailing_edge_flap!(spl, settings, ac, f, M_0, c_0, theta, phi, theta_flaps, hsr_supp)
 
-    ### ---------------- Flap noise ----------------
     # Calculate noise power
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 14-15
     if ac.af_s < 3
@@ -143,7 +148,7 @@ function trailing_edge_flap(settings::PyObject, ac::PyObject, freq::Array{Float6
     D_tef = 3 * (sin(theta_flaps * π / 180.) * cos(theta * π / 180.) + cos(theta_flaps * π / 180.) * sin(theta * π / 180.) * cos(phi * π / 180.))^2
     # Strouhal number
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 19
-    S_tef = freq * ac.af_S_f / (M_0 * ac.af_b_f * c_0) * (1 - M_0 * cos(theta * π / 180.))
+    S_tef = f * ac.af_S_f / (M_0 * ac.af_b_f * c_0) * (1 - M_0 * cos(theta * π / 180.))
     
     # Calculation of the spectral function
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 17-18
@@ -174,17 +179,18 @@ function trailing_edge_flap(settings::PyObject, ac::PyObject, freq::Array{Float6
     # Calculate msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
-    msap_tef = 1. / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef)
-
-    return msap_tef
+    if settings.hsr_calibration
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef) * hsr_supp
+    else
+        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef)
+    end
 end
-function landing_gear(settings::PyObject, ac::PyObject, freq::Array{Float64, 1}, M_0, c_0, theta, phi, I_landing_gear)
+function landing_gear!(spl, settings, ac, f, M_0, c_0, theta, phi, I_landing_gear, hsr_supp)
 
-    ### ---------------- Landing-gear noise ----------------
     if I_landing_gear == 1
         # Calculate nose-gear noise
         # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 29
-        S_ng = freq * ac.af_d_ng / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
+        S_ng = f * ac.af_d_ng / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
         
         # Calculate noise power and spectral distribution function
         # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 20-21-22-25-26-27-28
@@ -202,7 +208,7 @@ function landing_gear(settings::PyObject, ac::PyObject, freq::Array{Float64, 1},
         
         # Calculate main-gear noise
         # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 29
-        S_mg = freq * ac.af_d_mg / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
+        S_mg = f * ac.af_d_mg / (M_0 * c_0) * (1 - M_0 * cos(theta * π / 180.))
         # Calculate noise power and spectral distribution function
         # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 20-21-22-25-26-27-28
         if ac.af_n_mg == 1 || ac.af_n_mg == 2
@@ -225,76 +231,39 @@ function landing_gear(settings::PyObject, ac::PyObject, freq::Array{Float64, 1},
         # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
         # If landing gear is down
         r_s_star_af = settings.r_0 / ac.af_b_w
-        msap_lg = 1 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (
-                              ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) +
-                              ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s))
 
-    # If landing gear is up
-    else
-        msap_lg = zeros(eltype(I_landing_gear), 1)
-    end
-
-    return msap_lg
-end
-
-function airframe(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, M_0, mu_0, c_0, rho_0, theta, phi, theta_flaps, I_landing_gear)
-
-    # Initialize solution
-    T = eltype(theta_flaps)
-    msap_af = zeros(T, (n_t, settings.N_f))
-            
-    for i in range(1, n_t, step=1)
-
-        # Airframe noise only when aircraft is moving
-        if M_0[i] != 0.
-
-            # Apply HSR-era airframe suppression/calibration levels
-            # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
-            if settings.hsr_calibration
-                # Suppression data
-                data_angles = data.supp_af_angles
-                data_freq = data.supp_af_freq
-                data_supp = data.supp_af
-                f_supp = LinearInterpolation((data_freq, data_angles), data_supp)
-                supp = f_supp.(data.f, theta[i]*ones(T, (settings.N_f, )))
-            else
-                supp = ones(T, (settings.N_f, ))
-            end
-
-            # Add airframe noise components
-            msap_j = zeros(T, (settings.N_f, ))
-            if "wing" in ac.comp_lst
-                msap_w = trailing_edge_wing(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
-                msap_j = msap_j .+ msap_w .* supp
-            end
-            if "tail_v" in ac.comp_lst
-                msap_v = trailing_edge_vertical_tail(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
-                msap_j = msap_j .+ msap_v .* supp
-            end
-            if "tail_h" in ac.comp_lst
-                msap_h = trailing_edge_horizontal_tail(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
-                msap_j = msap_j .+ msap_h .* supp
-            end
-            if "les" in ac.comp_lst
-                msap_les = leading_edge_slat(settings, ac, data.f, M_0[i], c_0[i], rho_0[i], mu_0[i], theta[i], phi[i])
-                msap_j = msap_j .+ msap_les .* supp
-            end
-            if "tef" in ac.comp_lst
-                msap_tef = trailing_edge_flap(settings, ac, data.f, M_0[i], c_0[i], theta[i], phi[i], theta_flaps[i])
-                msap_j = msap_j .+ msap_tef .* supp
-            end
-            if "lg" in ac.comp_lst
-                msap_lg = landing_gear(settings, ac, data.f, M_0[i], c_0[i], theta[i], phi[i], I_landing_gear[i])
-                msap_j = msap_j .+ msap_lg .* supp
-            end
-
-            # Normalize msap by reference pressure
-            msap_af[i,:] = msap_j/settings.p_ref^2
-
+        if settings.hsr_calibration            
+            @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s)) * hsr_supp
         else
-            msap_af[i,:] =  1e-99 * ones(T, (settings.N_f, ))
+            @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s))
         end
     end
+end
 
-    return msap_af
+function airframe!(spl, pyna_ip, settings, ac, f, M_0, mu_0, c_0, rho_0, theta, phi, theta_flaps, I_landing_gear)
+    
+    
+    # HSR calibration
+    hsr_supp = pyna_ip.f_hsr_supp.(f, theta*ones(eltype(theta_flaps), (settings.N_f, )))
+
+    # Add airframe noise components
+    if "wing" in ac.comp_lst
+        trailing_edge_wing!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
+    end
+    if "tail_v" in ac.comp_lst
+        trailing_edge_vertical_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
+    end
+    if "tail_h" in ac.comp_lst
+        trailing_edge_horizontal_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
+    end
+    if "les" in ac.comp_lst
+        leading_edge_slat!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
+    end
+    if "tef" in ac.comp_lst
+        trailing_edge_flap!(spl, settings, ac, f, M_0, c_0, theta, phi, theta_flaps, hsr_supp)
+    end
+    if "lg" in ac.comp_lst
+        landing_gear!(spl, settings, ac, f, M_0, c_0, theta, phi, I_landing_gear, hsr_supp)
+    end
+
 end

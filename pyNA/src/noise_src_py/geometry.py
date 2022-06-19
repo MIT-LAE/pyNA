@@ -151,8 +151,8 @@ class Geometry(om.ExplicitComponent):
                 dz = z / n_intermediate
                 c_bar = c_0
                 for k in np.arange(1, n_intermediate):
-                    T_im = (T_0 + settings.dT) - (z - k * dz) * (-0.0065)  # Temperature
-                    c_im = np.sqrt(1.4 * 287. * T_im)  # Speed of sound
+                    T_im = T_0 - k * dz * (-0.0065)
+                    c_im = np.sqrt(1.4 * 287. * T_im)
                     c_bar = (k) / (k + 1) * c_bar + c_im / (k + 1)
                 outputs['c_bar'][i,:] = c_bar
 

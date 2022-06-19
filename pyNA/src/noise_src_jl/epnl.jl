@@ -5,13 +5,12 @@ function f_epnl(t_o, pnlt)
 
     # Number of time steps
     n_t = size(t_o)[1]
+    T = eltype(t_o)
 
     # Interpolate time, pnlt and C
     dt = 0.5
     n_ip = Int64(ceil((t_o[end]-t_o[1])/dt))
-
-    T = eltype(pnlt)
-    t_ip = zeros(T, n_ip)
+    t_ip = zeros(T, (n_ip,))
     for i in range(1, n_ip, step=1)
         t_ip[i] = t_o[1] + (i-1)*dt
     end
