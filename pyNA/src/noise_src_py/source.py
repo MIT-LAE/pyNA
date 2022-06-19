@@ -166,10 +166,11 @@ class Source(om.ExplicitComponent):
 
             if settings.core:
                 msap_core = Core.core(self, inputs['theta'][i, :], inputs)
-                
+
                 if settings.suppression and settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
                     idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings.N_f)) > 0.8)
                     msap_core[idx_TS] = (10.**(-2.3 / 10.) * msap_core)[idx_TS]
+
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_core
 
             if settings.jet_mixing:

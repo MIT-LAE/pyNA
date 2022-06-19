@@ -1,17 +1,16 @@
-function lateral_attenuation(settings, beta, x_obs)
+function lateral_attenuation!(spl_sb, settings, beta, x_obs)
     # Depression angle: phi_d = beta (elevation angle) + epsilon (aircraft bank angle = 0)
     # Note: beta is in degrees
     T = eltype(beta)
-    phi_d = beta
-
+    
     # Lateral side distance
     l = x_obs[2]
 
     # Engine installation term [dB]
     if settings.engine_mounting == "underwing"
-        E_eng = 10 * log10.((0.0039 * cos.(phi_d*pi/180).^2 .+ sin.(phi_d*pi/180).^2).^0.062./(0.8786 * sin.(2 * phi_d*pi/180).^2 .+ cos.(2*phi_d*pi/180).^2))
+        E_eng = 10 * log10.((0.0039 * cos.(beta*pi/180).^2 .+ sin.(beta*pi/180).^2).^0.062./(0.8786 * sin.(2 * beta*pi/180).^2 .+ cos.(2*beta*pi/180).^2))
     elseif settings.engine_mounting == "fuselage"
-        E_eng = 10 * log10.((0.1225 * cos.(phi_d*pi/180).^2 .+ sin.(phi_d*pi/180).^2).^0.329)
+        E_eng = 10 * log10.((0.1225 * cos.(beta*pi/180).^2 .+ sin.(beta*pi/180).^2).^0.329)
     elseif settings.engine_mounting == "propeller"
         E_eng = zeros(size(beta))
     elseif settings.engine_mounting == "none"
@@ -35,7 +34,6 @@ function lateral_attenuation(settings, beta, x_obs)
     end
 
     # Overall lateral attenuation
-    Lambda = 10 .^ ((E_eng .- g * A_grs ./ 10.86) ./ 10.)
+    @. spl_db *= 10 .^ ((E_eng .- g * A_grs ./ 10.86) ./ 10.)
 
-    return Lambda
 end

@@ -9,10 +9,10 @@ using Dates
 using FLoops
 using BenchmarkTools
 
+include("interpolation_functions.jl")
 include("normalization_engine_variables.jl")
 include("shielding.jl")
 include("geometry.jl")
-include("source.jl")
 include("fan.jl")
 include("core.jl")
 include("jet.jl")
@@ -20,7 +20,6 @@ include("airframe.jl")
 include("propagation.jl")
 include("split_subbands.jl")
 include("lateral_attenuation.jl")
-include("ground_reflections.jl")
 include("spl.jl")
 include("oaspl.jl")
 include("pnlt.jl")
@@ -33,6 +32,7 @@ include("smooth_max.jl")
 
 # Define propagation struct
 @concrete struct NoiseModel <: AbstractExplicitComp
+    pyna_ip
     settings :: PyObject
     data :: PyObject
     ac :: PyObject
@@ -45,158 +45,219 @@ include("smooth_max.jl")
     noise_model_fwd
 end
 
-function NoiseModel(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, idx::Dict{Any, Any}, objective::String)
+struct PynaInterpolations
+    f_supp_fi  # Fan
+    f_supp_fd
+    f_F3IB
+    f_F3DB
+    f_F3TI
+    f_F3TD
+    f_F2CT
+    f_TCS_takeoff_ih1
+    f_TCS_takeoff_ih2
+    f_TCS_approach_ih1
+    f_TCS_approach_ih2
+    f_D_core  # Core
+    f_S_core
+    f_omega_jet  # Jet mixing 
+    f_log10P_jet
+    f_log10D_jet
+    f_xi_jet
+    f_log10F_jet
+    f_m_theta_jet
+    f_C_jet  # Jet shock
+    f_H_jet
+    f_hsr_supp  # Airframe suppression
+    f_abs # Propagation
+    f_faddeeva_real
+    f_faddeeva_imag
+    f_noy  # Noy
+end
 
-    function compute_noise_observer(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, idx::Dict{Any, Any}, x_obs::Array{Float64, 1}, shield::Array{Float64, 2}, idx_supp::Array{CartesianIndex{2}, 1}, objective::String, input_v::Union{Array{Float64, 1}, ReverseDiff.TrackedArray{Float64,Float64,1,Array{Float64,1},Array{Float64,1}}})
+function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::String)
 
-        # Initialize
-        spl = zeros(eltype(input_v), (n_t, settings.N_f))
-
-        # Compute geometry
-        r, beta, theta, phi, c_bar, t_o = geometry(settings, x_obs, input_v[idx["x"][1]:idx["x"][2]], input_v[idx["y"][1]:idx["y"][2]], input_v[idx["z"][1]:idx["z"][2]], input_v[idx["alpha"][1]:idx["alpha"][2]], input_v[idx["gamma"][1]:idx["gamma"][2]], input_v[idx["t_s"][1]:idx["t_s"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]])
-
-        # Normalize engine inputs
-        if settings.jet_mixing == true && settings.jet_shock == false
-            V_j_star, rho_j_star, A_j_star, Tt_j_star = normalization_jet_mixing(settings, input_v[idx["V_j"][1]:idx["V_j"][2]], input_v[idx["rho_j"][1]:idx["rho_j"][2]], input_v[idx["A_j"][1]:idx["A_j"][2]], input_v[idx["Tt_j"][1]:idx["Tt_j"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]])
-            
-        elseif settings.jet_shock == true && settings.jet_mixing == false
-            V_j_star, A_j_star, Tt_j_star = normalization_jet_shock(settings, input_v[idx["V_j"][1]:idx["V_j"][2]], input_v[idx["A_j"][1]:idx["A_j"][2]], input_v[idx["Tt_j"][1]:idx["Tt_j"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]])
-            
-        elseif settings.jet_shock ==true && settings.jet_mixing == true
-            V_j_star, rho_j_star, A_j_star, Tt_j_star = normalization_jet(settings, input_v[idx["V_j"][1]:idx["V_j"][2]], input_v[idx["rho_j"][1]:idx["rho_j"][2]], input_v[idx["A_j"][1]:idx["A_j"][2]], input_v[idx["Tt_j"][1]:idx["Tt_j"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]])
-        end
-        if settings.core
-            if settings.method_core_turb == "GE"
-                mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, DTt_des_c_star = normalization_core_ge(settings, input_v[idx["mdoti_c"][1]:idx["mdoti_c"][2]], input_v[idx["Tti_c"][1]:idx["Tti_c"][2]], input_v[idx["Ttj_c"][1]:idx["Ttj_c"][2]], input_v[idx["Pti_c"][1]:idx["Pti_c"][2]], input_v[idx["DTt_des_c"][1]:idx["DTt_des_c"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]], input_v[idx["p_0"][1]:idx["p_0"][2]])
-                
-            elseif settings.method_core_turb == "PW"
-                mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, rho_te_c_star, c_te_c_star, rho_ti_c_star, c_ti_c_star = normalization_core_pw(settings, input_v[idx["mdoti_c"][1]:idx["mdoti_c"][2]], input_v[idx["Tti_c"][1]:idx["Tti_c"][2]], input_v[idx["Ttj_c"][1]:idx["Ttj_c"][2]], input_v[idx["Pti_c"][1]:idx["Pti_c"][2]], input_v[idx["rho_te_c"][1]:idx["rho_te_c"][2]], input_v[idx["c_te_c"][1]:idx["c_te_c"][2]], input_v[idx["rho_ti_c"][1]:idx["rho_ti_c"][2]], input_v[idx["c_ti_c"][1]:idx["c_ti_c"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]], input_v[idx["p_0"][1]:idx["p_0"][2]])
-            end
-        end
-        if settings.fan_inlet==true || settings.fan_discharge==true
-            DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star = normalization_fan(settings, input_v[idx["DTt_f"][1]:idx["DTt_f"][2]], input_v[idx["mdot_f"][1]:idx["mdot_f"][2]], input_v[idx["N_f"][1]:idx["N_f"][2]], input_v[idx["A_f"][1]:idx["A_f"][2]], input_v[idx["d_f"][1]:idx["d_f"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]])
-        end
-
-        # Compute source
-        if settings.fan_inlet
-            spl .+= fan(settings, data, ac, n_t, shield, input_v[idx["M_0"][1]:idx["M_0"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], theta, DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star, "fan_inlet")
-        end
-        if settings.fan_discharge
-            spl .+= fan(settings, data, ac, n_t, shield, input_v[idx["M_0"][1]:idx["M_0"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["T_0"][1]:idx["T_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], theta, DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star, "fan_discharge")
-        end
-
-        if settings.core
-            if settings.method_core_turb == "GE"
-                msap_core = core_ge(settings, data, ac, n_t, input_v[idx["M_0"][1]:idx["M_0"][2]], theta, mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, DTt_des_c_star)
-            elseif settings.method.method_core_turb == "PW"
-                msap_core = core_pw(settings, data, ac, n_t, input_v[idx["M_0"][1]:idx["M_0"][2]], theta, mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, rho_te_c_star, c_te_c_star, rho_ti_c_star, c_ti_c_star)
-            end
-            
-            if settings.suppression && settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]
-                msap_core[idx_supp] = (10. ^(-2.3 / 10.) * msap_core)[idx_supp]
-            end
-            spl .+= msap_core
-        end
-
-        if settings.jet_mixing 
-            msap_jet_mixing = jet_mixing(settings, data, ac, n_t, input_v[idx["M_0"][1]:idx["M_0"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], theta, V_j_star, rho_j_star, A_j_star, Tt_j_star)
-            if settings.suppression && settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]
-                msap_jet_mixing[idx_supp] = (10. ^(-2.3 / 10.) * msap_jet_mixing)[idx_supp]
-            end
-            spl .+= msap_jet_mixing
-        end
-        if settings.jet_shock
-            msap_jet_shock = jet_shock(settings, data, ac, n_t, input_v[idx["M_0"][1]:idx["M_0"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], theta, V_j_star, input_v[idx["M_j"][1]:idx["M_j"][2]], A_j_star, Tt_j_star)
-            if settings.suppression && settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]
-                msap_jet_shock[idx_supp] = (10. ^(-2.3 / 10.) * msap_jet_shock)[idx_supp]
-            end
-            spl .+= msap_jet_shock
-        end
-
-        if settings.airframe
-            spl .+= airframe(settings, data, ac, n_t, input_v[idx["M_0"][1]:idx["M_0"][2]], input_v[idx["mu_0"][1]:idx["mu_0"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]], input_v[idx["rho_0"][1]:idx["rho_0"][2]], theta, phi, input_v[idx["theta_flaps"][1]:idx["theta_flaps"][2]], input_v[idx["I_landing_gear"][1]:idx["I_landing_gear"][2]])
-        end
-
-        # Compute propagation
-        spl = propagation(settings, data, x_obs, spl, r, input_v[idx["x"][1]:idx["x"][2]], input_v[idx["z"][1]:idx["z"][2]], c_bar, input_v[idx["rho_0"][1]:idx["rho_0"][2]], input_v[idx["I_0"][1]:idx["I_0"][2]], beta)
-
-        # Compute noise levels
-        spl = f_spl(spl, input_v[idx["rho_0"][1]:idx["rho_0"][2]], input_v[idx["c_0"][1]:idx["c_0"][2]])
-        
-        oaspl = f_oaspl(spl)
-        pnlt, C = f_pnlt(settings, data, spl)
-        aspl = f_aspl(data, spl)
-
-        println(t_o)
-        println(pnlt)
-
-        # Compute integrated levels
-        if settings.levels_int_metric == "ioaspl"
-            level_int = f_ilevel(t_o, oaspl)
-        elseif settings.levels_int_metric == "ipnlt"
-            level_int = f_ilevel(t_o, pnlt)
-        elseif settings.levels_int_metric == "epnl"
-            level_int = f_epnl(t_o, pnlt)
-        elseif settings.levels_int_metric == "sel"
-            level_int = f_ilevel(t_o, aspl)
-        end
-
-        # Write output
-        if objective == "noise"
-            return level_int
-        else
-            return t_o, spl, aspl, oaspl, pnlt, C, level_int
-        end
-
-    end
-
-    function noise_model(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64, idx::Dict{Any, Any}, objective::String, input_v::Union{Array{Float64, 1}, ReverseDiff.TrackedArray{Float64,Float64,1,Array{Float64,1},Array{Float64,1}}})
+    function noise_model(pyna_ip, settings, data, ac, idx::Dict{Any, Any}, objective::String, input_v::Union{Array{Float64, 1}, ReverseDiff.TrackedArray{Float64,Float64,1,Array{Float64,1},Array{Float64,1}}})
 
         # Get type of input vector
         T = eltype(input_v)
 
+        # Number of time steps
+        n_t = size(input_v[idx["t_s"][1]:idx["t_s"][2]])[1]
+
         # Number of observers
         n_obs = size(settings.x_observer_array)[1]
 
+        # Frequency bands
+        f = data.f
+        f_sb = data.f_sb
+
         # Compute noise for each observer
         t_o = zeros(T, (n_obs, n_t))
-        spl = zeros(T, (n_obs, n_t, settings.N_f))
-        aspl = zeros(T, (n_obs, n_t))
-        oaspl = zeros(T, (n_obs, n_t))
-        pnlt = zeros(T, (n_obs, n_t))
-        C = zeros(T, (n_obs, n_t, settings.N_f))
-        level_int = zeros(T, (n_obs, ))
-
-        # Compute airframe shielding coefficients
-        shield = shielding(settings, n_t)
-
-        # Suppression  matrix
-        idx_supp = findall(input_v[idx["TS"][1]:idx["TS"][2]].*ones(1, settings.N_f).>0.8)
+        spl = 1e-99*ones(T, (n_obs, n_t, settings.N_f))
+        level = zeros(T, (n_obs, n_t))
+        level_int = zeros(T, (n_obs,))
 
         # Iterate over observers
-        ncores=6
-        # @floop ThreadedEx(basesize=n_obs÷ncores) 
-        for i in range(1, n_obs, step=1)
-
+        for i in 1:1:n_obs
             println("Computing noise at observer: ", i)
 
-            if objective == "noise"
-                level_int[i] = compute_noise_observer(settings, data, ac, n_t, idx, settings.x_observer_array[i,:], shield[i,:,:], idx_supp, objective, input_v)
-            else
-                t_o[i,:], spl[i,:,:], aspl[i,:], oaspl[i,:], pnlt[i,:], C[i,:,:], level_int[i] = compute_noise_observer(settings, data, ac, n_t, idx, settings.x_observer_array[i,:], shield[i,:,:], idx_supp, objective, input_v)
-            end
+            # Iterate over time steps
+            for j in 1:1:n_t
 
+                # Extract inputs
+                x = input_v[idx["x"][1]:idx["x"][2]][j]
+                y = input_v[idx["y"][1]:idx["y"][2]][j]
+                z = input_v[idx["z"][1]:idx["z"][2]][j]
+                alpha = input_v[idx["alpha"][1]:idx["alpha"][2]][j]
+                gamma = input_v[idx["gamma"][1]:idx["gamma"][2]][j]
+                t_s = input_v[idx["t_s"][1]:idx["t_s"][2]][j]
+                c_0 = input_v[idx["c_0"][1]:idx["c_0"][2]][j]
+                T_0 = input_v[idx["T_0"][1]:idx["T_0"][2]][j]
+                rho_0 = input_v[idx["rho_0"][1]:idx["rho_0"][2]][j]
+                p_0 = input_v[idx["p_0"][1]:idx["p_0"][2]][j]
+                TS = input_v[idx["TS"][1]:idx["TS"][2]][j]
+                M_0 = input_v[idx["M_0"][1]:idx["M_0"][2]][j]
+                mu_0 = input_v[idx["mu_0"][1]:idx["mu_0"][2]][j]
+                I_0 = input_v[idx["I_0"][1]:idx["I_0"][2]][j]
+                if settings.jet_mixing == true && settings.jet_shock == false
+                    V_j = input_v[idx["V_j"][1]:idx["V_j"][2]][j]
+                    rho_j = input_v[idx["rho_j"][1]:idx["rho_j"][2]][j]
+                    A_j = input_v[idx["A_j"][1]:idx["A_j"][2]][j]
+                    Tt_j = input_v[idx["Tt_j"][1]:idx["Tt_j"][2]][j]
+                elseif settings.jet_shock == true && settings.jet_mixing == false
+                    V_j = input_v[idx["V_j"][1]:idx["V_j"][2]][j]
+                    A_j = input_v[idx["A_j"][1]:idx["A_j"][2]][j]
+                    Tt_j = input_v[idx["Tt_j"][1]:idx["Tt_j"][2]][j]
+                    M_j = input_v[idx["M_j"][1]:idx["M_j"][2]][j]
+                elseif settings.jet_shock ==true && settings.jet_mixing == true
+                    V_j = input_v[idx["V_j"][1]:idx["V_j"][2]][j]
+                    rho_j = input_v[idx["rho_j"][1]:idx["rho_j"][2]][j]
+                    A_j = input_v[idx["A_j"][1]:idx["A_j"][2]][j]
+                    Tt_j = input_v[idx["Tt_j"][1]:idx["Tt_j"][2]][j]
+                    M_j = input_v[idx["M_j"][1]:idx["M_j"][2]][j]
+                end
+                if settings.core
+                    if settings.method_core_turb == "GE"
+                        mdoti_c = input_v[idx["mdoti_c"][1]:idx["mdoti_c"][2]][j]
+                        Tti_c = input_v[idx["Tti_c"][1]:idx["Tti_c"][2]][j]
+                        Ttj_c = input_v[idx["Ttj_c"][1]:idx["Ttj_c"][2]][j]
+                        Pti_c = input_v[idx["Pti_c"][1]:idx["Pti_c"][2]][j]
+                        DTt_des_c = input_v[idx["DTt_des_c"][1]:idx["DTt_des_c"][2]][j]
+                    elseif settings.method_core_turb == "PW"
+                        mdoti_c = input_v[idx["mdoti_c"][1]:idx["mdoti_c"][2]][j]
+                        Tti_c = input_v[idx["Tti_c"][1]:idx["Tti_c"][2]][j]
+                        Ttj_c = input_v[idx["Ttj_c"][1]:idx["Ttj_c"][2]][j]
+                        Pti_c = input_v[idx["Pti_c"][1]:idx["Pti_c"][2]][j]
+                        rho_te_c_star = input_v[idx["rho_te_c"][1]:idx["rho_te_c"][2]][j]
+                        c_te_c_star = input_v[idx["c_te_c"][1]:idx["c_te_c"][2]][j]
+                        rho_ti_c_star = input_v[idx["rho_ti_c"][1]:idx["rho_ti_c"][2]][j]
+                        c_ti_c_star = input_v[idx["c_ti_c"][1]:idx["c_ti_c"][2]][j]
+                    end
+                end
+                if settings.fan_inlet==true || settings.fan_discharge==true
+                    DTt_f = input_v[idx["DTt_f"][1]:idx["DTt_f"][2]][j]
+                    mdot_f = input_v[idx["mdot_f"][1]:idx["mdot_f"][2]][j]
+                    N_f = input_v[idx["N_f"][1]:idx["N_f"][2]][j]
+                    A_f = input_v[idx["A_f"][1]:idx["A_f"][2]][j]
+                    d_f = input_v[idx["d_f"][1]:idx["d_f"][2]][j]
+                end
+                if settings.airframe==true
+                    theta_flaps = input_v[idx["theta_flaps"][1]:idx["theta_flaps"][2]][j]
+                    I_landing_gear = input_v[idx["I_landing_gear"][1]:idx["I_landing_gear"][2]][j]
+                end
+
+                # Compute geometry
+                r, beta, theta, phi, c_bar, t_o[i,j] = geometry(settings.x_observer_array[i,:], x, y, z, alpha, gamma, t_s, c_0, T_0)
+
+                # Normalize engine inputs
+                if settings.jet_mixing == true && settings.jet_shock == false
+                    V_j_star, rho_j_star, A_j_star, Tt_j_star = normalization_jet_mixing(settings, V_j, rho_j, A_j, Tt_j, c_0, rho_0, T_0)
+                    
+                elseif settings.jet_shock == true && settings.jet_mixing == false
+                    V_j_star, A_j_star, Tt_j_star = normalization_jet_shock(settings, V_j, A_j, Tt_j, c_0, T_0)
+                    
+                elseif settings.jet_shock ==true && settings.jet_mixing == true
+                    V_j_star, rho_j_star, A_j_star, Tt_j_star = normalization_jet(settings, V_j, rho_j, A_j, Tt_j, c_0, rho_0, T_0)
+                end
+                if settings.core
+                    if settings.method_core_turb == "GE"
+                        mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, DTt_des_c_star = normalization_core_ge(settings, mdoti_c, Tti_c, Ttj_c, Pti_c, DTt_des_c, c_0, rho_0, T_0, p_0)
+                        
+                    elseif settings.method_core_turb == "PW"
+                        mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, rho_te_c_star, c_te_c_star, rho_ti_c_star, c_ti_c_star = normalization_core_pw(settings, mdoti_c, Tti_c, Ttj_c, Pti_c, rho_te_c, c_te_c, rho_te_c, c_ti_c, c_0, rho_0, T_0, p_0)
+                    end
+                end
+                if settings.fan_inlet==true || settings.fan_discharge==true
+                    DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star = normalization_fan(settings, DTt_f, mdot_f, N_f, A_f, d_f, c_0, rho_0, T_0)
+                end
+
+                # shielding
+                shield = shielding(settings, data, j, settings.observer_lst[i])
+
+                # Compute source
+                spl_j = zeros(T, (settings.N_f,))
+                if settings.fan_inlet
+                    fan!(spl_j, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0, theta, DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star, "fan_inlet")
+                end
+                if settings.fan_discharge
+                    fan!(spl_j, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0, theta, DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star, "fan_discharge")
+                end
+                if settings.core
+                    if settings.method_core_turb == "GE"
+                        core_ge!(spl_j, pyna_ip, settings, ac, f, M_0, theta, TS, mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, DTt_des_c_star)
+                    elseif settings.method.method_core_turb == "PW"
+                        core_pw!(spl_j, pyna_ip, settings, ac, f, M_0, theta, TS, mdoti_c_star, Tti_c_star, Ttj_c_star, Pti_c_star, rho_te_c_star, c_te_c_star, rho_ti_c_star, c_ti_c_star)
+                    end
+                end
+                if settings.jet_mixing 
+                    jet_mixing!(spl_j, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_star, rho_j_star, A_j_star, Tt_j_star)
+                end
+                if settings.jet_shock
+                    # Only shock noise if jet Mach number is larger than 1
+                    if M_j > 1
+                        jet_shock!(spl_j, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_star, M_j, A_j_star, Tt_j_star)
+                    end
+                end
+                if settings.airframe
+                    if M_0 > 0
+                        airframe!(spl_j, pyna_ip, settings, ac, f, M_0, mu_0, c_0, rho_0, theta, phi, theta_flaps, I_landing_gear)
+                    end
+                end
+
+                # Compute noise propagation
+                propagation!(spl_j, pyna_ip, settings, f_sb, settings.x_observer_array[i,:], r, x, z, c_bar, rho_0, I_0, beta)
+
+                # Add spl ambient correction
+                f_spl!(spl_j, rho_0, c_0)
+                spl[i,j,:] = spl_j
+
+                # Compute noise levels
+                if settings.levels_int_metric == "ioaspl"
+                    level[i, j] = f_oaspl(spl_j)
+                elseif settings.levels_int_metric in ["ipnlt", "epnl"]
+                    level[i, j] = f_pnlt(pyna_ip, settings, f, spl_j)
+                elseif settings.levels_int_metric == "sel"
+                    level[i, j] = f_aspl(data, spl_j)
+                end
+            end
+        
+            # Compute integrated levels
+            if settings.levels_int_metric in ["ioaspl", "ipnlt", "sel"]
+                level_int[i] = f_ilevel(t_o[i,:], level[i,:])
+            elseif settings.levels_int_metric == "epnl"
+                level_int[i] = f_epnl(t_o[i,:], level[i,:])
+            end
         end
 
         # Write output
         if objective == "noise"
             k_smooth = 50.
             level_lateral = smooth_max(k_smooth, level_int[1:end-1])
-
             return [level_lateral, level_int[end]]
         else
-            return t_o, spl, aspl, oaspl, pnlt, C, level_int
+            return t_o, spl, level, level_int
         end
+
     end
 
     # Default values for input vector
@@ -266,10 +327,20 @@ function NoiseModel(settings::PyObject, data::PyObject, ac::PyObject, n_t::Int64
     J = Y.*X'
     #'
 
-    # Define noise function
-    noise_model_fwd = (x)->noise_model(settings, data, ac, n_t, idx, objective, x)
+    # Get interpolation functions
+    f_supp_fi, f_supp_fd, f_F3IB, f_F3DB, f_F3TI, f_F3TD, f_F2CT, f_TCS_takeoff_ih1, f_TCS_takeoff_ih2, f_TCS_approach_ih1, f_TCS_approach_ih2 = get_fan_interpolation_functions(settings, data)
+    f_D_core, f_S_core = get_core_interpolation_functions()
+    f_omega_jet, f_log10P_jet, f_log10D_jet, f_xi_jet, f_log10F_jet, f_m_theta_jet = get_jet_mixing_interpolation_functions(data)
+    f_C_jet, f_H_jet = get_jet_shock_interpolation_functions()
+    f_hsr_supp = get_airframe_interpolation_functions(data)
+    f_abs, f_faddeeva_real, f_faddeeva_imag = get_propagation_interpolation_functions(data)
+    f_noy = get_noy_interpolation_functions(data)
+    pyna_ip = PynaInterpolations(f_supp_fi, f_supp_fd, f_F3IB, f_F3DB, f_F3TI, f_F3TD, f_F2CT, f_TCS_takeoff_ih1, f_TCS_takeoff_ih2, f_TCS_approach_ih1, f_TCS_approach_ih2, f_D_core, f_S_core, f_omega_jet, f_log10P_jet, f_log10D_jet, f_xi_jet, f_log10F_jet, f_m_theta_jet, f_C_jet, f_H_jet, f_hsr_supp, f_abs, f_faddeeva_real, f_faddeeva_imag, f_noy)
 
-    return NoiseModel(settings, data, ac, n_t, idx, objective, noise_model, X, J, noise_model_fwd)
+    # Define noise function
+    noise_model_fwd = (x)->noise_model(pyna_ip, settings, data, ac, idx, objective, x)
+
+    return NoiseModel(pyna_ip, settings, data, ac, n_t, idx, objective, noise_model, X, J, noise_model_fwd)
 end
 
 function setup(self::NoiseModel)
@@ -352,10 +423,7 @@ function setup(self::NoiseModel)
     else
         push!(outputs, VarData("t_o", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
         push!(outputs, VarData("spl", shape=(n_obs, n_t, settings.N_f), val=ones(n_obs, n_t, settings.N_f)))
-        push!(outputs, VarData("aspl", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
-        push!(outputs, VarData("oaspl", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
-        push!(outputs, VarData("pnlt", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
-        push!(outputs, VarData("C", shape=(n_obs, n_t, settings.N_f), val=ones(n_obs, n_t, settings.N_f)))
+        push!(outputs, VarData("level", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
         push!(outputs, VarData(settings.levels_int_metric, shape=(n_obs, ), val=ones(n_obs, )))
     end
 
@@ -430,7 +498,7 @@ function setup(self::NoiseModel)
     return inputs, outputs, partials
 end
 
-function get_noise_input_vector!(X::Array{Float64, 1}, settings::PyObject, inputs::PyDict{String, PyArray, true}, idx::Dict{Any, Any})
+function get_noise_input_vector!(X::Array{Float64, 1}, settings, inputs::PyDict{String, PyArray, true}, idx::Dict{Any, Any})
 
     # Extract inputs
     X[idx["x"][1]:idx["x"][2]] = inputs["x"]
@@ -499,10 +567,10 @@ end
 
 function compute!(self::NoiseModel, inputs, outputs)
     # Load options
+    pyna_ip = self.pyna_ip
     settings = self.settings
     data = self.data
     ac = self.ac
-    n_t = self.n_t
     idx = self.idx
     X = self.X
 
@@ -510,7 +578,7 @@ function compute!(self::NoiseModel, inputs, outputs)
     get_noise_input_vector!(X, settings, inputs, idx)
 
     if self.objective == "noise"
-        levels_int = self.noise_model(settings, data, ac, n_t, idx, self.objective, X)
+        levels_int = self.noise_model(pyna_ip, settings, data, ac, idx, self.objective, X)
         @. outputs["lateral"] = levels_int[1]
         @. outputs["flyover"] = levels_int[2]
 
@@ -533,13 +601,10 @@ function compute!(self::NoiseModel, inputs, outputs)
         end
 
     else
-        t_o, spl, aspl, oaspl, pnlt, C, levels_int = self.noise_model(settings, data, ac, n_t, idx, self.objective, X)
+        t_o, spl, level, levels_int = self.noise_model(pyna_ip, settings, data, ac, idx, self.objective, X)
         @. outputs["t_o"] = t_o
         @. outputs["spl"] = spl
-        @. outputs["aspl"] = aspl
-        @. outputs["oaspl"] = oaspl
-        @. outputs["pnlt"] = pnlt
-        @. outputs["C"] = C
+        @. outputs["level"] = level
         @. outputs[settings.levels_int_metric] = levels_int
     end
 
