@@ -31,9 +31,9 @@ function trailing_edge_wing!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta,
     r_s_star_af = settings.r_0 / ac.af_b_w
 
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w) * hsr_supp
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w) * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w)
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w)
     end
 
 end
@@ -65,11 +65,11 @@ function trailing_edge_horizontal_tail!(spl, settings, ac, f, M_0, c_0, rho_0, m
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 * (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h) * hsr_supp
+        @. spl += 1/settings.p_ref^2 / (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h) * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 * (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h)
+        @. spl += 1/settings.p_ref^2 / (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h)
     end
-end  
+end
 function trailing_edge_vertical_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
 
     delta_v_star = 0.37 * (ac.af_S_v / ac.af_b_v^2) * (rho_0 * M_0 * c_0 * ac.af_S_v / (mu_0 * ac.af_b_v))^(-0.2)
@@ -98,9 +98,9 @@ function trailing_edge_vertical_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_
     # Determine msap
     r_s_star_af = settings.r_0 / ac.af_b_w
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v) * hsr_supp
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v) * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v)
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v)
     end
 end
 function leading_edge_slat!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
@@ -128,9 +128,9 @@ function leading_edge_slat!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, 
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2) * hsr_supp
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2) * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2)
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2)
     end
 end
 function trailing_edge_flap!(spl, settings, ac, f, M_0, c_0, theta, phi, theta_flaps, hsr_supp)
@@ -180,9 +180,9 @@ function trailing_edge_flap!(spl, settings, ac, f, M_0, c_0, theta, phi, theta_f
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef) * hsr_supp
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef) * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef)
+        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef)
     end
 end
 function landing_gear!(spl, settings, ac, f, M_0, c_0, theta, phi, I_landing_gear, hsr_supp)
@@ -233,9 +233,9 @@ function landing_gear!(spl, settings, ac, f, M_0, c_0, theta, phi, I_landing_gea
         r_s_star_af = settings.r_0 / ac.af_b_w
 
         if settings.hsr_calibration            
-            @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s)) * hsr_supp
+            @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s)) * hsr_supp
         else
-            @. spl += 1/settings.p_ref^2 * (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s))
+            @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s))
         end
     end
 end

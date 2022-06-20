@@ -21,14 +21,14 @@ function jet_mixing!(spl, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_sta
     # Calculate directivity function (D)
     log10D = pyna_ip.f_log10D_jet(theta, log10Vja0)
     D_function = 10^log10D
-        
+    
     # Calculate Strouhal frequency adjustment factor (xi)
     xi = pyna_ip.f_xi_jet(V_j_star, theta)
 
     # Calculate Strouhal number (St)
     D_j_star = sqrt.(4 * A_j_star / π)  # Jet diamater [-] (rel. to sqrt(settings.A_e))
     f_star = f .* sqrt(settings.A_e) / c_0
-    St = (f_star * D_j_star) / xi * (V_j_star - M_0)
+    St = (f_star * D_j_star) / (xi * (V_j_star - M_0))
     log10St = log10.(St)
 
     # Calculate frequency function (F)
@@ -48,6 +48,7 @@ function jet_mixing!(spl, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_sta
     end
 
 end
+
 
 # Function 
 function jet_shock!(spl, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_star, M_j, A_j_star, Tt_j_star)

@@ -195,7 +195,7 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
                 shield = shielding(settings, data, j, settings.observer_lst[i])
 
                 # Compute source
-                spl_j = zeros(T, (settings.N_f,))
+                spl_j = 1e-99*ones(T, (settings.N_f,))
                 if settings.fan_inlet
                     fan!(spl_j, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0, theta, DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star, "fan_inlet")
                 end
@@ -230,7 +230,7 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
                 # Add spl ambient correction
                 f_spl!(spl_j, rho_0, c_0)
                 spl[i,j,:] = spl_j
-
+                
                 # Compute noise levels
                 if settings.levels_int_metric == "ioaspl"
                     level[i, j] = f_oaspl(spl_j)

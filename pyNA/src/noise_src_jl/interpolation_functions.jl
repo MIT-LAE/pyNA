@@ -133,12 +133,12 @@ function get_jet_mixing_interpolation_functions(data)
 	# Source: Hoch - Studies of the influence of density on jet noise: extend the 
 	array_1 = range(-0.45, 0.6, step=0.05)
 	array_2 = [-1.0, -0.9, -0.76, -0.58, -0.41, -0.22, 0.0, 0.22, 0.5, 0.77, 1.07, 1.39, 1.74, 1.95, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
-	f_omega_jet = PCHIPInterpolation.Interpolator(array_1, array_2)    
+	f_omega_jet = LinearInterpolation(array_1, array_2)    
 
 	# Source: Zorumski report 1982 part 2. Chapter 8.4 Table III
 	array_1 = range(-0.45, 0.4, step=0.05)
 	array_2 = [-0.13, -0.13, -0.13, -0.13, -0.13, -0.13, -0.12, -0.1, -0.05, 0.0, 0.1, 0.21, 0.32, 0.41, 0.43, 0.41,0.31, 0.14]
-	f_log10P_jet = PCHIPInterpolation.Interpolator(array_1, array_2)
+	f_log10P_jet = LinearInterpolation(array_1, array_2)
 
 	# Source: Zorumski report 1982 part 2. Chapter 8.4 Table IV
 	f_log10D_jet = LinearInterpolation((data.jet_D_velocity, data.jet_D_angles), data.jet_D)
@@ -154,7 +154,7 @@ function get_jet_mixing_interpolation_functions(data)
 	# Source: Zorumski report 1982 part 2. Chapter 8.4 Table VII
 	array_1 = range(0, 180, step=10)
 	array_2 = [3, 1.65, 1.1, 0.5, 0.2, 0, 0, 0.1, 0.4, 1, 1.9, 3, 4.7, 7, 8.5, 8.5, 8.5, 8.5, 8.5]
-	f_m_theta_jet = PCHIPInterpolation.Interpolator(array_1, array_2)
+	f_m_theta_jet = LinearInterpolation(array_1, array_2)
 
 	return f_omega_jet, f_log10P_jet, f_log10D_jet, f_xi_jet, f_log10F_jet, f_m_theta_jet
 end
@@ -165,12 +165,12 @@ function get_jet_shock_interpolation_functions()
 	# Note: extended array for log10sigma > 2 and log10sigma < -0.7
 	array_1_c = range(-3.5, 3.5, step=0.1)
 	array_2_c = [0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.703,0.71,0.714,0.719,0.724,0.729,0.735,0.74,0.74,0.74,0.735,0.714,0.681,0.635,0.579,0.52,0.46,0.4,0.345,0.29,0.235,0.195,0.15,0.1,0.06,0.03,0.015,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-	f_C_jet = PCHIPInterpolation.Interpolator(array_1_c, array_2_c)
+	f_C_jet = LinearInterpolation(array_1_c, array_2_c)
 
 	# Source: Zorumski report 1982 part 2. Chapter 8.5 Table III (+ linear extrapolation in logspace for log10sigma < 0; as given in SAEARP876)
 	array_1_H = range(-2.5, 3.5, step=0.1)
 	array_2_H = [-12.19,-11.81,-11.43,-11.05,-10.67,-10.29,-9.91,-9.53,-9.15,-8.77,-8.39,-8.01,-7.63,-7.25,-6.87,-6.49,-6.11,-5.73,-5.35,-4.97,-4.59,-4.21,-3.83,-3.45,-3.07,-2.69,-2.31,-1.94,-1.59,-1.33,-1.1,-0.94,-0.88,-0.91,-0.99,-1.09,-1.17,-1.3,-1.42,-1.55,-1.67,-1.81,-1.92,-2.06,-2.18,-2.3,-2.42,-2.54,-2.66,-2.78,-2.9,-3.02,-3.14,-3.26,-3.38,-3.5,-3.62,-3.74,-3.86,-3.98,-4.1]
-	f_H_jet = PCHIPInterpolation.Interpolator(array_1_H, array_2_H)
+	f_H_jet = LinearInterpolation(array_1_H, array_2_H)
 
 	return f_C_jet, f_H_jet
 end

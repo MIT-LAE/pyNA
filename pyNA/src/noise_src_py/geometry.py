@@ -141,7 +141,7 @@ class Geometry(om.ExplicitComponent):
                 # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 27
                 phi = -180. / np.pi * np.arctan2(n_vcr_s_1, n_vcr_s_2)
                 if settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
-                    outputs['phi'][i, :] = phi #np.zeros(n_t)
+                    outputs['phi'][i, :] = np.zeros(n_t)
                 else:
                     phi[phi==-180.] = np.zeros(n_t)[phi==-180.]
                     outputs['phi'][i,:] = phi

@@ -134,7 +134,7 @@ class Jet:
 
 			# Normalize msap by reference pressure
 			msap_jet_mixing[i,:] = msap_j/settings.p_ref**2
-		# pdb.set_trace()
+		
 		return msap_jet_mixing
 
 	@staticmethod
