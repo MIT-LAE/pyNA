@@ -340,7 +340,7 @@ class Trajectory:
             problem.driver.opt_settings['acceptable_tol'] = 1e-1
         else:
             problem.driver.opt_settings['tol'] = settings.tol
-            problem.driver.opt_settings['acceptable_tol'] = 1e-3
+            problem.driver.opt_settings['acceptable_tol'] = 1e-2
 
         problem.driver.opt_settings['max_iter'] = settings.max_iter
         problem.driver.opt_settings['mu_strategy'] = 'adaptive'
