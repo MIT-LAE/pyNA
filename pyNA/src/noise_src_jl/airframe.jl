@@ -29,11 +29,12 @@ function trailing_edge_wing!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta,
     # Add msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
-
-    if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w) * hsr_supp
+    pow_level_af = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * Pi_star_w * D_w
+    
+    if settings.hsr_calibration 
+        @. spl += pow_level_af * F_w * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_w * D_w * F_w)
+        @. spl += pow_level_af * F_w
     end
 
 end
@@ -64,10 +65,11 @@ function trailing_edge_horizontal_tail!(spl, settings, ac, f, M_0, c_0, rho_0, m
     # Add msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
+    pow_level_af = 1/settings.p_ref^2 / (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * Pi_star_h * D_h
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 / (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h) * hsr_supp
+        @. spl += pow_level_af * F_h * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 / (4. * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_h * D_h * F_h)
+        @. spl += pow_level_af * F_h
     end
 end
 function trailing_edge_vertical_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
@@ -97,10 +99,11 @@ function trailing_edge_vertical_tail!(spl, settings, ac, f, M_0, c_0, rho_0, mu_
     
     # Determine msap
     r_s_star_af = settings.r_0 / ac.af_b_w
+    pow_level_af = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * Pi_star_v * D_v 
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v) * hsr_supp
+        @. spl += pow_level_af * F_v * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_v * D_v * F_v)
+        @. spl += pow_level_af * F_v
     end
 end
 function leading_edge_slat!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, phi, hsr_supp)
@@ -127,10 +130,12 @@ function leading_edge_slat!(spl, settings, ac, f, M_0, c_0, rho_0, mu_0, theta, 
     # Add msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
+    pow_level_af_1 = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * Pi_star_les1 * D_les
+    pow_level_af_2 = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * Pi_star_les2 * D_les
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2) * hsr_supp
+        @. spl += (pow_level_af_1 * F_les1 +  pow_level_af_2 * F_les2) * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_les1 * D_les * F_les1 + Pi_star_les2 * D_les * F_les2)
+        @. spl += (pow_level_af_1 * F_les1 +  pow_level_af_2 * F_les2)
     end
 end
 function trailing_edge_flap!(spl, settings, ac, f, M_0, c_0, theta, phi, theta_flaps, hsr_supp)
@@ -179,10 +184,11 @@ function trailing_edge_flap!(spl, settings, ac, f, M_0, c_0, theta, phi, theta_f
     # Calculate msap
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
     r_s_star_af = settings.r_0 / ac.af_b_w
+    pow_level_af = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * Pi_star_tef * D_tef
     if settings.hsr_calibration
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef) * hsr_supp
+        @. spl += pow_level_af * F_tef * hsr_supp
     else
-        @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (Pi_star_tef * D_tef * F_tef)
+        @. spl += pow_level_af * F_tef
     end
 end
 function landing_gear!(spl, settings, ac, f, M_0, c_0, theta, phi, I_landing_gear, hsr_supp)
@@ -231,17 +237,19 @@ function landing_gear!(spl, settings, ac, f, M_0, c_0, theta, phi, I_landing_gea
         # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 1
         # If landing gear is down
         r_s_star_af = settings.r_0 / ac.af_b_w
-
+        pow_level_af_ng_w = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * ac.af_N_ng * Pi_star_ng_w * D_w
+        pow_level_af_ng_s = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * ac.af_N_ng * Pi_star_ng_s * D_s
+        pow_level_af_mg_w = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * ac.af_N_mg * Pi_star_mg_w * D_w
+        pow_level_af_mg_s = 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * ac.af_N_mg * Pi_star_mg_s * D_s
         if settings.hsr_calibration            
-            @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s)) * hsr_supp
+            @. spl += (pow_level_af_ng_w * F_ng_w + pow_level_af_ng_s * F_ng_s + pow_level_af_mg_w * F_mg_w + pow_level_af_mg_s * F_mg_s) * hsr_supp
         else
-            @. spl += 1/settings.p_ref^2 / (4 * π * r_s_star_af^2) / (1 - M_0 * cos(theta * π / 180.))^4 * (ac.af_N_ng * (Pi_star_ng_w * F_ng_w * D_w + Pi_star_ng_s * F_ng_s * D_s) + ac.af_N_mg * (Pi_star_mg_w * F_mg_w * D_w + Pi_star_mg_s * F_mg_s * D_s))
+            @. spl += (pow_level_af_ng_w * F_ng_w + pow_level_af_ng_s * F_ng_s + pow_level_af_mg_w * F_mg_w + pow_level_af_mg_s * F_mg_s)
         end
     end
 end
 
 function airframe!(spl, pyna_ip, settings, ac, f, M_0, mu_0, c_0, rho_0, theta, phi, theta_flaps, I_landing_gear)
-    
     
     # HSR calibration
     hsr_supp = pyna_ip.f_hsr_supp.(f, theta*ones(eltype(theta_flaps), (settings.N_f, )))

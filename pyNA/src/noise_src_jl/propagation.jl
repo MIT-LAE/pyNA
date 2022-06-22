@@ -27,13 +27,17 @@ function propagation!(spl, pyna_ip, settings, f_sb, x_obs, r, x, z, c_bar, rho_0
     if settings.groundeffects
         # Empirical lateral attenuation for microphone on sideline
         if (settings.lateral_attenuation == true) && (x_obs[2] != 0)
+            ## Source: Variable Noise Reduction Systems for a Notional Supersonic Business Jet (J. Berton, 2022)
+            # Compute pseudo-altitude, pseudo-distance, and pseudo-angle between centerline observer and source
+            z_pseudo = sqrt(z + x_obs[2])
+            r_pseudo = sqrt((x-x_obs[1])^2 + 1^2 + (z_pseudo-x_obs[3])^2)
+            beta_pseudo = asin((-x_obs[3] + z_pseudo)/r_pseudo) * (180/ pi)
+            
+            # Apply ground reflections using pseudo points
+            ground_reflections!(spl_sb, pyna_ip, settings, f_sb, x_obs, r_pseudo, beta_pseudo, c_bar, rho_0)
+
             # Lateral attenuation factor
             lateral_attenuation!(spl_sb, settings, beta, x_obs)
-            
-            # Ground reflection factor for center-line
-            r_cl = sqrt((x-x_obs[1])^2 + 1^2 + z^2)
-            beta_cl = asin(z/r_cl) * (180/ pi)
-            ground_reflections!(spl_sb, pyna_ip, settings, f_sb, x_obs, r_cl, beta_cl, c_bar, rho_0)
         else
             ground_reflections!(spl_sb, pyna_ip, settings, f_sb, x_obs, r, beta, c_bar, rho_0)
         end

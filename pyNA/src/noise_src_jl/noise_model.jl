@@ -21,12 +21,12 @@ include("propagation.jl")
 include("split_subbands.jl")
 include("lateral_attenuation.jl")
 include("spl.jl")
+include("aspl.jl")
 include("oaspl.jl")
 include("pnlt.jl")
 include("epnl.jl")
 include("ilevel.jl")
 include("aspl.jl")
-include("sel.jl")
 include("smooth_max.jl")
 
 
@@ -72,6 +72,7 @@ struct PynaInterpolations
     f_faddeeva_real
     f_faddeeva_imag
     f_noy  # Noy
+    f_aw
 end
 
 function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::String)
@@ -213,8 +214,8 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
                     jet_mixing!(spl_j, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_star, rho_j_star, A_j_star, Tt_j_star)
                 end
                 if settings.jet_shock
-                    # Only shock noise if jet Mach number is larger than 1
-                    if M_j > 1
+                    # Only shock noise if jet Mach number is larger than 1. Choose 1.01 to avoid ill-defined derivatives.
+                    if M_j > 1.01
                         jet_shock!(spl_j, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_star, M_j, A_j_star, Tt_j_star)
                     end
                 end
@@ -237,7 +238,7 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
                 elseif settings.levels_int_metric in ["ipnlt", "epnl"]
                     level[i, j] = f_pnlt(pyna_ip, settings, f, spl_j)
                 elseif settings.levels_int_metric == "sel"
-                    level[i, j] = f_aspl(data, spl_j)
+                    level[i, j] = f_aspl(f, spl_j)
                 end
             end
         
@@ -335,7 +336,8 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
     f_hsr_supp = get_airframe_interpolation_functions(data)
     f_abs, f_faddeeva_real, f_faddeeva_imag = get_propagation_interpolation_functions(data)
     f_noy = get_noy_interpolation_functions(data)
-    pyna_ip = PynaInterpolations(f_supp_fi, f_supp_fd, f_F3IB, f_F3DB, f_F3TI, f_F3TD, f_F2CT, f_TCS_takeoff_ih1, f_TCS_takeoff_ih2, f_TCS_approach_ih1, f_TCS_approach_ih2, f_D_core, f_S_core, f_omega_jet, f_log10P_jet, f_log10D_jet, f_xi_jet, f_log10F_jet, f_m_theta_jet, f_C_jet, f_H_jet, f_hsr_supp, f_abs, f_faddeeva_real, f_faddeeva_imag, f_noy)
+    f_aw = get_a_weighting_interpolation_functions(data)
+    pyna_ip = PynaInterpolations(f_supp_fi, f_supp_fd, f_F3IB, f_F3DB, f_F3TI, f_F3TD, f_F2CT, f_TCS_takeoff_ih1, f_TCS_takeoff_ih2, f_TCS_approach_ih1, f_TCS_approach_ih2, f_D_core, f_S_core, f_omega_jet, f_log10P_jet, f_log10D_jet, f_xi_jet, f_log10F_jet, f_m_theta_jet, f_C_jet, f_H_jet, f_hsr_supp, f_abs, f_faddeeva_real, f_faddeeva_imag, f_noy, f_aw)
 
     # Define noise function
     noise_model_fwd = (x)->noise_model(pyna_ip, settings, data, ac, idx, objective, x)

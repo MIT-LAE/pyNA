@@ -6,7 +6,6 @@ from pyNA.src.settings import Settings
 from pyNA.src.trajectory_src.atmosphere import Atmosphere
 from pyNA.src.trajectory_src.flight_dynamics import FlightDynamics
 from pyNA.src.trajectory_src.clcd import CLCD
-from pyNA.src.trajectory_src.ts_limit import TSLimit
 from pyNA.src.trajectory_src.aerodynamics import Aerodynamics
 from pyNA.src.trajectory_src.propulsion import Propulsion
 from pyNA.src.emissions import Emissions

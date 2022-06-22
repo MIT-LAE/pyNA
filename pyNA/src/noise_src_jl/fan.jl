@@ -108,9 +108,9 @@ function inlet_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float6
     F3IB = pyna_ip.f_F3IB(theta)
     
     # Component value:
-    spl_IB = tsqem .+ F1IB .+ F2IB .+ F3IB
+    spl_i_b = tsqem .+ F1IB .+ F2IB .+ F3IB
 
-    return spl_IB
+    return spl_i_b
 end
 
 function discharge_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
@@ -228,9 +228,9 @@ function discharge_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Fl
     end
 
     # Component value:
-    spl_DB = tsqem .+ F1DB .+ F2DB .+ F3DB .+ CDB
+    spl_d_b = tsqem .+ F1DB .+ F2DB .+ F3DB .+ CDB
 
-    return spl_DB
+    return spl_d_b
 end
 
 function inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
@@ -992,13 +992,13 @@ function fan!(spl, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0, theta
 
     # Calculate individual noise components
     if comp == "fan_inlet"
-        spl_IB = inlet_broadband(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
-        spl_DB = 0.
+        spl_i_b = inlet_broadband(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
+        spl_d_b = 0.
         tonlv_I = inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
         tonlv_X = 0.
     elseif comp == "fan_discharge"
-        spl_IB = 0.
-        spl_DB = discharge_broadband(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
+        spl_i_b = 0.
+        spl_d_b = discharge_broadband(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
         tonlv_I = 0.
         tonlv_X = discharge_tones(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
     end
@@ -1019,49 +1019,49 @@ function fan!(spl, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0, theta
     if settings.fan_BB_method == "allied_signal"
         # Eqn 2 or Figure 3A:
         # if f[j] / bpf < 2:
-        # FLOGinlet,exit = -10 * np.log10(np.exp(-0.35 * (np.log(f[j] / bpf / 2.0) / np.log(2.2))^2))
-        FLOGinlet = 2.445096095 * (log.(f / bpf / 2)).^2
+        # flog_i,exit = -10 * np.log10(np.exp(-0.35 * (np.log(f[j] / bpf / 2.0) / np.log(2.2))^2))
+        flog_i = 2.445096095 * (log.(f / bpf / 2)).^2
         # elif f[j] / bpf > 2:
-        # FLOGinlet,exit = -10 * np.log10(np.exp(-2.0 * (np.log(f[j] / bpf / 2.0) / np.log(2.2))^2))
-        FLOGinlet[f/bpf .> 2] = (13.97197769 * (log.(f / bpf / 2)).^2)[f/bpf .> 2]
-        FLOGexit = FLOGinlet
+        # flog_i,exit = -10 * np.log10(np.exp(-2.0 * (np.log(f[j] / bpf / 2.0) / np.log(2.2))^2))
+        flog_i[f/bpf .> 2] = (13.97197769 * (log.(f / bpf / 2)).^2)[f/bpf .> 2]
+        flog_e = flog_i
 
     elseif settings.fan_BB_method == "kresja"
         # Eqn 2 or Figure 3A:
-        # FLOGinlet = -10 * np.log10(np.exp(-0.5 * (np.log(f[j] / bpf / 4) / np.log(2.2))^2))
+        # flog_i = -10 * np.log10(np.exp(-0.5 * (np.log(f[j] / bpf / 4) / np.log(2.2))^2))
         # Which may be simplified as:
-        FLOGinlet = 3.4929944 * (log.(f / bpf / 4)).^2
-        # FLOGexit = -10 * np.log10(np.exp(-0.5 * (np.log(f[j] / bpf / 2.5) / np.log(2.2))^2))
+        flog_i = 3.4929944 * (log.(f / bpf / 4)).^2
+        # flog_e = -10 * np.log10(np.exp(-0.5 * (np.log(f[j] / bpf / 2.5) / np.log(2.2))^2))
         # Which may be simplified as:
-        FLOGexit = 3.4929944 * (log.(f / bpf / 2.5)).^2
+        flog_e = 3.4929944 * (log.(f / bpf / 2.5)).^2
     else
         # For the original or the GE large fan methods:
         # Eqn 2 or Figure 3A:
-        # FLOGinlet,exit = -10 * np.log10(np.exp(-0.5 * (np.log(f[j] / bpf / 2.5) / np.log(2.2))^2))
+        # flog_i,exit = -10 * np.log10(np.exp(-0.5 * (np.log(f[j] / bpf / 2.5) / np.log(2.2))^2))
         # Which may be simplified as:
-        FLOGinlet = 3.4929944 * (log.(f ./ bpf / 2.5)).^2
-        FLOGexit = FLOGinlet
+        flog_i = 3.4929944 * (log.(f ./ bpf / 2.5)).^2
+        flog_e = flog_i
     end
 
     if comp == "fan_inlet" # or comp == "inlet BB":
-        PLEV = 10 .^(0.1 * (spl_IB .- FLOGinlet))
-        PLEV = PLEV .+ dp
+        pow_level_fan = 10 .^(0.1 * (spl_i_b .- flog_i))
+        pow_level_fan = pow_level_fan .+ dp
 
     # Add discrete tone and broadband components for exhaust noise:
     elseif comp == "fan_discharge" # or comp == "discharge BB":
-        PLEV = 10 .^(0.1 * (spl_DB .- FLOGexit))
-        PLEV = PLEV .+ dpx
+        pow_level_fan = 10 .^(0.1 * (spl_d_b .- flog_e))
+        pow_level_fan = pow_level_fan .+ dpx
     else
         throw(DomainError("Invalid component specified."))
     end
         
     # Add inlet combination tones if needed:
     if (M_tip > 1) && (settings.combination_tones == true)
-        PLEV = PLEV .+ dcp
+        pow_level_fan = pow_level_fan .+ dcp
     end
         
     # Add ambient correction. Multiply with number of engines
-    msap_j = ac.n_eng * PLEV * settings.p_ref^2
+    msap_j = ac.n_eng * pow_level_fan * settings.p_ref^2
 
     # Fan liner suppression
     if settings.fan_liner_suppression

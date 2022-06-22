@@ -457,7 +457,7 @@ class pyna:
 
         return results
 
-    # --- Plotting functions --------------------------------------------------------------------------------
+
     def plot_trajectory(self, problem, *problem_verify):
         # Check if problem_verify is empty
         if problem_verify:
@@ -468,50 +468,44 @@ class pyna:
         fig, ax = plt.subplots(2,3, figsize=(20, 8), dpi=100)
         plt.style.use(self.settings.pyNA_directory + '/utils/' + 'plot.mplstyle')
 
-        ax[0,0].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.z'), '-', label='Take-off trajectory module')
+        ax[0,0].plot(problem.get_val('trajectory.x'), problem.get_val('trajectory.z'), '-', label='Take-off trajectory module', color='k')
         if verification:
-            ax[0,0].plot(problem_verify['X [m]'], problem_verify['Z [m]'], '--', label='NASA STCA (Berton et al.)')
-        ax[0,0].set_xlabel('t [s]')
+            ax[0,0].plot(problem_verify['X [m]'], problem_verify['Z [m]'], '--', label='NASA STCA (Berton et al.)', color='tab:orange')
+        ax[0,0].set_xlabel('X [m]')
         ax[0,0].set_ylabel('Z [m]')
-        ax[0,0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, borderaxespad=0, frameon=False)
+        ax[0,0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=1, borderaxespad=0, frameon=False)
 
-        ax[0,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.v'), '-')
+        ax[0,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.v'), '-', color='k')
         if verification:
-            ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton et al.)')
+            ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton et al.)', color='tab:orange')
         ax[0,1].set_xlabel('t [s]')
         ax[0,1].set_ylabel(r'$v$ [m/s]')
 
-        ax[0,2].plot(problem.get_val('trajectory.t_s'), (np.arctan(0.04)*180/np.pi)*np.ones(np.size(problem.get_val('trajectory.t_s'))), 'k--')
-        ax[0,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.gamma'), '-')
+        ax[0,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.gamma'), '-', color='k')
         if verification:
-            ax[0,2].plot(problem_verify['t_source [s]'], problem_verify['gamma [deg]'], '--')
+            ax[0,2].plot(problem_verify['t_source [s]'], problem_verify['gamma [deg]'], '--', color='tab:orange')
         ax[0,2].set_xlabel('t [s]')
         ax[0,2].set_ylabel(r'$\gamma$ [deg]')
 
-        ax[1,0].plot(problem.get_val('trajectory.t_s'), 1 / 1000. * problem.get_val('trajectory.F_n'), '-')
+        ax[1,0].plot(problem.get_val('trajectory.t_s'), 1 / 1000. * problem.get_val('trajectory.F_n'), '-', color='k')
         if verification:
-            ax[1,0].plot(problem_verify['t_source [s]'], 1 / 1000. * problem_verify['F_n [N]'], '--')
+            ax[1,0].plot(problem_verify['t_source [s]'], 1 / 1000. * problem_verify['F_n [N]'], '--', color='tab:orange')
         ax[1,0].set_xlabel('t [s]')
         ax[1,0].set_ylabel(r'$F_n$ [kN]')
 
-        ax[1,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.alpha'), '-')
+        ax[1,1].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.TS'), '-', color='k')
         if verification:
-            ax[1,1].plot(problem_verify['t_source [s]'], problem_verify['alpha [deg]'], '--')
+            ax[1,1].plot(problem_verify['t_source [s]'], problem_verify['TS [-]'], '--', color='tab:orange')
         ax[1,1].set_xlabel('t [s]')
-        ax[1,1].set_ylabel(r'$\alpha$ [deg]')
-
-        colors=['tab:blue', 'tab:orange']
-        ax[1,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.theta_flaps'), '-', label=r'$\theta_{flaps}$', color=colors[0])
-        ax[1,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.theta_slats')/(-1), '-', label=r'$\theta_{slats}$', color=colors[1])
+        ax[1,1].set_ylabel(r'$TS$ [-]')
+        
+        ax[1,2].plot(problem.get_val('trajectory.t_s'), problem.get_val('trajectory.alpha'), '-', color='k')
         if verification:
-            ax[1,2].plot(problem_verify['t_source [s]'], problem_verify['Airframe delta_f [deg]'], '--', color=colors[0])
-            ax[1,2].plot(problem_verify['t_source [s]'], problem_verify['Airframe delta_s [deg]']/(-1), '--', color=colors[1])
+            ax[1,2].plot(problem_verify['t_source [s]'], problem_verify['alpha [deg]'], '--', color='tab:orange')
         ax[1,2].set_xlabel('t [s]')
-        ax[1,2].set_ylabel(r'$\theta$ [deg]')
-        ax[1,2].set_ylim([-2, 28])
-        ax[1,2].legend(ncol=1, borderaxespad=0, frameon=False)
- 
-        plt.subplots_adjust(hspace=0.4, wspace=0.3)
+        ax[1,2].set_ylabel(r'$\alpha$ [deg]')
+
+        plt.subplots_adjust(hspace=0.37, wspace=0.27)
         plt.show()
 
         return None

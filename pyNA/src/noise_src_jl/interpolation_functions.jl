@@ -198,11 +198,17 @@ end
 ## Noy table
 function get_noy_interpolation_functions(data)
     f_noy = LinearInterpolation((data.noy_spl, data.noy_freq), data.noy)
-
+    
     return f_noy
-
 end
 
+# A-weighting
+function get_a_weighting_interpolation_functions(data)
+
+    f_aw = LinearInterpolation(data.aw_freq, data.aw_db)
+
+    return f_aw
+end
 
 
 

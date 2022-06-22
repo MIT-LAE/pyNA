@@ -13,7 +13,6 @@ from pyNA.src.engine import Engine
 from scipy.interpolate import RegularGridInterpolator
 from pyNA.src.trajectory_src.trajectory_ode import TrajectoryODE
 from pyNA.src.trajectory_src.mux import Mux
-from pyNA.src.trajectory_src.surrogate_noise import SurrogateNoise
 
 
 class Trajectory:
@@ -25,10 +24,9 @@ class Trajectory:
 
         # Initialize path
         self.path = pd.DataFrame
-        self.n_t = np.int
+        self.n_t = np.int64
 
         # Initialize phases
-        # self.phase_name_lst = ['groundroll', 'rotation', 'liftoff', 'vnrs', 'cutback']
         self.phase_name_lst = ['groundroll', 'rotation', 'liftoff', 'vnrs', 'cutback']
         self.phases = dict()
 
@@ -118,74 +116,140 @@ class Trajectory:
   
         return size_output
 
-    @staticmethod
-    def compute_minimum_TS(settings: Settings, ac: Aircraft, engine: Engine) -> np.float64:
-        """
-        Compute minimum cutback thrust-setting meeting the 4%CG and one-engine-inoperative (OEI) airworthiness requirements.
+    # Compute minimum thrust requirement
+    def compute_minimum_TS(settings: Settings, ac: Aircraft, engine: Engine, z_lst=[1300, 1300], v_lst=[250, 250], gamma_lst=[0.0, np.arctan(0.04)*180/np.pi]):
         
-        :param settings: pyNA settings
-        :type settings: Settings
-        :param ac: aircraft parameters
-        :type ac: Aircraft
-        :param engine: engine parameters
-        :param engine: Engine
-        :return: TS_max
-        :rtype: np.float64
-
-        """
-
         # Initialize limiting cases
-        gamma_lst = np.array([0, 2.3])
+        case_lst = ['OEI', '4%CG']
         nr_engine_lst = np.array([ac.n_eng - 1, ac.n_eng])
-        
-        alpha = np.zeros(2)
-        TS_lst = np.zeros(2)
 
-        for cc, case in enumerate(['OEI', '4%CG']):
+        # Create engine deck interpolant
+        F_n_interp = RegularGridInterpolator((engine.deck['z'], engine.deck['M_0'], engine.deck['TS']), engine.deck['F_n'])
+        
+        sol = dict()
+        sol['alpha'] = np.zeros(2)
+        sol['c_l'] = np.zeros(2)
+        sol['c_d'] = np.zeros(2) 
+        sol['F_avail'] = np.zeros(2)
+        sol['F_req'] = np.zeros(2)
+        sol['TS'] = np.zeros(2)
+        
+        for i, case in enumerate(case_lst):
             # Compute atmospheric properties at ac.z_max
             prob_atm = om.Problem()
             prob_atm.model.add_subsystem("atm", Atmosphere(num_nodes=1, settings=settings))
             prob_atm.setup(force_alloc_complex=True)
-            prob_atm.set_val('atm.z', ac.z_max)
+            prob_atm.set_val('atm.z', z_lst[i])
             prob_atm.run_model()
             rho_0 = prob_atm.get_val('atm.rho_0')
             c_0 = prob_atm.get_val('atm.c_0')
-
-            # Lift requirement for horizontal, steady climbing flight
-            L = 9.80665 * ac.mtow * np.cos(gamma_lst[cc] * np.pi / 180.)
-            c_l = L / (0.5* rho_0 * ac.v_max ** 2 * ac.af_S_w)
-
-            # Compute required angle of attack to meet lift coefficient
-            c_l_interp = RegularGridInterpolator((ac.aero['alpha'], ac.aero['theta_flaps'], ac.aero['theta_slats']), ac.aero['c_l'])
+            
+            # Lift requirement for steady flight
+            L = 9.80665 * ac.mtow * np.cos(gamma_lst[i] * np.pi / 180.)
+            sol['c_l'][i] = L / (0.5* rho_0 * v_lst[i] ** 2 * ac.af_S_w)
+            
+            settings.theta_flaps = 10.
+            if settings.ac_name == 'stca':
+                settings.theta_slats = -6.
+            elif settings.ac_name == 'a10':
+                settings.theta_slats = 0.
+            
+            c_l_interp = RegularGridInterpolator((ac.aero['alpha'], ac.aero['theta_flaps'], ac.aero['theta_slats']), ac.aero['c_l'])        
             c_l_data = c_l_interp((ac.aero['alpha'], settings.theta_flaps, settings.theta_slats))
-            alpha[cc] = np.interp(c_l, c_l_data, ac.aero['alpha'])
-
-            # Compute corresponding drag coefficient
+            
             c_d_interp = RegularGridInterpolator((ac.aero['alpha'], ac.aero['theta_flaps'], ac.aero['theta_slats']), ac.aero['c_d'])
             c_d_data = c_d_interp((ac.aero['alpha'], settings.theta_flaps, settings.theta_slats))
-            c_d = np.interp(alpha[cc], ac.aero['alpha'], c_d_data)
             
-            # Compute thrust requirement
-            D = (c_d * 0.5 * rho_0 * ac.v_max ** 2 * ac.af_S_w) + ac.mtow * 9.80065 * np.sin(gamma_lst[cc] * np.pi / 180.)
-            F_req = D / nr_engine_lst[cc]
+            # Before stall
+            if sol['c_l'][i] <= np.max(c_l_data):         
+                # Compute required angle of attack to meet lift coefficient
+                sol['alpha'][i] = np.interp(sol['c_l'][i], c_l_data, ac.aero['alpha'])
 
+                # Compute corresponding drag coefficient
+                sol['c_d'][i] = np.interp(sol['alpha'][i], ac.aero['alpha'], c_d_data)
+
+            else:
+                sol['alpha'][i] = 100.
+                sol['c_d'][i] = 100.
+                
+            # Compute aircraft total thrust requirement
+            T = (sol['c_d'][i] * 0.5 * rho_0 * v_lst[i] ** 2 * ac.af_S_w) + ac.mtow * 9.80065 * np.sin(gamma_lst[i] * np.pi / 180.)
+
+            # Compute thrust requirement per engine
+            sol['F_req'][i] = T / nr_engine_lst[i]
+            
             # Compute thrust available
-            F_n_interp = RegularGridInterpolator((engine.deck['z'], engine.deck['M_0'], engine.deck['TS']), engine.deck['F_n'])
-            F_avl = F_n_interp([ac.z_max, ac.v_max / c_0, 1.])[0]
+            sol['F_avail'][i] = F_n_interp((z_lst[i], v_lst[i] / c_0, 1.))[0]
 
             # Compute minimum thrust setting
-            TS_lst[cc] = F_req / F_avl
-            # Print results
-            print(case, 'engine thrust-setting requirement: ', np.round(TS_lst[cc], 3))
+            sol['TS'][i] = sol['F_req'][i] / sol['F_avail'][i]
+                                
+        return sol
 
-            pdb.set_trace()
+    # @staticmethod
+    # def compute_minimum_TS(settings: Settings, ac: Aircraft, engine: Engine) -> np.float64:
+    #     """
+    #     Compute minimum cutback thrust-setting meeting the 4%CG and one-engine-inoperative (OEI) airworthiness requirements.
+        
+    #     :param settings: pyNA settings
+    #     :type settings: Settings
+    #     :param ac: aircraft parameters
+    #     :type ac: Aircraft
+    #     :param engine: engine parameters
+    #     :param engine: Engine
+    #     :return: TS_max
+    #     :rtype: np.float64
 
-        # Compute TS_max
-        TS_max = max(TS_lst)
+    #     """
 
-        pdb.set_trace()
+    #     # Initialize limiting cases
+    #     gamma_lst = np.array([0, 2.3])
+    #     nr_engine_lst = np.array([ac.n_eng - 1, ac.n_eng])
+        
+    #     alpha = np.zeros(2)
+    #     TS_lst = np.zeros(2)
 
-        return TS_max
+    #     for cc, case in enumerate(['OEI', '4%CG']):
+    #         # Compute atmospheric properties at ac.z_max
+    #         prob_atm = om.Problem()
+    #         prob_atm.model.add_subsystem("atm", Atmosphere(num_nodes=1, settings=settings))
+    #         prob_atm.setup(force_alloc_complex=True)
+    #         prob_atm.set_val('atm.z', ac.z_max)
+    #         prob_atm.run_model()
+    #         rho_0 = prob_atm.get_val('atm.rho_0')
+    #         c_0 = prob_atm.get_val('atm.c_0')
+
+    #         # Lift requirement for horizontal, steady climbing flight
+    #         L = 9.80665 * ac.mtow * np.cos(gamma_lst[cc] * np.pi / 180.)
+    #         c_l = L / (0.5* rho_0 * ac.v_max ** 2 * ac.af_S_w)
+
+    #         # Compute required angle of attack to meet lift coefficient
+    #         c_l_interp = RegularGridInterpolator((ac.aero['alpha'], ac.aero['theta_flaps'], ac.aero['theta_slats']), ac.aero['c_l'])
+    #         c_l_data = c_l_interp((ac.aero['alpha'], settings.theta_flaps, settings.theta_slats))
+    #         alpha[cc] = np.interp(c_l, c_l_data, ac.aero['alpha'])
+
+    #         # Compute corresponding drag coefficient
+    #         c_d_interp = RegularGridInterpolator((ac.aero['alpha'], ac.aero['theta_flaps'], ac.aero['theta_slats']), ac.aero['c_d'])
+    #         c_d_data = c_d_interp((ac.aero['alpha'], settings.theta_flaps, settings.theta_slats))
+    #         c_d = np.interp(alpha[cc], ac.aero['alpha'], c_d_data)
+            
+    #         # Compute thrust requirement
+    #         D = (c_d * 0.5 * rho_0 * ac.v_max ** 2 * ac.af_S_w) + ac.mtow * 9.80065 * np.sin(gamma_lst[cc] * np.pi / 180.)
+    #         F_req = D / nr_engine_lst[cc]
+
+    #         # Compute thrust available
+    #         F_n_interp = RegularGridInterpolator((engine.deck['z'], engine.deck['M_0'], engine.deck['TS']), engine.deck['F_n'])
+    #         F_avl = F_n_interp([ac.z_max, ac.v_max / c_0, 1.])[0]
+
+    #         # Compute minimum thrust setting
+    #         TS_lst[cc] = F_req / F_avl
+    #         # Print results
+    #         print(case, 'engine thrust-setting requirement: ', np.round(TS_lst[cc], 3))
+
+    #     # Compute TS_max
+    #     TS_max = max(TS_lst)
+
+    #     return TS_max
 
     def load_time_series(self, settings: Settings) -> None:
         """
@@ -300,8 +364,9 @@ class Trajectory:
         if settings.TS_cutback:
             TS_min = settings.TS_cutback
         else:
-            TS_min = Trajectory.compute_minimum_TS(settings=settings, ac=ac, engine=engine)
-        
+            sol = Trajectory.compute_minimum_TS(settings, ac, engine, z_lst=[1300*0.3048, 1300*0.3048], v_lst=[ac.v_max, ac.v_max], gamma_lst=[0.0, np.arctan(0.04)*180/np.pi])
+            TS_min = np.max(sol['TS'])
+
         # Phase 1: ground roll
         if 'groundroll' in self.phase_name_lst:
             opts = {'phase': 'groundroll', 'ac': ac, 'engine': engine, 'settings': settings, 'objective': objective}
@@ -361,7 +426,7 @@ class Trajectory:
             self.phases['liftoff'].add_control('alpha', targets='alpha', units='deg', lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
             self.phases['liftoff'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[2]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
             self.phases['liftoff'].add_path_constraint(name='flight_dynamics.gamma_dot', lower=0., units='deg/s')
-            self.phases['liftoff'].add_path_constraint(name='flight_dynamics.eas_dot', lower=0., units='m/s**2')
+            self.phases['liftoff'].add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
             self.phases['liftoff'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             self.phases['liftoff'].add_parameter('TS_min', units=None, val=1, dynamic=True, include_timeseries=True)
             # PHLD
@@ -387,7 +452,7 @@ class Trajectory:
             self.phases['vnrs'].add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
             self.phases['vnrs'].add_control('alpha', targets='alpha', units='deg', lower=5., upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
             self.phases['vnrs'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[3]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
-            self.phases['vnrs'].add_path_constraint(name='flight_dynamics.eas_dot', lower=0., units='m/s**2')
+            self.phases['vnrs'].add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
             self.phases['vnrs'].add_path_constraint(name='gamma', lower=0., units='deg', ref=10.)
             # PTCB
             if objective == 'noise' and settings.PTCB:
@@ -417,8 +482,8 @@ class Trajectory:
             self.phases['cutback'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
             self.phases['cutback'].add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
             self.phases['cutback'].add_control('alpha', targets='alpha', units='deg', lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
-            self.phases['cutback'].add_path_constraint(name='flight_dynamics.eas_dot', lower=0., units='m/s**2')
-            self.phases['cutback'].add_path_constraint(name='flight_dynamics.gamma_dot', upper=0., units='deg/s')
+            self.phases['cutback'].add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
+            # self.phases['cutback'].add_path_constraint(name='flight_dynamics.gamma_dot', upper=0., units='deg/s')
             self.phases['cutback'].add_boundary_constraint('v', loc='final', upper=ac.v_max, ref=100., units='m/s')
             self.phases['cutback'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[4]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
             # PTCB
@@ -611,15 +676,6 @@ class Trajectory:
             problem.model.connect('phases.liftoff.timeseries.states:x' , 'combined.x_to', src_indices=[-1])
             problem.model.connect('trajectory.x', 'combined.x_end', src_indices=[-1])
             problem.model.add_objective('objective', scaler=10.)
-
-        elif objective == 'noise_surrogate':
-            x_observer = np.array([6500., 0., 0.3048*4.])
-            problem.model.add_subsystem('noise', SurrogateNoise(num_nodes=self.trajectory_size, x_observer=x_observer), promotes_outputs=['noise'])
-            problem.model.connect('trajectory.x', 'noise.x')
-            problem.model.connect('trajectory.y', 'noise.y')
-            problem.model.connect('trajectory.z', 'noise.z')
-            problem.model.connect('trajectory.t_s', 'noise.t_s')
-            problem.model.add_objective('noise', scaler=1)
 
         else: 
             raise ValueError('Invalid control objective specified.')

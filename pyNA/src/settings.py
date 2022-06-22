@@ -45,7 +45,7 @@ class Settings(FrozenClass):
                 fan_RS_method = 'allied_signal',
                 ge_flight_cleanup = 'takeoff', 
                 levels_int_metric = 'epnl', 
-                engine_mounting = 'underwing', 
+                engine_mounting = 'fuselage', 
                 direct_propagation = True,
                 absorption = True, 
                 groundeffects = True, 

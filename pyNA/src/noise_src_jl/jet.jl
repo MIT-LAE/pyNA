@@ -41,10 +41,11 @@ function jet_mixing!(spl, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_sta
     # Calculate mean-square acoustic pressure (msap)
     # Source: Zorumski report 1982 part 2. Chapter 8.4 Equation 8
     # Multiply with number of engines and normalize msap by reference pressure
+    pow_level_jet = ac.n_eng / settings.p_ref^2 * Pi_star * A_j_star / (4 * π * r_s_star^2) * D_function / (1 - M_0 * cos(π / 180 * (theta - jet_delta))) * ((V_j_star - M_0) / V_j_star) ^ m_theta
     if settings.suppression && settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"] && TS > 0.8
-        @. spl +=  ac.n_eng / settings.p_ref^2 * Pi_star * A_j_star / (4 * π * r_s_star^2) * D_function * F_function / (1 - M_0 * cos(π / 180 * (theta - jet_delta))) * ((V_j_star - M_0) / V_j_star) ^ m_theta * 10 ^(-2.3 / 10.)
+        @. spl += pow_level_jet * 10 ^(-2.3 / 10.) * F_function
     else
-        @. spl +=  ac.n_eng / settings.p_ref^2 * Pi_star * A_j_star / (4 * π * r_s_star^2) * D_function * F_function / (1 - M_0 * cos(π / 180 * (theta - jet_delta))) * ((V_j_star - M_0) / V_j_star) ^ m_theta
+        @. spl += pow_level_jet * F_function
     end
 
 end
@@ -111,7 +112,6 @@ function jet_shock!(spl, pyna_ip, settings, ac, f, M_0, c_0, theta, TS, V_j_star
     # Calculate mean-square acoustic pressure (msap)
     # Source: Zorumski report 1982 part 2. Chapter 8.5 Equation 1
     # Multiply with number of engines and normalize msap by reference pressure
-    
     if settings.suppression && settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"] && TS > 0.8
         @. spl += ac.n_eng / settings.p_ref^2 * 1.92e-3 * A_j_star / (4 * π * r_s_star^2) * (1 + W) / (1 - M_0 * cos(π / 180 * (theta - jet_delta)))^4 * beta^eta * (10^log10H) * 10 ^(-2.3 / 10.)
     else

@@ -24,10 +24,11 @@ function core_ge!(spl, pyna_ip, settings, ac, f, M_0, theta, TS, mdoti_c_star, T
     # # Calculate mean-square acoustic pressure (msap)
     # # Source Zorumski report 1982 part 2. Chapter 8.2 Equation 1
     # # Multiply with number of engines and normalize msap by reference pressure
+    pow_level_core = ac.n_eng / settings.p_ref^2 * Pi_star * A_c_star / (4 * π * r_s_star^2) * D_funct / (1 - M_0 * cos(π / 180. * theta))^4
     if settings.suppression && settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"] && TS > 0.8
-        @. spl += ac.n_eng / settings.p_ref^2 * Pi_star * A_c_star / (4 * π * r_s_star^2) * D_funct * S_funct / (1 - M_0 * cos(π / 180. * theta))^4 * 10 ^(-2.3 / 10.) 
+        @. spl += pow_level_core * 10 ^(-2.3 / 10.) * S_funct
     else
-        @. spl += ac.n_eng / settings.p_ref^2 * Pi_star * A_c_star / (4 * π * r_s_star^2) * D_funct * S_funct / (1 - M_0 * cos(π / 180. * theta))^4
+        @. spl += pow_level_core * S_funct
     end
 
 end
@@ -62,10 +63,11 @@ function core_pw!(spl, pyna_ip, settings, ac, f, M_0, theta, TS, mdoti_c_star, T
     # Calculate mean-square acoustic pressure (msap)
     # Source Zorumski report 1982 part 2. Chapter 8.2 Equation 1
     # Multiply with number of engines and normalize msap by reference pressure
+    pow_level_core = ac.n_eng / settings.p_ref^2 * Pi_star * A_c_star / (4 * π * r_s_star^2) * D_funct / (1. - M_0 * cos.(π / 180. * theta))^4
     if settings.suppression && settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"] && TS > 0.8
-        @. spl += ac.n_eng / settings.p_ref^2 * Pi_star * A_c_star / (4 * π * r_s_star^2) * D_funct * S_funct / (1. - M_0 * cos.(π / 180. * theta))^4 * 10 ^(-2.3 / 10.) 
+        @. spl += pow_level_core * 10 ^(-2.3 / 10.) * S_funct
     else
-        @. spl += ac.n_eng / settings.p_ref^2 * Pi_star * A_c_star / (4 * π * r_s_star^2) * D_funct * S_funct / (1. - M_0 * cos.(π / 180. * theta))^4
+        @. spl += pow_level_core * S_funct
     end
 
 end
