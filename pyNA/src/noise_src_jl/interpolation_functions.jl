@@ -120,8 +120,8 @@ function get_core_interpolation_functions()
 	f_D_core = LinearInterpolation(array_1, array_2)
 
 	# Take the S function as SAE ARP876E Table 17 and all other values which are not in the table from Zorumski report 1982 part 2. Chapter 8.2 Table III
-	array_1 = range(-1.1, 1.6, step=0.1)
-	array_2 = [-3.87, -3.47, -3.12, -2.72, -2.32, -1.99, -1.7, -1.41, -1.17, -0.97, -0.82, -0.72, -0.82, -0.97, -1.17, -1.41, -1.7, -1.99, -2.32, -2.72, -3.12, -3.47, -3.87, -4.32, -4.72, -5.22, -5.7, -6.2]
+	array_1 = range(-1.7, 2.0, step=0.1)
+	array_2 = [-6.27, -5.87, -5.47, -5.07, -4.67, -4.27, -3.87, -3.47, -3.12, -2.72, -2.32, -1.99, -1.7, -1.41, -1.17, -0.97, -0.82, -0.72, -0.82, -0.97, -1.17, -1.41, -1.7, -1.99, -2.32, -2.72, -3.12, -3.47, -3.87, -4.32, -4.72, -5.22, -5.7, -6.2, -6.7, -7.2, -7.7, -8.2]
 	f_S_core = LinearInterpolation(array_1, array_2)
 
 	return f_D_core, f_S_core

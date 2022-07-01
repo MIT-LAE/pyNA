@@ -87,7 +87,7 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
 
         # Number of observers
         n_obs = size(settings.x_observer_array)[1]
-
+        
         # Frequency bands
         f = data.f
         f_sb = data.f_sb
@@ -193,7 +193,7 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
                 end
 
                 # shielding
-                shield = shielding(settings, data, j, settings.observer_lst[i])
+                shield = shielding(settings, data, j, i)
 
                 # Compute source
                 spl_j = 1e-99*ones(T, (settings.N_f,))
@@ -248,6 +248,7 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
             elseif settings.levels_int_metric == "epnl"
                 level_int[i] = f_epnl(t_o[i,:], level[i,:])
             end
+
         end
 
         # Write output

@@ -484,7 +484,7 @@ class Trajectory:
             self.phases['cutback'].add_control('alpha', targets='alpha', units='deg', lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
             self.phases['cutback'].add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
             # self.phases['cutback'].add_path_constraint(name='flight_dynamics.gamma_dot', upper=0., units='deg/s')
-            self.phases['cutback'].add_boundary_constraint('v', loc='final', upper=ac.v_max, ref=100., units='m/s')
+            self.phases['cutback'].add_boundary_constraint('v', loc='final', equals=ac.v_max, ref=100., units='m/s')
             self.phases['cutback'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[4]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
             # PTCB
             self.phases['cutback'].add_parameter('TS', targets='propulsion.TS', units=None, val=TS_min, dynamic=True, include_timeseries=True)
@@ -550,8 +550,7 @@ class Trajectory:
                 traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'z', 'v', 'alpha', 'gamma'])
             elif trajectory_mode == 'cutback':
                 traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
-            # if objective == 'noise' and settings.PTCB:
-                # traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+            
             if objective == 'noise' and settings.PHLD:
                 traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
@@ -741,6 +740,7 @@ class Trajectory:
                 problem['phases.cutback.controls:alpha'] = self.phases['cutback'].interp(ys=[15., 15.], nodes='control_input')
                 
         else:
+
             # Phase 1: groundroll 
             if 'groundroll' in self.phase_name_lst:
                 problem['phases.groundroll.t_initial'] = init_trajectory.get_val('phases.groundroll.t_initial')
@@ -760,7 +760,7 @@ class Trajectory:
                 problem['phases.rotation.states:alpha'] = init_trajectory.get_val('phases.rotation.states:alpha')
 
             # Phase 3-5: liftoff-cutback
-            for j, phase_name in enumerate(self.phase_name_lst[3:]):
+            for j, phase_name in enumerate(self.phase_name_lst[2:]):
                 problem['phases.' + phase_name + '.t_initial'] = init_trajectory.get_val('phases.' + phase_name + '.t_initial')
                 problem['phases.' + phase_name + '.t_duration'] = init_trajectory.get_val('phases.' + phase_name + '.t_duration')
                 problem['phases.' + phase_name + '.timeseries.time'] = init_trajectory.get_val('phases.' + phase_name + '.timeseries.time')
@@ -769,8 +769,6 @@ class Trajectory:
                 problem['phases.' + phase_name + '.states:v'] = init_trajectory.get_val('phases.' + phase_name + '.states:v')
                 problem['phases.' + phase_name + '.states:gamma'] = init_trajectory.get_val('phases.' + phase_name + '.states:gamma')
                 problem['phases.' + phase_name + '.controls:alpha'] = init_trajectory.get_val('phases.' + phase_name + '.controls:alpha')
-                # if phase_name == 'vnrs' and settings.PTCB:
-                    # problem['phases.' + phase_name + '.controls:TS'] = init_trajectory.get_val('phases.' + phase_name + '.controls:TS')
 
         # Run problem
         dm.run_problem(problem, run_driver=run_driver)

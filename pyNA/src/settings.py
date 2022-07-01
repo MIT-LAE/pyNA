@@ -84,7 +84,7 @@ class Settings(FrozenClass):
                 theta_slats = -6., 
                 n_order = 3,
                 max_iter = 200, 
-                tol = 1e-3):
+                tol = 1e-5):
 
         """
         Initialize pyNA settings class

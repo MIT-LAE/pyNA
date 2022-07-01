@@ -1,11 +1,11 @@
-function shielding(settings, data, j, observer)
+function shielding(settings, data, j, i)
     
     if settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"] && settings.shielding == true
-        if observer == "lateral"
+        if settings.observer_lst[i] == "lateral"
             return data.shield_l[j, :]
-        elseif observer == "flyover"
+        elseif settings.observer_lst[i] == "flyover"
             return data.shield_f[j, :]
-        elseif observer == "approach"
+        elseif settings.observer_lst[i] == "approach"
             return data.shield_a[j, :]
         end
     else

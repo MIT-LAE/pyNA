@@ -1043,12 +1043,12 @@ function fan!(spl, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0, theta
         flog_e = flog_i
     end
 
-    if comp == "fan_inlet" # or comp == "inlet BB":
+    if comp == "fan_inlet"
         pow_level_fan = 10 .^(0.1 * (spl_i_b .- flog_i))
         pow_level_fan = pow_level_fan .+ dp
 
     # Add discrete tone and broadband components for exhaust noise:
-    elseif comp == "fan_discharge" # or comp == "discharge BB":
+    elseif comp == "fan_discharge"
         pow_level_fan = 10 .^(0.1 * (spl_d_b .- flog_e))
         pow_level_fan = pow_level_fan .+ dpx
     else

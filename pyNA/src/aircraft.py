@@ -253,7 +253,7 @@ class Aircraft:
             self.aero['theta_flaps_c_d_min_gr'] = theta_flaps_lst[np.argmin(c_d_flaps)]
 
         elif settings.ac_name == 'a10':
-            self.aero['alpha'] = np.array([-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+            self.aero['alpha'] = np.array([-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25])
             self.aero['theta_flaps'] = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0])
             self.aero['theta_slats'] = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0])
             self.aero['c_l'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/aircraft/c_l_' + settings.ac_name + '.npy')

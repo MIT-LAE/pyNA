@@ -332,7 +332,7 @@ class pyna:
 
         # Get list of observers
         self.settings.x_observer_array = np.zeros((n_sideline+1, 3))
-        self.settings.x_observer_array[:-1, 0] = np.linspace(1000, 5500, n_sideline)
+        self.settings.x_observer_array[:-1, 0] = np.linspace(1000, 5200, n_sideline)
         self.settings.x_observer_array[:-1, 1] = 450.
         self.settings.x_observer_array[:-1, 2] = 4 * 0.3048
         self.settings.x_observer_array[-1, 0] = 6500.
