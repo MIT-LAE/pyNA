@@ -451,9 +451,9 @@ class Trajectory:
             self.phases['vnrs'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
             self.phases['vnrs'].add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
             self.phases['vnrs'].add_control('alpha', targets='alpha', units='deg', lower=5., upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
-            self.phases['vnrs'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[3]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
             self.phases['vnrs'].add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
             self.phases['vnrs'].add_path_constraint(name='gamma', lower=0., units='deg', ref=10.)
+            self.phases['vnrs'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[3]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
             # PTCB
             if objective == 'noise' and settings.PTCB:
                 self.phases['vnrs'].add_control('TS', targets='propulsion.TS', units=None, upper=settings.TS_to, lower=TS_min, val=TS_min, opt=True, rate_continuity=True, rate2_continuity=False, ref=1.)
@@ -463,7 +463,6 @@ class Trajectory:
             # PHLD
             if objective == 'noise' and settings.PHLD:
                 self.phases['vnrs'].add_control('theta_flaps', targets='theta_flaps', units='deg', val=0., lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], opt=True, rate_continuity=True, rate2_continuity=False, ref=1.)
-                # self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=0., lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True)
             else:
                 self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['vnrs'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
@@ -477,13 +476,12 @@ class Trajectory:
                 self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=False, ref=10000.)
                 self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=1000.)
             elif trajectory_mode == 'cutback':
-                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=False, ref=10000.)
-                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=True, ref=1000.)
+                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=True, ref=10000.)
+                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
             self.phases['cutback'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
             self.phases['cutback'].add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
             self.phases['cutback'].add_control('alpha', targets='alpha', units='deg', lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
             self.phases['cutback'].add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
-            # self.phases['cutback'].add_path_constraint(name='flight_dynamics.gamma_dot', upper=0., units='deg/s')
             self.phases['cutback'].add_boundary_constraint('v', loc='final', equals=ac.v_max, ref=100., units='m/s')
             self.phases['cutback'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[4]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
             # PTCB
@@ -530,14 +528,10 @@ class Trajectory:
         # Link phases
         if 'rotation' in self.phase_name_lst:
             traj.link_phases(phases=['groundroll', 'rotation'], vars=['time', 'x', 'v', 'alpha'])
-            # if objective == 'noise' and settings.PHLD:
-                # traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
         if 'liftoff' in self.phase_name_lst:
             traj.link_phases(phases=['rotation', 'liftoff'], vars=['time', 'x', 'z', 'v', 'alpha', 'gamma'])
-            # if objective == 'noise' and settings.PHLD:
-                # traj.add_linkage_constraint(phase_a='rotation', phase_b='liftoff', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
-        
+            
         if 'vnrs' in self.phase_name_lst:
             traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
             if objective == 'noise' and settings.PTCB:
@@ -733,8 +727,8 @@ class Trajectory:
             if 'cutback' in self.phase_name_lst:
                 problem['phases.cutback.t_initial'] = 100.0
                 problem['phases.cutback.t_duration'] = 50.0
-                problem['phases.cutback.states:x'] = self.phases['cutback'].interp(ys=[6501., 20000.], nodes='state_input')
-                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, ac.z_max], nodes='state_input')
+                problem['phases.cutback.states:x'] = self.phases['cutback'].interp(ys=[6501., 15000.], nodes='state_input')
+                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, 1000.], nodes='state_input')
                 problem['phases.cutback.states:v'] = self.phases['cutback'].interp(ys=[110., 110.], nodes='state_input')
                 problem['phases.cutback.states:gamma'] = self.phases['cutback'].interp(ys=[15, 15.], nodes='state_input')
                 problem['phases.cutback.controls:alpha'] = self.phases['cutback'].interp(ys=[15., 15.], nodes='control_input')
