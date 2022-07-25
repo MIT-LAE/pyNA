@@ -22,8 +22,8 @@ function lateral_attenuation!(spl_sb, settings, beta, x_obs)
     end 
 
     # Over-ground attenuation [dB]
-    if abs(x_obs[2]) <= 914
-        g = 11.83 * (1 - exp(-0.00274 * abs(x_obs[2])))
+    if x_obs[2] <= 914
+        g = 11.83 * (1 - exp(-0.00274 * x_obs[2]))
     else
         g = 10.86  # 11.83*(1-exp(-0.00274*914))
     end

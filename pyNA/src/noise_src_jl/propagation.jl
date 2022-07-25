@@ -29,7 +29,7 @@ function propagation!(spl, pyna_ip, settings, f_sb, x_obs, r, x, z, c_bar, rho_0
         if (settings.lateral_attenuation == true) # && (x_obs[2] != 0)
             ## Source: Variable Noise Reduction Systems for a Notional Supersonic Business Jet (J. Berton, 2022)
             # Compute pseudo-altitude, pseudo-distance, and pseudo-angle between centerline observer and source
-            z_pseudo = sqrt(z^2 + x_obs[2]^2)
+            z_pseudo = sqrt((z+4)^2 + x_obs[2]^2)
             r_pseudo = sqrt((x-x_obs[1])^2 + 1^2 + (z_pseudo-x_obs[3])^2)
             beta_pseudo = asin((-x_obs[3] + z_pseudo)/r_pseudo) * (180/ pi)
             

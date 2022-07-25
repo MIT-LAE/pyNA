@@ -380,7 +380,7 @@ class Trajectory:
             self.phases['groundroll'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('TS_min', units=None, val=1, dynamic=True, include_timeseries=True)
             if settings.PKROT:
-                self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, lower=1.1, upper=2.0, dynamic=False, val=ac.k_rot, opt=True)
+                self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, lower=1.1, upper=1.6, dynamic=False, val=ac.k_rot, opt=True)
             else:
                 self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, dynamic=False, val=ac.k_rot, opt=False)
             self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
@@ -455,8 +455,8 @@ class Trajectory:
             self.phases['cutback'] = dm.Phase(ode_class=TrajectoryODE, transcription=self.transcription_phases[4], ode_init_kwargs=opts)
             self.phases['cutback'].set_time_options(initial_bounds=(10, 300), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)
             if trajectory_mode == 'flyover':
-                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=False, ref=10000.)
-                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=1000.)
+                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=True, ref=10000.)
+                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=False, ref=1000.)
             elif trajectory_mode == 'cutback':
                 self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=True, ref=10000.)
                 self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)

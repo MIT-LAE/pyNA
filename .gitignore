@@ -10,5 +10,3 @@ pyNA/cases/*
 !pyNA/cases/nasa_stca_standard
 
 wg3/
-
-*.ipynb
