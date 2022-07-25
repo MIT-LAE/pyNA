@@ -57,6 +57,7 @@ class Aerodynamics(om.ExplicitComponent):
         self.declare_partials(of='L', wrt='rho_0', dependent=True, rows=ar, cols=ar)
         self.declare_partials(of='L', wrt='v', dependent=True, rows=ar, cols=ar)
 
+        self.declare_partials(of='D', wrt='c_l', dependent=True, rows=ar, cols=ar)
         self.declare_partials(of='D', wrt='c_d', dependent=True, rows=ar, cols=ar)
         self.declare_partials(of='D', wrt='rho_0', dependent=True, rows=ar, cols=ar)
         self.declare_partials(of='D', wrt='v', dependent=True, rows=ar, cols=ar)
@@ -78,10 +79,15 @@ class Aerodynamics(om.ExplicitComponent):
         # Forces
         outputs['L'] = outputs['q'] * ac.af_S_w * inputs['c_l']
 
-        if phase_name in {'groundroll', 'rotation', 'liftoff'}:
-            outputs['D'] = outputs['q'] * ac.af_S_w * (inputs['c_d'] + ac.c_d_g)
-        elif phase_name in {'vnrs', 'cutback'}:
-            outputs['D'] = outputs['q'] * ac.af_S_w * inputs['c_d']
+        constant_LD = False
+        if constant_LD:
+            L_D = 6.718101501415649 
+            outputs['D'] = outputs['q'] * ac.af_S_w * inputs['c_l']/L_D
+        else:
+            if phase_name in {'groundroll', 'rotation', 'liftoff'}:
+                outputs['D'] = outputs['q'] * ac.af_S_w * (inputs['c_d'] + ac.c_d_g)
+            elif phase_name in {'vnrs', 'cutback'}:
+                outputs['D'] = outputs['q'] * ac.af_S_w * inputs['c_d']
 
     def compute_partials(self, inputs:openmdao.vectors.default_vector.DefaultVector, partials: openmdao.vectors.default_vector.DefaultVector):
         # Load options
@@ -98,13 +104,22 @@ class Aerodynamics(om.ExplicitComponent):
         partials['L', 'rho_0'] = inputs['c_l'] * 1/2. * inputs['v']**2 * ac.af_S_w
         partials['L', 'v'] = inputs['c_l'] * inputs['rho_0'] * inputs['v'] * ac.af_S_w
 
-        partials['D', 'c_d'] = q * ac.af_S_w
-        if phase_name in {'groundroll', 'rotation', 'liftoff'}:
-            partials['D', 'rho_0'] = (inputs['c_d'] + ac.c_d_g) * 1/2. * inputs['v']**2 * ac.af_S_w
-            partials['D', 'v'] = (inputs['c_d'] + ac.c_d_g) * inputs['rho_0'] * inputs['v'] * ac.af_S_w
-        elif phase_name in {'vnrs', 'cutback'}:
-            partials['D', 'rho_0'] = inputs['c_d'] * 1/2. * inputs['v']**2 * ac.af_S_w
-            partials['D', 'v'] = inputs['c_d'] * inputs['rho_0'] * inputs['v'] * ac.af_S_w 
+        constant_LD = False
+        if constant_LD:
+            L_D = 6.718101501415649
+            partials['D', 'c_d'] = 0.
+            partials['D', 'c_l'] = q * ac.af_S_w * 1/L_D
+            partials['D', 'rho_0'] = 1/2 * inputs['v']**2 * ac.af_S_w * inputs['c_l']/L_D
+            partials['D', 'v'] = inputs['rho_0'] * inputs['v'] * ac.af_S_w * inputs['c_l']/L_D
+        else:
+            partials['D', 'c_d'] = q * ac.af_S_w
+            partials['D', 'c_l'] = 0.
+            if phase_name in {'groundroll', 'rotation', 'liftoff'}:
+                partials['D', 'rho_0'] = (inputs['c_d'] + ac.c_d_g) * 1/2. * inputs['v']**2 * ac.af_S_w
+                partials['D', 'v'] = (inputs['c_d'] + ac.c_d_g) * inputs['rho_0'] * inputs['v'] * ac.af_S_w
+            elif phase_name in {'vnrs', 'cutback'}:
+                partials['D', 'rho_0'] = inputs['c_d'] * 1/2. * inputs['v']**2 * ac.af_S_w
+                partials['D', 'v'] = inputs['c_d'] * inputs['rho_0'] * inputs['v'] * ac.af_S_w 
 
         partials['M_0', 'v'] = 1.0 / inputs['c_0']
         partials['M_0', 'c_0'] = -inputs['v'] / inputs['c_0'] ** 2

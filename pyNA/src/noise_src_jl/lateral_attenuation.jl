@@ -6,26 +6,26 @@ function lateral_attenuation!(spl_sb, settings, beta, x_obs)
     elseif settings.engine_mounting == "fuselage"
         E_eng = 10 * log10((0.1225 * cos(beta*pi/180)^2 + sin(beta*pi/180)^2)^0.329)
     elseif settings.engine_mounting == "propeller"
-        E_eng = zeros(size(beta))
+        E_eng = 0.
     elseif settings.engine_mounting == "none"
-        E_eng = zeros(size(beta))
+        E_eng = 0.
     end
 
     # Attenuation caused by ground and refracting-scattering effects [dB]
     # Note: beta is in degrees
     if beta < 50.
         A_grs = 1.137 - 0.0229*beta + 9.72*exp(-0.142*beta)
+    elseif beta < 0.
+        throw(DomainError(beta, "beta is outside the valid domain (beta > 0)"))
     else
         A_grs = 0.
     end 
 
     # Over-ground attenuation [dB]
-    if 0. <= x_obs[2] <= 914
-        g = 11.83 * (1 - exp(-0.00274 * x_obs[2]))
-    elseif x_obs[2] > 914
-        g = 10.86  # 11.83*(1-exp(-0.00274*914))
+    if abs(x_obs[2]) <= 914
+        g = 11.83 * (1 - exp(-0.00274 * abs(x_obs[2])))
     else
-        throw(DomainError("Lateral sideline distance negative."))
+        g = 10.86  # 11.83*(1-exp(-0.00274*914))
     end
 
     # Overall lateral attenuation

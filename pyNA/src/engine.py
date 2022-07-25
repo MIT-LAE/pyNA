@@ -115,7 +115,7 @@ class Engine:
                 for k in np.flip(np.arange(self.deck['TS'].shape[0])):
                     cntr = cntr + 1
                     # F_n[i, j, k] = 1000. * data['DP.NetThrust[kN]'].values[cntr]
-                    self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr]
+                    self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 83821.6 * settings.Foo
                     self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[cntr]
 
                     self.deck['V_j'][i, j, k] = data['jet_V [m/s]'].values[cntr]
@@ -140,11 +140,5 @@ class Engine:
                     self.deck['A_f'][i, j, k] = data['fan_A [m2]'].values[cntr]
                     self.deck['d_f'][i, j, k] = data['fan_d [m]'].values[cntr]
                     self.deck['M_d_f'][i, j, k] = data['fan_M_d [-]'].values[cntr]
-
-        # Load minimum thrust setting
-        # self.TS_limit['z'] = np.linspace(0, 1500, 17)
-        # self.TS_limit['v'] = np.linspace(80, 130, 21)
-        # self.TS_limit['theta_flaps'] = np.linspace(0, 26, 14)
-        # self.TS_limit['TS_min'] = np.load(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/TS_min.npy')
 
         return None

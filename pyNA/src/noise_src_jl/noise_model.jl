@@ -238,7 +238,7 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
                 elseif settings.levels_int_metric in ["ipnlt", "epnl"]
                     level[i, j] = f_pnlt(pyna_ip, settings, f, spl_j)
                 elseif settings.levels_int_metric == "sel"
-                    level[i, j] = f_aspl(f, spl_j)
+                    level[i, j] = f_aspl(pyna_ip, f, spl_j)
                 end
             end
         
@@ -255,7 +255,9 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
         if objective == "noise"
             k_smooth = 50.
             level_lateral = smooth_max(k_smooth, level_int[1:end-1])
-            return [level_lateral, level_int[end]]
+            objective = level_int[end]
+
+            return [level_lateral, objective]
         else
             return t_o, spl, level, level_int
         end

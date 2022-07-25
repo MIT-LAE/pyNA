@@ -84,7 +84,8 @@ class Settings(FrozenClass):
                 theta_slats = -6., 
                 n_order = 3,
                 max_iter = 200, 
-                tol = 1e-5):
+                tol = 1e-5,
+                Foo = 83821.6):
 
         """
         Initialize pyNA settings class
@@ -213,6 +214,8 @@ class Settings(FrozenClass):
         :type max_iter: int
         :param tol: Tolerance for trajectory computations [-]
         :type tol: float
+        :param Foo: sea level static thrust [N]
+        :type Foo: float
 
         """
 
@@ -287,6 +290,8 @@ class Settings(FrozenClass):
         self.n_order = n_order
         self.max_iter = max_iter
         self.tol = tol
+
+        self.Foo = Foo
 
         # Freeze self.settings
         self._freeze()

@@ -380,13 +380,9 @@ class Trajectory:
             self.phases['groundroll'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('TS_min', units=None, val=1, dynamic=True, include_timeseries=True)
             if settings.PKROT:
-                self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, lower=1.1, upper=1.6, dynamic=False, val=ac.k_rot, opt=True)
+                self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, lower=1.1, upper=2.0, dynamic=False, val=ac.k_rot, opt=True)
             else:
                 self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, dynamic=False, val=ac.k_rot, opt=False)
-            # PHLD
-            # if objective == 'noise' and settings.PHLD:
-                # self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=ac.aero['theta_flaps_c_d_min_gr'], dynamic=True, include_timeseries=True, opt=False)
-            # else:
             self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[0]-1,order=3, solve_segments=False, compressed=True), subset='state_input')
@@ -396,7 +392,7 @@ class Trajectory:
         if 'rotation' in self.phase_name_lst:
             opts = {'phase': 'rotation', 'ac': ac, 'engine': engine, 'settings': settings, 'objective': objective}
             self.phases['rotation'] = dm.Phase(ode_class=TrajectoryODE, transcription=self.transcription_phases[1], ode_init_kwargs=opts)
-            self.phases['rotation'].set_time_options(initial_bounds=(20, 60), duration_bounds=(0, 60), initial_ref=100., duration_ref=100.)
+            self.phases['rotation'].set_time_options(initial_bounds=(10, 60), duration_bounds=(0, 60), initial_ref=100., duration_ref=100.)
             self.phases['rotation'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=False, ref=1000.)
             self.phases['rotation'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
             self.phases['rotation'].add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], ref=10.)
@@ -404,11 +400,6 @@ class Trajectory:
             self.phases['rotation'].add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
             self.phases['rotation'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             self.phases['rotation'].add_parameter('TS_min', units=None, val=1, dynamic=True, include_timeseries=True)
-            # PHLD
-            # if objective == 'noise' and settings.PHLD:
-                # self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)
-                # self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=15., dynamic=True, include_timeseries=True)
-            # else:
             self.phases['rotation'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['rotation'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
             self.phases['rotation'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[1]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
@@ -418,7 +409,7 @@ class Trajectory:
         if 'liftoff' in self.phase_name_lst:
             opts = {'phase': 'liftoff', 'ac': ac, 'engine': engine, 'settings': settings, 'objective': objective}
             self.phases['liftoff'] = dm.Phase(ode_class=TrajectoryODE, transcription=self.transcription_phases[2], ode_init_kwargs=opts)
-            self.phases['liftoff'].set_time_options(initial_bounds=(20, 150), duration_bounds=(0, 500), initial_ref=100., duration_ref=100., fix_duration=False)
+            self.phases['liftoff'].set_time_options(initial_bounds=(10, 150), duration_bounds=(0, 500), initial_ref=100., duration_ref=100., fix_duration=False)
             self.phases['liftoff'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=False, ref=10000.)
             self.phases['liftoff'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=10.)
             self.phases['liftoff'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
@@ -429,11 +420,6 @@ class Trajectory:
             self.phases['liftoff'].add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
             self.phases['liftoff'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             self.phases['liftoff'].add_parameter('TS_min', units=None, val=1, dynamic=True, include_timeseries=True)
-            # PHLD
-            # if objective == 'noise' and settings.PHLD:
-                # self.phases['liftoff'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], dynamic=True, include_timeseries=True, opt=True, ref=10.)                
-                # self.phases['liftoff'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=15, dynamic=True, include_timeseries=True, opt=True)
-            # else:
             self.phases['liftoff'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['liftoff'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
 
@@ -441,7 +427,7 @@ class Trajectory:
         if 'vnrs' in self.phase_name_lst:
             opts = {'phase': 'vnrs', 'ac': ac, 'engine': engine, 'settings': settings, 'objective': objective}
             self.phases['vnrs'] = dm.Phase(ode_class=TrajectoryODE, transcription=self.transcription_phases[3], ode_init_kwargs=opts)
-            self.phases['vnrs'].set_time_options(initial_bounds=(20, 150), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)            
+            self.phases['vnrs'].set_time_options(initial_bounds=(10, 300), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)            
             if trajectory_mode == 'flyover':
                 self.phases['vnrs'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=True, ref=10000.)
                 self.phases['vnrs'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
@@ -460,18 +446,14 @@ class Trajectory:
                 self.phases['vnrs'].add_path_constraint(name='TS', lower=TS_min, upper=1, units=None, ref=1.)
             else:
                 self.phases['vnrs'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_vnrs, dynamic=True, include_timeseries=True)
-            # PHLD
-            if objective == 'noise' and settings.PHLD:
-                self.phases['vnrs'].add_control('theta_flaps', targets='theta_flaps', units='deg', val=0., lower=ac.aero['theta_flaps'][0], upper=ac.aero['theta_flaps'][-1], opt=True, rate_continuity=True, rate2_continuity=False, ref=1.)
-            else:
-                self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
+            self.phases['vnrs'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
             self.phases['vnrs'].add_parameter('theta_slats', targets='theta_slats', units='deg', val=settings.theta_slats, dynamic=True, include_timeseries=True)
 
         # Phase 5: cutback phase
         if 'cutback' in self.phase_name_lst:
             opts = {'phase': 'cutback', 'ac': ac, 'engine': engine, 'settings': settings, 'objective': objective}
             self.phases['cutback'] = dm.Phase(ode_class=TrajectoryODE, transcription=self.transcription_phases[4], ode_init_kwargs=opts)
-            self.phases['cutback'].set_time_options(initial_bounds=(20, 150), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)
+            self.phases['cutback'].set_time_options(initial_bounds=(10, 300), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)
             if trajectory_mode == 'flyover':
                 self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=False, ref=10000.)
                 self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=1000.)
@@ -536,8 +518,8 @@ class Trajectory:
             traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
             if objective == 'noise' and settings.PTCB:
                 traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
-            if objective == 'noise' and settings.PHLD:
-                traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+            # if objective == 'noise' and settings.PHLD:
+                # traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
         if 'cutback' in self.phase_name_lst:
             if trajectory_mode == 'flyover':
@@ -545,8 +527,8 @@ class Trajectory:
             elif trajectory_mode == 'cutback':
                 traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
             
-            if objective == 'noise' and settings.PHLD:
-                traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+            # if objective == 'noise' and settings.PHLD:
+                # traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
         # Mux trajectory variables
         mux_t = problem.model.add_subsystem(name='trajectory', subsys=Mux(size_inputs=np.array(self.phase_size), size_output=self.trajectory_size))
@@ -655,7 +637,7 @@ class Trajectory:
             problem.model.add_objective('trajectory.x', index=-1, ref=1000.)
         
         elif objective == 't_end':
-            problem.model.add_objective('trajectory.t_s', index=-1, ref=1000.)
+            problem.model.add_objective('trajectory.t_s', index=-1, ref=100.)
         
         elif objective == 'noise':
             # Optimization bjective is set in the noise.setup_trajectory_noise() method

@@ -50,9 +50,10 @@ function geometry(x_obs, x, y, z, alpha, gamma, t_s, c_0, T_0)
     psi_B = 0.
 
     # Compute the relative observer-aircraft position vector i.e. difference between observer and ac coordinate
+    # Note: add 4 meters to the alitude of the aircraft (for engine height)
     r_1 =  x_obs[1] - x
     r_2 =  x_obs[2] - y
-    r_3 = -x_obs[3] + z
+    r_3 = -x_obs[3] + (z + 4.)
 
     # Normalize the distance vector
     r = sqrt(r_1 ^2 + r_2 ^2 + r_3 ^2)

@@ -101,9 +101,10 @@ class Geometry(om.ExplicitComponent):
                 psi_B = np.zeros(alpha.shape)
 
                 # Compute the relative observer-source position vector i.e. difference between observer and ac coordinate
+                # Note: add 4 meters to the alitude of the aircraft (for engine height)
                 r_0 =  settings.x_observer_array[i,0] - x
                 r_1 =  settings.x_observer_array[i,1] - y
-                r_2 = -settings.x_observer_array[i,2] + z
+                r_2 = -settings.x_observer_array[i,2] + (z + 4)
 
                 # Compute the distance of the observer-source vector
                 R = np.sqrt(r_0 ** 2 + r_1 ** 2 + r_2 ** 2)

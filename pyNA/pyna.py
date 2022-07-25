@@ -306,7 +306,7 @@ class pyna:
 
         return None
 
-    def optimize_trajectory_noise(self, n_sideline=1, init_traj_name=None) -> None:
+    def optimize_trajectory_noise(self, n_sideline=16, init_traj_name=None) -> None:
         """
         Optimize aircraft take-off trajectory for minimum noise signature.
 
@@ -332,7 +332,8 @@ class pyna:
 
         # Get list of observers
         self.settings.x_observer_array = np.zeros((n_sideline+1, 3))
-        self.settings.x_observer_array[:-1, 0] = np.linspace(1000, 5200, n_sideline)
+        # self.settings.x_observer_array[:-1, 0] = np.linspace(1300, 5200, n_sideline)
+        self.settings.x_observer_array[:-1, 0] = np.linspace(3000, 6500, n_sideline)
         self.settings.x_observer_array[:-1, 1] = 450.
         self.settings.x_observer_array[:-1, 2] = 4 * 0.3048
         self.settings.x_observer_array[-1, 0] = 6500.
@@ -522,6 +523,8 @@ class pyna:
 
         # Create figure
         fig, ax = plt.subplots(1, len(self.settings.observer_lst), figsize=(20, 4.3), dpi=100)
+        if len(self.settings.observer_lst) == 1:
+            ax = [ax]
         ax_zoom = copy.copy(ax)
         plt.style.use(self.settings.pyNA_directory + '/utils/' + 'plot.mplstyle')
 
@@ -541,7 +544,7 @@ class pyna:
                         ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.pnlt')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
                     else:
                         ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.pnlt')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
-                    ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [105, 105], alpha=0.15,
+                    ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [1.05*np.max(self.problem.get_val('noise.level')[i,:]), 1.05*np.max(self.problem.get_val('noise.level')[i,:])], alpha=0.15,
                                     label='EPNL domain of dependence', color=colors[0])
                     if self.settings.validation:
                         self.noise.data.load_trajectory_verification_data(settings=self.settings)
@@ -551,7 +554,7 @@ class pyna:
                     ax[i].grid(True)
                     ax[i].set_xlabel('Time after brake release [s]')
                     ax[i].tick_params(axis='both')
-                    ax[i].set_ylim([-5, 105])
+                    ax[i].set_ylim([-5, np.max(self.problem.get_val('noise.pnlt')[i,:])*1.05])
 
                     # Zoomed-in plots
                     ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
@@ -576,7 +579,7 @@ class pyna:
                 ax[i].grid(True)
                 ax[i].set_xlabel('Time after brake release [s]')
                 ax[i].tick_params(axis='both')
-                ax[i].set_ylim([-5, 105])
+                ax[i].set_ylim([-5, 110])
 
         elif self.settings.language == 'julia':
             # Iterate over observer locations
@@ -590,7 +593,7 @@ class pyna:
                     ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:180], self.problem.model.get_val('noise.level')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
                 else:
                     ax[i].plot(self.problem.model.get_val('noise.t_o')[i,:], self.problem.model.get_val('noise.level')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
-                ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [105, 105], alpha=0.15, label='EPNL domain of dependence', color=colors[0])
+                ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [1.05*np.max(self.problem.get_val('noise.level')[i,:]), 1.05*np.max(self.problem.get_val('noise.level')[i,:])], alpha=0.15, label='EPNL domain of dependence', color=colors[0])
                 if self.settings.validation:
                     self.noise.data.load_trajectory_verification_data(settings=self.settings)
                     ax[i].plot(self.noise.data.verification_trajectory[observer]['t observer [s]'],
@@ -615,10 +618,13 @@ class pyna:
                 ax[i].grid(True)
                 ax[i].set_xlabel('Time after brake release [s]')
                 ax[i].tick_params(axis='both')
-                ax[i].set_ylim([-5, 105])
+                ax[i].set_ylim([-5, 1.05*np.max(self.problem.get_val('noise.level')[i,:])])
 
-        ax[0].set_title('Lateral')
-        ax[1].set_title('Flyover')
+        if self.settings.observer_lst == ('lateral', 'flyover',):
+            ax[0].set_title('Lateral')
+            ax[1].set_title('Flyover')
+        elif self.settings.observer_lst == ('approach',):
+            ax[0].set_title('Approach')
         ax[0].set_ylabel('$PNLT$ [TPNdB]')
 
         # Set legend
@@ -766,6 +772,108 @@ class pyna:
         return None
 
     @staticmethod
+    def load_annex16_noise_limits(mtow, chapter: str, n_eng: int):
+
+        limits = dict()
+        limits['lateral'] = np.zeros(np.size(mtow))
+        limits['flyover'] = np.zeros(np.size(mtow))
+        limits['approach'] = np.zeros(np.size(mtow))
+
+        # ICAO Chapter 3 limits
+        if chapter == '3':
+            limits['lateral'][mtow <= 35] = 94*np.ones(np.size(mtow))[mtow <= 35]
+            limits['lateral'][(35<mtow)*(mtow<=400)]= (80.87 + 8.51*np.log10(mtow))[(35 < mtow)*(mtow<= 400)]
+            limits['lateral'][400<mtow]=103*np.ones(np.size(mtow))[400 < mtow]
+
+            limits['approach'][mtow<=35] = 98*np.ones(np.size(mtow))[mtow <= 35]
+            limits['approach'][(35<mtow)*(mtow<=280)]= (86.03 + 7.75*np.log10(mtow))[(35 < mtow)*(mtow<=280)]
+            limits['approach'][280<mtow]=105*np.ones(np.size(mtow))[280<mtow]
+
+            if n_eng == 2:
+                limits['flyover'][mtow <= 48.1] = 89*np.ones(np.size(mtow))[mtow <= 48.1] 
+                limits['flyover'][(48.1 < mtow)*(mtow<= 385)] = (66.65 + 13.29*np.log10(mtow))[(48.1 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 101*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 3:
+                limits['flyover'][mtow <= 28.6] = 89*np.ones(np.size(mtow))[mtow <= 28.6] 
+                limits['flyover'][(28.6 < mtow)*(mtow<= 385)] = (69.65 + 13.29*np.log10(mtow))[(28.6 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 104*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 4:
+                limits['flyover'][mtow <= 20.2] = 89*np.ones(np.size(mtow))[mtow <= 20.2] 
+                limits['flyover'][(20.2 < mtow)*(mtow<= 385)] = (71.65 + 13.29*np.log10(mtow))[(20.2 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 106*np.ones(np.size(mtow))[385 < mtow] 
+            else:
+                raise ValueError("ICAO Chapter " + chapter + " noise limits not available for aircraft with " + str(n_eng) + " engines.")
+
+        # ICAO Chapter 14 limits
+        elif chapter == '14':
+            limits['lateral'][mtow <= 2] = 88.6*np.ones(np.size(mtow))[mtow <= 2]
+            limits['lateral'][(2 < mtow)*(mtow<= 8.618)]= (86.03754 + 8.512295*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+            limits['lateral'][(8.618 < mtow)*(mtow<= 35)]= 94*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 35)]
+            limits['lateral'][(35 < mtow)*(mtow<= 400)]= (80.87 + 8.51*np.log10(mtow))[(35 < mtow)*(mtow<= 400)]
+            limits['lateral'][400 < mtow] = 103*np.ones(np.size(mtow))[400 < mtow]
+
+            limits['approach'][mtow <= 2] = 93.1*np.ones(np.size(mtow))[mtow <= 2]
+            limits['approach'][(2 < mtow)*(mtow<= 8.618)]= (90.77481 + 7.72412*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+            limits['approach'][(8.618 < mtow)*(mtow<= 35)]= 98*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 35)]
+            limits['approach'][(35<mtow)*(mtow<= 280)]= (86.03167 + 7.75117*np.log10(mtow))[(35 < mtow)*(mtow<= 280)]
+            limits['approach'][280<mtow] = 105*np.ones(np.size(mtow))[280<mtow]
+
+            if n_eng == 2:
+                limits['flyover'][mtow <= 2] = 80.6*np.ones(np.size(mtow))[mtow <= 2]
+                limits['flyover'][(2 < mtow)*(mtow<= 8.618)]= (76.57059 + 13.28771*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+                limits['flyover'][(8.618 < mtow)*(mtow<=48.125)]= 89*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<=48.125)]
+                limits['flyover'][(48.125 < mtow)*(mtow<= 385)] = (66.65 + 13.29*np.log10(mtow))[(48.125 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 101*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 3:
+                limits['flyover'][mtow <= 2] = 80.6*np.ones(np.size(mtow))[mtow <= 2]
+                limits['flyover'][(2 < mtow)*(mtow<= 8.618)]= (76.57059 + 13.28771*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+                limits['flyover'][(8.618 < mtow)*(mtow<= 28.615)]= 89*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 28.615)]
+                limits['flyover'][(28.615 < mtow)*(mtow<= 385)] = (69.65 + 13.29*np.log10(mtow))[(28.615 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 104*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 4:
+                limits['flyover'][mtow <= 2] = 80.6*np.ones(np.size(mtow))[mtow <= 2]
+                limits['flyover'][(2 < mtow)*(mtow<= 8.618)]= (76.57059 + 13.28771*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+                limits['flyover'][(8.618 < mtow)*(mtow<= 20.234)]= 89*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 20.234)]
+                limits['flyover'][(20.234 < mtow)*(mtow<= 385)] = (71.65 + 13.29*np.log10(mtow))[(20.234 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 106*np.ones(np.size(mtow))[385 < mtow] 
+            else:
+                raise ValueError("ICAO Chapter " + chapter + " noise limits not available for aircraft with " + str(n_eng) + " engines.")
+
+            # Apply the noise margins
+            limits['cumulative'] = (limits['lateral']+limits['flyover']+limits['approach']) - 17
+            limits['lateral'] = limits['lateral'] - 1
+            limits['flyover'] = limits['flyover'] - 1
+            limits['approach'] = limits['approach'] - 1
+
+        # FAA NPRM noise limits
+        elif chapter == 'NPRM':
+
+            limits['lateral'][mtow <= 35] = 94*np.ones(np.size(mtow))[mtow <= 35]
+            limits['lateral'][(35 < mtow)*(mtow<= 68.039)] = (80.87 + 8.51*np.log10(mtow))[(35 < mtow)*(mtow<= 68.039)]
+            limits['lateral'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+
+            limits['approach'][mtow <= 35] = 98*np.ones(np.size(mtow))[mtow <= 35]
+            limits['approach'][(35 < mtow)*(mtow<= 68.039)] = (86.03167 + 7.75117*np.log10(mtow))[(35 < mtow)*(mtow<= 68.039)]
+            limits['approach'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+
+            if n_eng == 2:
+                limits['flyover'][mtow <= 48.125] = 89*np.ones(np.size(mtow))[mtow <= 48.125]
+                limits['flyover'][(48.125 < mtow)*(mtow<= 68.039)] = (66.65 + 13.29*np.log10(mtow))[(48.125 < mtow)*(mtow<=68.039)]
+                limits['flyover'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+            elif n_eng == 3:
+                limits['flyover'][mtow <= 28.615] = 89*np.ones(np.size(mtow))[mtow <= 28.615]
+                limits['flyover'][(28.615 < mtow)*(mtow<= 68.039)] = (69.65 + 13.29*np.log10(mtow))[(28.615 < mtow)*(mtow<= 68.039)]
+                limits['flyover'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+            else:
+                raise ValueError("ICAO Chapter " + chapter + " noise limits not available for aircraft with " + str(n_eng) + " engines.")
+
+        else:
+            raise ValueError("ICAO Chapter " + chapter + "noise limits are not available. Specify '3', '14', or 'NPRM'.")
+
+        return limits
+
+
+    @staticmethod
     def plot_optimizer_convergence_data(file_name: str) -> None:
         """
         Plot the convergence data of the optimization across iterates.
@@ -846,7 +954,8 @@ class pyna:
         ax[1, 1].set_ylabel('Stepsize')
         ax[1, 1].tick_params(axis='both')
         ax[1, 1].grid(True)
-        plt.subplots_adjust(hspace=0.45, wspace=0.4)
+        
+        plt.subplots_adjust(hspace=0.45, wspace=0.3)
 
         fig.delaxes(ax[1, 2])
 
