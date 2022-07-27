@@ -6,9 +6,9 @@ function lateral_attenuation!(spl_sb, settings, beta, x_obs)
     elseif settings.engine_mounting == "fuselage"
         E_eng = 10 * log10((0.1225 * cos(beta*pi/180)^2 + sin(beta*pi/180)^2)^0.329)
     elseif settings.engine_mounting == "propeller"
-        E_eng = zeros(size(beta))
+        E_eng = 0.
     elseif settings.engine_mounting == "none"
-        E_eng = zeros(size(beta))
+        E_eng = 0.
     end
 
     # Attenuation caused by ground and refracting-scattering effects [dB]
@@ -20,7 +20,7 @@ function lateral_attenuation!(spl_sb, settings, beta, x_obs)
     end 
 
     # Over-ground attenuation [dB]
-    if 0. <= x_obs[2] <= 914
+    if x_obs[2] <= 914
         g = 11.83 * (1 - exp(-0.00274 * x_obs[2]))
     elseif x_obs[2] > 914
         g = 10.86  # 11.83*(1-exp(-0.00274*914))

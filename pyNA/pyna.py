@@ -306,12 +306,10 @@ class pyna:
 
         return None
 
-    def optimize_trajectory_noise(self, n_sideline=1, init_traj_name=None) -> None:
+    def optimize_trajectory_noise(self, init_traj_name=None) -> None:
         """
         Optimize aircraft take-off trajectory for minimum noise signature.
 
-        :param n_sideline: Number of sideline microphones to use in the control optimization
-        :type n_sideline: int
         :param init_traj_name: Name of initialization trajectory (in output folder of case).
         :type init_traj_name: str
 
@@ -331,8 +329,13 @@ class pyna:
             self.problem_init = pyna.load_results(self, init_traj_name, 'final')
 
         # Get list of observers
-        self.settings.x_observer_array = np.zeros((n_sideline+1, 3))
-        self.settings.x_observer_array[:-1, 0] = np.linspace(1000, 5200, n_sideline)
+        
+        if self.settings.ac_name == 'stca':
+            self.settings.x_observer_array = np.zeros((17+1, 3))
+            self.settings.x_observer_array[:-1, 0] = np.linspace(1400, 5400, 17)
+        elif self.settings.ac_name == 'a10':
+            self.settings.x_observer_array = np.zeros((15+1, 3))
+            self.settings.x_observer_array[:-1, 0] = np.linspace(3000, 6500, 15)
         self.settings.x_observer_array[:-1, 1] = 450.
         self.settings.x_observer_array[:-1, 2] = 4 * 0.3048
         self.settings.x_observer_array[-1, 0] = 6500.
@@ -851,3 +854,105 @@ class pyna:
         fig.delaxes(ax[1, 2])
 
         return data
+
+    @staticmethod
+    def load_annex16_noise_limits(mtow, chapter: str, n_eng: int):
+
+        limits = dict()
+        limits['lateral'] = np.zeros(np.size(mtow))
+        limits['flyover'] = np.zeros(np.size(mtow))
+        limits['approach'] = np.zeros(np.size(mtow))
+
+        # ICAO Chapter 3 limits
+        if chapter == '3':
+            limits['lateral'][mtow <= 35] = 94*np.ones(np.size(mtow))[mtow <= 35]
+            limits['lateral'][(35<mtow)*(mtow<=400)]= (80.87 + 8.51*np.log10(mtow))[(35 < mtow)*(mtow<= 400)]
+            limits['lateral'][400<mtow]=103*np.ones(np.size(mtow))[400 < mtow]
+
+            limits['approach'][mtow<=35] = 98*np.ones(np.size(mtow))[mtow <= 35]
+            limits['approach'][(35<mtow)*(mtow<=280)]= (86.03 + 7.75*np.log10(mtow))[(35 < mtow)*(mtow<=280)]
+            limits['approach'][280<mtow]=105*np.ones(np.size(mtow))[280<mtow]
+
+            if n_eng == 2:
+                limits['flyover'][mtow <= 48.1] = 89*np.ones(np.size(mtow))[mtow <= 48.1] 
+                limits['flyover'][(48.1 < mtow)*(mtow<= 385)] = (66.65 + 13.29*np.log10(mtow))[(48.1 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 101*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 3:
+                limits['flyover'][mtow <= 28.6] = 89*np.ones(np.size(mtow))[mtow <= 28.6] 
+                limits['flyover'][(28.6 < mtow)*(mtow<= 385)] = (69.65 + 13.29*np.log10(mtow))[(28.6 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 104*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 4:
+                limits['flyover'][mtow <= 20.2] = 89*np.ones(np.size(mtow))[mtow <= 20.2] 
+                limits['flyover'][(20.2 < mtow)*(mtow<= 385)] = (71.65 + 13.29*np.log10(mtow))[(20.2 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 106*np.ones(np.size(mtow))[385 < mtow] 
+            else:
+                raise ValueError("ICAO Chapter " + chapter + " noise limits not available for aircraft with " + str(n_eng) + " engines.")
+
+        # ICAO Chapter 14 limits
+        elif chapter == '14':
+            limits['lateral'][mtow <= 2] = 88.6*np.ones(np.size(mtow))[mtow <= 2]
+            limits['lateral'][(2 < mtow)*(mtow<= 8.618)]= (86.03754 + 8.512295*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+            limits['lateral'][(8.618 < mtow)*(mtow<= 35)]= 94*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 35)]
+            limits['lateral'][(35 < mtow)*(mtow<= 400)]= (80.87 + 8.51*np.log10(mtow))[(35 < mtow)*(mtow<= 400)]
+            limits['lateral'][400 < mtow] = 103*np.ones(np.size(mtow))[400 < mtow]
+
+            limits['approach'][mtow <= 2] = 93.1*np.ones(np.size(mtow))[mtow <= 2]
+            limits['approach'][(2 < mtow)*(mtow<= 8.618)]= (90.77481 + 7.72412*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+            limits['approach'][(8.618 < mtow)*(mtow<= 35)]= 98*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 35)]
+            limits['approach'][(35<mtow)*(mtow<= 280)]= (86.03167 + 7.75117*np.log10(mtow))[(35 < mtow)*(mtow<= 280)]
+            limits['approach'][280<mtow] = 105*np.ones(np.size(mtow))[280<mtow]
+
+            if n_eng == 2:
+                limits['flyover'][mtow <= 2] = 80.6*np.ones(np.size(mtow))[mtow <= 2]
+                limits['flyover'][(2 < mtow)*(mtow<= 8.618)]= (76.57059 + 13.28771*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+                limits['flyover'][(8.618 < mtow)*(mtow<=48.125)]= 89*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<=48.125)]
+                limits['flyover'][(48.125 < mtow)*(mtow<= 385)] = (66.65 + 13.29*np.log10(mtow))[(48.125 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 101*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 3:
+                limits['flyover'][mtow <= 2] = 80.6*np.ones(np.size(mtow))[mtow <= 2]
+                limits['flyover'][(2 < mtow)*(mtow<= 8.618)]= (76.57059 + 13.28771*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+                limits['flyover'][(8.618 < mtow)*(mtow<= 28.615)]= 89*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 28.615)]
+                limits['flyover'][(28.615 < mtow)*(mtow<= 385)] = (69.65 + 13.29*np.log10(mtow))[(28.615 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 104*np.ones(np.size(mtow))[385 < mtow] 
+            elif n_eng == 4:
+                limits['flyover'][mtow <= 2] = 80.6*np.ones(np.size(mtow))[mtow <= 2]
+                limits['flyover'][(2 < mtow)*(mtow<= 8.618)]= (76.57059 + 13.28771*np.log10(mtow))[(2 < mtow)*(mtow<= 8.618)]
+                limits['flyover'][(8.618 < mtow)*(mtow<= 20.234)]= 89*np.ones(np.size(mtow))[(8.618 < mtow)*(mtow<= 20.234)]
+                limits['flyover'][(20.234 < mtow)*(mtow<= 385)] = (71.65 + 13.29*np.log10(mtow))[(20.234 < mtow)*(mtow<= 385)]
+                limits['flyover'][385 < mtow] = 106*np.ones(np.size(mtow))[385 < mtow] 
+            else:
+                raise ValueError("ICAO Chapter " + chapter + " noise limits not available for aircraft with " + str(n_eng) + " engines.")
+
+            # Apply the noise margins
+            limits['cumulative'] = (limits['lateral']+limits['flyover']+limits['approach']) - 17
+            limits['lateral'] = limits['lateral'] - 1
+            limits['flyover'] = limits['flyover'] - 1
+            limits['approach'] = limits['approach'] - 1
+
+        # FAA NPRM noise limits
+        elif chapter == 'NPRM':
+
+            limits['lateral'][mtow <= 35] = 94*np.ones(np.size(mtow))[mtow <= 35]
+            limits['lateral'][(35 < mtow)*(mtow<= 68.039)] = (80.87 + 8.51*np.log10(mtow))[(35 < mtow)*(mtow<= 68.039)]
+            limits['lateral'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+
+            limits['approach'][mtow <= 35] = 98*np.ones(np.size(mtow))[mtow <= 35]
+            limits['approach'][(35 < mtow)*(mtow<= 68.039)] = (86.03167 + 7.75117*np.log10(mtow))[(35 < mtow)*(mtow<= 68.039)]
+            limits['approach'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+
+            if n_eng == 2:
+                limits['flyover'][mtow <= 48.125] = 89*np.ones(np.size(mtow))[mtow <= 48.125]
+                limits['flyover'][(48.125 < mtow)*(mtow<= 68.039)] = (66.65 + 13.29*np.log10(mtow))[(48.125 < mtow)*(mtow<=68.039)]
+                limits['flyover'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+            elif n_eng == 3:
+                limits['flyover'][mtow <= 28.615] = 89*np.ones(np.size(mtow))[mtow <= 28.615]
+                limits['flyover'][(28.615 < mtow)*(mtow<= 68.039)] = (69.65 + 13.29*np.log10(mtow))[(28.615 < mtow)*(mtow<= 68.039)]
+                limits['flyover'][68.039 < mtow] = np.nan*np.ones(np.size(mtow))[68.039 < mtow]
+            else:
+                raise ValueError("ICAO Chapter " + chapter + " noise limits not available for aircraft with " + str(n_eng) + " engines.")
+
+        else:
+            raise ValueError("ICAO Chapter " + chapter + "noise limits are not available. Specify '3', '14', or 'NPRM'.")
+
+        return limits
+
