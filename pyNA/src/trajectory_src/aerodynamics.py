@@ -81,7 +81,7 @@ class Aerodynamics(om.ExplicitComponent):
 
         constant_LD = False
         if constant_LD:
-            L_D = 6.718101501415649 
+            L_D = 6.718101501415649*2 
             outputs['D'] = outputs['q'] * ac.af_S_w * inputs['c_l']/L_D
         else:
             if phase_name in {'groundroll', 'rotation', 'liftoff'}:
@@ -106,7 +106,7 @@ class Aerodynamics(om.ExplicitComponent):
 
         constant_LD = False
         if constant_LD:
-            L_D = 6.718101501415649
+            L_D = 6.718101501415649*2
             partials['D', 'c_d'] = 0.
             partials['D', 'c_l'] = q * ac.af_S_w * 1/L_D
             partials['D', 'rho_0'] = 1/2 * inputs['v']**2 * ac.af_S_w * inputs['c_l']/L_D

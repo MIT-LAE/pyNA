@@ -380,7 +380,7 @@ class Trajectory:
             self.phases['groundroll'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('TS_min', units=None, val=1, dynamic=True, include_timeseries=True)
             if settings.PKROT:
-                self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, lower=1.1, upper=1.6, dynamic=False, val=ac.k_rot, opt=True)
+                self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, lower=1.1, upper=2.0, dynamic=False, val=ac.k_rot, opt=True)
             else:
                 self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, dynamic=False, val=ac.k_rot, opt=False)
             self.phases['groundroll'].add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=settings.theta_flaps, dynamic=True, include_timeseries=True)
@@ -668,14 +668,14 @@ class Trajectory:
             # Phase 1: groundroll
             if 'groundroll' in self.phase_name_lst:
                 problem['phases.groundroll.t_initial'] = 0.0
-                problem['phases.groundroll.t_duration'] = 30.0
+                problem['phases.groundroll.t_duration'] = 20.0
                 problem['phases.groundroll.states:x'] = self.phases['groundroll'].interp(ys=[0, 1000], nodes='state_input')
                 problem['phases.groundroll.states:v'] = self.phases['groundroll'].interp(ys=[0.0, 60], nodes='state_input')
                 problem['phases.groundroll.states:alpha'] = self.phases['groundroll'].interp(ys=[ac.alpha_0, ac.alpha_0], nodes='state_input')
 
             # Phase 2: rotation
             if 'rotation' in self.phase_name_lst:
-                problem['phases.rotation.t_initial'] = 30.0
+                problem['phases.rotation.t_initial'] = 20.0
                 problem['phases.rotation.t_duration'] = 10.0
                 problem['phases.rotation.states:x'] = self.phases['rotation'].interp(ys=[1500, 2000], nodes='state_input')
                 problem['phases.rotation.states:v'] = self.phases['rotation'].interp(ys=[100, 110.], nodes='state_input')
@@ -687,7 +687,7 @@ class Trajectory:
                     z_cutback_guess = 500.
                 elif trajectory_mode == 'cutback':
                     z_cutback_guess = settings.z_cutback
-                problem['phases.liftoff.t_initial'] = 40.0
+                problem['phases.liftoff.t_initial'] = 30.0
                 problem['phases.liftoff.t_duration'] = 2.
                 problem['phases.liftoff.states:x'] = self.phases['liftoff'].interp(ys=[2000., 3500.], nodes='state_input')
                 problem['phases.liftoff.states:z'] = self.phases['liftoff'].interp(ys=[0., 35*0.3048], nodes='state_input')
@@ -697,7 +697,7 @@ class Trajectory:
 
             # # Phase 4: vnrs 
             if 'vnrs' in self.phase_name_lst:
-                problem['phases.vnrs.t_initial'] = 50.0
+                problem['phases.vnrs.t_initial'] = 32.0
                 problem['phases.vnrs.t_duration'] = 50.0
                 problem['phases.vnrs.states:x'] = self.phases['vnrs'].interp(ys=[3500., 6501.], nodes='state_input')
                 problem['phases.vnrs.states:z'] = self.phases['vnrs'].interp(ys=[35*0.3048, z_cutback_guess], nodes='state_input')
@@ -707,10 +707,10 @@ class Trajectory:
                 
             # Phase 5: cutback
             if 'cutback' in self.phase_name_lst:
-                problem['phases.cutback.t_initial'] = 100.0
+                problem['phases.cutback.t_initial'] = 82.0
                 problem['phases.cutback.t_duration'] = 50.0
                 problem['phases.cutback.states:x'] = self.phases['cutback'].interp(ys=[6501., 15000.], nodes='state_input')
-                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, 1000.], nodes='state_input')
+                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, 3000.], nodes='state_input')
                 problem['phases.cutback.states:v'] = self.phases['cutback'].interp(ys=[110., 110.], nodes='state_input')
                 problem['phases.cutback.states:gamma'] = self.phases['cutback'].interp(ys=[15, 15.], nodes='state_input')
                 problem['phases.cutback.controls:alpha'] = self.phases['cutback'].interp(ys=[15., 15.], nodes='control_input')

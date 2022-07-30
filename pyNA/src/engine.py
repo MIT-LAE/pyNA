@@ -114,8 +114,10 @@ class Engine:
             for j in np.arange(self.deck['M_0'].shape[0]):
                 for k in np.flip(np.arange(self.deck['TS'].shape[0])):
                     cntr = cntr + 1
-                    # F_n[i, j, k] = 1000. * data['DP.NetThrust[kN]'].values[cntr]
-                    self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 83821.6 * settings.Foo
+                    if settings.engine_thrust_lapse:
+                        self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 83821.6 * settings.Foo
+                    else:
+                        self.deck['F_n'][i, j, k] = settings.Foo
                     self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[cntr]
 
                     self.deck['V_j'][i, j, k] = data['jet_V [m/s]'].values[cntr]

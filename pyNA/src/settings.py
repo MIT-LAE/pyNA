@@ -46,6 +46,8 @@ class Settings(FrozenClass):
                 ge_flight_cleanup = 'takeoff', 
                 levels_int_metric = 'epnl', 
                 engine_mounting = 'none', 
+                engine_thrust_lapse = True,
+                atmosphere_type = 'troposphere',
                 direct_propagation = True,
                 absorption = True, 
                 groundeffects = True, 
@@ -140,6 +142,10 @@ class Settings(FrozenClass):
         :type levels_int_metric: str
         :param engine_mounting: Engine mounting ('fuselage'/'underwing'/'none') [-]
         :type engine_mounting: str
+        :param engine_thrust_lapse: Flag for engine thrust lapse [-]
+        :type engine_thrust_lapse: bool
+        :param atmosphere_type: Type of atmosphere ('troposphere', 'sealevel')
+        :type atmosphere_type: str
         :param direct_propagation: Flag for direct propagation (including distance and characteristic impedance effects) [-]
         :type direct_propagation: bool
         :param absorption: Flag for atmospheric absorption [-]
@@ -250,6 +256,8 @@ class Settings(FrozenClass):
         self.levels_int_metric = levels_int_metric
         self.engine_mounting = engine_mounting
 
+        self.engine_thrust_lapse = engine_thrust_lapse
+        self.atmosphere_type = atmosphere_type
         self.direct_propagation = direct_propagation
         self.absorption = absorption
         self.groundeffects = groundeffects
@@ -345,6 +353,8 @@ class Settings(FrozenClass):
             raise TypeError(self.fan_igv, "does not have the correct type. type(settings.fan_igv) must be bool.")
         if type(self.fan_id) != bool:
             raise TypeError(self.fan_id, "does not have the correct type. type(settings.fan_id) must be bool.")
+        if type(self.engine_thrust_lapse) != bool:
+            raise TypeError(self.engine_thrust_lapse, "does not have the correct type. type(settings.engine_thrust_lapse) must be bool.")
         if type(self.direct_propagation) != bool:
             raise TypeError(self.direct_propagation, "does not have the correct type. type(settings.direct_propagation) must be bool.")
         if type(self.absorption) != bool:
@@ -394,6 +404,8 @@ class Settings(FrozenClass):
             raise ValueError(self.levels_int_metric, "is not a valid option for the integrated noise levels metric. Specify: 'epnl'/'ipnlt'/'ioaspl'/'sel'.")
         if self.engine_mounting not in ['fuselage', 'underwing', 'none']:
             raise ValueError(self.engine_mounting, "is not a valid option for the engine mounting description. Specify: 'fuselage', 'underwing', 'none'.")
+        if self.atmosphere_type not in ['stratified', 'sealevel']:
+            raise ValueError(self.atmosphere_type, "is not a valid option for the atmosphere type. Specify: 'stratified'/'sealevel'.")
 
         # Values
         if type(self.N_shock) not in [int, np.int32, np.int64]:
