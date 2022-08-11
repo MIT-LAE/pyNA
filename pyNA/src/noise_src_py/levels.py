@@ -59,9 +59,12 @@ class Levels(om.ExplicitComponent):
 
         self.add_output('spl', val=np.ones((n_obs, n_t, settings.N_f)), desc='sound pressure level [dB]')
         self.add_output('oaspl', val=np.ones((n_obs, n_t)), desc='overall sound pressure level [dB]')
+        
+        self.add_output('noy', val=np.ones((n_obs, n_t, settings.N_f)), desc='noy [dB]')
+        self.add_output('pnl', val=np.ones((n_obs, n_t)), desc='perceived noise level [PNdB]')
         self.add_output('pnlt', val=np.ones((n_obs, n_t)), desc='perceived noise level, tone corrected [PNdB]')
-        if settings.bandshare:
-            self.add_output('C', val=np.ones((n_t, settings.N_f)), desc='pnlt tone correction [dB]')
+        self.add_output('c_max', val=np.ones((n_obs, n_t)), desc='maximum tone correction [dB]')
+        self.add_output('C', val=np.ones((n_obs, n_t, settings.N_f)), desc='pnlt tone correction [dB]')
 
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
         # Load options
@@ -84,7 +87,4 @@ class Levels(om.ExplicitComponent):
             outputs['oaspl'][i, :] = oaspl(self, outputs['spl'][i, :, :])
 
             # Compute PNLT and C
-            if settings.bandshare:
-                outputs['pnlt'][i, :], outputs['C'][i, :, :] = pnlt(self, outputs['spl'][i, :, :])
-            else:
-                outputs['pnlt'][i, :], _ = pnlt(self, outputs['spl'][i, :, :])
+            outputs['noy'][i, :, :], outputs['pnl'][i, :], outputs['pnlt'][i, :], outputs['c_max'][i, :], outputs['C'][i, :, :] = pnlt(self, outputs['spl'][i, :, :])

@@ -19,8 +19,10 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     n_t = levels.options['n_t']
 
     # Initialize solution matrices
+    pnl = np.zeros(n_t)
     pnlt = np.zeros(n_t)
     noy = np.zeros((n_t, settings.N_f))
+    c_max = np.zeros(n_t)
     C = np.zeros((n_t, settings.N_f))
 
     for k in np.arange(n_t):
@@ -60,9 +62,9 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         # Compute perceived noise level (pnl)
         # Source: ICAO Annex 16 Appendix 2 section 4.2 Step 3
         if n_t < 1e-10:
-            pnl = n_t ** 0 - 1
+            pnl[k] = n_t ** 0 - 1
         else:
-            pnl = 40 + 10. / np.log10(2) * np.log10(n_t)
+            pnl[k] = 40 + 10. / np.log10(2) * np.log10(n_t)
 
         # Spectral irregularities correction
         # Step 1: Compute the slope of SPL
@@ -179,12 +181,12 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         # Step 10: Compute the largest of the tone correction
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 10
         if settings.TCF800:
-            c_max = np.max(C_j[13:])
+            c_max[k] = np.max(C_j[13:])
         else:
-            c_max = np.max(C_j)
+            c_max[k] = np.max(C_j)
 
         # Compute tone-corrected perceived noise level (pnlt)
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 10
-        pnlt[k] = pnl + c_max
+        pnlt[k] = pnl[k] + c_max[k]
 
-    return pnlt, C
+    return noy, pnl, pnlt, c_max, C

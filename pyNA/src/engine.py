@@ -115,7 +115,12 @@ class Engine:
                 for k in np.flip(np.arange(self.deck['TS'].shape[0])):
                     cntr = cntr + 1
                     if settings.engine_thrust_lapse:
-                        self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 83821.6 * settings.Foo
+                        if settings.ac_name == 'stca' and not settings.Foo == None:
+                            self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 83821.6 * settings.Foo
+                        elif settings.ac_name == 'a10' and not settings.Foo == None:
+                            self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 136325.9272 * settings.Foo
+                        else:
+                            self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr]
                     else:
                         self.deck['F_n'][i, j, k] = settings.Foo
                     self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[cntr]

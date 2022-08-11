@@ -45,9 +45,9 @@ class Settings(FrozenClass):
                 fan_RS_method = 'allied_signal',
                 ge_flight_cleanup = 'takeoff', 
                 levels_int_metric = 'epnl', 
-                engine_mounting = 'none', 
+                engine_mounting = 'underwing', 
                 engine_thrust_lapse = True,
-                atmosphere_type = 'troposphere',
+                atmosphere_type = 'stratified',
                 direct_propagation = True,
                 absorption = True, 
                 groundeffects = True, 
@@ -87,7 +87,7 @@ class Settings(FrozenClass):
                 n_order = 3,
                 max_iter = 200, 
                 tol = 1e-5,
-                Foo = 83821.6):
+                Foo = None):
 
         """
         Initialize pyNA settings class

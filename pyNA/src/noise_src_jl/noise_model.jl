@@ -242,11 +242,21 @@ function NoiseModel(settings, data, ac, n_t, idx::Dict{Any, Any}, objective::Str
                 end
             end
         
+            # # Lateral attenuation post-hoc subtraction on integrated noise levels
+            if settings.lateral_attenuation
+                x = input_v[idx["x"][1]:idx["x"][2]]
+                y = input_v[idx["y"][1]:idx["y"][2]]
+                z = input_v[idx["z"][1]:idx["z"][2]]
+                delta_dB_lat = lateral_attenuation(settings, settings.x_observer_array[i,:], x, y, z)
+            else
+                delta_dB_lat = 0.
+            end
+
             # Compute integrated levels
             if settings.levels_int_metric in ["ioaspl", "ipnlt", "sel"]
-                level_int[i] = f_ilevel(t_o[i,:], level[i,:])
+                level_int[i] = f_ilevel(t_o[i,:], level[i,:]) + delta_dB_lat
             elseif settings.levels_int_metric == "epnl"
-                level_int[i] = f_epnl(t_o[i,:], level[i,:])
+                level_int[i] = f_epnl(t_o[i,:], level[i,:]) + delta_dB_lat
             end
 
         end
