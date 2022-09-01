@@ -226,7 +226,6 @@ class FlightDynamics(ExplicitComponent):
 
         # Compute outputs
         F_fric = ac.mu_r * (ac.mtow * atm['g'] - L)
-        vdot = (1.0 / ac.mtow) * (F_n * calpha - D - F_fric) - atm['g'] * sgamma
         zdot = v * sgamma
 
         # Acceleration dvdt

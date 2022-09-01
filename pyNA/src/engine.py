@@ -114,6 +114,7 @@ class Engine:
             for j in np.arange(self.deck['M_0'].shape[0]):
                 for k in np.flip(np.arange(self.deck['TS'].shape[0])):
                     cntr = cntr + 1
+
                     if settings.engine_thrust_lapse:
                         if settings.ac_name == 'stca' and not settings.Foo == None:
                             self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 83821.6 * settings.Foo
@@ -121,31 +122,50 @@ class Engine:
                             self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 136325.9272 * settings.Foo
                         else:
                             self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr]
+                        self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[cntr]
+                        self.deck['V_j'][i, j, k] = data['jet_V [m/s]'].values[cntr]
+                        self.deck['Tt_j'][i, j, k] = data['jet_Tt [K]'].values[cntr]
+                        self.deck['rho_j'][i, j, k] = data['jet_rho [kg/m3]'].values[cntr]
+                        self.deck['A_j'][i, j, k] = data['jet_A [m2]'].values[cntr]
+                        self.deck['M_j'][i, j, k] = data['jet_M [-]'].values[cntr]
+                        self.deck['mdot_i_c'][i, j, k] = data['core_mdot_in [kg/s]'].values[cntr]
+                        self.deck['Tti_c'][i, j, k] = data['core_Tt_in [K]'].values[cntr]
+                        self.deck['Ttj_c'][i, j, k] = data['core_Tt_out [K]'].values[cntr]
+                        self.deck['Pti_c'][i, j, k] = data['core_Pt_in [Pa]'].values[cntr]
+                        self.deck['DTt_des_c'][i, j, k] = data['core_DT_t [K]'].values[cntr]
+                        self.deck['rho_te_c'][i, j, k] = data['core_LPT_rho_out [kg/m3]'].values[cntr]
+                        self.deck['rho_ti_c'][i, j, k] = data['core_HPT_rho_in [kg/m3]'].values[cntr]
+                        self.deck['c_te_c'][i, j, k] = data['core_LPT_c_out [m/s]'].values[cntr]
+                        self.deck['c_ti_c'][i, j, k] = data['core_HPT_c_in [m/s]'].values[cntr]
+                        self.deck['DTt_f'][i, j, k] = data['fan_DTt [K]'].values[cntr]
+                        self.deck['mdot_f'][i, j, k] = data['fan_mdot_in [kg/s]'].values[cntr]
+                        self.deck['N_f'][i, j, k] = data['fan_N [rpm]'].values[cntr]
+                        self.deck['A_f'][i, j, k] = data['fan_A [m2]'].values[cntr]
+                        self.deck['d_f'][i, j, k] = data['fan_d [m]'].values[cntr]
+                        self.deck['M_d_f'][i, j, k] = data['fan_M_d [-]'].values[cntr]
+
                     else:
                         self.deck['F_n'][i, j, k] = settings.Foo
-                    self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[cntr]
-
-                    self.deck['V_j'][i, j, k] = data['jet_V [m/s]'].values[cntr]
-                    self.deck['Tt_j'][i, j, k] = data['jet_Tt [K]'].values[cntr]
-                    self.deck['rho_j'][i, j, k] = data['jet_rho [kg/m3]'].values[cntr]
-                    self.deck['A_j'][i, j, k] = data['jet_A [m2]'].values[cntr]
-                    self.deck['M_j'][i, j, k] = data['jet_M [-]'].values[cntr]
-
-                    self.deck['mdot_i_c'][i, j, k] = data['core_mdot_in [kg/s]'].values[cntr]
-                    self.deck['Tti_c'][i, j, k] = data['core_Tt_in [K]'].values[cntr]
-                    self.deck['Ttj_c'][i, j, k] = data['core_Tt_out [K]'].values[cntr]
-                    self.deck['Pti_c'][i, j, k] = data['core_Pt_in [Pa]'].values[cntr]
-                    self.deck['DTt_des_c'][i, j, k] = data['core_Tt_out [K]'].values[0] - data['core_Tt_in [K]'].values[0]
-                    self.deck['rho_te_c'][i, j, k] = data['core_LPT_rho_out [kg/m3]'].values[cntr]
-                    self.deck['rho_ti_c'][i, j, k] = data['core_HPT_rho_in [kg/m3]'].values[cntr]
-                    self.deck['c_te_c'][i, j, k] = data['core_LPT_c_out [m/s]'].values[cntr]
-                    self.deck['c_ti_c'][i, j, k] = data['core_HPT_c_in [m/s]'].values[cntr]
-
-                    self.deck['DTt_f'][i, j, k] = data['fan_DTt [K]'].values[cntr]
-                    self.deck['mdot_f'][i, j, k] = data['fan_mdot_in [kg/s]'].values[cntr]
-                    self.deck['N_f'][i, j, k] = data['fan_N [rpm]'].values[cntr]
-                    self.deck['A_f'][i, j, k] = data['fan_A [m2]'].values[cntr]
-                    self.deck['d_f'][i, j, k] = data['fan_d [m]'].values[cntr]
-                    self.deck['M_d_f'][i, j, k] = data['fan_M_d [-]'].values[cntr]
+                        self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[1]
+                        self.deck['V_j'][i, j, k] = data['jet_V [m/s]'].values[1]
+                        self.deck['Tt_j'][i, j, k] = data['jet_Tt [K]'].values[1]
+                        self.deck['rho_j'][i, j, k] = data['jet_rho [kg/m3]'].values[1]
+                        self.deck['A_j'][i, j, k] = data['jet_A [m2]'].values[1]
+                        self.deck['M_j'][i, j, k] = data['jet_M [-]'].values[1]
+                        self.deck['mdot_i_c'][i, j, k] = data['core_mdot_in [kg/s]'].values[1]
+                        self.deck['Tti_c'][i, j, k] = data['core_Tt_in [K]'].values[1]
+                        self.deck['Ttj_c'][i, j, k] = data['core_Tt_out [K]'].values[1]
+                        self.deck['Pti_c'][i, j, k] = data['core_Pt_in [Pa]'].values[1]
+                        self.deck['DTt_des_c'][i, j, k] = data['core_DT_t [K]'].values[1]
+                        self.deck['rho_te_c'][i, j, k] = data['core_LPT_rho_out [kg/m3]'].values[1]
+                        self.deck['rho_ti_c'][i, j, k] = data['core_HPT_rho_in [kg/m3]'].values[1]
+                        self.deck['c_te_c'][i, j, k] = data['core_LPT_c_out [m/s]'].values[1]
+                        self.deck['c_ti_c'][i, j, k] = data['core_HPT_c_in [m/s]'].values[1]
+                        self.deck['DTt_f'][i, j, k] = data['fan_DTt [K]'].values[1]
+                        self.deck['mdot_f'][i, j, k] = data['fan_mdot_in [kg/s]'].values[1]
+                        self.deck['N_f'][i, j, k] = data['fan_N [rpm]'].values[1]
+                        self.deck['A_f'][i, j, k] = data['fan_A [m2]'].values[1]
+                        self.deck['d_f'][i, j, k] = data['fan_d [m]'].values[1]
+                        self.deck['M_d_f'][i, j, k] = data['fan_M_d [-]'].values[1]
 
         return None

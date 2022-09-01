@@ -20,14 +20,14 @@ class Trajectory:
     The trajectory module contains the methods to compute the take-off trajectory used by pyNA.
     """
 
-    def __init__(self, n_order):
+    def __init__(self, phase_name_lst):
 
         # Initialize path
         self.path = pd.DataFrame
         self.n_t = np.int64
 
         # Initialize phases
-        self.phase_name_lst = ['groundroll', 'rotation', 'liftoff', 'vnrs', 'cutback']
+        self.phase_name_lst = phase_name_lst
         self.phases = dict()
 
         # Compute transcription for the phases
@@ -148,17 +148,11 @@ class Trajectory:
             L = 9.80665 * ac.mtow * np.cos(gamma_lst[i] * np.pi / 180.)
             sol['c_l'][i] = L / (0.5* rho_0 * v_lst[i] ** 2 * ac.af_S_w)
             
-            settings.theta_flaps = 10.
-            if settings.ac_name == 'stca':
-                settings.theta_slats = -6.
-            elif settings.ac_name == 'a10':
-                settings.theta_slats = 0.
-            
             c_l_interp = RegularGridInterpolator((ac.aero['alpha'], ac.aero['theta_flaps'], ac.aero['theta_slats']), ac.aero['c_l'])        
-            c_l_data = c_l_interp((ac.aero['alpha'], settings.theta_flaps, settings.theta_slats))
+            c_l_data = c_l_interp((ac.aero['alpha'], 10., -6.))
             
             c_d_interp = RegularGridInterpolator((ac.aero['alpha'], ac.aero['theta_flaps'], ac.aero['theta_slats']), ac.aero['c_d'])
-            c_d_data = c_d_interp((ac.aero['alpha'], settings.theta_flaps, settings.theta_slats))
+            c_d_data = c_d_interp((ac.aero['alpha'], 10., -6.))
             
             # Before stall
             if sol['c_l'][i] <= np.max(c_l_data):         
@@ -366,7 +360,7 @@ class Trajectory:
         else:
             sol = Trajectory.compute_minimum_TS(settings, ac, engine, z_lst=[1300*0.3048, 1300*0.3048], v_lst=[ac.v_max, ac.v_max], gamma_lst=[0.0, np.arctan(0.04)*180/np.pi])
             TS_min = np.max(sol['TS'])
-
+        
         # Phase 1: ground roll
         if 'groundroll' in self.phase_name_lst:
             opts = {'phase': 'groundroll', 'ac': ac, 'engine': engine, 'settings': settings, 'objective': objective}
@@ -455,11 +449,11 @@ class Trajectory:
             self.phases['cutback'] = dm.Phase(ode_class=TrajectoryODE, transcription=self.transcription_phases[4], ode_init_kwargs=opts)
             self.phases['cutback'].set_time_options(initial_bounds=(10, 400), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)
             if trajectory_mode == 'flyover':
-                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=False, ref=10000.)
-                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=1000.)
+                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=True, ref=10000.)
+                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=False, ref=1000.)
             elif trajectory_mode == 'cutback':
-                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=False, ref=10000.)
-                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=True, ref=1000.)
+                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=True, ref=10000.)
+                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
             self.phases['cutback'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
             self.phases['cutback'].add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
             self.phases['cutback'].add_control('alpha', targets='alpha', units='deg', lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
@@ -701,8 +695,8 @@ class Trajectory:
             if 'cutback' in self.phase_name_lst:
                 problem['phases.cutback.t_initial'] = 100.0
                 problem['phases.cutback.t_duration'] = 50.0
-                problem['phases.cutback.states:x'] = self.phases['cutback'].interp(ys=[6501., 20000.], nodes='state_input')
-                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, 1300.], nodes='state_input')
+                problem['phases.cutback.states:x'] = self.phases['cutback'].interp(ys=[6501., 15000.], nodes='state_input')
+                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, 3000.], nodes='state_input')
                 problem['phases.cutback.states:v'] = self.phases['cutback'].interp(ys=[110., 110.], nodes='state_input')
                 problem['phases.cutback.states:gamma'] = self.phases['cutback'].interp(ys=[15, 15.], nodes='state_input')
                 problem['phases.cutback.controls:alpha'] = self.phases['cutback'].interp(ys=[15., 15.], nodes='control_input')

@@ -75,6 +75,7 @@ class Settings(FrozenClass):
                 x_observer_array = np.array([[12325.*0.3048, 450., 4*0.3048], [21325.*0.3048, 0., 4*0.3048]]),
                 noise_optimization = False, 
                 noise_constraint_lateral = 200.,
+                phase_name_lst = ['groundroll', 'rotation', 'liftoff', 'vnrs', 'cutback'],
                 PTCB = False, 
                 PHLD = False, 
                 PKROT = False,
@@ -198,6 +199,8 @@ class Settings(FrozenClass):
         :type noise_optimization: bool
         :param noise_constraint_lateral: Constraint on the lateral noise [EPNdB]
         :type noise_constraint_lateral: float
+        :param phase_name_lst: List of all phases of the trajectory
+        :type phase_name_lst: list
         :param PTCB: Enable PTCB [-]
         :type PTCB: bool
         :param PHLD: Enable PHLD [-]
@@ -286,6 +289,7 @@ class Settings(FrozenClass):
 
         self.noise_optimization = noise_optimization
         self.noise_constraint_lateral = noise_constraint_lateral
+        self.phase_name_lst = phase_name_lst
         self.PTCB = PTCB
         self.PHLD = PHLD
         self.PKROT = PKROT

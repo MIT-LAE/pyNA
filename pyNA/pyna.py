@@ -41,7 +41,7 @@ class pyna:
         self.settings.language = os.environ['pyna_language']
 
         # Initialize trajectory
-        self.trajectory = Trajectory(n_order=self.settings.n_order)
+        self.trajectory = Trajectory(self.settings.phase_name_lst)
         
         # Initialize noise
         self.noise = Noise(settings=self.settings)
@@ -408,6 +408,7 @@ class pyna:
         engine['Core Tti [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Tti_c'))
         engine['Core Ttj [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.Ttj_c'))
         engine['Core DT_t [K]'] = np.interp(t_intp, t_source, problem.get_val('engine.DTt_des_c'))
+            
         engine['LPT rho_e [kg/m3]'] = np.zeros(np.size(t_intp))
         engine['LPT c_e [m/s]'] = np.zeros(np.size(t_intp))
         engine['HPT rho_i [kg/m3]'] = np.zeros(np.size(t_intp))
