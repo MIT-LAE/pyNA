@@ -3,9 +3,7 @@ import openmdao
 import pandas as pd
 import openmdao.api as om
 import numpy as np
-from pyNA.src.settings import Settings
 
-## CHECK THIS COMPONENT
 
 class NormalizationEngineVariables(om.ExplicitComponent):
     """
@@ -71,7 +69,7 @@ class NormalizationEngineVariables(om.ExplicitComponent):
     """
 
     def initialize(self):
-        self.options.declare('settings', types=Settings)
+        self.options.declare('settings', types=dict)
         self.options.declare('n_t', types=int, desc='Number of time steps in trajectory')
 
     def setup(self):
@@ -85,28 +83,28 @@ class NormalizationEngineVariables(om.ExplicitComponent):
         self.add_input('p_0', val=np.ones(n_t), units='Pa', desc='ambient pressure [Pa]')
         self.add_input('rho_0', val=np.ones(n_t), units='kg/m**3', desc='ambient density [kg/m3]')
 
-        if settings.jet_mixing and settings.jet_shock == False:
+        if settings['jet_mixing_source'] and settings['jet_shock_source'] == False:
             self.add_input('V_j', val=np.ones(n_t), units='m/s', desc='jet velocity [m/s]')
             self.add_input('rho_j', val=np.ones(n_t), units='kg/m**3', desc='jet total density [kg/m3]')
             self.add_input('A_j', val=np.ones(n_t), units='m**2', desc='jet area [m2]')
             self.add_input('Tt_j', val=np.ones(n_t), units='K', desc='jet total temperature [K]')
-        elif settings.jet_shock and settings.jet_mixing == False:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source'] == False:
             self.add_input('V_j', val=np.ones(n_t), units='m/s', desc='jet velocity [m/s]')
             self.add_input('A_j', val=np.ones(n_t), units='m**2', desc='jet area [m2]')
             self.add_input('Tt_j', val=np.ones(n_t), units='K', desc='jet total temperature [K]')
-        elif settings.jet_shock and settings.jet_mixing:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source']:
             self.add_input('V_j', val=np.ones(n_t), units='m/s', desc='jet velocity [m/s]')
             self.add_input('rho_j', val=np.ones(n_t), units='kg/m**3', desc='jet total density [kg/m3]')
             self.add_input('A_j', val=np.ones(n_t), units='m**2', desc='jet area [m2]')
             self.add_input('Tt_j', val=np.ones(n_t), units='K', desc='jet total temperature [K]')
-        if settings.core:
-            if settings.method_core_turb == 'GE':
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == 'ge':
                 self.add_input('mdoti_c', val=np.ones(n_t), units='kg/s', desc='core inlet mass flow [kg/s]')
                 self.add_input('Tti_c', val=np.ones(n_t), units='K', desc='core inlet total temperature [K]')
                 self.add_input('Ttj_c', val=np.ones(n_t), units='K', desc='core exit total temperature [K]')
                 self.add_input('Pti_c', val=np.ones(n_t), units='Pa', desc='core inlet total pressure [Pa]')
                 self.add_input('DTt_des_c', val=np.ones(n_t), units='K', desc='core total temperature drop across the turbine [K]')
-            elif settings.method_core_turb == 'PW':
+            elif settings['core_turbine_attenuation_method'] == 'pw':
                 self.add_input('mdoti_c', val=np.ones(n_t), units='kg/m**3', desc='core inlet mass flow [kg/s]')
                 self.add_input('Tti_c', val=np.ones(n_t), units='K', desc='core inlet total temperature [K]')
                 self.add_input('Ttj_c', val=np.ones(n_t), units='K', desc='core exit total temperature [K]')
@@ -115,7 +113,7 @@ class NormalizationEngineVariables(om.ExplicitComponent):
                 self.add_input('c_te_c', val=np.ones(n_t), units='m/s', desc='core exit total speed of sound [m/s]')
                 self.add_input('rho_ti_c', val=np.ones(n_t), units='kg/m**3', desc='core inlet total density [kg/m3]')
                 self.add_input('c_ti_c', val=np.ones(n_t), units='m/s', desc='core inlet total speed of sound [m/s]')
-        if settings.fan_inlet or settings.fan_discharge:
+        if settings['fan_inlet_source'] or settings['fan_discharge_source']:
             self.add_input('mdot_f', val=np.ones(n_t), units='kg/s', desc='fan inlet mass flow [kg/s]')
             self.add_input('N_f', val=np.ones(n_t), units='rpm', desc='fan rotational speed [rpm]')
             self.add_input('DTt_f', val=np.ones(n_t), units='K', desc='fan total temperature rise [K]')
@@ -123,29 +121,29 @@ class NormalizationEngineVariables(om.ExplicitComponent):
             self.add_input('d_f', val=np.ones(n_t), units='m', desc='fan diameter [m]')
 
         # Add outputs
-        if settings.jet_mixing and settings.jet_shock == False:
+        if settings['jet_mixing_source'] and settings['jet_shock_source'] == False:
             self.add_output('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
             self.add_output('rho_j_star', val=np.ones(n_t), units=None, desc='jet total density (re. rho_0) [-]')
             self.add_output('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
             self.add_output('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
-        elif settings.jet_shock and settings.jet_mixing == False:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source'] == False:
             self.add_output('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
             self.add_output('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
             self.add_output('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
             self.add_output('M_j', val=np.ones(n_t), units=None)
-        elif settings.jet_shock and settings.jet_mixing:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source']:
             self.add_output('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
             self.add_output('rho_j_star', val=np.ones(n_t), units=None, desc='jet total density (re. rho_0) [-]')
             self.add_output('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
             self.add_output('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
-        if settings.core:
-            if settings.method_core_turb == 'GE':
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == 'ge':
                 self.add_output('mdoti_c_star', val=np.ones(n_t), units=None, desc='core inlet mass flow (re. rho_0c_0A_e) [-]')
                 self.add_output('Tti_c_star', val=np.ones(n_t), units=None, desc='core inlet total temperature (re. T_0) [-]')
                 self.add_output('Ttj_c_star', val=np.ones(n_t), units=None, desc='core exit total temperature (re. T_0) [-]')
                 self.add_output('Pti_c_star', val=np.ones(n_t), units=None, desc='core inlet total pressure (re. p_O) [-]')
                 self.add_output('DTt_des_c_star', val=np.ones(n_t), units=None, desc='core total temperature drop across the turbine (re. T_0) [-]')
-            elif settings.method_core_turb == 'PW':
+            elif settings['core_turbine_attenuation_method'] == 'pw':
                 self.add_output('mdoti_c_star', val=np.ones(n_t), units=None, desc='core inlet mass flow (re. rho_0c_0A_e) [-]')
                 self.add_output('Tti_c_star', val=np.ones(n_t), units=None, desc='core inlet total temperature (re. T_0) [-]')
                 self.add_output('Ttj_c_star', val=np.ones(n_t), units=None, desc='core exit total temperature (re. T_0) [-]')
@@ -154,7 +152,7 @@ class NormalizationEngineVariables(om.ExplicitComponent):
                 self.add_output('c_te_c_star', val=np.ones(n_t), units=None, desc='core exit total speed of sound (re. c_0) [-]')
                 self.add_output('rho_ti_c_star', val=np.ones(n_t), units=None, desc='core inlet total density (re. rho_0) [-]')
                 self.add_output('c_ti_c_star', val=np.ones(n_t), units=None, desc='core inlet total speed of sound (re. c_0) [-]')
-        if settings.fan_inlet or settings.fan_discharge:
+        if settings['fan_inlet_source'] or settings['fan_discharge_source']:
             self.add_output('mdot_f_star', val=np.ones(n_t), units=None, desc='fan inlet mass flow (re. rho_0c_0A_e) [-]')
             self.add_output('N_f_star', val=np.ones(n_t), units=None, desc='fan rotational speed (re. c_0/sqrt(A_e)) [-]')
             self.add_output('DTt_f_star', val=np.ones(n_t), units=None, desc='fan total temperature rise (re. T_0) [-]')
@@ -169,30 +167,30 @@ class NormalizationEngineVariables(om.ExplicitComponent):
         # Load options
         settings = self.options['settings']
 
-        if settings.jet_mixing and settings.jet_shock == False:
+        if settings['jet_mixing_source'] and settings['jet_shock_source'] == False:
             outputs['V_j_star'] = inputs['V_j'] / inputs['c_0']
             outputs['rho_j_star'] = inputs['rho_j'] / inputs['rho_0']
-            outputs['A_j_star'] = inputs['A_j'] / settings.A_e
+            outputs['A_j_star'] = inputs['A_j'] / settings['A_e']
             outputs['Tt_j_star'] = inputs['Tt_j'] / inputs['T_0']
-        elif settings.jet_shock and settings.jet_mixing == False:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source'] == False:
             outputs['V_j_star'] = inputs['V_j'] / inputs['c_0']
-            outputs['A_j_star'] = inputs['A_j'] / settings.A_e
+            outputs['A_j_star'] = inputs['A_j'] / settings['A_e']
             outputs['Tt_j_star'] = inputs['Tt_j'] / inputs['T_0']
-        elif settings.jet_shock and settings.jet_mixing:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source']:
             outputs['V_j_star'] = inputs['V_j'] / inputs['c_0']
             outputs['rho_j_star'] = inputs['rho_j'] / inputs['rho_0']
-            outputs['A_j_star'] = inputs['A_j'] / settings.A_e
+            outputs['A_j_star'] = inputs['A_j'] / settings['A_e']
             outputs['Tt_j_star'] = inputs['Tt_j'] / inputs['T_0']
         
-        if settings.core:
-            if settings.method_core_turb == 'GE':
-                outputs['mdoti_c_star'] = inputs['mdoti_c'] / (inputs['rho_0'] * inputs['c_0'] * settings.A_e)
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == 'ge':
+                outputs['mdoti_c_star'] = inputs['mdoti_c'] / (inputs['rho_0'] * inputs['c_0'] * settings['A_e'])
                 outputs['Tti_c_star'] = inputs['Tti_c'] / inputs['T_0']
                 outputs['Ttj_c_star'] = inputs['Ttj_c'] / inputs['T_0']
                 outputs['Pti_c_star'] = inputs['Pti_c'] / inputs['p_0']
                 outputs['DTt_des_c_star'] = inputs['DTt_des_c'] / inputs['T_0']
-            elif settings.method_core_turb == 'PW':    
-                outputs['mdoti_c_star'] = inputs['mdoti_c'] / (inputs['rho_0'] * inputs['c_0'] * settings.A_e)
+            elif settings['core_turbine_attenuation_method'] == 'pw':    
+                outputs['mdoti_c_star'] = inputs['mdoti_c'] / (inputs['rho_0'] * inputs['c_0'] * settings['A_e'])
                 outputs['Tti_c_star'] = inputs['Tti_c'] / inputs['T_0']
                 outputs['Ttj_c_star'] = inputs['Ttj_c'] / inputs['T_0']
                 outputs['Pti_c_star'] = inputs['Pti_c'] / inputs['p_0']
@@ -201,9 +199,9 @@ class NormalizationEngineVariables(om.ExplicitComponent):
                 outputs['rho_ti_c_star'] = inputs['rho_ti_c'] / inputs['rho_0']
                 outputs['c_ti_c_star'] = inputs['c_ti_c'] / inputs['c_0']
 
-        if settings.fan_inlet or settings.fan_discharge:
+        if settings['fan_inlet_source'] or settings['fan_discharge_source']:
             outputs['DTt_f_star'] = inputs['DTt_f'] / inputs['T_0']
-            outputs['mdot_f_star'] = inputs['mdot_f'] / (inputs['rho_0'] * inputs['c_0'] * settings.A_e)
-            outputs['d_f_star'] = inputs['d_f'] / np.sqrt(settings.A_e)
-            outputs['A_f_star'] = inputs['A_f'] / settings.A_e
+            outputs['mdot_f_star'] = inputs['mdot_f'] / (inputs['rho_0'] * inputs['c_0'] * settings['A_e'])
+            outputs['d_f_star'] = inputs['d_f'] / np.sqrt(settings['A_e'])
+            outputs['A_f_star'] = inputs['A_f'] / settings['A_e']
             outputs['N_f_star'] = inputs['N_f'] / (inputs['c_0'] / inputs['d_f'] * 60)

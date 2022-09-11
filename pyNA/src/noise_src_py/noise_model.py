@@ -3,8 +3,7 @@ import os
 import numpy as np
 import openmdao.api as om
 from pyNA.src.data import Data
-from pyNA.src.settings import Settings
-from pyNA.src.aircraft import Aircraft
+from pyNA.src.airframe import Airframe
 from pyNA.src.noise_src_py.normalization_engine_variables import NormalizationEngineVariables
 from pyNA.src.noise_src_py.geometry import Geometry
 from pyNA.src.noise_src_py.source import Source
@@ -28,9 +27,9 @@ class NoiseModel(om.Group):
     """
 
     def initialize(self):
-        self.options.declare('settings', types=Settings)
+        self.options.declare('settings', types=dict)
         self.options.declare('data', types=Data)
-        self.options.declare('ac', types=Aircraft)
+        self.options.declare('airframe', types=Airframe)
         self.options.declare('n_t', types=int, desc='Number of time steps in trajectory')
         self.options.declare('mode', types=str)
 
@@ -39,7 +38,7 @@ class NoiseModel(om.Group):
         settings = self.options['settings']
         n_t = self.options['n_t']
         data = self.options['data']
-        ac = self.options['ac']
+        airframe = self.options['airframe']
 
         # Normalize engine inputs
         self.add_subsystem(name='normalize_engine',
@@ -61,35 +60,35 @@ class NoiseModel(om.Group):
 
         # Source module
         self.add_subsystem(name='source',
-                           subsys=Source(n_t=n_t, settings=settings, data=data, ac=ac),
+                           subsys=Source(settings=settings, data=data, airframe=airframe, n_t=n_t),
                            promotes_inputs=[],
                            promotes_outputs=[])
         self.connect('geometry.theta', 'source.theta')
         self.connect('geometry.phi', 'source.phi')
         self.connect('shielding.shield', 'source.shield')
-        if settings.jet_mixing and settings.jet_shock == False:
+        if settings['jet_mixing_source'] and settings['jet_shock_source'] == False:
             self.connect('normalize_engine.V_j_star', 'source.V_j_star')
             self.connect('normalize_engine.rho_j_star', 'source.rho_j_star')
             self.connect('normalize_engine.A_j_star', 'source.A_j_star')
             self.connect('normalize_engine.Tt_j_star', 'source.Tt_j_star')
-        elif settings.jet_shock and settings.jet_mixing == False:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source'] == False:
             self.connect('normalize_engine.V_j_star', 'source.V_j_star')
             self.connect('normalize_engine.A_j_star', 'source.A_j_star')
             self.connect('normalize_engine.Tt_j_star', 'source.Tt_j_star')
             self.connect('normalize_engine.M_j', 'source.M_j')
-        elif settings.jet_shock and settings.jet_mixing:
+        elif settings['jet_shock_source'] and settings['jet_mixing_source']:
             self.connect('normalize_engine.V_j_star', 'source.V_j_star')
             self.connect('normalize_engine.rho_j_star', 'source.rho_j_star')
             self.connect('normalize_engine.A_j_star', 'source.A_j_star')
             self.connect('normalize_engine.Tt_j_star', 'source.Tt_j_star')
-        if settings.core:
-            if settings.method_core_turb == 'GE':
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == 'ge':
                 self.connect('normalize_engine.mdoti_c_star', 'source.mdoti_c_star')
                 self.connect('normalize_engine.Tti_c_star', 'source.Tti_c_star')
                 self.connect('normalize_engine.Ttj_c_star', 'source.Ttj_c_star')
                 self.connect('normalize_engine.Pti_c_star', 'source.Pti_c_star')
                 self.connect('normalize_engine.DTt_des_c_star', 'source.DTt_des_c_star')
-            elif settings.method_core_turb == 'PW':
+            elif settings['core_turbine_attenuation_method'] == 'pw':
                 self.connect('normalize_engine.mdoti_c_star', 'source.mdoti_c_star')
                 self.connect('normalize_engine.Tti_c_star', 'source.Tti_c_star')
                 self.connect('normalize_engine.Ttj_c_star', 'source.Ttj_c_star')
@@ -98,7 +97,7 @@ class NoiseModel(om.Group):
                 self.connect('normalize_engine.c_te_c_star', 'source.c_te_c_star')
                 self.connect('normalize_engine.rho_ti_c_star', 'source.rho_ti_c_star')
                 self.connect('normalize_engine.c_ti_c_star', 'source.c_ti_c_star')
-        if settings.fan_inlet or settings.fan_discharge:
+        if settings['fan_inlet_source'] or settings['fan_discharge_source']:
             self.connect('normalize_engine.mdot_f_star', 'source.mdot_f_star')
             self.connect('normalize_engine.N_f_star', 'source.N_f_star')
             self.connect('normalize_engine.DTt_f_star','source.DTt_f_star')
@@ -117,7 +116,7 @@ class NoiseModel(om.Group):
             self.connect('source.msap_source', 'propagation.msap_source')
 
             # Levels module
-            if settings.bandshare:
+            if settings['epnl_bandshare']:
                 promotes_outputs_lst = ['spl', 'oaspl', 'pnlt', 'C']
             else:
                 promotes_outputs_lst = ['spl', 'oaspl', 'pnlt']
@@ -128,23 +127,23 @@ class NoiseModel(om.Group):
             self.connect('propagation.msap_prop', 'levels.msap_prop')
 
             # Integrated levels module
-            if settings.levels_int_metric == 'ioaspl':
+            if settings['levels_int_metric'] == 'ioaspl':
                 promotes_inputs_lst = ['t_o', 'oaspl']
-            elif settings.levels_int_metric == 'ipnlt':
+            elif settings['levels_int_metric'] == 'ipnlt':
                 promotes_inputs_lst = ['t_o', 'pnlt']
-            elif settings.levels_int_metric == 'epnl':
-                if settings.bandshare:
+            elif settings['levels_int_metric'] == 'epnl':
+                if settings['epnl_bandshare']:
                     promotes_inputs_lst = ['t_o', 'pnlt', 'C']
                 else:
                     promotes_inputs_lst = ['t_o', 'pnlt']
             self.add_subsystem(name='levels_int',
                             subsys=LevelsInt(n_t=n_t, settings=settings),
                             promotes_inputs=promotes_inputs_lst,
-                            promotes_outputs=[settings.levels_int_metric])
+                            promotes_outputs=[settings['levels_int_metric']])
 
         elif self.options['mode'] == 'distribution':
             # Levels module
-            if settings.bandshare:
+            if settings['epnl_bandshare']:
                 promotes_outputs_lst = ['spl', 'oaspl', 'pnlt', 'C']
             else:
                 promotes_outputs_lst = ['spl', 'oaspl', 'pnlt']

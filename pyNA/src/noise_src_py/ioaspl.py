@@ -3,7 +3,6 @@ import openmdao
 import openmdao.api as om
 import numpy as np
 from tqdm import tqdm
-from pyNA.src.settings import Settings
 
 
 def ioaspl(self, t_o: np.ndarray, oaspl: np.ndarray) -> np.float64:
@@ -19,7 +18,6 @@ def ioaspl(self, t_o: np.ndarray, oaspl: np.ndarray) -> np.float64:
     :rtype: Float64
     """
     # Load settings
-    settings = self.options['settings']
     n_t = self.options['n_t']
 
     # Trapezoidal integration

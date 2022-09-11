@@ -3,7 +3,6 @@ import pdb
 import openmdao
 import openmdao.api as om
 import numpy as np
-from pyNA.src.settings import Settings
 
 
 class Geometry(om.ExplicitComponent):
@@ -40,7 +39,7 @@ class Geometry(om.ExplicitComponent):
 
     def initialize(self):
         # Declare data option
-        self.options.declare('settings', types=Settings, desc='pyna settings')
+        self.options.declare('settings', types=dict, desc='noise settings')
         self.options.declare('n_t', types=int, desc='Number of time steps in trajectory')
         self.options.declare('mode', types=str, desc='mode for geometry calculations')
 
@@ -51,7 +50,7 @@ class Geometry(om.ExplicitComponent):
         n_t = self.options['n_t']
         
         # Number of observers
-        n_obs = np.shape(settings.x_observer_array)[0]
+        n_obs = np.shape(settings['x_observer_array'])[0]
 
         # Add inputs and outputs
         self.add_input('x', val=np.ones(n_t), units='m', desc='aircraft x-position [m]')
@@ -78,7 +77,7 @@ class Geometry(om.ExplicitComponent):
         mode = self.options['mode']
 
         # Number of observers
-        n_obs = np.shape(settings.x_observer_array)[0]
+        n_obs = np.shape(settings['x_observer_array'])[0]
 
         # Extract inputs
         x = inputs['x']
@@ -102,9 +101,9 @@ class Geometry(om.ExplicitComponent):
 
                 # Compute the relative observer-source position vector i.e. difference between observer and ac coordinate
                 # Note: add 4 meters to the alitude of the aircraft (for engine height)
-                r_0 =  settings.x_observer_array[i,0] - x
-                r_1 =  settings.x_observer_array[i,1] - y
-                r_2 = -settings.x_observer_array[i,2] + (z + 4)
+                r_0 =  settings['x_observer_array'][i,0] - x
+                r_1 =  settings['x_observer_array'][i,1] - y
+                r_2 = -settings['x_observer_array'][i,2] + (z + 4)
 
                 # Compute the distance of the observer-source vector
                 R = np.sqrt(r_0 ** 2 + r_1 ** 2 + r_2 ** 2)
@@ -141,7 +140,7 @@ class Geometry(om.ExplicitComponent):
                 # Compute azimuthal directivity angle
                 # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 27
                 phi = -180. / np.pi * np.arctan2(n_vcr_s_1, n_vcr_s_2)
-                if settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
+                if settings['case_name'] in ["nasa_stca_standard", "stca_enginedesign_standard"]:
                     outputs['phi'][i, :] = np.zeros(n_t)
                 else:
                     phi[phi==-180.] = np.zeros(n_t)[phi==-180.]

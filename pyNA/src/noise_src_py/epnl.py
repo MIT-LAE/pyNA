@@ -3,7 +3,7 @@ import openmdao
 import openmdao.api as om
 import numpy as np
 from tqdm import tqdm
-from pyNA.src.settings import Settings
+
 
 def epnl(self, t_o: np.ndarray, pnlt: np.ndarray, C: np.ndarray = np.ones(1)) -> np.float64:
     """
@@ -14,7 +14,7 @@ def epnl(self, t_o: np.ndarray, pnlt: np.ndarray, C: np.ndarray = np.ones(1)) ->
     :param pnlt: perceived noise level, tone corrected [PNdB]
     :type pnlt: np.ndarray [n_t']
     :param C: pnlt tone correction [dB]
-    :type C: np.ndarray [n_t'] settings.N_f']
+    :type C: np.ndarray
 
     :return: epnl [EPNdB]
     :rtype: Float64
@@ -37,10 +37,10 @@ def epnl(self, t_o: np.ndarray, pnlt: np.ndarray, C: np.ndarray = np.ones(1)) ->
 
     # Check tone band-sharing
     i_max = np.where(pnlt_ip == pnltm)[0][0]
-    if settings.bandshare:
+    if settings['epnl_bandshare']:
 
-        C_ip = np.zeros((n_ip, settings.N_f))
-        for j in np.arange(settings.N_f):
+        C_ip = np.zeros((n_ip, settings['n_frequency_bands']))
+        for j in np.arange(settings['n_frequency_bands']):
             C_ip[:,j] = np.interp(t_ip, t_o, C[:,j])
 
         if i_max == 0 or i_max == 1:

@@ -13,13 +13,13 @@ function lateral_attenuation(settings, x_obs, x, y, z)
     beta_max = smooth_max(k_smooth, beta)
 
     # Engine installation term [dB]
-    if settings.engine_mounting == "underwing"
+    if settings["lateral_attenuation_engine_mounting"] == "underwing"
         E_eng = 10 * log10((0.0039 * cos(beta_max*pi/180)^2 + sin(beta_max*pi/180)^2)^0.062/(0.8786 * sin(2 * beta_max*pi/180)^2 + cos(2*beta_max*pi/180)^2))
-    elseif settings.engine_mounting == "fuselage"
+    elseif settings["lateral_attenuation_engine_mounting"] == "fuselage"
         E_eng = 10 * log10((0.1225 * cos(beta_max*pi/180)^2 + sin(beta_max*pi/180)^2)^0.329)
-    elseif settings.engine_mounting == "propeller"
+    elseif settings["lateral_attenuation_engine_mounting"] == "propeller"
         E_eng = 0.
-    elseif settings.engine_mounting == "none"
+    elseif settings["lateral_attenuation_engine_mounting"] == "none"
         E_eng = 0.
     end
 
@@ -49,13 +49,13 @@ end
 function lateral_attenuation!(spl_sb, settings, beta, x_obs)
     
     # Engine installation term [dB]
-    if settings.engine_mounting == "underwing"
+    if settings["lateral_attenuation_engine_mounting"] == "underwing"
         E_eng = 10 * log10((0.0039 * cos(beta*pi/180)^2 + sin(beta*pi/180)^2)^0.062/(0.8786 * sin(2 * beta*pi/180)^2 + cos(2*beta*pi/180)^2))
-    elseif settings.engine_mounting == "fuselage"
+    elseif settings["lateral_attenuation_engine_mounting"] == "fuselage"
         E_eng = 10 * log10((0.1225 * cos(beta*pi/180)^2 + sin(beta*pi/180)^2)^0.329)
-    elseif settings.engine_mounting == "propeller"
+    elseif settings["lateral_attenuation_engine_mounting"] == "propeller"
         E_eng = zeros(size(beta))
-    elseif settings.engine_mounting == "none"
+    elseif settings["lateral_attenuation_engine_mounting"] == "none"
         E_eng = zeros(size(beta))
     end
 

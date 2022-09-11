@@ -3,7 +3,6 @@ import openmdao
 import numpy as np
 import openmdao.api as om
 from pyNA.src.data import Data
-from pyNA.src.settings import Settings
 
 
 class Shielding(om.ExplicitComponent):
@@ -26,7 +25,7 @@ class Shielding(om.ExplicitComponent):
     """
     def initialize(self):
         # Declare data option
-        self.options.declare('settings', types=Settings, desc='pyna settings')
+        self.options.declare('settings', types=dict, desc='pyna settings')
         self.options.declare('n_t', types=int, desc='Number of time steps in trajectory')
         self.options.declare('data', types=Data)
 
@@ -37,10 +36,10 @@ class Shielding(om.ExplicitComponent):
         n_t = self.options['n_t']
 
         # Number of observers
-        n_obs = np.shape(settings.x_observer_array)[0]
+        n_obs = np.shape(settings['x_observer_array'])[0]
 
         # Output
-        self.add_output('shield', val=np.zeros((n_obs, n_t, settings.N_f)), desc='airframe shielding delta-dB values')
+        self.add_output('shield', val=np.zeros((n_obs, n_t, settings['n_frequency_bands'])), desc='airframe shielding delta-dB values')
 
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
         
@@ -48,15 +47,15 @@ class Shielding(om.ExplicitComponent):
         settings = self.options['settings']
         data = self.options['data']
 
-        if settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"] and settings.shielding:
+        if settings['case_name'] in ["nasa_stca_standard", "stca_enginedesign_standard"] and settings['shielding']:
                 
-            for i in np.arange(len(settings.observer_lst)):
+            for i in np.arange(len(settings['observer_lst'])):
 
-                if settings.observer_lst[i] == 'lateral':
+                if settings['observer_lst'][i] == 'lateral':
                     outputs['shield'][i, :, :] = data.shield_l
 
-                elif settings.observer_lst[i] == 'flyover':
+                elif settings['observer_lst'][i] == 'flyover':
                     outputs['shield'][i, :, :] = data.shield_f
 
-                elif settings.observer_lst[i] == 'approach':
+                elif settings['observer_lst'][i] == 'approach':
                     outputs['shield'][i, :, :] = data.shield_a

@@ -31,10 +31,7 @@
 "af_clean_h" : false, 
 "af_clean_v" : true,  
 "af_delta_wing" : true, 
-"alpha_0" : -0.85,
-"k_rot" : 1.29,  
-"v_max" : 128.6, 
-"z_max" : 1000.0
+"alpha_0" : -0.85
 }
 
 

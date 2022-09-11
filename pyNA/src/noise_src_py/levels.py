@@ -3,7 +3,6 @@ import openmdao
 import openmdao.api as om
 import numpy as np
 from pyNA.src.data import Data
-from pyNA.src.settings import Settings
 from pyNA.src.noise_src_py.spl import spl
 from pyNA.src.noise_src_py.oaspl import oaspl
 from pyNA.src.noise_src_py.pnlt import pnlt
@@ -39,7 +38,7 @@ class Levels(om.ExplicitComponent):
     """
 
     def initialize(self):
-        self.options.declare('settings', types=Settings)
+        self.options.declare('settings', types=dict)
         self.options.declare('n_t', types=int, desc='Number of time steps in trajectory')
         self.options.declare('data', types=Data)
 
@@ -50,28 +49,28 @@ class Levels(om.ExplicitComponent):
         n_t = self.options['n_t']
 
         # Number of observers
-        n_obs = np.shape(settings.x_observer_array)[0]
+        n_obs = np.shape(settings['x_observer_array'])[0]
 
         # Add inputs and outputs
         self.add_input('rho_0', val=np.ones(n_t), units='kg/m**3', desc='ambient density [kg/m3]')
         self.add_input('c_0', val=np.ones(n_t), units='m/s', desc='ambient speed of sound [m/s]')
-        self.add_input('msap_prop', val=np.ones((n_obs, n_t, settings.N_f)), units=None, desc='mean-square acoustic pressure, propagated to the observer (re. rho_0^2c_0^2) [-]')
+        self.add_input('msap_prop', val=np.ones((n_obs, n_t, settings['n_frequency_bands'])), units=None, desc='mean-square acoustic pressure, propagated to the observer (re. rho_0^2c_0^2) [-]')
 
-        self.add_output('spl', val=np.ones((n_obs, n_t, settings.N_f)), desc='sound pressure level [dB]')
+        self.add_output('spl', val=np.ones((n_obs, n_t, settings['n_frequency_bands'])), desc='sound pressure level [dB]')
         self.add_output('oaspl', val=np.ones((n_obs, n_t)), desc='overall sound pressure level [dB]')
         
-        self.add_output('noy', val=np.ones((n_obs, n_t, settings.N_f)), desc='noy [dB]')
+        self.add_output('noy', val=np.ones((n_obs, n_t, settings['n_frequency_bands'])), desc='noy [dB]')
         self.add_output('pnl', val=np.ones((n_obs, n_t)), desc='perceived noise level [PNdB]')
         self.add_output('pnlt', val=np.ones((n_obs, n_t)), desc='perceived noise level, tone corrected [PNdB]')
         self.add_output('c_max', val=np.ones((n_obs, n_t)), desc='maximum tone correction [dB]')
-        self.add_output('C', val=np.ones((n_obs, n_t, settings.N_f)), desc='pnlt tone correction [dB]')
+        self.add_output('C', val=np.ones((n_obs, n_t, settings['n_frequency_bands'])), desc='pnlt tone correction [dB]')
 
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
         # Load options
         settings = self.options['settings']
 
         # Number of observers
-        n_obs = np.shape(settings.x_observer_array)[0]
+        n_obs = np.shape(settings['x_observer_array'])[0]
 
         # Extract inputs
         msap_prop = inputs['msap_prop']

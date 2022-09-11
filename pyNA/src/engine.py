@@ -1,77 +1,108 @@
-import pdb
 import pandas as pd
 import numpy as np
-from dataclasses import dataclass
-from pyNA.src.settings import Settings
+import pdb
 
 
-@dataclass
-class Engine:
-    """
-    Engine class containing the following parameters
+class Engine():
 
-    * ``time_series``:   time series of engine parameters for a predefined trajectory
-    * ``deck``:         engine deck used for trajectory computations
+    def __init__(self, pyna_directory, ac_name, case_name, output_directory_name, engine_timeseries_name, engine_deck_name) -> None:
+        
+        # Settings 
+        self.pyna_directory = pyna_directory
+        self.ac_name = ac_name
+        self.case_name = case_name
+        self.output_directory_name = output_directory_name
+        self.engine_timeseries_name = engine_timeseries_name
+        self.engine_deck_name = engine_deck_name
 
-    """
-
-    # Initialize aircraft name
-    def __init__(self) -> None:
-
-        # Initialization
-        self.time_series = dict()
+        # Instantiate 
+        self.timeseries = pd.DataFrame()
         self.deck = dict()
-        self.TS_limit = dict()
-
-    def load_time_series(self, settings, engine_file_name='Engine_to.csv') -> None:
+        self.deck_variables = dict()
+        
+    def get_timeseries(self, timestep=None) -> None:
+        
         """
-        Load engine time series for noise computations.
-
-        :param settings: pyna settings
-        :type settings: Dict[str, Any]
-        :param engine_file_name: File name of engine time series
-        :type engine_file_name: str
+        Load engine timeseries from .csv file.
 
         :return: None
         """
 
         # Load raw inputs from .csv file
         # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
-        self.time_series = pd.read_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + settings.output_directory_name + '/' + engine_file_name)
+        self.timeseries = pd.read_csv(self.pyna_directory + '/cases/' + self.case_name + '/engine/' + self.output_directory_name + '/' + self.engine_timeseries_name)
+
+        if not timestep==None:
+            # Select operating point
+            cols = self.timeseries.columns
+            op_point = pd.DataFrame(np.reshape(self.timeseries.values[timestep, :], (1, len(cols))))
+            op_point.columns = cols
+
+            # Duplicate operating for theta range (np.linspace(0, 180, 19))
+            self.timeseries = pd.DataFrame()
+            for i in np.arange(19):
+                self.timeseries = self.timeseries.append(op_point)
 
         return None
 
-    def load_operating_point(self, settings, time_step, engine_file_name='Engine_to.csv') -> None:
+    def get_performance_deck_variables(self, fan_inlet_source, fan_discharge_source, core_source, jet_mixing_source, jet_shock_source, core_turbine_attenuation_method='ge'):
         """
-        Load engine operating point for noise distribution calculations.
-
-        :param settings: pyna settings
-        :type settings: Dict[str, Any]
-        :param time_step: 
-        :type time_step:
-        :param engine_file_name: File name of engine time series
-        :type engine_file_name: str
+        Get list of engine variables required from the engine deck
 
         :return: None
         """
 
-        # Load raw inputs from .csv file
-        # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
-        self.time_series = pd.read_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + settings.output_directory_name + '/' + engine_file_name)
+        # General variables
+        self.deck_variables['F_n'] = 'N'
+        self.deck_variables['W_f'] = 'kg/s'
+        self.deck_variables['Tti_c'] = 'K'
+        self.deck_variables['Pti_c'] = 'Pa'
 
-        # Select operating point
-        cols = self.time_series.columns
-        op_point = pd.DataFrame(np.reshape(self.time_series.values[time_step, :], (1, len(cols))))
-        op_point.columns = cols
+        # Jet variables
+        if jet_mixing_source and not jet_shock_source:
+            self.deck_variables['V_j'] = 'm/s' 
+            self.deck_variables['rho_j'] = 'kg/m**3'
+            self.deck_variables['A_j'] = 'm**2'
+            self.deck_variables['Tt_j'] = 'K'
+        elif jet_shock_source and not jet_mixing_source:
+            self.deck_variables['V_j'] = 'm/s' 
+            self.deck_variables['A_j'] = 'm**2'
+            self.deck_variables['Tt_j'] = 'K'
+            self.deck_variables['M_j'] = None
+        elif jet_mixing_source and jet_shock_source:
+            self.deck_variables['V_j'] = 'm/s' 
+            self.deck_variables['rho_j'] = 'kg/m**3'
+            self.deck_variables['A_j'] = 'm**2'
+            self.deck_variables['Tt_j'] = 'K'
+            self.deck_variables['M_j'] = None
+        
+        # Core variables
+        if core_source:
+            if core_turbine_attenuation_method == 'ge':
+                self.deck_variables['mdoti_c'] = 'kg/s'
+                self.deck_variables['Ttj_c'] = 'K'
+                self.deck_variables['DTt_des_c'] = 'K'
 
-        # Duplicate operating for theta range (np.linspace(0, 180, 19))
-        self.time_series = pd.DataFrame()
-        for i in np.arange(19):
-            self.time_series = self.time_series.append(op_point)
+            elif core_turbine_attenuation_method.method_core_turb == 'pw':
+                self.deck_variables['mdoti_c'] = 'kg/s'
+                self.deck_variables['Ttj_c'] = 'K'
+                self.deck_variables['DTt_des_c'] = 'K'
+                self.deck_variables['rho_te_c'] = 'kg/m**3'
+                self.deck_variables['c_te_c', ] = 'm/s'
+                self.deck_variables['rho_ti_c'] = 'kg/m**3'
+                self.deck_variables['c_ti_c'] = 'm/s'
+
+        # Fan variables
+        if fan_inlet_source or fan_discharge_source:
+            self.deck_variables['DTt_f'] = 'K'
+            self.deck_variables['mdot_f'] = 'kg/s'
+            self.deck_variables['N_f'] = 'rpm'
+            self.deck_variables['A_f'] = 'm**2'
+            self.deck_variables['d_f'] = 'm'
 
         return None
 
-    def load_deck(self, settings: Settings) -> None:
+    def get_performance_deck(self, atmosphere_type, thrust_lapse, F00=None) -> None:
         """
         Load engine deck for trajectory computations.
 
@@ -79,93 +110,103 @@ class Engine:
         """
 
         # Load self.engine data and create interpolation functions
-        data = pd.read_csv(settings.pyNA_directory + '/cases/' + settings.case_name + '/engine/' + settings.engine_file_name)
-        self.deck['z'] = np.unique(data['z [m]'].values)
-        self.deck['M_0'] = np.unique(data['M_0 [-]'].values)
-        self.deck['TS'] = np.unique(data['T/TMAX [-]'].values)
-        self.deck['F_n'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['W_f'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
+        data = pd.read_csv(self.pyna_directory + '/cases/' + self.case_name + '/engine/' + self.engine_deck_name)
+        data_column_labels = {'F_n':'Fn [N]',
+                              'W_f':'Wf [kg/s]',
+                              'V_j':'jet_V [m/s]',
+                              'Tt_j':'jet_Tt [K]',
+                              'rho_j':'jet_rho [kg/m3]',
+                              'A_j':'jet_A [m2]',
+                              'M_j':'jet_M [-]',
+                              'mdoti_c':'core_mdot_in [kg/s]',
+                              'Tti_c':'core_Tt_in [K]',
+                              'Ttj_c':'core_Tt_out [K]',
+                              'Pti_c':'core_Pt_in [Pa]',
+                              'DTt_des_c':'core_DT_t [K]',
+                              'rho_te_c':'core_LPT_rho_out [kg/m3]',
+                              'rho_ti_c':'core_HPT_rho_in [kg/m3]',
+                              'c_te_c':'core_LPT_c_out [m/s]',
+                              'c_ti_c':'core_HPT_c_in [m/s]',
+                              'DTt_f':'fan_DTt [K]',
+                              'mdot_f':'fan_mdot_in [kg/s]',
+                              'N_f':'fan_N [rpm]',
+                              'A_f':'fan_A [m2]',
+                              'd_f':'fan_d [m]',
+                              'M_d_f':'fan_M_d [-]'}
 
-        self.deck['V_j'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['Tt_j'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['rho_j'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['A_j'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['M_j'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
+        # Initialize engine deck variables
+        if atmosphere_type == 'stratified':
+            self.deck['z'] = np.unique(data['z [m]'].values)
+            self.deck['M_0'] = np.unique(data['M_0 [-]'].values)
+            self.deck['TS'] = np.unique(data['T/TMAX [-]'].values)
+            
+            if len(self.deck_variables.keys()) == 0:
+                raise ValueError('deck_variables is empty') 
+            else:                
+                for var in self.deck_variables:
+                    self.deck[var] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
 
-        self.deck['mdot_i_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['Tti_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['Ttj_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['Pti_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['DTt_des_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['rho_te_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['rho_ti_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['c_te_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['c_ti_c'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
+                # Fill engine deck
+                cntr = -1
+                for i in np.arange(self.deck['z'].shape[0]):
+                    for j in np.arange(self.deck['M_0'].shape[0]):
+                        for k in np.flip(np.arange(self.deck['TS'].shape[0])):
+                            cntr = cntr + 1
 
-        self.deck['DTt_f'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['mdot_f'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['N_f'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['A_f'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['d_f'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
-        self.deck['M_d_f'] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
+                            for var in self.deck_variables:
 
-        cntr = -1
-        for i in np.arange(self.deck['z'].shape[0]):
-            for j in np.arange(self.deck['M_0'].shape[0]):
-                for k in np.flip(np.arange(self.deck['TS'].shape[0])):
-                    cntr = cntr + 1
+                                if var == 'F_n':
+                                    if thrust_lapse:
+                                        # self.deck[var][i, j, k] = data[data_column_labels[var]].values[cntr]/83821.6*F00
+                                        # self.deck[var][i, j, k] = data[data_column_labels[var]].values[cntr]/136325.9272*F00
+                                        self.deck[var][i, j, k] = data[data_column_labels[var]].values[cntr]
+                                    else:
+                                        self.deck[var][i, j, k] = F00
 
-                    if settings.engine_thrust_lapse:
-                        if settings.ac_name == 'stca' and not settings.Foo == None:
-                            self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 83821.6 * settings.Foo
-                        elif settings.ac_name == 'a10' and not settings.Foo == None:
-                            self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr] / 136325.9272 * settings.Foo
-                        else:
-                            self.deck['F_n'][i, j, k] = data['Fn [N]'].values[cntr]
-                        self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[cntr]
-                        self.deck['V_j'][i, j, k] = data['jet_V [m/s]'].values[cntr]
-                        self.deck['Tt_j'][i, j, k] = data['jet_Tt [K]'].values[cntr]
-                        self.deck['rho_j'][i, j, k] = data['jet_rho [kg/m3]'].values[cntr]
-                        self.deck['A_j'][i, j, k] = data['jet_A [m2]'].values[cntr]
-                        self.deck['M_j'][i, j, k] = data['jet_M [-]'].values[cntr]
-                        self.deck['mdot_i_c'][i, j, k] = data['core_mdot_in [kg/s]'].values[cntr]
-                        self.deck['Tti_c'][i, j, k] = data['core_Tt_in [K]'].values[cntr]
-                        self.deck['Ttj_c'][i, j, k] = data['core_Tt_out [K]'].values[cntr]
-                        self.deck['Pti_c'][i, j, k] = data['core_Pt_in [Pa]'].values[cntr]
-                        self.deck['DTt_des_c'][i, j, k] = data['core_DT_t [K]'].values[cntr]
-                        self.deck['rho_te_c'][i, j, k] = data['core_LPT_rho_out [kg/m3]'].values[cntr]
-                        self.deck['rho_ti_c'][i, j, k] = data['core_HPT_rho_in [kg/m3]'].values[cntr]
-                        self.deck['c_te_c'][i, j, k] = data['core_LPT_c_out [m/s]'].values[cntr]
-                        self.deck['c_ti_c'][i, j, k] = data['core_HPT_c_in [m/s]'].values[cntr]
-                        self.deck['DTt_f'][i, j, k] = data['fan_DTt [K]'].values[cntr]
-                        self.deck['mdot_f'][i, j, k] = data['fan_mdot_in [kg/s]'].values[cntr]
-                        self.deck['N_f'][i, j, k] = data['fan_N [rpm]'].values[cntr]
-                        self.deck['A_f'][i, j, k] = data['fan_A [m2]'].values[cntr]
-                        self.deck['d_f'][i, j, k] = data['fan_d [m]'].values[cntr]
-                        self.deck['M_d_f'][i, j, k] = data['fan_M_d [-]'].values[cntr]
+                                else:
+                                    if thrust_lapse:
+                                        self.deck[var][i, j, k] = data[data_column_labels[var]].values[cntr]
+                                    else:
+                                        self.deck[var][i, j, k] = data[data_column_labels[var]].values[1]
 
-                    else:
-                        self.deck['F_n'][i, j, k] = settings.Foo
-                        self.deck['W_f'][i, j, k] = data['Wf [kg/s]'].values[1]
-                        self.deck['V_j'][i, j, k] = data['jet_V [m/s]'].values[1]
-                        self.deck['Tt_j'][i, j, k] = data['jet_Tt [K]'].values[1]
-                        self.deck['rho_j'][i, j, k] = data['jet_rho [kg/m3]'].values[1]
-                        self.deck['A_j'][i, j, k] = data['jet_A [m2]'].values[1]
-                        self.deck['M_j'][i, j, k] = data['jet_M [-]'].values[1]
-                        self.deck['mdot_i_c'][i, j, k] = data['core_mdot_in [kg/s]'].values[1]
-                        self.deck['Tti_c'][i, j, k] = data['core_Tt_in [K]'].values[1]
-                        self.deck['Ttj_c'][i, j, k] = data['core_Tt_out [K]'].values[1]
-                        self.deck['Pti_c'][i, j, k] = data['core_Pt_in [Pa]'].values[1]
-                        self.deck['DTt_des_c'][i, j, k] = data['core_DT_t [K]'].values[1]
-                        self.deck['rho_te_c'][i, j, k] = data['core_LPT_rho_out [kg/m3]'].values[1]
-                        self.deck['rho_ti_c'][i, j, k] = data['core_HPT_rho_in [kg/m3]'].values[1]
-                        self.deck['c_te_c'][i, j, k] = data['core_LPT_c_out [m/s]'].values[1]
-                        self.deck['c_ti_c'][i, j, k] = data['core_HPT_c_in [m/s]'].values[1]
-                        self.deck['DTt_f'][i, j, k] = data['fan_DTt [K]'].values[1]
-                        self.deck['mdot_f'][i, j, k] = data['fan_mdot_in [kg/s]'].values[1]
-                        self.deck['N_f'][i, j, k] = data['fan_N [rpm]'].values[1]
-                        self.deck['A_f'][i, j, k] = data['fan_A [m2]'].values[1]
-                        self.deck['d_f'][i, j, k] = data['fan_d [m]'].values[1]
-                        self.deck['M_d_f'][i, j, k] = data['fan_M_d [-]'].values[1]
+        elif atmosphere_type == 'sealevel':
+
+            # Select only sealevel values in engine deck
+            data = data[data['z [m]'] == 0]
+
+            self.deck['M_0'] = np.unique(data['M_0 [-]'].values)
+            self.deck['TS'] = np.unique(data['T/TMAX [-]'].values)
+
+            if len(self.deck_variables.keys()) == 0:
+                raise ValueError('deck_variables is empty') 
+            else:
+                for var in self.deck_variables:
+                    self.deck[var] = np.zeros((self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
+
+                # Fill engine deck
+                cntr = -1
+                for j in np.arange(self.deck['M_0'].shape[0]):
+                    for k in np.flip(np.arange(self.deck['TS'].shape[0])):
+                        cntr = cntr + 1
+
+                        for var in self.deck_variables:
+
+                            if var == 'F_n':
+                                if thrust_lapse:
+                                    # self.deck[var][j, k] = data[data_column_labels[var]].values[cntr]/83821.6*F00
+                                    # self.deck[var][j, k] = data[data_column_labels[var]].values[cntr]/136325.9272*F00
+                                    self.deck[var][j, k] = data[data_column_labels[var]].values[cntr]
+                                else:
+                                    self.deck[var][j, k] = F00
+
+                            else:
+                                if thrust_lapse:
+                                    self.deck[var][j, k] = data[data_column_labels[var]].values[cntr]
+                                else:
+                                    self.deck[var][j, k] = data[data_column_labels[var]].values[1]
+    
 
         return None
+
+
+

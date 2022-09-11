@@ -17,78 +17,78 @@ function get_fan_interpolation_functions(settings, data)
 	f_supp_fd = LinearInterpolation((data_freq, data_angles), data_supp)
     
     # Fan inlet broadband
-	if settings.fan_BB_method == "kresja"
+	if settings["fan_BB_method"] == "kresja"
         THET7A = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190]
         FIG7A = [-0.5, -1, -1.25, -1.41, -1.4, -2.2, -4.5, -8.5, -13, -18.5, -24, -30, -36, -42, -48, -54, -60,-66, -73, -66]
         f_F3IB = LinearInterpolation(THET7A, FIG7A)
-    elseif settings.fan_BB_method in ["original", "allied_signal", "geae"]
+    elseif settings["fan_BB_method"] in ["original", "allied_signal", "geae"]
         THET7A = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 180, 250]
         FIG7A = [-2, -1, 0, 0, 0, -2, -4.5, -7.5, -11, -15, -19.5, -25, -63.5, -25]
         f_F3IB = LinearInterpolation(THET7A, FIG7A)
     end
 
     # Fan discharge broadband
-    if settings.fan_BB_method == "allied_signal"
+    if settings["fan_BB_method"] == "allied_signal"
         THET7B = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]
         FIG7B = [0, -29.5, -26, -22.5, -19, -15.5, -12, -8.5, -5, -3.5, -2.5, -2, -1.3, 0, -3, -7, -11, -15, -20]
         f_F3DB = LinearInterpolation(THET7B, FIG7B)
-    elseif settings.fan_BB_method == "kresja"
+    elseif settings["fan_BB_method"] == "kresja"
         THET7B = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190]
         FIG7B = [-30, -25, -20.8, -19.5, -18.4, -16.7, -14.5, -12, -9.6, -6.9, -4.5, -1.8, -0.3, 0.5, 0.7, -1.9,-4.5, -9, -15, -9]
         f_F3DB = LinearInterpolation(THET7B, FIG7B)
-    elseif settings.fan_BB_method in ["original", "geae"]
+    elseif settings["fan_BB_method"] in ["original", "geae"]
         THET7B = [0, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190]
         FIG7B = [-41.6, -15.8, -11.5, -8, -5, -2.7, -1.2, -0.3, 0, -2, -6, -10, -15, -20, -15]
         f_F3DB = LinearInterpolation(THET7B, FIG7B)
     end
 
     # Fan inlet tones
-    if settings.fan_RS_method == "allied_signal"
+    if settings["fan_RS_method"] == "allied_signal"
         THT13A = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]
         FIG13A = [-3, -1.5, -1.5, -1.5, -1.5, -2, -3, -4, -6, -9, -12.5, -16, -19.5, -23, -26.5, -30, -33.5, -37,-40.5]
         f_F3TI = LinearInterpolation(THT13A, FIG13A)
-    elseif settings.fan_RS_method == "kresja"
+    elseif settings["fan_RS_method"] == "kresja"
         THT13A = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]
         FIG13A = [-3, -1.5, 0, 0, 0, -1.2, -3.5, -6.8, -10.5, -15.5, -19, -25, -32, -40, -49, -59, -70, -80, -90]
         f_F3TI = LinearInterpolation(THT13A, FIG13A)
-    elseif settings.fan_RS_method in ["original", "geae"]  # For original and GE large fan methods:
+    elseif settings["fan_RS_method"] in ["original", "geae"]  # For original and GE large fan methods:
         THT13A = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 180, 260]
         FIG13A = [-3, -1.5, 0, 0, 0, -1.2, -3.5, -6.8, -10.5, -14.5, -19, -55, -19]
         f_F3TI = LinearInterpolation(THT13A, FIG13A)
     end
 
     # Fan discharge tones
-    if settings.fan_RS_method == "allied_signal"
+    if settings["fan_RS_method"] == "allied_signal"
         THT13B = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]
         FIG13B = [-34, -30, -26, -22, -18, -14, -10.5, -6.5, -4, -1, 0, 0, 0, 0, -1, -3.5, -7, -11, -16]
         f_F3TD = LinearInterpolation(THT13B, FIG13B)
-    elseif settings.fan_RS_method == "kresja"
+    elseif settings["fan_RS_method"] == "kresja"
         THT13B = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]
         FIG13B = [-50, -41, -33, -26, -20.6, -17.9, -14.7, -11.2, -9.3, -7.1, -4.7, -2, 0, 0.8, 1, -1.6, -4.2, -9,-15]
         f_F3TD = LinearInterpolation(THT13B, FIG13B)
-    elseif settings.fan_RS_method in ["original", "geae"]
+    elseif settings["fan_RS_method"] in ["original", "geae"]
         THT13B = [0, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190]
         FIG13B = [-39, -15, -11, -8, -5, -3, -1, 0, 0, -2, -5.5, -9, -13, -18, -13]
         f_F3TD = LinearInterpolation(THT13B, FIG13B)
     end
 
     # Fan combination tones
-    if settings.fan_RS_method == "original"
+    if settings["fan_RS_method"] == "original"
         # Theta correction term (F2 of Eqn 8, Figure 16), original method:
         THT16 = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 180, 270]
         FIG16 = [-9.5, -8.5, -7, -5, -2, 0, 0, -3.5, -7.5, -9, -13.5, -9]
         f_F2CT = LinearInterpolation(THT16, FIG16)
-    elseif settings.fan_RS_method == "allied_signal"
+    elseif settings["fan_RS_method"] == "allied_signal"
         # Theta correction term (F2 of Eqn 8, Figure 16), small fan method:
         THT16 = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 270]
         FIG16 = [-5.5, -4.5, -3, -1.5, 0, 0, 0, 0, -2.5, -5, -6, -6.9, -7.9, -8.8, -9.8, -10.7, -11.7, -12.6,-13.6, -6]
         f_F2CT = LinearInterpolation(THT16, FIG16)
-    elseif settings.fan_RS_method == "geae"
+    elseif settings["fan_RS_method"] == "geae"
         # Theta correction term (F2 of Eqn 8, Figure 16), large fan method:
         THT16 = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 180, 270]
         FIG16 = [-9.5, -8.5, -7, -5, -2, 0, 0, -3.5, -7.5, -9, -13.5, -9]
         f_F2CT = LinearInterpolation(THT16, FIG16)
-    elseif settings.fan_RS_method == "kresja"
+    elseif settings["fan_RS_method"] == "kresja"
         # Theta correction term (F2 of Eqn 8, Figure 16), Krejsa method:
         THT16 = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190]
         FIG16 = [-28, -23, -18, -13, -8, -3, 0, -1.3, -2.6, -3.9, -5.2, -6.5, -7.9, -9.4, -11, -12.7, -14.5,-16.4, -18.4]

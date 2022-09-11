@@ -3,10 +3,9 @@ import openmdao
 import openmdao.api as om
 import numpy as np
 from tqdm import tqdm
-from pyNA.src.settings import Settings
 
 
-def ipnlt(self, t_o: np.ndarray, pnlt: np.ndarray) -> np.float64:
+def ipnlt(t_o: np.ndarray, pnlt: np.ndarray) -> np.float64:
     """
     Compute time-integrated pnlt.
 

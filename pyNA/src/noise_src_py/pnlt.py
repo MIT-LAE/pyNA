@@ -8,30 +8,29 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     :param levels: pyNA component computing noise levels
     :type levels: Levels
     :param spl: sound pressure level [dB]
-    :type spl: np.ndarray [n_t, settings.N_f]
+    :type spl: np.ndarray
 
     :return: pnlt, C
-    :rtype: np.ndarray [n_t], np.ndarray [n_t, settings.N_f]
+    :rtype: np.ndarray
     """
     # Load data
-    data = levels.options['data']
     settings = levels.options['settings']
     n_t = levels.options['n_t']
 
     # Initialize solution matrices
     pnl = np.zeros(n_t)
     pnlt = np.zeros(n_t)
-    noy = np.zeros((n_t, settings.N_f))
+    noy = np.zeros((n_t, settings['n_frequency_bands']))
     c_max = np.zeros(n_t)
-    C = np.zeros((n_t, settings.N_f))
+    C = np.zeros((n_t, settings['n_frequency_bands']))
 
     for k in np.arange(n_t):
         spl_k = spl[k, :]
 
         # Compute noy
         # Source: ICAO Annex 16 Appendix 2 section 4.2 Step 1
-        N = np.zeros(settings.N_f)
-        for i in np.arange(settings.N_f):
+        N = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(settings['n_frequency_bands']):
             # Source: ICAO Annex 16 Appendix 2 Table A2-3 (Noy tables)
             spl_a = np.array([91. , 85.9, 87.3, 79. , 79.8, 76. , 74. , 74.9, 94.6,  1e8,  1e8, 1e8,  1e8,  1e8,  1e8,  1e8,  1e8,  1e8,  1e8,  1e8,  1e8,  1e8, 44.3, 50.7])
             spl_b = np.array([64, 60, 56, 53, 51, 48, 46, 44, 42, 40, 40, 40, 40, 40, 38, 34, 32, 30, 29, 29, 30, 31, 34, 37])
@@ -69,8 +68,8 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         # Spectral irregularities correction
         # Step 1: Compute the slope of SPL
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 1
-        s = np.zeros(settings.N_f)
-        for i in np.arange(settings.N_f):
+        s = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(settings['n_frequency_bands']):
             # Up to the 3th band the table has no value
             if i <= 2:
                 s[i] = np.nan
@@ -80,9 +79,9 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 2: Compute the absolute value of the slope and compare to 5
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 2
-        slope = np.zeros(settings.N_f)
-        slope_large = np.zeros(settings.N_f)
-        for i in np.arange(settings.N_f):
+        slope = np.zeros(settings['n_frequency_bands'])
+        slope_large = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(settings['n_frequency_bands']):
             # Compute the absolute value of the slope
             slope[i] = s[i] - s[i - 1]
             # Check if slope is larger than 5
@@ -91,8 +90,8 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 3: Compute the encircled values of SPL
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 3
-        spl_large = np.zeros(settings.N_f)
-        for i in np.arange(settings.N_f):
+        spl_large = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(settings['n_frequency_bands']):
             # Check if value of slope is encircled
             if slope_large[i] == 1:
                 # Check if value of slope is positive and greater than previous slope
@@ -103,8 +102,8 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 4: Compute new adjusted sound pressure levels SPL'
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 4
-        spl_p = np.zeros(settings.N_f)
-        for i in np.arange(settings.N_f):
+        spl_p = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(settings['n_frequency_bands']):
             if spl_large[i] == 0:
                 spl_p[i] = spl_k[i]
             elif spl_large[i] == 1:
@@ -115,8 +114,8 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 5: Recompute the slope s'
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 5
-        s_p = np.zeros(settings.N_f + 1)
-        for i in np.flip(np.arange(settings.N_f), 0):
+        s_p = np.zeros(settings['n_frequency_bands'] + 1)
+        for i in np.flip(np.arange(settings['n_frequency_bands']), 0):
             # From 4th band onwards
             if i > 2:
                 s_p[i] = spl_p[i] - spl_p[i - 1]
@@ -128,14 +127,14 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 6: Compute arithmetic average of the 3 adjacent slopes
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 6
-        s_bar = np.zeros(settings.N_f)
-        for i in np.arange(2, settings.N_f - 1):
+        s_bar = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(2, settings['n_frequency_bands'] - 1):
             s_bar[i] = 1. / 3. * (s_p[i] + s_p[i + 1] + s_p[i + 2])
 
         # Step 7: Compute final 1/3 octave-band sound pressure level
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 7
-        spl_pp = np.zeros(settings.N_f)
-        for i in np.arange(2, settings.N_f):
+        spl_pp = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(2, settings['n_frequency_bands']):
             if i == 2:
                 spl_pp[i] = spl_k[i]
             elif i > 2:
@@ -143,8 +142,8 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 8: Compute the difference between SPL and SPL_pp
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 8
-        F = np.zeros(settings.N_f)
-        for i in np.arange(settings.N_f):
+        F = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(settings['n_frequency_bands']):
             # Compute the difference and limit at 1.5
             F[i] = spl_k[i] - spl_pp[i]
             # Check values larger than 3 (ICAO Appendix 2-16)
@@ -153,8 +152,8 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 9: Compute the correction factor C
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 9
-        C_j = np.zeros(settings.N_f)
-        for i in np.arange(2, settings.N_f):
+        C_j = np.zeros(settings['n_frequency_bands'])
+        for i in np.arange(2, settings['n_frequency_bands']):
             if i < 10:  # Frequency in [50,500[
                 if 1.5 <= F[i] < 3:
                     C_j[i] = F[i] / 3. - 0.5
@@ -180,7 +179,7 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
         # Step 10: Compute the largest of the tone correction
         # Source: ICAO Annex 16 Appendix 2 section 4.3 Step 10
-        if settings.TCF800:
+        if not settings['tones_under_800Hz']:
             c_max[k] = np.max(C_j[13:])
         else:
             c_max[k] = np.max(C_j)

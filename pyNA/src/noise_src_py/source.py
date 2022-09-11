@@ -4,15 +4,16 @@ import numpy as np
 import openmdao.api as om
 from typing import Dict, Any
 from pyNA.src.data import Data
-from pyNA.src.aircraft import Aircraft
-from pyNA.src.settings import Settings
-from pyNA.src.noise_src_py.jet import Jet
-from pyNA.src.noise_src_py.fan import Fan
-from pyNA.src.noise_src_py.core import Core
-from pyNA.src.noise_src_py.airframe import Airframe
+from pyNA.src.airframe import Airframe
+from pyNA.src.noise_src_py.fan_source import fan_source
+from pyNA.src.noise_src_py.core_source import core_source
+from pyNA.src.noise_src_py.jet_source import jet_mixing_source, jet_shock_source
+from pyNA.src.noise_src_py.airframe_source import airframe_source
 from tqdm import tqdm
 
+
 class Source(om.ExplicitComponent):
+
     """
     Compute noise source mean-square acoustic pressure (msap):
 
@@ -68,15 +69,15 @@ class Source(om.ExplicitComponent):
     * ``settings``:                         pyna settings
     * ``n_t``:                              number of time steps in the noise time series 
     * ``data``:                             pyna noise data
-    * ``ac``:                               aircraft characteristics
 
     """
+
     def initialize(self):
         # Declare data option
-        self.options.declare('settings', types=Settings)
-        self.options.declare('n_t', types=int, desc='Number of time steps in trajectory')
+        self.options.declare('settings', types=dict)
         self.options.declare('data', types=Data)
-        self.options.declare('ac', types=Aircraft)
+        self.options.declare('airframe', types=Airframe)
+        self.options.declare('n_t', types=int, desc='Number of time steps in trajectory')
 
     def setup(self):
 
@@ -85,7 +86,7 @@ class Source(om.ExplicitComponent):
         n_t = self.options['n_t']
 
         # Number of observers
-        n_obs = np.shape(settings.x_observer_array)[0]
+        n_obs = np.shape(settings['x_observer_array'])[0]
 
         # Inputs
         self.add_input('TS', val=np.ones(n_t), units=None, desc='engine power-setting [-]')
@@ -96,32 +97,23 @@ class Source(om.ExplicitComponent):
         self.add_input('T_0', val=np.ones(n_t), units='K', desc='ambient temperature [K]')
         self.add_input('theta', val=np.ones((n_obs, n_t)), units='deg', desc='polar directivity angle [deg]')
         self.add_input('phi', val=np.ones((n_obs, n_t)), units='deg', desc='azimuthal directivity angle [deg]')
-        self.add_input('shield', val=np.ones((n_obs, n_t, settings.N_f)), units=None, desc='shielding factors for the trajectory')
+        self.add_input('shield', val=np.ones((n_obs, n_t, settings['n_frequency_bands'])), units=None, desc='shielding factors for the trajectory')
 
-        if settings.jet_mixing and settings.jet_shock == False:
-            self.add_input('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
-            self.add_input('rho_j_star', val=np.ones(n_t), units=None, desc='jet total density (re. rho_0) [-]')
-            self.add_input('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
-            self.add_input('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
-        elif settings.jet_shock and settings.jet_mixing == False:
-            self.add_input('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
-            self.add_input('M_j', val=np.ones(n_t), units=None, desc='jet Mach number [-]')
-            self.add_input('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
-            self.add_input('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
-        elif settings.jet_shock and settings.jet_mixing:
-            self.add_input('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
-            self.add_input('rho_j_star', val=np.ones(n_t), units=None, desc='jet total density (re. rho_0) [-]')
-            self.add_input('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
-            self.add_input('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
-            self.add_input('M_j', val=np.ones(n_t), units=None, desc='jet Mach number [-]')
-        if settings.core:
-            if settings.method_core_turb == 'GE':
+        if settings['fan_inlet_source'] or settings['fan_discharge_source']:
+            self.add_input('DTt_f_star', val=np.ones(n_t), units=None, desc='fan total temperature rise (re. T_0) [-]')
+            self.add_input('mdot_f_star', val=np.ones(n_t), units=None, desc='fan inlet mass flow (re. rho_0c_0A_e) [-]')
+            self.add_input('N_f_star', val=np.ones(n_t), units=None, desc='fan rotational speed (re. c_0/sqrt(A_e)) [-]')
+            self.add_input('A_f_star', val=np.ones(n_t), units=None, desc='fan area (re. A_e) [-]')
+            self.add_input('d_f_star', val=np.ones(n_t), units=None, desc='fan diameter (re. sqrt(A_e) [-]')
+
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == 'ge':
                 self.add_input('mdoti_c_star', val=np.ones(n_t), units=None, desc='core inlet mass flow (re. rho_0c_0A_e) [-]')
                 self.add_input('Tti_c_star', val=np.ones(n_t), units=None, desc='core inlet total temperature (re. T_0) [-]')
                 self.add_input('Ttj_c_star', val=np.ones(n_t), units=None, desc='core exit total temperature (re. T_0) [-]')
                 self.add_input('Pti_c_star', val=np.ones(n_t), units=None, desc='core inlet total pressure (re. p_0) [-]')
                 self.add_input('DTt_des_c_star', val=np.ones(n_t), units=None, desc='core total temperature drop across the turbine (re. T_0) [-]')
-            elif settings.method_core_turb == 'PW':
+            elif settings['core_turbine_attenuation_method'] == 'pw':
                 self.add_input('mdoti_c_star', val=np.ones(n_t), units=None, desc='core inlet mass flow (re. rho_0c_0A_e) [-]')
                 self.add_input('Tti_c_star', val=np.ones(n_t), units=None, desc='core inlet total temperature (re. T_0) [-]')
                 self.add_input('Ttj_c_star', val=np.ones(n_t), units=None, desc='core exit total temperature (re. T_0) [-]')
@@ -130,18 +122,30 @@ class Source(om.ExplicitComponent):
                 self.add_input('c_te_c_star', val=np.ones(n_t), units=None, desc='core exit total speed of sound (re. c_0) [-]')
                 self.add_input('rho_ti_c_star', val=np.ones(n_t), units=None, desc='core inlet total density (re. rho_0) [-]')
                 self.add_input('c_ti_c_star', val=np.ones(n_t), units=None, desc='core inlet total speed of sound (re. c_0) [-]')
-        if settings.airframe:
+
+        if settings['jet_mixing_source'] and settings['jet_shock_source'] == False:
+            self.add_input('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
+            self.add_input('rho_j_star', val=np.ones(n_t), units=None, desc='jet total density (re. rho_0) [-]')
+            self.add_input('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
+            self.add_input('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
+        elif settings['jet_shock_source'] and settings['jet_mixing_source'] == False:
+            self.add_input('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
+            self.add_input('M_j', val=np.ones(n_t), units=None, desc='jet Mach number [-]')
+            self.add_input('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
+            self.add_input('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
+        elif settings['jet_shock_source'] and settings['jet_mixing_source']:
+            self.add_input('V_j_star', val=np.ones(n_t), units=None, desc='jet velocity (re. c_0) [-]')
+            self.add_input('rho_j_star', val=np.ones(n_t), units=None, desc='jet total density (re. rho_0) [-]')
+            self.add_input('A_j_star', val=np.ones(n_t), units=None, desc='jet area (re. A_e) [-]')
+            self.add_input('Tt_j_star', val=np.ones(n_t), units=None, desc='jet total temperature (re. T_0) [-]')
+            self.add_input('M_j', val=np.ones(n_t), units=None, desc='jet Mach number [-]')
+
+        if settings['airframe_source']:
             self.add_input('theta_flaps', val=np.ones(n_t), units='deg', desc='airframe flap angle [deg]')
             self.add_input('I_landing_gear', val=np.ones(n_t), units=None, desc='airframe landing gear extraction (0/1) [-]')
-        if settings.fan_inlet or settings.fan_discharge:
-            self.add_input('DTt_f_star', val=np.ones(n_t), units=None, desc='fan total temperature rise (re. T_0) [-]')
-            self.add_input('mdot_f_star', val=np.ones(n_t), units=None, desc='fan inlet mass flow (re. rho_0c_0A_e) [-]')
-            self.add_input('N_f_star', val=np.ones(n_t), units=None, desc='fan rotational speed (re. c_0/sqrt(A_e)) [-]')
-            self.add_input('A_f_star', val=np.ones(n_t), units=None, desc='fan area (re. A_e) [-]')
-            self.add_input('d_f_star', val=np.ones(n_t), units=None, desc='fan diameter (re. sqrt(A_e) [-]')
 
         # Output
-        self.add_output('msap_source', val=np.zeros((n_obs, n_t, settings.N_f)), desc='mean-square acoustic pressure of the overall noise source (re. rho_0,^2c_0^2) [-]')
+        self.add_output('msap_source', val=np.zeros((n_obs, n_t, settings['n_frequency_bands'])), desc='mean-square acoustic pressure of the overall noise source (re. rho_0,^2c_0^2) [-]')
 
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
         # Load options
@@ -149,49 +153,53 @@ class Source(om.ExplicitComponent):
         n_t = self.options['n_t']
 
         # Number of observers
-        n_obs = np.shape(settings.x_observer_array)[0]
+        n_obs = np.shape(settings['x_observer_array'])[0]
 
         # Initialize sourde msap
-        msap_source = np.zeros((n_obs, n_t, settings.N_f))
+        msap_source = np.zeros((n_obs, n_t, settings['n_frequency_bands']))
 
         for i in np.arange(n_obs):
 
-            if settings.fan_inlet:
-                msap_fan_inlet = Fan.fan(self, inputs['theta'][i, :], inputs['shield'][i,:,:], inputs, 'fan_inlet')
+            if settings['fan_inlet_source']:
+                msap_fan_inlet = fan_source(self, inputs['theta'][i, :], inputs['shield'][i,:,:], inputs, 'fan_inlet')
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_fan_inlet
 
-            if settings.fan_discharge:
-                msap_fan_discharge = Fan.fan(self, inputs['theta'][i, :], inputs['shield'][i,:,:], inputs, 'fan_discharge')
+            if settings['fan_discharge_source']:
+                msap_fan_discharge = fan_source(self, inputs['theta'][i, :], inputs['shield'][i,:,:], inputs, 'fan_discharge')
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_fan_discharge
 
-            if settings.core:
-                msap_core = Core.core(self, inputs['theta'][i, :], inputs)
+            if settings['core_source']:
+                msap_core = core_source(self, inputs['theta'][i, :], inputs)
 
-                if settings.suppression and settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
-                    idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings.N_f)) > 0.8)
+                if settings['core_jet_suppression'] and settings['case_name'] in ["nasa_stca_standard", "stca_enginedesign_standard"]:
+                    idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings['n_frequency_bands'])) > 0.8)
                     msap_core[idx_TS] = (10.**(-2.3 / 10.) * msap_core)[idx_TS]
 
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_core
 
-            if settings.jet_mixing:
-                msap_jet_mixing = Jet.jet_mixing(self, inputs['theta'][i, :], inputs)
+            if settings['jet_mixing_source']:
+                msap_jet_mixing = jet_mixing_source(self, inputs['theta'][i, :], inputs)
                 
-                if settings.suppression and settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
-                    idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings.N_f)) > 0.8)
+                if settings['core_jet_suppression'] and settings['case_name'] in ["nasa_stca_standard", "stca_enginedesign_standard"]:
+                    idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings['n_frequency_bands'])) > 0.8)
                     msap_jet_mixing[idx_TS] = (10. **(-2.3 / 10.) * msap_jet_mixing)[idx_TS]
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_jet_mixing
 
-            if settings.jet_shock:
-                msap_jet_shock = Jet.jet_shock(self, inputs['theta'][i, :], inputs)
+            if settings['jet_shock_source']:
+                msap_jet_shock = jet_shock_source(self, inputs['theta'][i, :], inputs)
                 
-                if settings.suppression and settings.case_name in ["nasa_stca_standard", "stca_enginedesign_standard"]:
-                    idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings.N_f)) > 0.8)
+                if settings['core_jet_suppression'] and settings['case_name'] in ["nasa_stca_standard", "stca_enginedesign_standard"]:
+                    idx_TS = np.where(np.reshape(inputs['TS'], (n_t, 1))*np.ones((1, settings['n_frequency_bands'])) > 0.8)
                     msap_jet_shock[idx_TS] = (10. **(-2.3 / 10.) * msap_jet_shock)[idx_TS]
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_jet_shock
             
-            if settings.airframe:
-                msap_airframe = Airframe.airframe(self, inputs['theta'][i, :], inputs['phi'][i, :], inputs)
+            if settings['airframe_source']:
+                msap_airframe = airframe_source(self, inputs['theta'][i, :], inputs['phi'][i, :], inputs)
                 msap_source[i, :, :] = msap_source[i, :, :] + msap_airframe
 
         # Convert to dB (clip values to avoid -inf)
         outputs['msap_source'] = msap_source.clip(min=1e-99)
+
+
+
+

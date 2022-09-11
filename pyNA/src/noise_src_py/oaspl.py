@@ -7,10 +7,10 @@ def oaspl(levels, spl: np.ndarray) -> np.ndarray:
     :param levels: pyNA component computing noise levels
     :type levels: Levels
     :param spl: sound pressure level [dB]
-    :type spl: np.ndarray [settings.n_t, settings.N_f]
+    :type spl: np.ndarray
 
     :return: oaspl
-    :rtype: np.ndarray [settings.n_t]
+    :rtype: np.ndarray
 
     """
 

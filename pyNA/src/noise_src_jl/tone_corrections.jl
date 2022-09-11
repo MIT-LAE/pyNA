@@ -4,29 +4,29 @@ function f_tone_corrections(settings, spl)
     T = eltype(spl)
 
     # Step 1: Compute the slope of SPL
-    s = zeros(T, (settings.N_f, ))    
+    s = zeros(T, (settings["n_frequency_bands"], ))    
     s[4:end] = spl[4:end] .- spl[3:end-1]
     
     # Step 2: Compute the absolute value of the slope and compare to 5    
-    slope = zeros(T, (settings.N_f, ))    
+    slope = zeros(T, (settings["n_frequency_bands"], ))    
     slope[4:end] = s[4:end] .- s[3:end-1]
 
-    slope_large = zeros(T, (settings.N_f, ))  
+    slope_large = zeros(T, (settings["n_frequency_bands"], ))  
     idx_step2 = findall(abs.(slope).>5)
-    slope_large[idx_step2] = ones(T, (settings.N_f, ))[idx_step2]
+    slope_large[idx_step2] = ones(T, (settings["n_frequency_bands"], ))[idx_step2]
 
     # Step 3: Compute the encircled values of SPL
-    spl_large = zeros(T, (settings.N_f, ))   
+    spl_large = zeros(T, (settings["n_frequency_bands"], ))   
     idx_step3a = findall((slope_large .== 1) .* (s.> 0) .* (s .- vcat(0, s[1:end-1]) .> 0) )
-    spl_large[idx_step3a] = ones(T, (settings.N_f,))[idx_step3a]
+    spl_large[idx_step3a] = ones(T, (settings["n_frequency_bands"],))[idx_step3a]
     
     interm = vcat(0, spl_large)
     idx_step3b = findall( (slope_large .== 1) .* (s.<=0) .* (vcat(0, s[1:end-1]) .> 0) )
-    interm[idx_step3b] = ones(settings.N_f, )[idx_step3b]
+    interm[idx_step3b] = ones(settings["n_frequency_bands"], )[idx_step3b]
     spl_large = interm[2:end]
 
     # Step 4: Compute new adjusted sound pressure levels SPL'
-    spl_p = zeros(T, (settings.N_f, ))    
+    spl_p = zeros(T, (settings["n_frequency_bands"], ))    
     spl_p[24] = spl[22] + s[22]
     spl_p[2:23]= 0.5 * (spl[1:22] .+ spl[3:24])
 
@@ -34,27 +34,27 @@ function f_tone_corrections(settings, spl)
     spl_p[idx_step4] = spl[idx_step4]
 
     # Step 5: Recompute the slope s'
-    s_p = zeros(T, (settings.N_f + 1,))
+    s_p = zeros(T, (settings["n_frequency_bands"] + 1,))
     s_p[4:end-1] = spl_p[4:end] .- spl_p[3:end-1]
     s_p[3] = s_p[4]
     # Compute 25th imaginary band
     s_p[25] = s_p[24]
 
     # Step 6: Compute arithmetic average of the 3 adjacent slopes
-    s_bar = zeros(T, (settings.N_f,))
+    s_bar = zeros(T, (settings["n_frequency_bands"],))
     s_bar[3:end-1] = 1/3 * (s_p[3:end-2] + s_p[4:end-1] + s_p[5:end])
 
     # Step 7: Compute final 1/3 octave-band sound pressure level       
-    spl_pp = zeros(T, (settings.N_f,))
+    spl_pp = zeros(T, (settings["n_frequency_bands"],))
     spl_pp[3] = spl[3]
     spl_pp[4:end]  = cumsum(s_bar[3:end-1]) .+  spl[3]
        
     # Step 8: Compute the difference between SPL and SPL_pp
-    F = zeros(T, (settings.N_f,))
+    F = zeros(T, (settings["n_frequency_bands"],))
     F[3:end] = spl[3:end] .- spl_pp[3:end]
     
     idx_step8 = findall(F.<1.5)
-    F[idx_step8] = zeros(T, (settings.N_f,))[idx_step8]
+    F[idx_step8] = zeros(T, (settings["n_frequency_bands"],))[idx_step8]
     
     # Step 9: Compute the correction factor C    
     c10 = zeros(T, (8,))
@@ -83,10 +83,10 @@ function f_tone_corrections(settings, spl)
     C = vcat(0, 0, c10, c20, cend)
       
     # Compute the largest of the tone correction
-    if settings.TCF800
-        c_max = maximum(C[14:end])
-    else
+    if settings["tones_under_800Hz"]
         c_max = maximum(C)
+    else
+        c_max = maximum(C[14:end])
     end
 
     return c_max

@@ -24,13 +24,13 @@ def lateral_attenuation(settings: Dict[str, Any], beta: np.ndarray, x_obs: np.nd
     l = x_obs[1]
 
     # Engine installation term [dB]
-    if settings.engine_mounting == "underwing":
+    if settings['lateral_attenuation_engine_mounting'] == "underwing":
         E_eng = 10 * np.log10((0.0039 * np.cos(phi_d) ** 2 + np.sin(phi_d) ** 2) ** 0.062 / (0.8786 * np.sin(2 * phi_d) ** 2 + np.cos(2 * phi_d) ** 2))
-    elif settings.engine_mounting == "fuselage":
+    elif settings['lateral_attenuation_engine_mounting'] == "fuselage":
         E_eng = 10 * np.log10((0.1225 * np.cos(phi_d) ** 2 + np.sin(phi_d) ** 2) ** 0.329)
-    elif settings.engine_mounting == "propeller":
+    elif settings['lateral_attenuation_engine_mounting'] == "propeller":
         E_eng = 0.
-    elif settings.engine_mounting == "none":
+    elif settings['lateral_attenuation_engine_mounting'] == "none":
         E_eng = 0.
     else:
         raise ValueError('Invalid engine_mounting specified. Specify: underwing/fuselage/propeller/none.')

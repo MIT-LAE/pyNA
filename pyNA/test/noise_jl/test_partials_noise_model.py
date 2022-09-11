@@ -4,21 +4,165 @@ import openmdao.api as om
 from julia.OpenMDAO import make_component
 import julia.Main as julia
 import numpy as np
+import pdb
 import os
+os.chdir('../../../')
 os.environ['pyna_language'] = 'julia'
 from dataclasses import dataclass
-import os
+julia.include("pyNA/src/noise_src_jl/noise_model.jl")
+
 from pyNA.pyna import pyna
-from pyNA.src.settings import Settings
 
-# Load pyna data
-pyna_settings = pyna.load_settings(case_name='nasa_stca_standard')
-pyna_settings.suppression = False
-py = pyna(pyna_settings)
+def get_input_vector_indices(language, settings: dict, n_t: int):
+    
+    """
+    Get indices for input vector of noise model.
 
-# Load noise file
-os.chdir('../../')
-julia.include("src/noise_src_jl/noise_model.jl")
+    :param settings: noise settings
+    :type settings: dict
+    :param n_t: number of time steps in trajectory
+    :type n_t: int
+
+    :return: idx
+
+    """
+
+    # Initialize indices dictionary
+    idx = dict()
+
+    if language == 'julia':
+        idx["x"] = [0 * n_t + 1, 1 * n_t]
+        idx["y"] = [1 * n_t + 1, 2 * n_t]
+        idx["z"] = [2 * n_t + 1, 3 * n_t]
+        idx["alpha"] = [3 * n_t + 1, 4 * n_t]
+        idx["gamma"] = [4 * n_t + 1, 5 * n_t]
+        idx["t_s"] = [5 * n_t + 1, 6 * n_t]
+        idx["rho_0"] = [6 * n_t + 1, 7 * n_t]
+        idx["mu_0"] = [7 * n_t + 1, 8 * n_t]
+        idx["c_0"] = [8 * n_t + 1, 9 * n_t]
+        idx["T_0"] = [9 * n_t + 1, 10 * n_t]
+        idx["p_0"] = [10 * n_t + 1, 11 * n_t]
+        idx["M_0"] = [11 * n_t + 1, 12 * n_t]
+        idx["I_0"] = [12 * n_t + 1, 13 * n_t]
+        idx["TS"] = [13 * n_t + 1, 14 * n_t]
+        idx["theta_flaps"] = [14 * n_t + 1, 15 * n_t]
+        n = 15
+        if settings['jet_mixing_source'] == True and settings['jet_shock_source'] == False:
+            idx["V_j"]   = [n * n_t + 1, (n + 1) * n_t]
+            idx["rho_j"] = [(n + 1) * n_t + 1, (n + 2) * n_t]
+            idx["A_j"]   = [(n + 2) * n_t + 1, (n + 3) * n_t]
+            idx["Tt_j"]  = [(n + 3) * n_t + 1, (n + 4) * n_t]
+            n = n + 4
+        elif settings['jet_shock_source'] == True and settings['jet_mixing_source'] == False:
+            idx["V_j"]  = [n * n_t + 1, (n + 1) * n_t]
+            idx["M_j"]       = [(n + 1) * n_t + 1, (n + 2) * n_t]
+            idx["A_j"]  = [(n + 2) * n_t + 1, (n + 3) * n_t]
+            idx["Tt_j"] = [(n + 3) * n_t + 1, (n + 4) * n_t]
+            n = n + 4
+        elif settings['jet_shock_source'] == True and settings['jet_mixing_source'] == True:
+            idx["V_j"] = [n * n_t + 1, (n + 1) * n_t]
+            idx["rho_j"] = [(n + 1) * n_t + 1, (n + 2) * n_t]
+            idx["A_j"] = [(n + 2) * n_t + 1, (n + 3) * n_t]
+            idx["Tt_j"] = [(n + 3) * n_t + 1, (n + 4) * n_t]
+            idx["M_j"] = [(n + 4) * n_t + 1, (n + 5) * n_t]
+            n = n + 5
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == "ge":
+                idx["mdoti_c"] = [n * n_t + 1, (n + 1) * n_t]
+                idx["Tti_c"] = [(n + 1) * n_t + 1, (n + 2) * n_t]
+                idx["Ttj_c"] = [(n + 2) * n_t + 1, (n + 3) * n_t]
+                idx["Pti_c"] = [(n + 3) * n_t + 1, (n + 4) * n_t]
+                idx["DTt_des_c"] = [(n + 4) * n_t + 1, (n + 5) * n_t]
+                n = n + 5
+            elif settings['core_turbine_attenuation_method'] == "pw":
+                idx["mdoti_c"] = [n * n_t + 1, (n + 1) * n_t]
+                idx["Tti_c"] = [(n + 1) * n_t + 1, (n + 2) * n_t]
+                idx["Ttj_c"] = [(n + 2) * n_t + 1, (n + 3) * n_t]
+                idx["Pti_c"] = [(n + 3) * n_t + 1, (n + 4) * n_t]
+                idx["rho_te_c"] = [(n + 4) * n_t + 1, (n + 5) * n_t]
+                idx["c_te_c"] = [(n + 5) * n_t + 1, (n + 6) * n_t]
+                idx["rho_ti_c"] = [(n + 6) * n_t + 1, (n + 7) * n_t]
+                idx["c_ti_c"] = [(n + 7) * n_t + 1, (n + 8) * n_t]
+                n = n + 8
+        if settings['airframe_source']:
+            idx["I_landing_gear"] = [n * n_t + 1, (n + 1) * n_t]
+            n = n + 1
+        if settings['fan_inlet_source'] == True or settings['fan_discharge_source'] == True:
+            idx["DTt_f"] = [n * n_t + 1, (n + 1) * n_t]
+            idx["mdot_f"] = [(n + 1) * n_t + 1, (n + 2) * n_t]
+            idx["N_f"] = [(n + 2) * n_t + 1, (n + 3) * n_t]
+            idx["A_f"] = [(n + 3) * n_t + 1, (n + 4) * n_t]
+            idx["d_f"] = [(n + 4) * n_t + 1, (n + 5) * n_t]
+
+    elif language == 'python':
+        idx["x"] = [0 * n_t, 1 * n_t]
+        idx["y"] = [1 * n_t, 2 * n_t]
+        idx["z"] = [2 * n_t, 3 * n_t]
+        idx["alpha"] = [3 * n_t, 4 * n_t]
+        idx["gamma"] = [4 * n_t, 5 * n_t]
+        idx["t_s"] = [5 * n_t, 6 * n_t]
+        idx["rho_0"] = [6 * n_t, 7 * n_t]
+        idx["mu_0"] = [7 * n_t, 8 * n_t]
+        idx["c_0"] = [8 * n_t, 9 * n_t]
+        idx["T_0"] = [9 * n_t, 10 * n_t]
+        idx["p_0"] = [10 * n_t, 11 * n_t]
+        idx["M_0"] = [11 * n_t, 12 * n_t]
+        idx["I_0"] = [12 * n_t, 13 * n_t]
+        idx["TS"] = [13 * n_t, 14 * n_t]
+        idx["theta_flaps"] = [14 * n_t, 15 * n_t]
+        n = 15
+        if settings['jet_mixing_source'] == True and settings['jet_shock_source'] == False:
+            idx["V_j"]   = [n * n_t, (n + 1) * n_t]
+            idx["rho_j"] = [(n + 1) * n_t, (n + 2) * n_t]
+            idx["A_j"]   = [(n + 2) * n_t, (n + 3) * n_t]
+            idx["Tt_j"]  = [(n + 3) * n_t, (n + 4) * n_t]
+            n = n + 4
+        elif settings['jet_shock_source'] == True and settings['jet_mixing_source'] == False:
+            idx["V_j"]  = [n * n_t, (n + 1) * n_t]
+            idx["M_j"]  = [(n + 1) * n_t, (n + 2) * n_t]
+            idx["A_j"]  = [(n + 2) * n_t, (n + 3) * n_t]
+            idx["Tt_j"] = [(n + 3) * n_t, (n + 4) * n_t]
+            n = n + 4
+        elif settings['jet_shock_source'] == True and settings['jet_mixing_source'] == True:
+            idx["V_j"] = [n * n_t, (n + 1) * n_t]
+            idx["rho_j"] = [(n + 1) * n_t, (n + 2) * n_t]
+            idx["A_j"] = [(n + 2) * n_t, (n + 3) * n_t]
+            idx["Tt_j"] = [(n + 3) * n_t, (n + 4) * n_t]
+            idx["M_j"] = [(n + 4) * n_t, (n + 5) * n_t]
+            n = n + 5
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == "ge":
+                idx["mdoti_c"] = [n * n_t, (n + 1) * n_t]
+                idx["Tti_c"] = [(n + 1) * n_t, (n + 2) * n_t]
+                idx["Ttj_c"] = [(n + 2) * n_t, (n + 3) * n_t]
+                idx["Pti_c"] = [(n + 3) * n_t, (n + 4) * n_t]
+                idx["DTt_des_c"] = [(n + 4) * n_t, (n + 5) * n_t]
+                n = n + 5
+            elif settings['core_turbine_attenuation_method'] == "pw":
+                idx["mdoti_c"] = [n * n_t, (n + 1) * n_t]
+                idx["Tti_c"] = [(n + 1) * n_t, (n + 2) * n_t]
+                idx["Ttj_c"] = [(n + 2) * n_t, (n + 3) * n_t]
+                idx["Pti_c"] = [(n + 3) * n_t, (n + 4) * n_t]
+                idx["rho_te_c"] = [(n + 4) * n_t, (n + 5) * n_t]
+                idx["c_te_c"] = [(n + 5) * n_t, (n + 6) * n_t]
+                idx["rho_ti_c"] = [(n + 6) * n_t, (n + 7) * n_t]
+                idx["c_ti_c"] = [(n + 7) * n_t, (n + 8) * n_t]
+                n = n + 8
+        if settings['airframe_source']:
+            idx["I_landing_gear"] = [n * n_t, n * n_t]
+            n = n + 1
+        if settings['fan_inlet_source'] == True or settings['fan_discharge_source'] == True:
+            idx["DTt_f"] = [n * n_t, (n + 1) * n_t]
+            idx["mdot_f"] = [(n + 1) * n_t, (n + 2) * n_t]
+            idx["N_f"] = [(n + 2) * n_t, (n + 3) * n_t]
+            idx["A_f"] = [(n + 3) * n_t, (n + 4) * n_t]
+            idx["d_f"] = [(n + 4) * n_t, (n + 5) * n_t]
+
+    return idx
+
+# Initialize pyna
+py = pyna()
+py.initialize()
 
 # Inputs
 x = np.array([0.00000000e+00, 3.32251665e-01, 8.91600837e-01, 1.80841957e+00, 3.25092060e+00, 4.96324890e+00, 7.11635610e+00, 9.70586070e+00, 1.25640032e+01, 1.59506637e+01, 1.98012627e+01, 2.37970660e+01, 2.84773081e+01, 3.34742444e+01, 3.87562806e+01, 4.47163398e+01, 5.09753616e+01, 5.75157600e+01, 6.46873992e+01, 7.23768936e+01, 8.01319200e+01, 8.86907040e+01, 9.75586628e+01, 1.06743829e+02, 1.16607157e+02, 1.26836245e+02, 1.37378811e+02, 1.48674968e+02, 1.60121997e+02, 1.72254428e+02, 1.84776831e+02, 1.97864943e+02, 2.11323308e+02, 2.25168916e+02, 2.39910375e+02, 2.54619102e+02, 2.70130524e+02, 2.86143497e+02, 3.02682250e+02, 3.19630264e+02, 3.36992282e+02, 3.55172204e+02, 3.73955722e+02, 3.92619787e+02, 4.12435552e+02, 4.32703010e+02, 4.53274153e+02, 4.74794067e+02, 4.96445278e+02, 5.19005098e+02, 5.41834599e+02, 5.65701500e+02, 5.89610544e+02, 6.14504560e+02, 6.39929147e+02, 6.65892246e+02, 6.92325973e+02, 7.19643321e+02, 7.47621060e+02, 7.76159865e+02, 8.05274742e+02, 8.34906506e+02, 8.65447618e+02, 8.96696056e+02, 9.28579653e+02, 9.60877867e+02, 9.94278892e+02, 1.02811609e+03, 1.06282672e+03, 1.09811542e+03, 1.13449537e+03, 1.17142290e+03, 1.20908285e+03, 1.24731604e+03, 1.28660881e+03, 1.32654065e+03, 1.33018469e+03, 1.34861290e+03, 1.36704111e+03, 1.38563126e+03, 1.40435390e+03, 1.42309017e+03, 1.44208531e+03, 1.46108044e+03, 1.48022377e+03, 1.49948835e+03, 1.51876628e+03, 1.53829786e+03, 1.55782945e+03, 1.57749648e+03, 1.59727435e+03, 1.61706383e+03, 1.63707413e+03, 1.65708442e+03, 1.67114274e+03, 1.69135752e+03, 1.71157229e+03, 1.73191246e+03, 1.75229444e+03, 1.77270080e+03, 1.79318031e+03, 1.81365982e+03, 1.83420334e+03, 1.85476820e+03, 1.87535058e+03, 1.89598554e+03, 1.91662050e+03, 1.93729432e+03, 1.95798110e+03, 1.97864535e+03, 1.99924203e+03, 2.00130169e+03, 2.10497530e+03, 2.20902266e+03, 2.31318059e+03, 2.41729270e+03, 2.52126017e+03, 2.62487324e+03, 2.72799844e+03, 2.83072720e+03, 2.93333424e+03, 3.03594128e+03, 3.13862461e+03, 3.24138026e+03, 3.34424269e+03, 3.44718501e+03, 3.55025701e+03, 3.65341269e+03, 3.75669805e+03, 3.86005952e+03, 3.96351242e+03, 4.06707968e+03, 4.17074594e+03, 4.27453034e+03, 4.37843666e+03, 4.48246112e+03, 4.58658837e+03, 4.69085288e+03, 4.79522397e+03, 4.89973232e+03, 5.00434346e+03, 5.10910785e+03, 5.18159408e+03, 5.28658546e+03, 5.39189722e+03, 5.49763010e+03, 5.60372761e+03, 5.71009833e+03, 5.81662705e+03, 5.92333529e+03, 6.03016656e+03, 6.13709040e+03, 6.24410456e+03, 6.35118080e+03, 6.45829318e+03, 6.49993402e+03, 6.60709184e+03, 6.71435096e+03, 6.82164696e+03, 6.92902160e+03, 7.03643632e+03, 7.14390560e+03, 7.25141176e+03, 7.35897248e+03, 7.46657008e+03, 7.57422224e+03, 7.68190808e+03, 7.78962760e+03, 7.89740488e+03, 8.00523672e+03, 8.11308456e+03, 8.22100464e+03, 8.32894072e+03, 8.43693136e+03, 8.54497976e+03, 8.65306184e+03, 8.76117760e+03, 8.86934792e+03, 8.97755192e+03, 9.08595210e+03, 9.14385886e+03, 9.25229822e+03, 9.36062692e+03, 9.46901102e+03, 9.57742838e+03, 9.68587900e+03, 9.79438502e+03, 9.90292708e+03, 1.00115245e+04, 1.01201553e+04, 1.02288192e+04, 1.03375386e+04, 1.04462913e+04, 1.05550772e+04, 1.06639185e+04, 1.07727930e+04, 1.08817008e+04, 1.09906641e+04, 1.10996633e+04, 1.12087152e+04, 1.13177782e+04, 1.14268966e+04, 1.15360732e+04, 1.16452830e+04, 1.17545233e+04, 1.18637969e+04, 1.19731287e+04, 1.20825158e+04, 1.21503393e+04])
@@ -58,11 +202,11 @@ n_t = 10
 n1 = 100
 n2 = 110
 objective = 'noise'
-idx = py.noise.get_input_vector_indices(py.settings, n_t)
+idx = get_input_vector_indices(py.language, py.noise_settings, n_t)
 
 # Create problem
 prob = om.Problem()
-comp = make_component(julia.NoiseModel(py.settings, py.noise.data, py.ac, n_t, idx, objective))
+comp = make_component(julia.NoiseModel(py.noise_settings, py.noise_data, py.airframe, n_t, idx, objective))
 prob.model.add_subsystem("g", comp)
 prob.setup(force_alloc_complex=True)
 
@@ -81,36 +225,36 @@ prob.set_val('g.M_0', M_0[n1:n2])
 prob.set_val('g.I_0', I_0[n1:n2])
 prob.set_val('g.TS', TS[n1:n2])
 
-if py.settings.jet_mixing == True and py.settings.jet_shock == False:
+if py.jet_mixing_source == True and py.jet_shock_source == False:
        prob.set_val('g.V_j', V_j[n1:n2])
        prob.set_val('g.rho_j', rho_j[n1:n2])
        prob.set_val('g.A_j', A_j[n1:n2])
        prob.set_val('g.Tt_j', Tt_j[n1:n2])
-elif py.settings.jet_shock == True and py.settings.jet_mixing == False:
+elif py.jet_shock_source == True and py.jet_mixing_source == False:
        prob.set_val('g.V_j', V_j[n1:n2])
        prob.set_val('g.A_j', A_j[n1:n2])
        prob.set_val('g.Tt_j', Tt_j[n1:n2])
        prob.set_val('g.M_j', M_j[n1:n2])
-elif py.settings.jet_shock ==True and py.settings.jet_mixing == True:
+elif py.jet_shock_source ==True and py.jet_mixing_source == True:
        prob.set_val('g.V_j', V_j[n1:n2])
        prob.set_val('g.rho_j', rho_j[n1:n2])
        prob.set_val('g.A_j', A_j[n1:n2])
        prob.set_val('g.Tt_j', Tt_j[n1:n2])
        prob.set_val('g.M_j', M_j[n1:n2])
     
-if py.settings.core:
-       if py.settings.method_core_turb == "GE":
+if py.core_source:
+       if py.core_turbine_attenuation_method == "GE":
               prob.set_val('g.mdoti_c', mdoti_c[n1:n2])
               prob.set_val('g.Tti_c', Tti_c[n1:n2])
               prob.set_val('g.Ttj_c', Ttj_c[n1:n2])
               prob.set_val('g.Pti_c', Pti_c[n1:n2])
               prob.set_val('g.DTt_des_c', DTt_des_c[n1:n2])
 
-if py.settings.airframe:
+if py.airframe_source:
        prob.set_val('g.theta_flaps', theta_flaps[n1:n2])
        prob.set_val('g.I_landing_gear', I_landing_gear[n1:n2])
 
-if py.settings.fan_inlet==True or py.settings.fan_discharge==True:
+if py.fan_inlet_source==True or py.fan_discharge_source==True:
        prob.set_val('g.DTt_f', DTt_f[n1:n2])
        prob.set_val('g.mdot_f', mdot_f[n1:n2])
        prob.set_val('g.N_f', N_f[n1:n2])
