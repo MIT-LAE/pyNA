@@ -4,37 +4,44 @@ include("lateral_attenuation.jl")
 include("ground_effects.jl")
 
 
-function propagation!(spl, pyna_ip, settings, f_sb, x_obs, r, x, z, c_bar, rho_0, I_0, beta)
+function propagation!(spl, x, settings, pyna_ip, f_sb, x_obs)
+
+    # x = [r, z, c_bar, rho_0, I_0, beta]
+    # y = spl
 
     if settings["direct_propagation"]
-        direct_propagation!(spl, settings, r, I_0)
+        direct_propagation!(spl, vcat(x[1], x[5]), settings)
     end
 
     # Split mean-square acoustic pressure in frequency sub-bands
     if settings["n_frequency_subbands"] > 1
-        spl_sb = split_subbands(settings, spl)
+        spl_sb = zeros(eltype(x), settings["n_frequency_bands"]*settings["n_frequency_subbands"])
+        split_subbands!(spl_sb, spl, settings)
     else
         spl_sb = spl
     end
 
     # Apply atmospheric absorption on sub-bands
-    z = max.(z, 0)
+    if x[2] < 0
+        x[2] = 0
+    end
+    
     if settings["absorption"]
-        atmospheric_absorption!(spl_sb, pyna_ip, settings, f_sb, z, r)
+        atmospheric_absorption!(spl_sb, vcat(x[1], x[2]), settings, pyna_ip, f_sb)
     end
 
     # Apply ground effects on sub-bands
     if settings["ground_effects"]
-        ground_effects!(spl_sb, pyna_ip, settings, f_sb, x_obs, r, beta, c_bar, rho_0)
+        ground_effects!(spl_sb, vcat(x[1], x[6], x[3], x[4]), settings, pyna_ip, f_sb, x_obs)
     end
-
+    
     # Recombine the mean-square acoustic pressure in the frequency sub-bands
     if settings["n_frequency_subbands"] > 1
-        spl_combined = reshape(sum(reshape(spl_sb, (settings["n_frequency_subbands"], settings["n_frequency_bands"])), dims=1), (settings["n_frequency_bands"],))
-    else
-        spl_combined = spl
+        for i in 1:1:settings["n_frequency_bands"]
+            spl[i] = sum(spl_sb[(i-1)*settings["n_frequency_subbands"]+1:i*settings["n_frequency_subbands"]])
+        end
     end
-
-    # Output
-    @. spl = spl_combined
+    
 end
+
+propagation_fwd! = (y,x)->propagation!(y, x, settings, pyna_ip, f_sb, x_obs)

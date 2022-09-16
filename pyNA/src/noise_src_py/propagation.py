@@ -4,7 +4,7 @@ import numpy as np
 import openmdao.api as om
 from pyNA.src.data import Data
 from pyNA.src.noise_src_py.split_subbands import split_subbands
-from noise_src_py.ground_effects import ground_effects
+from pyNA.src.noise_src_py.ground_effects import ground_effects
 from pyNA.src.noise_src_py.lateral_attenuation import lateral_attenuation
 
 
@@ -118,28 +118,11 @@ class Propagation(om.ExplicitComponent):
 
                     # ---------- Apply ground effects on sub-bands ----------
                     if settings['ground_effects']:
-                        # Empirical lateral attenuation for microphone on sideline
-                        if  settings['lateral_attenuation'] and settings['x_observer_array'][k, 1] != 0:
-                            # Lateral attenuation factor
-                            Lambda = lateral_attenuation(settings, beta[k, i], settings['x_observer_array'][k, :])
+                        # Ground reflection factor
+                        G = ground_effects(settings, data, r[k, i], beta[k, i], settings['x_observer_array'][k, :], c_bar[k, i], rho_0[i])
                             
-                            # Compute elevation angle from center-line observer; set observer z-position to 0
-                            r_cl = np.sqrt((x-settings['x_observer_array'][k,1])**2 + 1**2 + z**2)
-                            beta_cl = np.arcsin(z/r_cl) * 180. / np.pi
-
-                            # Ground reflection factor for center-line
-                            G_cl = ground_effects(settings, data, r_cl, beta_cl, settings['x_observer_array'][k, :], c_bar[k, i], rho_0[i])
-                            
-                            # Apply ground effects
-                            msap_sb = msap_sb * (G_cl * Lambda)
-
-                        # No empirical lateral attenuation or microphone underneath flight path
-                        else:
-                            # Ground reflection factor
-                            G = ground_effects(settings, data, r[k, i], beta[k, i], settings['x_observer_array'][k, :], c_bar[k, i], rho_0[i])
-                            
-                            # Apply ground effects
-                            msap_sb = msap_sb * G
+                        # Apply ground effects
+                        msap_sb = msap_sb * G
 
                     # Compute absorbed msap by adding up the msap at all the sub-band frequencies
                     # Source: Zorumski report 1982 part 1. Chapter 5.1 Equation 22

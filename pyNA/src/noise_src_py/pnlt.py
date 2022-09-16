@@ -146,7 +146,7 @@ def pnlt(levels, spl: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         for i in np.arange(settings['n_frequency_bands']):
             # Compute the difference and limit at 1.5
             F[i] = spl_k[i] - spl_pp[i]
-            # Check values larger than 3 (ICAO Appendix 2-16)
+            # Check values larger than 1.5 (ICAO Appendix 2-16)
             if F[i] < 1.5:
                 F[i] = 0
 

@@ -1,8 +1,15 @@
-function smooth_max(k_smooth, x)
+function smooth_max(x, k_smooth)
 
     # Compute lateral noise
-    smooth_max = maximum(x) + 1/k_smooth.*log(sum(exp.(k_smooth*(x.-maximum(x)))))
+    return maximum(x) + 1/k_smooth.*log(sum(exp.(k_smooth*(x.-maximum(x)))))
     
-    # Return
-    return smooth_max
 end
+
+function smooth_max!(y, x, k_smooth)
+
+    # Compute lateral noise
+    y .= maximum(x) + 1/k_smooth.*log(sum(exp.(k_smooth*(x.-maximum(x)))))
+    
+end
+
+smooth_max_fwd! = (y, x)->smooth_max!(y, x, k_smooth)

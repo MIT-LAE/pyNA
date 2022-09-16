@@ -1,6 +1,5 @@
-using Interpolations
+using Interpolations: LinearInterpolation, Flat
 using PCHIPInterpolation
-
 
 ## Fan 
 function get_fan_interpolation_functions(settings, data)
@@ -186,13 +185,19 @@ function get_airframe_interpolation_functions(data)
 end
 
 ## Propagation
-function get_propagation_interpolation_functions(data)
-    # Atmospheric absorption
+function get_atmospheric_absorption_interpolation_functions(data)
+    
     f_abs = LinearInterpolation((data.abs_alt, data.abs_freq), data.abs)
+    
+    return f_abs
+end
+
+function get_ground_effects_interpolation_functions(data)
+    
     f_faddeeva_real = LinearInterpolation((data.Faddeeva_itau_im, data.Faddeeva_itau_re), data.Faddeeva_real, extrapolation_bc=Flat())
     f_faddeeva_imag = LinearInterpolation((data.Faddeeva_itau_im, data.Faddeeva_itau_re), data.Faddeeva_imag, extrapolation_bc=Flat())
-    
-    return f_abs, f_faddeeva_real, f_faddeeva_imag
+
+    return f_faddeeva_real, f_faddeeva_imag
 end
 
 ## Noy table

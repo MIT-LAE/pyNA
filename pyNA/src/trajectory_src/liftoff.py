@@ -20,7 +20,7 @@ class LiftOff(dm.Phase):
         if objective == 'noise' and phld:
             self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True, opt=True, ref=10.)
         else:
-            self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True, ref=10.)
+            self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True)
         self.add_parameter('theta_slats', targets='theta_slats', units='deg', val=theta_slats, dynamic=True, include_timeseries=True)
         self.add_parameter('I_landing_gear', units=None, val=1, dynamic=True, include_timeseries=True)
         self.add_parameter('y', units='m', val=0, dynamic=True, include_timeseries=True)

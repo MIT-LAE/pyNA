@@ -1,10 +1,17 @@
-function f_spl!(spl, rho_0, c_0)
+function f_spl!(spl, x)
 
+    # x = [c_0, rho_0]
+    # y = [spl]
+    
     # Compute SPL
-    @. spl = 10*log10.(spl) + 20*log10(rho_0 * c_0^2)
-
     # Remove all SPL below 0
-    @. spl = clamp(spl, 0, Inf)
+    spl .= 10*log10.(spl) .+ 20*log10(x[1]^2*x[2])
+    
+    for i in 1:1:size(spl)[1]
+        if spl[i] < 1e-99
+            spl[i] = 1e-99
+        end
+    end
 
 end
 

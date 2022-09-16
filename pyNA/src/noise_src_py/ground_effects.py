@@ -50,8 +50,6 @@ def ground_effects(settings: Dict[str, Any], data: Data, r: np.float64, beta: np
     # Source: Zorumski report 1982 part 1. Chapter 3.2 Equation 13 / adapted through Berton lateral attenuation paper
     nu = (1 + (6.86 * eta) ** (-0.75) + (4.36 * eta) ** (-0.73) * 1j) ** (-1)
 
-    pdb.set_trace()
-
     # Compute Gamma
     # Source: Zorumski report 1982 part 1. Chapter 3.2 Equation 5
     Gamma = (cos_theta - nu) / (cos_theta + nu)

@@ -15,8 +15,7 @@ class GroundRoll(dm.Phase):
         
         self.add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=True, fix_final=False, ref=100.)
-        self.add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=True, fix_final=False, lower=airframe.aero['alpha'][0], upper=airframe.aero['alpha'][-1], ref=1.)
-
+        self.add_parameter('alpha', targets='alpha', units='deg', dynamic=True, include_timeseries=True, val=airframe.alpha_0)
         self.add_parameter('z', targets='z', units='m', val=0., dynamic=True,include_timeseries=True)
         self.add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
         self.add_parameter('TS', targets='propulsion.TS', units=None, val=TS, dynamic=True, include_timeseries=True)
@@ -28,7 +27,7 @@ class GroundRoll(dm.Phase):
         if objective == 'noise' and phld:
             self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True, opt=True, ref=10)
         else:
-            self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True, ref=10.)
+            self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True)
         self.add_parameter('theta_slats', targets='theta_slats', units='deg', val=theta_slats, dynamic=True, include_timeseries=True)
         self.add_parameter('I_landing_gear', units=None, val=1, dynamic=True, include_timeseries=True)
         self.add_parameter('y', units='m', val=0, dynamic=True, include_timeseries=True)

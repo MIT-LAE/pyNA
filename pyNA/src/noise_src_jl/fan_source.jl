@@ -1,4 +1,4 @@
-function inlet_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
+function inlet_broadband(settings, pyna_ip, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
 
     T = eltype(M_tip)
     # Fan inlet broadband noise component:
@@ -73,7 +73,7 @@ function inlet_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float6
         end
 
         # Rotor-stator spacing correction term (F2 of Eqn 4, Figure 6B):
-        F2IB = zeros(T, 1)
+        F2IB = 0.
 
     elseif settings["fan_BB_method"] == "kresja"
         # Tip Mach-dependent term (F1, of Eqn 4 in report, Figure 4A, modified by Krejsa):
@@ -108,12 +108,12 @@ function inlet_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float6
     F3IB = pyna_ip.f_F3IB(theta)
     
     # Component value:
-    spl_i_b = tsqem .+ F1IB .+ F2IB .+ F3IB
+    spl_i_b = tsqem + F1IB + F2IB + F3IB
 
     return spl_i_b
 end
 
-function discharge_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
+function discharge_broadband(settings, pyna_ip, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
 
     T = eltype(M_tip)
     # Fan discharge broadband noise component:
@@ -222,18 +222,18 @@ function discharge_broadband(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Fl
 
     # Added noise factor if there are inlet guide vanes present:
     if settings["fan_igv"] == true
-        CDB = 3 * ones(T, 1)
+        CDB = 3.
     else
-        CDB = zeros(T, 1)
+        CDB = 0.
     end
 
     # Component value:
-    spl_d_b = tsqem .+ F1DB .+ F2DB .+ F3DB .+ CDB
+    spl_d_b = tsqem + F1DB + F2DB + F3DB + CDB
 
     return spl_d_b
 end
 
-function inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
+function inlet_tones(settings, pyna_ip, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
     
     T = eltype(M_tip)
     # Fan inlet discrete tone noise component:
@@ -277,7 +277,8 @@ function inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, R
             else
                 F2TI = -10 * log10(100 / 300)  # This is set to a constant 4.7712
             end
-        end   
+        end  
+
     elseif settings["fan_RS_method"] == "allied_signal"
         # Tip Mach-dependent term (F1 of Eqn 6 in report, Figure 10A, modified by AlliedSignal):
         if M_d_fan <= 1
@@ -316,6 +317,7 @@ function inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, R
                 F2TI = -10 * log10(100. / 300)  # This is set to a constant 4.7712
             end
         end
+    
     elseif settings["fan_RS_method"] == "geae"
         # Tip Mach-dependent term (F1 of Eqn 6 in report, Figure 10A, modified by GE):
         if M_d_fan <= 1
@@ -343,8 +345,10 @@ function inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, R
                 end
             end
         end
+        
         # Rotor-stator spacing correction term (F2 of Eqn 6, Figure 12, modified to zero by GE):
-        F2TI = zeros(T, 1)
+        F2TI = 0.
+
     elseif settings["fan_RS_method"] == "kresja"
         # Tip Mach-dependent term (F1 of Eqn 6 in report, Figure 10A, modified by Krejsa):
         if M_d_fan <= 1
@@ -363,6 +367,7 @@ function inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, R
                 F2TI = -10 * log10(100 / 300)  # This is set to a constant 4.7712
             end
         end
+    
     else
         throw(DomainError("Invalid fan_RS_method specified. Specify: original / allied_signal / geae / kresja."))
     end
@@ -371,12 +376,12 @@ function inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, R
     F3TI = pyna_ip.f_F3TI(theta)
         
     # Component value:
-    tonlv_I = tsqem .+ F1TI .+ F2TI .+ F3TI
+    tonlv_I = tsqem + F1TI + F2TI + F3TI
 
     return tonlv_I
 end
 
-function discharge_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
+function discharge_tones(settings, pyna_ip, theta, M_tip, tsqem, M_d_fan::Float64, RSS_fan::Float64)
 
     T = eltype(M_tip)
     # Fan discharge discrete tone noise component:
@@ -475,18 +480,18 @@ function discharge_tones(pyna_ip, settings, theta, M_tip, tsqem, M_d_fan::Float6
 
     # Added noise factor if there are inlet guide vanes:
     if settings["fan_igv"] == true
-        CDT = 6 * ones(T, 1)
+        CDT = 6.
     else
-        CDT = zeros(T, 1)
+        CDT = 0.
     end
 
     # Component value:
-    tonlv_X = tsqem .+ F1TD .+ F2TD .+ F3TD .+ CDT
+    tonlv_X = tsqem + F1TD + F2TD + F3TD + CDT
 
     return tonlv_X
 end
 
-function combination_tones(pyna_ip, settings, f, theta, M_tip, bpf, tsqem)
+function combination_tones(settings, pyna_ip, f, theta, M_tip, bpf, tsqem)
     
     # Combination tone (multiple pure tone or buzzsaw) calculations:
     # Note the original Heidmann reference states that MPTs should be computed if
@@ -537,9 +542,9 @@ function combination_tones(pyna_ip, settings, f, theta, M_tip, bpf, tsqem)
         
         # Noise adjustment (reduction) if there are inlet guide vanes, for all methods:
         if settings["fan_igv"] == true
-            CCT = -5 * ones(T, 1)
+            CCT = -5.
         else
-            CCT = zeros(T, 1)
+            CCT = 0.
         end
         
         # Loop through the three sub-bpf terms:
@@ -629,255 +634,223 @@ function combination_tones(pyna_ip, settings, f, theta, M_tip, bpf, tsqem)
     return dcp
 end    
 
-function calculate_harmonics(pyna_ip, settings, f, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf, comp::String)
+function inlet_harmonics!(dp, x, settings, pyna_ip, f, comp)
 
+    # x = [theta, tonlv, i_cut, M_tip, bpf]
+    # y = dp
+    
     # Assign discrete interaction tones at bpf and harmonics to proper bins (see figures 8 and 9):
     # Initialize solution matrices
-    T = eltype(M_tip)
-    dp = zeros(T, settings["n_frequency_bands"])
-    dpx = zeros(T, settings["n_frequency_bands"])
+    T = eltype(x)
 
     nfi = 1
-    for ih in range(1, settings["n_harmonics"], step=1)
+    for ih in 1:1:settings["n_harmonics"]
 
         # Determine the tone fall-off rates per harmonic (harm_i and harm_x):
         if settings["fan_RS_method"] == "original"
             if settings["fan_igv"] == false
                 # For fans without inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     else
                         # For cut-on fans, harmonics:
                         harm_i = 3 * (ih - 1) * ones(T, 1)
-                        harm_x = 3 * (ih - 1) * ones(T, 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, harmonics:
-                        harm_i = 3 * (ih - 1) * ones(T, 1)
-                        harm_x = 3 * (ih - 1) * ones(T, 1)
+                        harm_i = 3 * (ih - 1) * ones(eltype(x[3]), 1)
                     end
                 end
             elseif settings["fan_igv"] == true
                 # For fans with inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     else
                         # For cut-on fans, harmonics:
-                        harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                        harm_i = 3 * (ih + 1) * ones(eltype(x[3]), 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, harmonics:
-                        harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                        harm_i = 3 * (ih + 1) * ones(eltype(x[3]), 1)
                     end
                 end
             end
         elseif settings["fan_RS_method"] == "allied_signal"
             if settings["fan_igv"] == false
                 # For fans without inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     elseif ih == 2
                         # For cut-on fans, second harmonic:
-                        harm_i = 9.2 * ones(T, 1)
-                        harm_x = 9.2 * ones(T, 1)
+                        harm_i = 9.2 * ones(eltype(x[3]), 1)
                     else
                         # For cut-on fans, upper harmonics:
-                        harm_i = (3 * ih + 1.8) * ones(T, 1)
-                        harm_x = (3 * ih + 1.8) * ones(T, 1)
+                        harm_i = (3 * ih + 1.8) * ones(eltype(x[3]), 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     elseif ih == 2
                         # For cut-off fans, second harmonic:
-                        harm_i = 9.2 * ones(T, 1)
-                        harm_x = 9.2 * ones(T, 1)
+                        harm_i = 9.2 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, upper harmonics:
                         harm_i = (3 * ih + 1.8) * ones(T, 1)
-                        harm_x = (3 * ih + 1.8) * ones(T, 1)
                     end
                 end
             elseif settings["fan_igv"] == true
                 # For fans with inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     else
                         # For cut-on fans, harmonics:
                         harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, harmonics:
-                        harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                        harm_i = 3 * (ih + 1) * ones(eltype(x[3]), 1)
                     end
                 end
             end
         elseif settings["fan_RS_method"] == "geae"
             if settings["fan_igv"] == false
                 # For fans without inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     else
                         # For cut-on fans, harmonics:
-                        if M_tip < 1.15
-                            harm_i = 6 * (ih - 1) * ones(T, 1)
+                        if x[4] < 1.15
+                            harm_i = 6 * (ih - 1) * ones(eltype(x[3]), 1)
                         else
-                            harm_i = 9 * (ih - 1) * ones(T, 1)
+                            harm_i = 9 * (ih - 1) * ones(eltype(x[3]), 1)
                         end
-                        harm_x = 3 * (ih - 1) * ones(T, 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, harmonics:
-                        if M_tip < 1.15
-                            harm_i = 6 * (ih - 1) * ones(T, 1)
+                        if x[4] < 1.15
+                            harm_i = 6 * (ih - 1) * ones(eltype(x[3]), 1)
                         else
-                            harm_i = 9 * (ih - 1) * ones(T, 1)
-                        harm_x = 3 * (ih - 1) * ones(T, 1)
+                            harm_i = 9 * (ih - 1) * ones(eltype(x[3]), 1)
                         end
                     end
                 end
             elseif settings["fan_igv"] == true
                 # For fans with inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     else
                         # For cut-on fans, harmonics:
-                        harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                        harm_i = 3 * (ih + 1) * ones(eltype(x[3]), 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, harmonics:
-                        harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                        harm_i = 3 * (ih + 1) * ones(eltype(x[3]), 1)
                     end
                 end
             end
         elseif settings["fan_RS_method"] == "kresha"
             if settings["fan_igv"] == false
                 # For fans without inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     else
                         # For cut-on fans, harmonics:
-                        harm_i = 3 * (ih - 1) * ones(T, 1)
-                        harm_x = 3 * (ih - 1) * ones(T, 1)
+                        harm_i = 3 * (ih - 1) * ones(eltype(x[3]), 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, harmonics:
-                        harm_i = 3 * (ih - 1) * ones(T, 1)
-                        harm_x = 3 * (ih - 1) * ones(T, 1)
+                        harm_i = 3 * (ih - 1) * ones(eltype(x[3]), 1)
                     end
                 end
             elseif settings["fan_igv"] == true
                 # For fans with inlet guide vanes:
-                if i_cut == [0]
+                if x[3] == 0.0
                     # For cut-on fans, fundamental:
                     if ih == 1
-                        harm_i = zeros(T, 1)
-                        harm_x = zeros(T, 1)
+                        harm_i = zeros(eltype(x[3]), 1)
                     else
                         # For cut-on fans, harmonics:
-                        harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                        harm_i = 3 * (ih + 1) * ones(eltype(x[3]), 1)
                     end
-                elseif i_cut == [1]
+                elseif x[3] == 1.
                     # For cut-off fans, fundamental:
                     if ih == 1
-                        harm_i = 8 * ones(T, 1)
-                        harm_x = 8 * ones(T, 1)
+                        harm_i = 8 * ones(eltype(x[3]), 1)
                     else
                         # For cut-off fans, harmonics:
-                        harm_i = 3 * (ih + 1) * ones(T, 1)
-                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                        harm_i = 3 * (ih + 1) * ones(eltype(x[3]), 1)
                     end
                 end
             end
         else
             throw(DomainError("Invalid fan_RS_method specified. Specify: original / allied_signal / geae / kresja."))    
         end
+        
         # Calculate TCS and distor
         if (settings["fan_id"] == true) && (settings["fan_RS_method"] != "geae")
             # Assign the increment to the fundamental tone along with a 10 dB per harmonic order fall-off
             # for cases with inlet flow distortion (see figure 9):
-            distor = 10^(0.1 * tonlv_I - ih + 1)
+            distor = 10^(0.1 * x[2] - ih + 1)
             TCS = zeros(T, 1)
         elseif (settings["fan_id"] == true) && (settings["fan_RS_method"] == "geae")
             # Compute suppression factors for GE#s "Flight cleanup Turbulent Control Structure."
             # Approach or takeoff values to be applied to inlet discrete interaction tones
-            # at bpf and 2bpf.  Accounts for observed in-flight tendencies.
+            # at x[5] and 2x[5].  Accounts for observed in-flight tendencies.
 
             if settings["fan_ge_flight_cleanup"] == "takeoff"
                 # Apply takeoff values:
                 if ih == 1
-                    TCS = pyna_ip.f_TCS_takeoff_ih1(theta)
+                    TCS = pyna_ip.f_TCS_takeoff_ih1(x[1])
                 elseif ih == 2
-                    TCS = pyna_ip.f_TCS_takeoff_ih2(theta)
+                    TCS = pyna_ip.f_TCS_takeoff_ih2(x[1])
                 else
                     TCS = zeros(T, 1)
                 end
             elseif settings["fan_ge_flight_cleanup"] == "approach"
                 # Apply approach values:
                 if ih == 1
-                    TCS = pyna_ip.f_TCS_approach_ih1(theta)
+                    TCS = pyna_ip.f_TCS_approach_ih1(x[1])
                 elseif ih == 2
-                    TCS = pyna_ip.f_TCS_approach_ih2(theta)
+                    TCS = pyna_ip.f_TCS_approach_ih2(x[1])
                 else
                     TCS = zeros(T, 1)
                 end
@@ -889,23 +862,14 @@ function calculate_harmonics(pyna_ip, settings, f, theta, tonlv_I, tonlv_X, i_cu
             # Flight cleanup levels are then subtracted from the inlet tones if the flow is not distorted.
             # The flight cleanup levels are set to zero if the flow is distorted.
             # Use the same increment as the original method and the same 10 dB per harmonic fall-off rate.
-            distor = 10 .^(0.1 * (tonlv_I .- TCS) - ih + 1)
+            distor = 10 .^(0.1 * (x[2] .- TCS) - ih + 1)
         else
             distor = zeros(T, 1)
             TCS = zeros(T, 1)
         end
         
         # Calculate tone power
-        if comp == "fan_inlet" # or comp == "inlet RS":
-            tonpwr_i = 10 .^(0.1 * (tonlv_I .- harm_i .- TCS)) .+ distor
-        else
-            tonpwr_i = zeros(T, 1)
-        end
-        if comp == "fan_discharge" # or comp == "discharge RS" or comp == "total":
-            tonpwr_x = 10 .^(0.1 * (tonlv_X .- harm_x))
-        else
-            tonpwr_x = zeros(T, 1)
-        end
+        tonpwr_i = 10 .^(0.1 * (x[2] .- harm_i .- TCS)) .+ distor
                 
         # Compute filter bandwidths:
         filbw = 1  # Fraction of filter bandwidth with gain of unity (default to unity)
@@ -917,7 +881,7 @@ function calculate_harmonics(pyna_ip, settings, f, theta, tonlv_I, tonlv_X, i_cu
         # Cycle through frequencies and assign tones to 1/3rd octave bins:
         ll = NaN
         for l in range(nfi, settings["n_frequency_bands"], step=1)
-            Frat = bpf * ih / f[l]
+            Frat = x[5] * ih / f[l]
             FR = 1
             if Frat .< F1
                 break
@@ -931,14 +895,228 @@ function calculate_harmonics(pyna_ip, settings, f, theta, tonlv_I, tonlv_X, i_cu
             end
 
             dp[l] = dp[l] .+ tonpwr_i[1] .* FR
-            dpx[l] = dpx[l] .+ tonpwr_x[1] .* FR
             nfi = ll
 
             #continue
         end
     end
+end
 
-    return dp, dpx
+function discharge_harmonics!(dp, x, settings, pyna_ip, f, comp)
+
+    # x = [theta, tonlv, i_cut, M_tip, bpf]
+    # y = dp
+    
+    # Assign discrete interaction tones at x[5] and harmonics to proper bins (see figures 8 and 9):
+    # Initialize solution matrices
+    T = eltype(x)
+
+    nfi = 1
+    for ih in range(1, settings["n_harmonics"], step=1)
+
+        # Determine the tone fall-off rates per harmonic (harm_i and harm_x):
+        if settings["fan_RS_method"] == "original"
+            if settings["fan_igv"] == false
+                # For fans without inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, harmonics:
+                        harm_x = 3 * (ih - 1) * ones(T, 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, harmonics:
+                        harm_x = 3 * (ih - 1) * ones(eltype(x[3]), 1)
+                    end
+                end
+            elseif settings["fan_igv"] == true
+                # For fans with inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(eltype(x[3]), 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(eltype(x[3]), 1)
+                    end
+                end
+            end
+        elseif settings["fan_RS_method"] == "allied_signal"
+            if settings["fan_igv"] == false
+                # For fans without inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    elseif ih == 2
+                        # For cut-on fans, second harmonic:
+                        harm_x = 9.2 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, upper harmonics:
+                        harm_x = (3 * ih + 1.8) * ones(eltype(x[3]), 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    elseif ih == 2
+                        # For cut-off fans, second harmonic:
+                        harm_x = 9.2 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, upper harmonics:
+                        harm_x = (3 * ih + 1.8) * ones(T, 1)
+                    end
+                end
+            elseif settings["fan_igv"] == true
+                # For fans with inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(T, 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(eltype(x[3]), 1)
+                    end
+                end
+            end
+        elseif settings["fan_RS_method"] == "geae"
+            if settings["fan_igv"] == false
+                # For fans without inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, harmonics:
+                        harm_x = 3 * (ih - 1) * ones(eltype(x[3]), 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, harmonics:
+                        harm_x = 3 * (ih - 1) * ones(eltype(x[3]), 1)
+                    end
+                end
+            elseif settings["fan_igv"] == true
+                # For fans with inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(eltype(x[3]), 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(eltype(x[3]), 1)
+                    end
+                end
+            end
+        elseif settings["fan_RS_method"] == "kresha"
+            if settings["fan_igv"] == false
+                # For fans without inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, harmonics:
+                        harm_x = 3 * (ih - 1) * ones(eltype(x[3]), 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, harmonics:
+                        harm_x = 3 * (ih - 1) * ones(eltype(x[3]), 1)
+                    end
+                end
+            elseif settings["fan_igv"] == true
+                # For fans with inlet guide vanes:
+                if x[3] == 0.
+                    # For cut-on fans, fundamental:
+                    if ih == 1
+                        harm_x = zeros(eltype(x[3]), 1)
+                    else
+                        # For cut-on fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(eltype(x[3]), 1)
+                    end
+                elseif x[3] == 1.
+                    # For cut-off fans, fundamental:
+                    if ih == 1
+                        harm_x = 8 * ones(eltype(x[3]), 1)
+                    else
+                        # For cut-off fans, harmonics:
+                        harm_x = 3 * (ih + 1) * ones(eltype(x[3]), 1)
+                    end
+                end
+            end
+        else
+            throw(DomainError("Invalid fan_RS_method specified. Specify: original / allied_signal / geae / kresja."))    
+        end
+                
+        # Calculate tone power
+        tonpwr_x = 10 .^(0.1 * (x[2] .- harm_x))
+                       
+        # Compute filter bandwidths:
+        filbw = 1  # Fraction of filter bandwidth with gain of unity (default to unity)
+        F1 = 0.78250188 + 0.10874906 * filbw
+        F2 = 1 - 0.10874906 * filbw
+        F3 = 1 + 0.12201845 * filbw
+        F4 = 1.2440369 - 0.12201845 * filbw
+
+        # Cycle through frequencies and assign tones to 1/3rd octave bins:
+        ll = NaN
+        for l in range(nfi, settings["n_frequency_bands"], step=1)
+            Frat = x[5] * ih / f[l]
+            FR = 1
+            if Frat .< F1
+                break
+            elseif Frat .> F4
+                ll = l
+                continue
+            #elseif Frat .> F3
+                #FR = (F4 .- Frat) ./ (F4 .- F3)
+            #elseif Frat .< F2
+                #FR = (Frat .- F1) ./ (F2 .- F1)
+            end
+
+            dp[l] = dp[l] .+ tonpwr_x[1] .* FR
+            nfi = ll
+
+            #continue
+        end
+    end  
 end
 
 function calculate_cutoff(M_tip_tan, B_fan::Int64, V_fan::Int64)
@@ -955,65 +1133,67 @@ function calculate_cutoff(M_tip_tan, B_fan::Int64, V_fan::Int64)
     # if the cutoff parameter is less than 1.05 and the tip Mach is less than
     # unity, the fan is cut off (i.e., the tones are reduced in magnitude):
     if (cutoff < 1.05) && (M_tip_tan < 1)
-        i_cut = ones(eltype(cutoff), (1, ))
+        i_cut = cutoff^0
     elseif (cutoff < 1.05) && (M_tip_tan >= 1)
-        i_cut = zeros(eltype(cutoff), (1, ))
+        i_cut = cutoff^0-1
     elseif (cutoff >= 1.05) && (M_tip_tan < 1)
-        i_cut = zeros(eltype(cutoff), (1, ))
+        i_cut = cutoff^0-1
     else
-        i_cut = zeros(eltype(cutoff), (1, ))
+        i_cut = cutoff^0-1
     end
 
     return i_cut
 end
 
-function fan_source!(spl, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0, theta, DTt_f_star, mdot_f_star, N_f_star, A_f_star, d_f_star, comp::String)
+function fan_source!(spl, x, settings, pyna_ip, af, f, shield, comp)
 
-    # Initialize solution
-    T = eltype(DTt_f_star)
-    
+    # x = [DTt_f, mdot_f, N_f, A_f, d_f, c_0, rho_0, M_0, theta]
+    # y = spl
+
     ### Extract the inputs
-    delta_T_fan = DTt_f_star * T_0  # Total temperature rise across fan [R]
-    rpm = N_f_star * 60 * c_0 / (d_f_star * sqrt(settings["A_e"]))  # Shaft speed [rpm]
-    M_tip_tan = (d_f_star * sqrt(settings["A_e"]) / 2) * rpm * 2 * π / 60 / c_0  # Tangential (i.e., radius*omega) tip Mach number: ! Doesn"t need correction
-    mdot_fan = mdot_f_star * rho_0 * c_0 * settings["A_e"]  # Airflow [kg/s]
-    bpf = rpm * ac.B_fan / 60. / (1 .- M_0 * cos.(theta * π / 180))  # Blade passing frequency, [Hz]
-    flow_M = mdot_fan / (rho_0 .* A_f_star * settings["A_e"] * c_0)  # Fan face flow Mach number (assumes ambient and fan face static densities are equal): !!!!!!!
+    M_tip_tan = (x[5] / 2) * x[3] * 2 * π / 60 / x[6]  # Tangential (i.e., radius*omega) tip Mach number: ! Doesn"t need correction
+    bpf = x[3] * af.B_fan / 60. / (1 .- x[8] * cos.(x[9] * π / 180))  # Blade passing frequency, [Hz]
+    flow_M = x[2] / (x[7] .* x[4] * x[6])  # Fan face flow Mach number (assumes ambient and fan face static densities are equal): !!!!!!!
     M_tip = (M_tip_tan^2 + flow_M^2)^0.5  # Relative (i.e., helical) tip Mach number: ! Doesn"t need correction
 
     # Temperature-flow power base term:
     rho_sl = 1.22514
     c_sl = 340.29395
     if settings["fan_BB_method"] == "kresja"
-        tsqem = 40 * log10(delta_T_fan * 1.8) + 10 * log10(2.20462 * mdot_fan / (1 - M_0 * cos(theta * π / 180)).^4) - 20 * log10(settings["r_0"]) - 10*log10(rho_sl^2 * c_sl^4)
+        tsqem = 40 * log10(x[1] * 1.8) + 10 * log10(2.20462 * x[2] / (1 - x[8] * cos(x[9] * π / 180)).^4) - 20 * log10(settings["r_0"]) - 10*log10(rho_sl^2 * c_sl^4)
     else  # All other methods:
-        tsqem = 20 * log10(delta_T_fan * 1.8) + 10 * log10(2.20462 * mdot_fan / (1 - M_0 * cos(theta * π / 180)).^4) - 20 * log10(settings["r_0"]) - 10*log10(rho_sl^2 * c_sl^4)
+        tsqem = 20 * log10(x[1] * 1.8) + 10 * log10(2.20462 * x[2] / (1 - x[8] * cos(x[9] * π / 180)).^4) - 20 * log10(settings["r_0"]) - 10*log10(rho_sl^2 * c_sl^4)
     end
 
     # Calculate individual noise components
     if comp == "fan_inlet"
-        spl_i_b = inlet_broadband(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
+        spl_i_b = inlet_broadband(settings, pyna_ip, x[9], M_tip, tsqem, af.M_d_fan, af.RSS_fan)
         spl_d_b = 0.
-        tonlv_I = inlet_tones(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
+        tonlv_I = inlet_tones(settings, pyna_ip, x[9], M_tip, tsqem, af.M_d_fan, af.RSS_fan)
         tonlv_X = 0.
     elseif comp == "fan_discharge"
         spl_i_b = 0.
-        spl_d_b = discharge_broadband(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
+        spl_d_b = discharge_broadband(settings, pyna_ip, x[9], M_tip, tsqem, af.M_d_fan, af.RSS_fan)
         tonlv_I = 0.
-        tonlv_X = discharge_tones(pyna_ip, settings, theta, M_tip, tsqem, ac.M_d_fan, ac.RSS_fan)
+        tonlv_X = discharge_tones(settings, pyna_ip, x[9], M_tip, tsqem, af.M_d_fan, af.RSS_fan)
     end
-            
+
     if settings["fan_combination_tones"]
-        dcp = combination_tones(pyna_ip, settings,  f, theta, M_tip, bpf, tsqem)
+        dcp = combination_tones(settings, pyna_ip,  f, x[9], M_tip, bpf, tsqem)
     else
-        dcp = zeros(T, settings["n_frequency_bands"])
+        dcp = zeros(eltype(x), settings["n_frequency_bands"])
     end
 
     # Calculate if cut-off happens (1) or not (0)
-    i_cut = calculate_cutoff(M_tip_tan, ac.B_fan, ac.V_fan)
+    i_cut = calculate_cutoff(M_tip_tan, af.B_fan, af.V_fan)
 
     # Assign tones_to bands
-    dp, dpx = calculate_harmonics(pyna_ip, settings, f, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf, comp)
+    dp = zeros(eltype(x), settings["n_frequency_bands"])
+    if comp == "fan_inlet"
+        inlet_harmonics!(dp, vcat(x[9], tonlv_I, i_cut, M_tip, bpf), settings, pyna_ip, f, comp)
+    elseif comp == "fan_discharge"
+        discharge_harmonics!(dp, vcat(x[9], tonlv_X, i_cut, M_tip, bpf), settings, pyna_ip, f, comp)
+    end
 
     # Final calculations;  cycle through frequencies and assign values:
     if settings["fan_BB_method"] == "allied_signal"
@@ -1046,11 +1226,9 @@ function fan_source!(spl, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0
     if comp == "fan_inlet"
         pow_level_fan = 10 .^(0.1 * (spl_i_b .- flog_i))
         pow_level_fan = pow_level_fan .+ dp
-
-    # Add discrete tone and broadband components for exhaust noise:
     elseif comp == "fan_discharge"
         pow_level_fan = 10 .^(0.1 * (spl_d_b .- flog_e))
-        pow_level_fan = pow_level_fan .+ dpx
+        pow_level_fan = pow_level_fan .+ dp
     else
         throw(DomainError("Invalid component specified."))
     end
@@ -1061,14 +1239,14 @@ function fan_source!(spl, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0
     end
         
     # Add ambient correction. Multiply with number of engines
-    msap_j = ac.n_eng * pow_level_fan * settings["p_ref"]^2
+    msap_j = af.n_eng * pow_level_fan * settings["p_ref"]^2
 
     # Fan liner suppression
     if settings["fan_liner_suppression"]
         if comp == "fan_inlet"
-            supp = pyna_ip.f_supp_fi.(f, theta.*ones(T, settings["n_frequency_bands"], ))
+            supp = pyna_ip.f_supp_fi.(f, x[9].*ones(eltype(x), settings["n_frequency_bands"], ))
         elseif comp == "fan_discharge"
-            supp = pyna_ip.f_supp_fd.(f, theta.*ones(T, settings["n_frequency_bands"], ))
+            supp = pyna_ip.f_supp_fd.(f, x[9].*ones(eltype(x), settings["n_frequency_bands"], ))
         end
         msap_j = supp .* msap_j
     end
@@ -1079,6 +1257,11 @@ function fan_source!(spl, pyna_ip, settings, ac, f, shield, M_0, c_0, T_0, rho_0
     end
 
     # Normalize msap by reference pressure
-    @. spl += clamp.(msap_j, 1e-99, Inf)/settings["p_ref"]^2
+    # spl += clamp.(msap_j, 1e-99, Inf)/settings["p_ref"]^2
+    spl .+= msap_j/settings["p_ref"]^2
 
 end
+
+fan_source_fwd! = (y,x)->fan_source!(y,x, settings, pyna_ip, ac, f, shield, comp)
+inlet_harmonics_fwd! = (y,x)->inlet_harmonics!(y, x, settings, pyna_ip, f, comp)
+discharge_harmonics_fwd! = (y,x)->discharge_harmonics!(y, x, settings, pyna_ip, f, comp)

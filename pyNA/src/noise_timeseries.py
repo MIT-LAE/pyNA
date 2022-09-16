@@ -5,7 +5,7 @@ import pandas as pd
 import dymos as dm
 import numpy as np
 import openmdao.api as om
-from pyNA.src.noise_src_jl.get_noise_input_vector_indices import get_input_vector_indices
+from pyNA.src.noise_src_jl.get_input_vector_indices import get_input_vector_indices
 import matplotlib.pyplot as plt
 from pyNA.src.data import Data
 from pyNA.src.airframe import Airframe
@@ -32,7 +32,7 @@ class NoiseTimeSeries(om.Problem):
         self.settings = settings
         self.data = data
 
-    def create(self, airframe:Airframe, n_t:np.int, mode:str, objective:str) -> None:
+    def create(self, sealevel_atmosphere: dict, airframe:Airframe, n_t:np.int, mode:str, objective:str) -> None:
         """
         Create model for computing noise of predefined trajectory timeseries.
 
@@ -62,7 +62,7 @@ class NoiseTimeSeries(om.Problem):
             idx = get_input_vector_indices(self.language, settings=self.settings, n_t=n_t)
             
             self.model.add_subsystem(name='noise',
-                                        subsys=make_component(julia.NoiseModel(self.settings, self.data, airframe, n_t, idx, objective)),
+                                        subsys=make_component(julia.NoiseModel(self.settings, self.data, sealevel_atmosphere, airframe, n_t, idx, objective)),
                                         promotes_inputs=[],
                                         promotes_outputs=[])
 
@@ -172,31 +172,25 @@ class NoiseTimeSeries(om.Problem):
             self['noise.alpha'] = path['alpha [deg]']
             self['noise.gamma'] = path['gamma [deg]']
             self['noise.t_s'] = path['t_source [s]']
-            self['noise.rho_0'] = path['rho_0 [kg/m3]']
-            self['noise.c_0'] = path['c_0 [m/s]']
-            self['noise.mu_0'] = path['mu_0 [kg/ms]']
-            self['noise.T_0'] = path['T_0 [K]']
-            self['noise.p_0'] = path['p_0 [Pa]']
             self['noise.M_0'] = path['M_0 [-]']
-            self['noise.I_0'] = path['I_0 [kg/m2s]']
-            self['noise.TS'] = path['TS [-]']
 
-            if self.settings['jet_mixing_source'] and not self.settings['jet_shock_source']:
-                self['noise.V_j'] = engine['Jet V [m/s]']
-                self['noise.rho_j'] = engine['Jet rho [kg/m3]']
-                self['noise.A_j'] = engine['Jet A [m2]']
-                self['noise.Tt_j'] = engine['Jet Tt [K]']
-            elif self.settings['jet_shock_source'] and not self.settings['jet_mixing_source']:
-                self['noise.V_j'] = engine['Jet V [m/s]']
-                self['noise.M_j'] = engine['Jet M [-]']
-                self['noise.A_j'] = engine['Jet A [m2]']
-                self['noise.Tt_j'] = engine['Jet Tt [K]']
-            elif self.settings['jet_shock_source'] and self.settings['jet_mixing_source']:
-                self['noise.V_j'] = engine['Jet V [m/s]']
-                self['noise.rho_j'] = engine['Jet rho [kg/m3]']
-                self['noise.A_j'] = engine['Jet A [m2]']
-                self['noise.Tt_j'] = engine['Jet Tt [K]']
-                self['noise.M_j'] = engine['Jet M [-]']
+            if self.settings['atmosphere_type'] == 'stratified':
+                self['noise.c_0'] = path['c_0 [m/s]']
+                self['noise.T_0'] = path['T_0 [K]']
+                self['noise.rho_0'] = path['rho_0 [kg/m3]']
+                self['noise.p_0'] = path['p_0 [Pa]']
+                self['noise.mu_0'] = path['mu_0 [kg/ms]']    
+                self['noise.I_0'] = path['I_0 [kg/m2s]']
+
+            if self.settings['core_jet_suppression'] and self.settings['case_name'] in ['nasa_stca_standard', 'stca_enginedesign_standard']:
+                self['noise.TS'] = path['TS [-]']
+
+            if self.settings['fan_inlet_source'] or self.settings['fan_discharge_source']:
+                self['noise.DTt_f'] = engine['Fan delta T [K]']
+                self['noise.mdot_f'] = engine['Fan mdot in [kg/s]']
+                self['noise.N_f'] = engine['Fan N [rpm]']
+                self['noise.A_f'] = engine['Fan A [m2]']
+                self['noise.d_f'] = engine['Fan d [m]']
 
             if self.settings['core_source']:
                 if self.settings['core_turbine_attenuation_method'] == "ge":
@@ -215,16 +209,26 @@ class NoiseTimeSeries(om.Problem):
                     self['noise.rho_ti_c'] = engine['HPT rho_i [kg/m3]']
                     self['noise.c_ti_c'] = engine['HPT c_i [m/s]']
 
+            if self.settings['jet_mixing_source'] and not self.settings['jet_shock_source']:
+                self['noise.V_j'] = engine['Jet V [m/s]']
+                self['noise.rho_j'] = engine['Jet rho [kg/m3]']
+                self['noise.A_j'] = engine['Jet A [m2]']
+                self['noise.Tt_j'] = engine['Jet Tt [K]']
+            elif self.settings['jet_shock_source'] and not self.settings['jet_mixing_source']:
+                self['noise.V_j'] = engine['Jet V [m/s]']
+                self['noise.M_j'] = engine['Jet M [-]']
+                self['noise.A_j'] = engine['Jet A [m2]']
+                self['noise.Tt_j'] = engine['Jet Tt [K]']
+            elif self.settings['jet_shock_source'] and self.settings['jet_mixing_source']:
+                self['noise.V_j'] = engine['Jet V [m/s]']
+                self['noise.rho_j'] = engine['Jet rho [kg/m3]']
+                self['noise.A_j'] = engine['Jet A [m2]']
+                self['noise.Tt_j'] = engine['Jet Tt [K]']
+                self['noise.M_j'] = engine['Jet M [-]']
+
             if self.settings['airframe_source']:
                 self['noise.theta_flaps'] = path['Airframe delta_f [deg]']
                 self['noise.I_landing_gear'] = path['Airframe LG [-]']
-
-            if self.settings['fan_inlet_source'] or self.settings['fan_discharge_source']:
-                self['noise.DTt_f'] = engine['Fan delta T [K]']
-                self['noise.mdot_f'] = engine['Fan mdot in [kg/s]']
-                self['noise.N_f'] = engine['Fan N [rpm]']
-                self['noise.A_f'] = engine['Fan A [m2]']
-                self['noise.d_f'] = engine['Fan d [m]']
 
         # Run noise module
         dm.run_problem(self, run_driver=False, simulate=False, solution_record_file=self.pyna_directory + '/cases/' + self.case_name + '/dymos_solution.db')

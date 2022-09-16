@@ -69,7 +69,8 @@ class pyna:
                 tones_under_800Hz = False,
                 levels_int_metric = 'epnl',
                 epnl_bandshare = False,
-                core_jet_suppression = True,
+                epnl_dt = 0.5,
+                core_jet_suppression = False,
                 observer_lst = ('lateral', 'flyover'),
                 x_observer_array = np.array([[12325.*0.3048, 450., 4*0.3048], [21325.*0.3048, 0., 4*0.3048]]),
                 ground_resistance = 291.0 * 515.379,
@@ -80,7 +81,6 @@ class pyna:
                 n_harmonics = 10,
                 n_shock = 8,
                 A_e = 10.334 * (0.3048 ** 2),
-                dt_epnl = 0.5,
                 r_0 = 0.3048,
                 p_ref = 2e-5,
                 save_results = False,
@@ -144,6 +144,7 @@ class pyna:
         self.tones_under_800Hz = tones_under_800Hz
         self.levels_int_metric = levels_int_metric
         self.epnl_bandshare = epnl_bandshare
+        self.epnl_dt = epnl_dt
         self.core_jet_suppression = core_jet_suppression
         self.observer_lst = observer_lst
         self.x_observer_array = x_observer_array
@@ -155,7 +156,6 @@ class pyna:
         self.n_harmonics = n_harmonics
         self.n_shock = n_shock
         self.A_e = A_e
-        self.dt_epnl = dt_epnl
         self.r_0 = r_0
         self.p_ref = p_ref
 
@@ -271,6 +271,7 @@ class pyna:
         settings['case_name'] = self.case_name
         settings['output_directory_name'] = self.output_directory_name
         settings['output_file_name'] = self.output_file_name
+        settings['atmosphere_type'] = self.atmosphere_type
         settings['fan_inlet_source'] = self.fan_inlet_source
         settings['fan_discharge_source'] = self.fan_discharge_source
         settings['core_source'] = self.core_source
@@ -307,7 +308,7 @@ class pyna:
         settings['n_harmonics'] = self.n_harmonics
         settings['n_shock'] = self.n_shock
         settings['A_e'] = self.A_e
-        settings['dt_epnl'] = self.dt_epnl
+        settings['epnl_dt'] = self.epnl_dt
         settings['r_0'] = self.r_0
         settings['p_ref'] = self.p_ref
         settings['verification'] = self.verification
@@ -328,7 +329,7 @@ class pyna:
         pyna.load_path_timeseries(self)
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.noise_settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-        self.noise_timeseries.create(airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
+        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
         self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='trajectory')
 
         return None
@@ -386,7 +387,7 @@ class pyna:
             self.engine.get_timeseries()
             pyna.load_path_timeseries(self)
             self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.noise_settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-            self.noise_timeseries.create(airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
+            self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
             self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='trajectory')
 
             # Save solutions
@@ -430,7 +431,7 @@ class pyna:
                 self.x_observer_array[cntr, 2] = 4*0.3048
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.noise_settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-        self.noise_timeseries.create(airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
+        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
         self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='trajectory')
 
         # Extract the contour
@@ -474,7 +475,7 @@ class pyna:
         pyna.load_path_timeseries(self, timestep=timestep)
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.noise_settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-        self.noise_timeseries.create(airframe=self.airframe, n_t=self.n_t, mode='distribution', objective=None)
+        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='distribution', objective=None)
         self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='distribution')
 
         return None
@@ -546,7 +547,7 @@ class pyna:
             self.initialization_path.set_phases_initial_conditions(airframe=self.airframe, z_cb=self.z_cb, v_max=self.v_max, initialization_trajectory=None, trajectory_mode=trajectory_mode)
             self.initialization_path.solve(run_driver=True, save_results=self.save_results)
 
-            converged = self.path.check_convergence(filename='IPOPT_trajectory_convergence.out')
+            converged = self.initialization_path.check_convergence(filename='IPOPT_trajectory_convergence.out')
 
         else:
             self.initialization_path = pyna.load_results(self, initialization_path_name, 'final')
@@ -561,7 +562,7 @@ class pyna:
 
             self.path = Trajectory(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, output_directory_name=self.output_directory_name, output_file_name=self.output_file_name)
             self.path.create_trajectory(airframe=self.airframe, engine=self.engine, sealevel_atmosphere=self.sealevel_atmosphere, k_rot=self.k_rot, v_max=self.v_max, TS_to=self.TS_to, TS_vnrs=self.TS_vnrs, TS_cb=self.TS_cb, TS_min=self.TS_cb, theta_flaps=self.theta_flaps, theta_slats=self.theta_slats, atmosphere_type=self.atmosphere_type, atmosphere_dT=self.atmosphere_dT, pkrot=self.pkrot, ptcb=self.ptcb, phld=self.phld, objective=objective, trajectory_mode=trajectory_mode)
-            self.path.create_noise(settings=self.noise_settings, data=self.noise_data, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')            
+            self.path.create_noise(settings=self.noise_settings, data=self.noise_data, sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')            
             
             self.path.set_objective(objective='t_end')
             self.path.set_ipopt_settings(objective=objective, tolerance=self.tolerance, max_iter=self.max_iter)
@@ -622,7 +623,7 @@ class pyna:
 
         self.path = Trajectory(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, output_directory_name=self.output_directory_name, output_file_name=self.output_file_name)
         self.path.create_trajectory(airframe=self.airframe, engine=self.engine, sealevel_atmosphere=self.sealevel_atmosphere, k_rot=self.k_rot, v_max=self.v_max, TS_to=self.TS_to, TS_vnrs=self.TS_vnrs, TS_cb=self.TS_cb, TS_min=self.TS_cb, theta_flaps=self.theta_flaps, theta_slats=self.theta_slats, atmosphere_type=self.atmosphere_type, atmosphere_dT=self.atmosphere_dT, pkrot=self.pkrot, ptcb=self.ptcb, phld=self.phld, objective='noise', trajectory_mode='flyover')
-        self.path.create_noise(settings=self.noise_settings, data=self.noise_data, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='noise')            
+        self.path.create_noise(settings=self.noise_settings, data=self.noise_data, sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='noise')            
         
         self.path.set_objective(objective='noise', noise_constraint_lateral=self.noise_constraint_lateral)
         self.path.set_ipopt_settings(objective='noise', tolerance=self.tolerance, max_iter=self.max_iter)
@@ -668,12 +669,12 @@ class pyna:
                         ax[i].plot(self.noise_timeseries.get_val('noise.t_o')[i,:180], self.noise_timeseries.get_val('noise.pnlt')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
                     else:
                         ax[i].plot(self.noise_timeseries.get_val('noise.t_o')[i,:], self.noise_timeseries.get_val('noise.pnlt')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
-                    ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [1.05*np.max(self.noise_timeseries.get_val('noise.pnlt')[i,:]), 1.05*np.max(problem.get_val('noise.pnlt')[i,:])], alpha=0.15,
+                    ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [1.05*np.max(self.noise_timeseries.get_val('noise.pnlt')[i,:]), 1.05*np.max(self.noise_timeseries.get_val('noise.pnlt')[i,:])], alpha=0.15,
                                     label='EPNL domain of dependence', color=colors[0])
                     if self.noise_settings['verification']:
-                        self.data.load_trajectory_verification_data(settings=self.noise_settings)
-                        ax[i].plot(self.data.verification_trajectory[observer]['t observer [s]'],
-                                self.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
+                        self.noise_data.load_trajectory_verification_data(settings=self.noise_settings)
+                        ax[i].plot(self.noise_data.verification_trajectory[observer]['t observer [s]'],
+                                self.noise_data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
 
                     ax[i].grid(True)
                     ax[i].set_xlabel('Time after brake release [s]')
@@ -684,7 +685,7 @@ class pyna:
                     ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
                     ax_zoom[i].plot(self.noise_timeseries.get_val('noise.t_o')[i,:180], self.noise_timeseries.get_val('noise.pnlt')[i,:180], linewidth=2.5, color=colors[0])
                     if self.noise_settings['verification']:
-                        ax_zoom[i].plot(self.data.verification_trajectory[observer]['t observer [s]'], self.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
+                        ax_zoom[i].plot(self.noise_data.verification_trajectory[observer]['t observer [s]'], self.noise_data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
                     ax_zoom[i].set_xticks([])
                     ax_zoom[i].set_yticks([])
                     ax_zoom[i].set_xlim([time_epnl[0], time_epnl[-1]])
@@ -695,9 +696,9 @@ class pyna:
                     ax[i].plot(self.noise_timeseries.get_val('noise.t_o')[i,:], self.noise_timeseries.get_val('noise.oaspl')[i,:], linewidth=2.5, label='pyNA')
                     ax[i].set_ylabel('$OASPL_{' + observer + '}$ [dB]')
                     if self.noise_settings['verification']:
-                        self.data.load_trajectory_verification_data(settings=self.noise_settings)
-                        ax[i].plot(self.data.verification_trajectory[observer]['t observer [s]'],
-                                self.data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
+                        self.noise_data.load_trajectory_verification_data(settings=self.noise_settings)
+                        ax[i].plot(self.noise_data.verification_trajectory[observer]['t observer [s]'],
+                                self.noise_data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
                                 label='NASA STCA (Berton et al.)')
 
                 ax[i].grid(True)
@@ -719,9 +720,15 @@ class pyna:
                     ax[i].plot(self.noise_timeseries.get_val('noise.t_o')[i,:], self.noise_timeseries.get_val('noise.level')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
                 ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [1.05*np.max(self.noise_timeseries.get_val('noise.level')[i,:]), 1.05*np.max(self.noise_timeseries.get_val('noise.level')[i,:])], alpha=0.15, label='EPNL domain of dependence', color=colors[0])
                 if self.noise_settings['verification']:
-                    self.data.load_trajectory_verification_data(settings=self.noise_settings)
-                    ax[i].plot(self.data.verification_trajectory[observer]['t observer [s]'],
-                            self.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
+                    if metric == 'pnlt':
+                        self.noise_data.load_trajectory_verification_data(settings=self.noise_settings)
+                        ax[i].plot(self.noise_data.verification_trajectory[observer]['t observer [s]'],
+                                self.noise_data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
+                    elif metric == 'oaspl':
+                        self.noise_data.load_trajectory_verification_data(settings=self.noise_settings)
+                        ax[i].plot(self.noise_data.verification_trajectory[observer]['t observer [s]'],
+                                self.noise_data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
+                                label='NASA STCA (Berton et al.)')
 
                 ax[i].grid(True)
                 ax[i].set_xlabel('Time after brake release [s]')
@@ -729,15 +736,17 @@ class pyna:
                 ax[i].set_ylim([-5, 105])
 
                 # Zoomed-in plots
-                ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
-                ax_zoom[i].plot(self.noise_timeseries.get_val('noise.t_o')[i,:180], self.noise_timeseries.get_val('noise.level')[i,:180], linewidth=2.5, color=colors[0])
-                if self.noise_settings['verification']:
-                    ax_zoom[i].plot(self.data.verification_trajectory[observer]['t observer [s]'], self.data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
-                ax_zoom[i].set_xticks([])
-                ax_zoom[i].set_yticks([])
-                ax_zoom[i].set_xlim([time_epnl[0], time_epnl[-1]])
-                ax_zoom[i].set_ylim([np.max(self.noise_timeseries.get_val('noise.level')[i,:])-11, np.max(self.noise_timeseries.get_val('noise.level')[i,:])+1.5])
-                mark_inset(ax[i], ax_zoom[i], loc1=1, loc2=3)                
+                if metric == 'pnlt':
+                    ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
+                    ax_zoom[i].plot(self.noise_timeseries.get_val('noise.t_o')[i,:180], self.noise_timeseries.get_val('noise.level')[i,:180], linewidth=2.5, color=colors[0])
+                    if self.noise_settings['verification']:
+                            ax_zoom[i].plot(self.noise_data.verification_trajectory[observer]['t observer [s]'], self.noise_data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
+
+                    ax_zoom[i].set_xticks([])
+                    ax_zoom[i].set_yticks([])
+                    ax_zoom[i].set_xlim([time_epnl[0], time_epnl[-1]])
+                    ax_zoom[i].set_ylim([np.max(self.noise_timeseries.get_val('noise.level')[i,:])-11, np.max(self.noise_timeseries.get_val('noise.level')[i,:])+1.5])
+                    mark_inset(ax[i], ax_zoom[i], loc1=1, loc2=3)                
 
                 ax[i].grid(True)
                 ax[i].set_xlabel('Time after brake release [s]')
@@ -749,7 +758,10 @@ class pyna:
             ax[1].set_title('Flyover')
         elif self.noise_settings['observer_lst'] == ('approach',):
             ax[0].set_title('Approach')
-        ax[0].set_ylabel('$PNLT$ [TPNdB]')
+        if metric == 'pnlt':
+            ax[0].set_ylabel('$PNLT$ [TPNdB]')
+        elif metric == 'oaspl':
+            ax[0].set_ylabel('$OASPL$ [dB]')
 
         # Set legend
         ax[0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.09), ncol=1, borderaxespad=0, frameon=False)

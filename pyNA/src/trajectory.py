@@ -13,7 +13,7 @@ from pyNA.src.trajectory_src.vnrs import Vnrs
 from pyNA.src.trajectory_src.cutback import CutBack
 from pyNA.src.trajectory_src.take_off_phase_ode import TakeOffPhaseODE
 from pyNA.src.trajectory_src.mux import Mux
-from pyNA.src.noise_src_jl.get_noise_input_vector_indices import get_input_vector_indices
+from pyNA.src.noise_src_jl.get_input_vector_indices import get_input_vector_indices
 
 if os.environ['pyna_language']=='julia':
     import julia.Main as julia
@@ -22,6 +22,7 @@ if os.environ['pyna_language']=='julia':
     julia.include(src_path + "/noise_src_jl/noise_model.jl")
 elif os.environ['pyna_language']=='python':
     from pyNA.src.noise_src_py.noise_model import NoiseModel
+
 
 class Trajectory(om.Problem):
 
@@ -147,15 +148,21 @@ class Trajectory(om.Problem):
         
         trajectory_var = dict()
         if atmosphere_type == 'stratified':
-            trajectory_var['time'] = 's'
             trajectory_var['x'] = 'm'
             trajectory_var['y'] = 'm'
             trajectory_var['z'] = 'm'
             trajectory_var['v'] = 'm/s'
-            trajectory_var['M_0'] = None
             trajectory_var['alpha'] = 'deg'
             trajectory_var['gamma'] = 'deg'
+            trajectory_var['time'] = 's'
+            trajectory_var['M_0'] = None
             trajectory_var['TS'] = None
+            trajectory_var['c_0'] = 'm/s'
+            trajectory_var['T_0'] = 'K'
+            trajectory_var['rho_0'] = 'kg/m**3'
+            trajectory_var['p_0'] = 'Pa'
+            trajectory_var['mu_0'] = 'kg/m/s'
+            trajectory_var['I_0'] = 'kg/m**2/s'
             trajectory_var['I_landing_gear'] = None
             trajectory_var['theta_flaps'] = 'deg'
             trajectory_var['theta_slats'] = 'deg'
@@ -167,21 +174,15 @@ class Trajectory(om.Problem):
             trajectory_var['n'] = None
             trajectory_var['mdot_NOx'] = 'kg/s'
             trajectory_var['EINOx'] = None
-            trajectory_var['p_0'] = 'Pa'
-            trajectory_var['rho_0'] = 'kg/m**3'
-            trajectory_var['T_0'] = 'K'
-            trajectory_var['c_0'] = 'm/s'
-            trajectory_var['mu_0'] = 'kg/m/s'
-            trajectory_var['I_0'] = 'kg/m**2/s'
         else:
-            trajectory_var['time'] = 's'
             trajectory_var['x'] = 'm'
             trajectory_var['y'] = 'm'
             trajectory_var['z'] = 'm'
             trajectory_var['v'] = 'm/s'
-            trajectory_var['M_0'] = None
             trajectory_var['alpha'] = 'deg'
             trajectory_var['gamma'] = 'deg'
+            trajectory_var['time'] = 's'
+            trajectory_var['M_0'] = None
             trajectory_var['TS'] = None
             trajectory_var['I_landing_gear'] = None
             trajectory_var['theta_flaps'] = 'deg'
@@ -245,8 +246,8 @@ class Trajectory(om.Problem):
 
         if 'vnrs' in self.phase_name_lst:
             self.traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
-            if objective == 'noise' and ptcb:
-                self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+            # if objective == 'noise' and ptcb:
+                # self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
 
         if 'cutback' in self.phase_name_lst:
             if trajectory_mode == 'flyover':
@@ -259,7 +260,7 @@ class Trajectory(om.Problem):
         # Mux trajectory and engine variables
         Trajectory.get_mux_input_output_size(self)
 
-        mux_t = self.model.add_subsystem(name='trajectory', subsys=Mux(input_size_array=self.mux_input_size_array, output_size=self.mux_output_size))
+        mux_t = self.model.add_subsystem(name='trajectory', subsys=Mux(objective=objective, input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, case_name=self.case_name, output_directory_name=self.output_directory_name))
         trajectory_var = Trajectory.get_trajectory_var_lst(atmosphere_type)
         for var in trajectory_var.keys():
             
@@ -282,7 +283,9 @@ class Trajectory(om.Problem):
                         self.model.connect('phases.' + phase_name + '.interpolated.states:' + var, 'trajectory.' + var + '_' + str(j))
 
                 elif var in ['alpha']:
-                    if phase_name in {'groundroll', 'rotation'}:
+                    if phase_name in {'groundroll'}:
+                        self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var,'trajectory.' + var + '_' + str(j))
+                    elif phase_name in {'groundroll', 'rotation'}:
                         self.model.connect('phases.' + phase_name + '.interpolated.states:' + var,'trajectory.' + var + '_' + str(j))
                     else:
                         self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
@@ -307,7 +310,7 @@ class Trajectory(om.Problem):
                 elif var in ['L', 'D', 'eas', 'n','M_0', 'p_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
                     self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.' + var + '_' + str(j))
 
-        mux_e = self.model.add_subsystem(name='engine', subsys=Mux(input_size_array=self.mux_input_size_array, output_size=self.mux_output_size))
+        mux_e = self.model.add_subsystem(name='engine', subsys=Mux(objective=objective, input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, case_name=self.case_name, output_directory_name=self.output_directory_name))
         for var in engine.deck_variables.keys():
             
             mux_e.add_var(var, units=engine.deck_variables[var])
@@ -317,7 +320,7 @@ class Trajectory(om.Problem):
 
         return 
 
-    def create_noise(self, settings, data, airframe, n_t, objective, mode) -> None:
+    def create_noise(self, settings, data, sealevel_atmosphere, airframe, n_t, objective, mode) -> None:
 
         """
         Setup model for computing noise along computed trajectory.
@@ -417,7 +420,7 @@ class Trajectory(om.Problem):
             idx = get_input_vector_indices(self.language, settings=settings, n_t=n_t)
 
             self.model.add_subsystem(name='noise',
-                                        subsys=make_component(julia.NoiseModel(settings, data, airframe, n_t,  idx, objective)),
+                                        subsys=make_component(julia.NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t,  idx, objective)),
                                         promotes_inputs=[],
                                         promotes_outputs=[])
 
@@ -428,36 +431,26 @@ class Trajectory(om.Problem):
             self.model.connect('trajectory.alpha', 'noise.alpha')
             self.model.connect('trajectory.gamma', 'noise.gamma')
             self.model.connect('trajectory.t_s', 'noise.t_s')
-            self.model.connect('trajectory.TS', 'noise.TS')
             self.model.connect('trajectory.M_0', 'noise.M_0')
-            self.model.connect('trajectory.p_0', 'noise.p_0')
-            self.model.connect('trajectory.c_0', 'noise.c_0')
-            self.model.connect('trajectory.T_0', 'noise.T_0')
-            self.model.connect('trajectory.rho_0', 'noise.rho_0')
-            self.model.connect('trajectory.mu_0', 'noise.mu_0')
-            self.model.connect('trajectory.I_0', 'noise.I_0')
-            self.model.connect('trajectory.theta_flaps', 'noise.theta_flaps')
 
-            if settings['airframe_source']:
-                self.model.connect('trajectory.I_landing_gear', 'noise.I_landing_gear')
+            if settings['core_jet_suppression'] and settings['case_name'] in ['nasa_stca_standard', 'stca_enginedesign_standard']:
+                self.model.connect('trajectory.TS', 'noise.TS')
+            
+            if settings['atmosphere_type'] == 'stratified':
+                self.model.connect('trajectory.c_0', 'noise.c_0')
+                self.model.connect('trajectory.T_0', 'noise.T_0')
+                self.model.connect('trajectory.rho_0', 'noise.rho_0')
+                self.model.connect('trajectory.p_0', 'noise.p_0')
+                self.model.connect('trajectory.mu_0', 'noise.mu_0')
+                self.model.connect('trajectory.I_0', 'noise.I_0')
 
             # Create connections from engine component
-            if settings['jet_mixing_source'] and settings['jet_shock_source'] == False:
-                self.model.connect('engine.V_j', 'noise.V_j')
-                self.model.connect('engine.rho_j', 'noise.rho_j')
-                self.model.connect('engine.A_j', 'noise.A_j')
-                self.model.connect('engine.Tt_j', 'noise.Tt_j')
-            elif settings['jet_shock_source'] and settings['jet_mixing_source'] == False:
-                self.model.connect('engine.V_j', 'noise.V_j')
-                self.model.connect('engine.A_j', 'noise.A_j')
-                self.model.connect('engine.Tt_j', 'noise.Tt_j')
-                self.model.connect('engine.M_j', 'noise.M_j')
-            elif settings['jet_shock_source'] and settings['jet_mixing_source']:
-                self.model.connect('engine.V_j', 'noise.V_j')
-                self.model.connect('engine.rho_j', 'noise.rho_j')
-                self.model.connect('engine.A_j', 'noise.A_j')
-                self.model.connect('engine.Tt_j', 'noise.Tt_j')
-                self.model.connect('engine.M_j', 'noise.M_j')
+            if settings['fan_inlet_source'] or settings['fan_discharge_source']:
+                self.model.connect('engine.DTt_f', 'noise.DTt_f')
+                self.model.connect('engine.mdot_f', 'noise.mdot_f')
+                self.model.connect('engine.N_f', 'noise.N_f')
+                self.model.connect('engine.A_f', 'noise.A_f')
+                self.model.connect('engine.d_f', 'noise.d_f')
             if settings['core_source']:
                 if settings['core_turbine_attenuation_method'] == 'ge':
                     self.model.connect('engine.mdoti_c', 'noise.mdoti_c')
@@ -474,12 +467,25 @@ class Trajectory(om.Problem):
                     self.model.connect('engine.c_te_c', 'noise.c_te_c')
                     self.model.connect('engine.rho_ti_c', 'noise.rho_ti_c')
                     self.model.connect('engine.c_ti_c', 'noise.c_ti_c')
-            if settings['fan_inlet_source'] or settings['fan_discharge_source']:
-                self.model.connect('engine.DTt_f', 'noise.DTt_f')
-                self.model.connect('engine.mdot_f', 'noise.mdot_f')
-                self.model.connect('engine.N_f', 'noise.N_f')
-                self.model.connect('engine.A_f', 'noise.A_f')
-                self.model.connect('engine.d_f', 'noise.d_f')
+            if settings['jet_mixing_source'] and settings['jet_shock_source'] == False:
+                self.model.connect('engine.V_j', 'noise.V_j')
+                self.model.connect('engine.rho_j', 'noise.rho_j')
+                self.model.connect('engine.A_j', 'noise.A_j')
+                self.model.connect('engine.Tt_j', 'noise.Tt_j')
+            elif settings['jet_shock_source'] and settings['jet_mixing_source'] == False:
+                self.model.connect('engine.V_j', 'noise.V_j')
+                self.model.connect('engine.A_j', 'noise.A_j')
+                self.model.connect('engine.Tt_j', 'noise.Tt_j')
+                self.model.connect('engine.M_j', 'noise.M_j')
+            elif settings['jet_shock_source'] and settings['jet_mixing_source']:
+                self.model.connect('engine.V_j', 'noise.V_j')
+                self.model.connect('engine.rho_j', 'noise.rho_j')
+                self.model.connect('engine.A_j', 'noise.A_j')
+                self.model.connect('engine.Tt_j', 'noise.Tt_j')
+                self.model.connect('engine.M_j', 'noise.M_j')
+            if settings['airframe_source']:
+                self.model.connect('trajectory.theta_flaps', 'noise.theta_flaps')
+                self.model.connect('trajectory.I_landing_gear', 'noise.I_landing_gear')
 
         return None
 
@@ -519,7 +525,6 @@ class Trajectory(om.Problem):
                 self['phases.groundroll.t_duration'] = 30.0
                 self['phases.groundroll.states:x'] = self.groundroll.interp(ys=[0, 1000], nodes='state_input')
                 self['phases.groundroll.states:v'] = self.groundroll.interp(ys=[0.0, 60], nodes='state_input')
-                self['phases.groundroll.states:alpha'] = self.groundroll.interp(ys=[airframe.alpha_0, airframe.alpha_0], nodes='state_input')
 
             # Phase 2: rotation
             if 'rotation' in self.phase_name_lst:
@@ -559,7 +564,7 @@ class Trajectory(om.Problem):
                 self['phases.cutback.t_initial'] = 100.0
                 self['phases.cutback.t_duration'] = 50.0
                 self['phases.cutback.states:x'] = self.cutback.interp(ys=[6501., 15000.], nodes='state_input')
-                self['phases.cutback.states:z'] = self.cutback.interp(ys=[z_cutback_guess, 3000.], nodes='state_input')
+                self['phases.cutback.states:z'] = self.cutback.interp(ys=[z_cutback_guess, 1500.], nodes='state_input')
                 self['phases.cutback.states:v'] = self.cutback.interp(ys=[v_max, v_max], nodes='state_input')
                 self['phases.cutback.states:gamma'] = self.cutback.interp(ys=[15, 15.], nodes='state_input')
                 self['phases.cutback.controls:alpha'] = self.cutback.interp(ys=[15., 15.], nodes='control_input')
@@ -573,7 +578,6 @@ class Trajectory(om.Problem):
                 self['phases.groundroll.timeseries.time'] = initialization_trajectory.get_val('phases.groundroll.timeseries.time')
                 self['phases.groundroll.states:x'] = initialization_trajectory.get_val('phases.groundroll.states:x')
                 self['phases.groundroll.states:v'] = initialization_trajectory.get_val('phases.groundroll.states:v')
-                self['phases.groundroll.states:alpha'] = initialization_trajectory.get_val('phases.groundroll.states:alpha')
 
             # Phase 2: rotation
             if 'rotation' in self.phase_name_lst:
