@@ -482,6 +482,7 @@ function compute!(self::NoiseModel, inputs, outputs)
         @. outputs[self.settings["levels_int_metric"]] = levels_int
     end
 
+    
 end
 
 function compute_partials!(self::NoiseModel, inputs, partials)

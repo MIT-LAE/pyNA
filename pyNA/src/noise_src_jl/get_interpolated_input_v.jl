@@ -53,11 +53,11 @@ function get_interpolated_input_v!(input_v_i::Array, input_v::Union{Array, Rever
     n += 6
     
     if settings["fan_inlet_source"]==true || settings["fan_discharge_source"]==true
-        f_DTt_f = LinearInterpolation(t_s, input_v_i[(n + 0) * n_t + 1 : (n + 1) * n_t], extrapolation_bc=Line())
-        f_mdot_f = LinearInterpolation(t_s, input_v_i[(n + 1) * n_t + 1 : (n + 2) * n_t], extrapolation_bc=Line())
-        f_N_f = LinearInterpolation(t_s, input_v_i[(n + 2) * n_t + 1 : (n + 3) * n_t], extrapolation_bc=Line())
-        f_A_f = LinearInterpolation(t_s, input_v_i[(n + 3) * n_t + 1 : (n + 4) * n_t], extrapolation_bc=Line())
-        f_d_f = LinearInterpolation(t_s, input_v_i[(n + 4) * n_t + 1 : (n + 5) * n_t], extrapolation_bc=Line())
+        f_DTt_f = LinearInterpolation(t_s, input_v[(n + 0) * n_t + 1 : (n + 1) * n_t], extrapolation_bc=Line())
+        f_mdot_f = LinearInterpolation(t_s, input_v[(n + 1) * n_t + 1 : (n + 2) * n_t], extrapolation_bc=Line())
+        f_N_f = LinearInterpolation(t_s, input_v[(n + 2) * n_t + 1 : (n + 3) * n_t], extrapolation_bc=Line())
+        f_A_f = LinearInterpolation(t_s, input_v[(n + 3) * n_t + 1 : (n + 4) * n_t], extrapolation_bc=Line())
+        f_d_f = LinearInterpolation(t_s, input_v[(n + 4) * n_t + 1 : (n + 5) * n_t], extrapolation_bc=Line())
         input_v_i[(n + 0) * n_t_noise + 1 : (n + 1) * n_t_noise] .= f_DTt_f(t_s_i)
         input_v_i[(n + 1) * n_t_noise + 1 : (n + 2) * n_t_noise] .= f_mdot_f(t_s_i)
         input_v_i[(n + 2) * n_t_noise + 1 : (n + 3) * n_t_noise] .= f_N_f(t_s_i)
@@ -68,11 +68,11 @@ function get_interpolated_input_v!(input_v_i::Array, input_v::Union{Array, Rever
     
     if settings["core_source"]
         if settings["core_turbine_attenuation_method"] == "ge"
-            f_mdoti_c = LinearInterpolation(t_s, input_v_i[(n + 0) * n_t + 1 : (n + 1) * n_t])
-            f_Tti_c = LinearInterpolation(t_s, input_v_i[(n + 1) * n_t + 1 : (n + 2) * n_t])
-            f_Ttj_c = LinearInterpolation(t_s, input_v_i[(n + 2) * n_t + 1 : (n + 3) * n_t])
-            f_Pti_c = LinearInterpolation(t_s, input_v_i[(n + 3) * n_t + 1 : (n + 4) * n_t])
-            f_DTt_des_c = LinearInterpolation(t_s, input_v_i[(n + 4) * n_t + 1 : (n + 5) * n_t])
+            f_mdoti_c = LinearInterpolation(t_s, input_v[(n + 0) * n_t + 1 : (n + 1) * n_t])
+            f_Tti_c = LinearInterpolation(t_s, input_v[(n + 1) * n_t + 1 : (n + 2) * n_t])
+            f_Ttj_c = LinearInterpolation(t_s, input_v[(n + 2) * n_t + 1 : (n + 3) * n_t])
+            f_Pti_c = LinearInterpolation(t_s, input_v[(n + 3) * n_t + 1 : (n + 4) * n_t])
+            f_DTt_des_c = LinearInterpolation(t_s, input_v[(n + 4) * n_t + 1 : (n + 5) * n_t])
             input_v_i[(n + 0) * n_t_noise + 1 : (n + 1) * n_t_noise] .= f_mdoti_c(t_s_i)
             input_v_i[(n + 1) * n_t_noise + 1 : (n + 2) * n_t_noise] .= f_Tti_c(t_s_i)
             input_v_i[(n + 2) * n_t_noise + 1 : (n + 3) * n_t_noise] .= f_Ttj_c(t_s_i)
@@ -80,14 +80,14 @@ function get_interpolated_input_v!(input_v_i::Array, input_v::Union{Array, Rever
             input_v_i[(n + 4) * n_t_noise + 1 : (n + 5) * n_t_noise] .= f_DTt_des_c(t_s_i)
             n += 5
         elseif settings["core_turbine_attenuation_method"] == "pw"
-            f_mdoti_c = LinearInterpolation(t_s, input_v_i[(n + 0) * n_t + 1 : (n + 1) * n_t])
-            f_Tti_c = LinearInterpolation(t_s, input_v_i[(n + 1) * n_t + 1 : (n + 2) * n_t])
-            f_Ttj_c = LinearInterpolation(t_s, input_v_i[(n + 2) * n_t + 1 : (n + 3) * n_t])
-            f_Pti_c = LinearInterpolation(t_s, input_v_i[(n + 3) * n_t + 1 : (n + 4) * n_t])
-            f_rho_te_c = LinearInterpolation(t_s, input_v_i[(n + 4) * n_t + 1 : (n + 5) * n_t])
-            f_c_te_c = LinearInterpolation(t_s, input_v_i[(n + 5) * n_t + 1 : (n + 6) * n_t])
-            f_rho_ti_c = LinearInterpolation(t_s, input_v_i[(n + 6) * n_t + 1 : (n + 7) * n_t])
-            f_c_ti_c = LinearInterpolation(t_s, input_v_i[(n + 7) * n_t + 1 : (n + 8) * n_t])
+            f_mdoti_c = LinearInterpolation(t_s, input_v[(n + 0) * n_t + 1 : (n + 1) * n_t])
+            f_Tti_c = LinearInterpolation(t_s, input_v[(n + 1) * n_t + 1 : (n + 2) * n_t])
+            f_Ttj_c = LinearInterpolation(t_s, input_v[(n + 2) * n_t + 1 : (n + 3) * n_t])
+            f_Pti_c = LinearInterpolation(t_s, input_v[(n + 3) * n_t + 1 : (n + 4) * n_t])
+            f_rho_te_c = LinearInterpolation(t_s, input_v[(n + 4) * n_t + 1 : (n + 5) * n_t])
+            f_c_te_c = LinearInterpolation(t_s, input_v[(n + 5) * n_t + 1 : (n + 6) * n_t])
+            f_rho_ti_c = LinearInterpolation(t_s, input_v[(n + 6) * n_t + 1 : (n + 7) * n_t])
+            f_c_ti_c = LinearInterpolation(t_s, input_v[(n + 7) * n_t + 1 : (n + 8) * n_t])
             input_v_i[(n + 0) * n_t_noise + 1 : (n + 1) * n_t_noise] .= f_mdoti_c(t_s_i)
             input_v_i[(n + 1) * n_t_noise + 1 : (n + 2) * n_t_noise] .= f_Tti_c(t_s_i)
             input_v_i[(n + 2) * n_t_noise + 1 : (n + 3) * n_t_noise] .= f_Ttj_c(t_s_i)

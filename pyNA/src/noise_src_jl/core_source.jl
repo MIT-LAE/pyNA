@@ -42,6 +42,7 @@ function core_source_ge!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, 
     else
         spl .+= pow_level_core * S_funct
     end
+
 end
 
 
