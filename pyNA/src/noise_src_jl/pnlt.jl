@@ -1,9 +1,10 @@
+using ReverseDiff: TrackedArray
 include("pnl.jl")
 include("tone_corrections.jl")
 include("smooth_max.jl")
 
 
-function f_pnlt(spl, settings, pyna_ip, f)
+function f_pnlt(spl::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, f::Array{Float64, 1})
 
     # Compute noy
     N = pyna_ip.f_noy.(spl, f)
@@ -33,7 +34,7 @@ function f_pnlt(spl, settings, pyna_ip, f)
 
 end
 
-function f_pnlt!(pnlt, spl, settings, pyna_ip, f)
+function f_pnlt!(pnlt::Array, spl::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, f::Array{Float64, 1})
 
     # Compute noy
     N = pyna_ip.f_noy.(spl, f)

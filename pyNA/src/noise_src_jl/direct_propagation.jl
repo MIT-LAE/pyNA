@@ -1,4 +1,4 @@
-function direct_propagation!(spl, x, settings)
+function direct_propagation!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings)
     
     # x = [r, I_0]
     # y = spl

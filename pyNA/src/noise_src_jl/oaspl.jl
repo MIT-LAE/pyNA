@@ -1,4 +1,6 @@
-function f_oaspl(x)
+using ReverseDiff
+
+function f_oaspl(x::Union{Array, ReverseDiff.TrackedArray})
     
     # y = oaspl
     # x = spl
@@ -11,7 +13,7 @@ function f_oaspl(x)
 end
 
 
-function f_oaspl!(oaspl, x)
+function f_oaspl!(oaspl::Array, x::Union{Array, ReverseDiff.TrackedArray})
     
     # y = oaspl
     # x = spl

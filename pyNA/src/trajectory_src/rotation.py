@@ -8,6 +8,8 @@ class Rotation(dm.Phase):
         super().__init__(from_phase, **kwargs)
         self.phase_size = int(self.options['transcription'].options['num_segments']*self.options['transcription'].options['order'] + 1)
 
+        self.phase_target_size = 3
+
     def create(self, airframe, engine, phld, TS, theta_flaps, theta_slats, objective, atmosphere_type) -> None:
 
         self.set_time_options(initial_bounds=(10, 100), duration_bounds=(0, 100), initial_ref=100., duration_ref=100.)
@@ -29,7 +31,7 @@ class Rotation(dm.Phase):
 
         self.add_boundary_constraint('flight_dynamics.n', equals=1.1, loc='final', ref=1, units=None)
         
-        self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size-1, order=3, solve_segments=False, compressed=True), subset='state_input')
+        self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_target_size-1, order=3, solve_segments=False, compressed=True), subset='state_input')
         for var in engine.deck_variables.keys():
             self.add_timeseries_output('propulsion.'+ var, timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.M_0', timeseries='interpolated')

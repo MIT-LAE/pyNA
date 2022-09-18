@@ -2,6 +2,7 @@ using ReverseDiff: JacobianTape, jacobian!, compile
 using CSV
 using NPZ: npzread
 using DataFrames
+using BenchmarkTools
 include("../../src/noise_src_jl/jet_source.jl")
 include("../../src/noise_src_jl/get_interpolation_functions.jl")
 
@@ -60,33 +61,35 @@ af = Aircraft(3)
 
 f = [50.11,63.09,79.43,100.,125.89,158.49,199.53,251.19,316.23,398.11,501.19,630.96,794.33,1000.,1258.93,1584.89,1995.26,2511.89,3162.28,3981.07,5011.87,6309.57,7943.28,10000.]
 
-M_0 = 0.3
+V_j = 500.
+rho_j = 0.6
+A_j = 1.
+Tt_j = 500.
 c_0 = 300.
+T_0 = 290.
+rho_0 = 1.2
+M_0 = 0.3
+TS = 1
 theta = 50.
-TS = 1.
-V_j_star = 0.6
-rho_j_star = 0.3
-A_j_star = 0.2
-Tt_j_star = 1.
-x = vcat(M_0, c_0, theta, TS, V_j_star, rho_j_star, A_j_star, Tt_j_star)
+x = vcat(V_j, rho_j, A_j, Tt_j, c_0, T_0, rho_0, M_0, TS, theta)
 y = ones(24)
 
 # Compute
 println("--- Compute ---")
-@time jet_mixing_source_fwd!(y, x)
+@btime jet_mixing_source_fwd!(y, x)
 println(y)
 
 # Compute partials
 println("\n--- Compute partials ----")
 Y = ones(24)
-X = vcat(M_0, c_0, theta, TS, V_j_star, rho_j_star, A_j_star, Tt_j_star)
+X = vcat(V_j, rho_j, A_j, Tt_j, c_0, T_0, rho_0, M_0, TS, theta)
 J = Y.*X'
 #'
 
 const f_tape = JacobianTape(jet_mixing_source_fwd!, Y, X)
 const compiled_f_tape = compile(f_tape)
 
-@time jacobian!(J, compiled_f_tape, x)
+@btime jacobian!(J, compiled_f_tape, x)
 println(J)
 
 

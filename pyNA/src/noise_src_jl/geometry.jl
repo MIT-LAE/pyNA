@@ -1,26 +1,24 @@
-function compute_euler_transformation(n_vcr_a_1, n_vcr_a_2, n_vcr_a_3, theta_B, phi_B, psi_B)
+using ReverseDiff
+
+function compute_euler_transformation(n_vcr_a_1, n_vcr_a_2, n_vcr_a_3, theta_B)
 
     cth  = cos(deg2rad(theta_B))
     sth  = sin(deg2rad(theta_B))
-    cphi = cos(deg2rad(phi_B))
-    sphi = sin(deg2rad(phi_B))
-    cpsi = cos(deg2rad(psi_B))
-    spsi = sin(deg2rad(psi_B))
-    n_vcr_s_1 = cth * cpsi * n_vcr_a_1 + cth * spsi * n_vcr_a_2 - sth * n_vcr_a_3
-    n_vcr_s_2 = (-spsi * cphi + sphi * sth * cpsi) * n_vcr_a_1 + ( cphi * cpsi + sphi * sth * spsi) * n_vcr_a_2 + sphi * cth * n_vcr_a_3
-    n_vcr_s_3 = (spsi * sphi + cphi * sth * cpsi) * n_vcr_a_1 + ( -sphi * cpsi + cphi * sth * spsi) * n_vcr_a_2 + cphi * cth * n_vcr_a_3
+    n_vcr_s_1 = cth * n_vcr_a_1 - sth * n_vcr_a_3
+    n_vcr_s_2 = n_vcr_a_2
+    n_vcr_s_3 = sth * n_vcr_a_1 + cth * n_vcr_a_3
     
     return n_vcr_s_1, n_vcr_s_2, n_vcr_s_3
-end 
+end
 
 function compute_average_speed_of_sound(z, c_0, T_0)
 
-    n_intermediate = 11
-    dz = z / n_intermediate
+    n_intermediate = 0
+    dz = z / (n_intermediate+1)
     c_bar = c_0
 
     # Step from altitude back down to sea level (sign is opposite for the atmospheric temperature formula)
-    for k in 1:(n_intermediate-1)
+    for k in 1:(n_intermediate+1)
         T_im = T_0 - k * dz * (-0.0065)
         c_im = sqrt(1.4 * 287. * T_im)
         c_bar = (k) / (k + 1) * c_bar + c_im / (k + 1)
@@ -29,16 +27,16 @@ function compute_average_speed_of_sound(z, c_0, T_0)
     return c_bar
 end
 
-function geometry!(y, input_v, x_obs)
+function geometry!(y::Array, input_v::Union{Array, ReverseDiff.TrackedArray}, x_obs::Array{Float64, 1})
 
     # Extract inputs
     # input_v = [x, y, z, alpha, gamma, t_s, c_0, T_0]
     # y = [r, beta, theta, phi, c_bar, t_o]
     
     # Compute body angles (psi_B, theta_B, phi_B): angle of body w.r.t. horizontal
-    theta_B = input_v[4] + input_v[5]
-    phi_B = 0.
-    psi_B = 0.
+    # theta_B = alpha + gamma
+    # phi_B = 0.
+    # psi_B = 0.
 
     # Compute the relative observer-aircraft position vector i.e. difference between observer and ac coordinate
     # Note: add 4 meters to the alitude of the aircraft (for engine height)
@@ -56,7 +54,7 @@ function geometry!(y, input_v, x_obs)
     beta = asind(n_vcr_a_3)
 
     # Transformation direction cosines (Euler angles) to the source coordinate system (i.e. take position of the aircraft into account)
-    n_vcr_s_1, n_vcr_s_2, n_vcr_s_3 = compute_euler_transformation(n_vcr_a_1, n_vcr_a_2, n_vcr_a_3, theta_B, phi_B, psi_B)
+    n_vcr_s_1, n_vcr_s_2, n_vcr_s_3 = compute_euler_transformation(n_vcr_a_1, n_vcr_a_2, n_vcr_a_3, input_v[4] + input_v[5])
 
     # Define polar directivity angle
     theta = acosd(n_vcr_s_1)

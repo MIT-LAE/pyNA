@@ -1,6 +1,6 @@
 using PCHIPInterpolation
 
-function f_epnl(x, settings)
+function f_epnl(x::Union{Array, ReverseDiff.TrackedArray}, settings)
 
     # x = [t_o, level]
     # y = epnl
@@ -67,7 +67,7 @@ function f_epnl(x, settings)
 
 end
 
-function f_epnl!(epnl, x, settings)
+function f_epnl!(epnl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings)
 
     # x = [t_o, level]
     # y = epnl

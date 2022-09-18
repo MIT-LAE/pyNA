@@ -144,10 +144,10 @@ class Data:
         # Spectral level F
         # Source: Zorumski report 1982 part 1. Chapter 8.4 Table VI
         self.jet_F = np.load(self.pyna_directory + '/data/sources/jet/spectral_function_extended_T.npy')
-        self.jet_F_angles = np.array([0, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180])
-        self.jet_F_temperature = np.array([0, 1, 2, 2.5, 3, 3.5, 4, 5, 6, 7])
+        self.jet_F_angles = np.array([0., 90., 100., 110., 120., 130., 140., 150., 160., 170., 180.])
+        self.jet_F_temperature = np.array([0., 1., 2., 2.5, 3., 3.5, 4., 5., 6., 7.])
         self.jet_F_velocity = np.array([-0.4, 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.4])
-        self.jet_F_strouhal = np.array([-2, -1.6, -1.3, -1.15, -1, -0.824, -0.699, -0.602, -0.5, -0.398, -0.301, -0.222, 0, 0.477, 1, 1.6, 1.7, 2.5])
+        self.jet_F_strouhal = np.array([-2., -1.6, -1.3, -1.15, -1., -0.824, -0.699, -0.602, -0.5, -0.398, -0.301, -0.222, 0., 0.477, 1., 1.6, 1.7, 2.5])
         self.jet_F_f = interpolate.RegularGridInterpolator((self.jet_F_angles,
                                                             self.jet_F_temperature,
                                                             self.jet_F_velocity,

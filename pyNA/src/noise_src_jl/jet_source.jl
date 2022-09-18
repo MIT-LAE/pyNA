@@ -1,4 +1,7 @@
-function jet_mixing_source!(spl, x, settings, pyna_ip, af, f)
+using ReverseDiff
+
+
+function jet_mixing_source!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, af, f::Array{Float64, 1})
     
     # x = [V_j, rho_j, A_j, Tt_j, c_0, T_0, rho_0, M_0, TS, theta]
     # y = spl
@@ -15,7 +18,7 @@ function jet_mixing_source!(spl, x, settings, pyna_ip, af, f)
     # Calculate jet mixing
     log10Vja0 = log10(V_j_star)
 
-    # Calculate density exponent (omega)
+    # # Calculate density exponent (omega)
     omega = pyna_ip.f_omega_jet(log10Vja0)
     
     # Calculate power deviation factor (P)
@@ -59,8 +62,7 @@ function jet_mixing_source!(spl, x, settings, pyna_ip, af, f)
 
 end
 
-function jet_shock_source!(spl, x, settings, pyna_ip, af, f)
-
+function jet_shock_source!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, af, f::Array{Float64, 1})
 
     # x = [V_j, M_j, A_j, Tt_j, c_0, T_0, M_0, TS, theta]
     # y = spl

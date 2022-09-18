@@ -5,7 +5,6 @@ import pandas as pd
 import dymos as dm
 import numpy as np
 import openmdao.api as om
-from pyNA.src.noise_src_jl.get_input_vector_indices import get_input_vector_indices
 import matplotlib.pyplot as plt
 from pyNA.src.data import Data
 from pyNA.src.airframe import Airframe
@@ -32,7 +31,7 @@ class NoiseTimeSeries(om.Problem):
         self.settings = settings
         self.data = data
 
-    def create(self, sealevel_atmosphere: dict, airframe:Airframe, n_t:np.int, mode:str, objective:str) -> None:
+    def create(self, sealevel_atmosphere: dict, airframe:Airframe, n_t:int, n_t_noise:int, mode:str, objective:str) -> None:
         """
         Create model for computing noise of predefined trajectory timeseries.
 
@@ -58,11 +57,9 @@ class NoiseTimeSeries(om.Problem):
                                         promotes_inputs=[],
                                         promotes_outputs=[])
         
-        elif self.language == 'julia':
-            idx = get_input_vector_indices(self.language, settings=self.settings, n_t=n_t)
-            
+        elif self.language == 'julia':            
             self.model.add_subsystem(name='noise',
-                                        subsys=make_component(julia.NoiseModel(self.settings, self.data, sealevel_atmosphere, airframe, n_t, idx, objective)),
+                                        subsys=make_component(julia.NoiseModel(self.settings, self.data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective)),
                                         promotes_inputs=[],
                                         promotes_outputs=[])
 

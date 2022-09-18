@@ -1,4 +1,4 @@
-function f_pnl(N)
+function f_pnl(N::Union{Array, ReverseDiff.TrackedArray})
 
     # Compute perceived noise level
     n_max = maximum(N)
@@ -9,7 +9,7 @@ function f_pnl(N)
 
 end
 
-function f_pnl!(pnl, N)
+function f_pnl!(pnl::Array, N::Union{Array, ReverseDiff.TrackedArray})
 
     # Compute perceived noise level
     n_max = maximum(N)

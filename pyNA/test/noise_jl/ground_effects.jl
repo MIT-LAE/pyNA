@@ -1,6 +1,7 @@
-using ReverseDiff: JacobianTape, jacobian!, compile
+# using ReverseDiff: JacobianTape, jacobian!, compile
 using CSV
 using DataFrames
+using BenchmarkTools
 include("../../src/noise_src_jl/ground_effects.jl")
 include("../../src/noise_src_jl/get_interpolation_functions.jl")
 
@@ -44,7 +45,7 @@ f_sb = [   45.69436719,    47.8554422 ,    50.11872336,    52.48904442,   54.971
 
 # Compute
 println("--- Compute ---")
-@time ground_effects_fwd!(y, x)
+@btime ground_effects_fwd!(y, x)
 println(y)
 
 # Compute partials
@@ -57,7 +58,7 @@ J = Y.*X'
 const f_tape = JacobianTape(ground_effects_fwd!, Y, X)
 const compiled_f_tape = compile(f_tape)
 
-@time jacobian!(J, compiled_f_tape, x)
+@btime jacobian!(J, compiled_f_tape, x)
 println(J)
 
 

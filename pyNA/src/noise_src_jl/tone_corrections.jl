@@ -1,4 +1,4 @@
-function f_tone_corrections!(C, spl, settings)
+function f_tone_corrections!(C::Array, spl::Union{Array, ReverseDiff.TrackedArray}, settings)
 
     # Step 1: Compute the slope of SPL
     s = zeros(eltype(spl), (settings["n_frequency_bands"], ))    

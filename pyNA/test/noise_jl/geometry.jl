@@ -1,4 +1,5 @@
 using ReverseDiff: JacobianTape, jacobian!, compile
+using BenchmarkTools
 include("../../src/noise_src_jl/geometry.jl")
 
 # Inputs 
@@ -18,8 +19,7 @@ x_obs = [3500., 450., 1.2]
 
 # Compute
 println("--- Compute ---")
-@time geometry_fwd!(y, x)
-println(y)
+@timev geometry_fwd!(y, x)
 
 # Compute partials
 println("\n--- Compute partials ----")
@@ -31,5 +31,4 @@ J = Y.*X'
 const f_tape = JacobianTape(geometry_fwd!, Y, X)
 const compiled_f_tape = compile(f_tape)
 
-@time jacobian!(J, compiled_f_tape, x)
-println(J)
+@timev jacobian!(J, compiled_f_tape, x)

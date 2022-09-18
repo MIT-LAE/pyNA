@@ -1,4 +1,6 @@
-function core_source_ge!(spl, x, settings, pyna_ip, af, f)
+using ReverseDiff
+
+function core_source_ge!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, af, f::Array{Float64,1})
 
     # x = [mdoti_c, Tti_c, Ttj_c, Pti_c, DTt_des_c, c_0, rho_0, T_0, p_0, M_0, TS, theta]
     # y = spl
@@ -43,7 +45,7 @@ function core_source_ge!(spl, x, settings, pyna_ip, af, f)
 end
 
 
-function core_source_pw!(spl, x, settings, pyna_ip, af, f)
+function core_source_pw!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, af, f::Array{Float64, 1})
     
     # x = [mdoti_c, Tti_c, Ttj_c, Pti_c, rho_te_c, c_te_c, rho_ti_c, c_ti_c, c_0, T_0, rho_0, p_0, M_0, TS, theta]
     # y = spl

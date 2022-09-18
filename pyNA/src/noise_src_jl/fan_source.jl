@@ -491,7 +491,7 @@ function discharge_tones(settings, pyna_ip, theta, M_tip, tsqem, M_d_fan::Float6
     return tonlv_X
 end
 
-function combination_tones(settings, pyna_ip, f, theta, M_tip, bpf, tsqem)
+function combination_tones(settings, pyna_ip, f::Array{Float64, 1}, theta, M_tip, bpf, tsqem)
     
     # Combination tone (multiple pure tone or buzzsaw) calculations:
     # Note the original Heidmann reference states that MPTs should be computed if
@@ -634,7 +634,7 @@ function combination_tones(settings, pyna_ip, f, theta, M_tip, bpf, tsqem)
     return dcp
 end    
 
-function inlet_harmonics!(dp, x, settings, pyna_ip, f, comp)
+function inlet_harmonics!(dp, x, settings, pyna_ip, f::Array{Float64,1})
 
     # x = [theta, tonlv, i_cut, M_tip, bpf]
     # y = dp
@@ -902,7 +902,7 @@ function inlet_harmonics!(dp, x, settings, pyna_ip, f, comp)
     end
 end
 
-function discharge_harmonics!(dp, x, settings, pyna_ip, f, comp)
+function discharge_harmonics!(dp, x, settings, f::Array{Float64, 1})
 
     # x = [theta, tonlv, i_cut, M_tip, bpf]
     # y = dp
@@ -1145,7 +1145,7 @@ function calculate_cutoff(M_tip_tan, B_fan::Int64, V_fan::Int64)
     return i_cut
 end
 
-function fan_source!(spl, x, settings, pyna_ip, af, f, shield, comp)
+function fan_source!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, af, f::Array{Float64,1}, shield::Array{Float64, 1}, comp::String)
 
     # x = [DTt_f, mdot_f, N_f, A_f, d_f, c_0, rho_0, M_0, theta]
     # y = spl
@@ -1190,9 +1190,9 @@ function fan_source!(spl, x, settings, pyna_ip, af, f, shield, comp)
     # Assign tones_to bands
     dp = zeros(eltype(x), settings["n_frequency_bands"])
     if comp == "fan_inlet"
-        inlet_harmonics!(dp, vcat(x[9], tonlv_I, i_cut, M_tip, bpf), settings, pyna_ip, f, comp)
+        inlet_harmonics!(dp, vcat(x[9], tonlv_I, i_cut, M_tip, bpf), settings, pyna_ip, f)
     elseif comp == "fan_discharge"
-        discharge_harmonics!(dp, vcat(x[9], tonlv_X, i_cut, M_tip, bpf), settings, pyna_ip, f, comp)
+        discharge_harmonics!(dp, vcat(x[9], tonlv_X, i_cut, M_tip, bpf), settings, f)
     end
 
     # Final calculations;  cycle through frequencies and assign values:
@@ -1263,5 +1263,5 @@ function fan_source!(spl, x, settings, pyna_ip, af, f, shield, comp)
 end
 
 fan_source_fwd! = (y,x)->fan_source!(y,x, settings, pyna_ip, ac, f, shield, comp)
-inlet_harmonics_fwd! = (y,x)->inlet_harmonics!(y, x, settings, pyna_ip, f, comp)
-discharge_harmonics_fwd! = (y,x)->discharge_harmonics!(y, x, settings, pyna_ip, f, comp)
+inlet_harmonics_fwd! = (y,x)->inlet_harmonics!(y, x, settings, pyna_ip, f)
+discharge_harmonics_fwd! = (y,x)->discharge_harmonics!(y, x, settings, f)

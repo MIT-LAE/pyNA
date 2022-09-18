@@ -1,4 +1,5 @@
 using ReverseDiff: JacobianTape, jacobian!, compile
+using BenchmarkTools
 include("../../src/noise_src_jl/spl.jl")
 
 # Inputs 
@@ -10,8 +11,7 @@ y = 100*ones(24)
 
 # Compute
 println("--- Compute ---")
-@time f_spl!(y, x)
-println(y)
+@btime f_spl!(y, x)
 
 # Compute partials
 println("\n--- Compute partials ----")
@@ -23,5 +23,5 @@ J = Y.*X'
 const f_tape = JacobianTape(f_spl!, Y, X)
 const compiled_f_tape = compile(f_tape)
 
-@time jacobian!(J, compiled_f_tape, x)
+@btime jacobian!(J, compiled_f_tape, x)
 println(J)

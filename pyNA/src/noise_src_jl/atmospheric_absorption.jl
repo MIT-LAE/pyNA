@@ -1,10 +1,13 @@
-function atmospheric_absorption!(spl_sb, x, settings, pyna_ip, f_sb)
+using ReverseDiff
+
+function atmospheric_absorption!(spl_sb::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, f_sb::Array{Float64, 1})
 
     # x = [r, z]
     # y = spl_sb
 
     # Calculate average absorption factor between observer and source
-    alpha = pyna_ip.f_abs.(x[2].*ones(settings["n_frequency_subbands"]*settings["n_frequency_bands"],), f_sb)
+    # Note: add 4 meters to the alitude of the aircraft (for engine height)
+    alpha = pyna_ip.f_abs.((x[2] + 4).*ones(settings["n_frequency_subbands"]*settings["n_frequency_bands"],), f_sb)
 
     # Calculate absorption (convert dB to Np: 1dB is 0.115Np)
     # Source: Zorumski report 1982 part 1. Chapter 5.1 Equation 14

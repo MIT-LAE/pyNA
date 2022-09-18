@@ -1,6 +1,6 @@
 using PCHIPInterpolation
 
-function f_ilevel(x, settings)
+function f_ilevel(x::Union{Array, ReverseDiff.TrackedArray}, settings)
 
     # x = [t_o, level]
     # y = ilevel
@@ -35,7 +35,7 @@ function f_ilevel(x, settings)
     return ilevel
 end
 
-function f_ilevel!(ilevel, x, settings)
+function f_ilevel!(ilevel::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings)
 
     # x = [t_o, level]
     # y = ilevel

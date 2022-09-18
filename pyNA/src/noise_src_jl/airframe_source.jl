@@ -1,6 +1,8 @@
-function trailing_edge_wing!(spl, x, settings, af, f, hsr_supp)
+using ReverseDiff
+
+function trailing_edge_wing!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, af, f::Array{Float64, 1})
     
-    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi]
+    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi, hsr_supp]
     # y = spl
     
     # Source: Zorumski report 1982 part 2. Chapter 8.8 Equation 5
@@ -34,11 +36,11 @@ function trailing_edge_wing!(spl, x, settings, af, f, hsr_supp)
     r_s_star_af = settings["r_0"] / af.af_b_w
     pow_level_af = 1/settings["p_ref"]^2 / (4 * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * Pi_star_w * D_w
 
-    spl .+= pow_level_af .* F_w .* hsr_supp
+    spl .+= pow_level_af .* F_w .* x[9:end]
 end
-function trailing_edge_horizontal_tail!(spl, x, settings, af, f, hsr_supp)
+function trailing_edge_horizontal_tail!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, af, f::Array{Float64, 1})
 
-    # x = [x[6], x[5], x[3], x[4], x[7], x[8], x[1], x[2]]
+    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi, hsr_supp]
     # y = spl
     
     # Trailing edge noise of the horizontal tail
@@ -68,11 +70,11 @@ function trailing_edge_horizontal_tail!(spl, x, settings, af, f, hsr_supp)
     r_s_star_af = settings["r_0"] / af.af_b_w
     pow_level_af = 1/settings["p_ref"]^2 / (4. * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * Pi_star_h * D_h
 
-    spl .+= pow_level_af .* F_h .* hsr_supp
+    spl .+= pow_level_af .* F_h .* x[9:end]
 end
-function trailing_edge_vertical_tail!(spl, x, settings, af, f, hsr_supp)
+function trailing_edge_vertical_tail!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, af, f)
 
-    # x = [x[6], x[5], x[3], x[4], x[7], x[8], x[1], x[2]]
+    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi, hsr_supp]
     # y = spl
     
     delta_v_star = 0.37 * (af.af_S_v / af.af_b_v^2) * (x[4] * x[6] * x[3] * af.af_S_v / (x[5] * af.af_b_v))^(-0.2)
@@ -102,11 +104,11 @@ function trailing_edge_vertical_tail!(spl, x, settings, af, f, hsr_supp)
     r_s_star_af = settings["r_0"] / af.af_b_w
     pow_level_af = 1/settings["p_ref"]^2 / (4 * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * Pi_star_v * D_v 
 
-    spl .+= pow_level_af .* F_v .* hsr_supp
+    spl .+= pow_level_af .* F_v .* x[9:end]
 end
-function leading_edge_slat!(spl, x, settings, af, f, hsr_supp)
+function leading_edge_slat!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, af, f::Array{Float64,1})
     
-    # x = [x[6], x[5], x[3], x[4], x[7], x[8], x[1], x[2]]
+    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi, hsr_supp]
     # y = spl
     
     # Trailing edge noise leading edge flap
@@ -134,11 +136,11 @@ function leading_edge_slat!(spl, x, settings, af, f, hsr_supp)
     pow_level_af_1 = 1/settings["p_ref"]^2 / (4 * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * Pi_star_les1 * D_les
     pow_level_af_2 = 1/settings["p_ref"]^2 / (4 * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * Pi_star_les2 * D_les
 
-    spl .+= (pow_level_af_1 * F_les1 +  pow_level_af_2 * F_les2) .* hsr_supp
+    spl .+= (pow_level_af_1 * F_les1 +  pow_level_af_2 * F_les2) .* x[9:end]
 end
-function trailing_edge_flap!(spl, x, settings, af, f, hsr_supp)
+function trailing_edge_flap!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, af, f::Array{Float64,1})
     
-    # x = [x[6], x[5], x[3], x[4], x[7], x[8], x[1], x[2]]
+    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi, hsr_supp]
     # y = spl
     
     # Calculate noise power
@@ -187,11 +189,11 @@ function trailing_edge_flap!(spl, x, settings, af, f, hsr_supp)
     r_s_star_af = settings["r_0"] / af.af_b_w
     pow_level_af = 1/settings["p_ref"]^2 / (4 * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * Pi_star_tef * D_tef
 
-    spl .+= pow_level_af .* F_tef .* hsr_supp
+    spl .+= pow_level_af .* F_tef .* x[9:end]
 end
-function landing_gear!(spl, x, settings, af, f, hsr_supp)
+function landing_gear!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, af, f::Array{Float64, 1})
 
-    # x = [x[6], x[5], x[3], x[4], x[7], x[8], x[1], x[2]]
+    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi, hsr_supp]
     # y = spl
     
     # Calculate nose-gear noise
@@ -242,12 +244,12 @@ function landing_gear!(spl, x, settings, af, f, hsr_supp)
     pow_level_af_mg_w = 1/settings["p_ref"]^2 / (4 * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * af.af_N_mg * Pi_star_mg_w * D_w
     pow_level_af_mg_s = 1/settings["p_ref"]^2 / (4 * π * r_s_star_af^2) / (1 - x[6] * cos(x[7] * π / 180.))^4 * af.af_N_mg * Pi_star_mg_s * D_s
 
-    spl .+= x[2].*(pow_level_af_ng_w * F_ng_w + pow_level_af_ng_s * F_ng_s + pow_level_af_mg_w * F_mg_w + pow_level_af_mg_s * F_mg_s) .* hsr_supp
+    spl .+= x[2].*(pow_level_af_ng_w * F_ng_w + pow_level_af_ng_s * F_ng_s + pow_level_af_mg_w * F_mg_w + pow_level_af_mg_s * F_mg_s) .* x[9:end]
 end
 
-function airframe_source!(spl, x, settings, pyna_ip, af, f)
+function airframe_source!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, af, f::Array{Float64,1})
     
-    # x = [x[6], x[5], x[3], x[4], x[7], x[8], x[1], x[2]]
+    # x = [theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi]
     # y = spl
 
     # HSR calibration
@@ -255,22 +257,22 @@ function airframe_source!(spl, x, settings, pyna_ip, af, f)
 
     # Add airframe noise components
     if "wing" in af.comp_lst
-        trailing_edge_wing!(spl, x, settings, af, f, hsr_supp)
+        trailing_edge_wing!(spl, vcat(x, hsr_supp), settings, af, f)
     end
     if "tail_v" in af.comp_lst
-        trailing_edge_vertical_tail!(spl, x, settings, af, f, hsr_supp)
+        trailing_edge_vertical_tail!(spl, vcat(x, hsr_supp), settings, af, f)
     end
     if "tail_h" in af.comp_lst
-        trailing_edge_horizontal_tail!(spl, x, settings, af, f, hsr_supp)
+        trailing_edge_horizontal_tail!(spl, vcat(x, hsr_supp), settings, af, f)
     end
     if "les" in af.comp_lst
-        leading_edge_slat!(spl, x, settings, af, f, hsr_supp)
+        leading_edge_slat!(spl, vcat(x, hsr_supp), settings, af, f)
     end
     if "tef" in af.comp_lst
-        trailing_edge_flap!(spl, x, settings, af, f, hsr_supp)
+        trailing_edge_flap!(spl, vcat(x, hsr_supp), settings, af, f)
     end
     if "lg" in af.comp_lst
-        landing_gear!(spl, x, settings, af, f, hsr_supp)
+        landing_gear!(spl, vcat(x, hsr_supp), settings, af, f)
     end
 
 end

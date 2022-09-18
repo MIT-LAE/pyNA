@@ -2,9 +2,10 @@ include("direct_propagation.jl")
 include("atmospheric_absorption.jl")
 include("lateral_attenuation.jl")
 include("ground_effects.jl")
+using ReverseDiff
 
 
-function propagation!(spl, x, settings, pyna_ip, f_sb, x_obs)
+function propagation!(spl::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, f_sb::Array{Float64, 1}, x_obs::Array{Float64, 1})
 
     # x = [r, z, c_bar, rho_0, I_0, beta]
     # y = spl
@@ -21,11 +22,6 @@ function propagation!(spl, x, settings, pyna_ip, f_sb, x_obs)
         spl_sb = spl
     end
 
-    # Apply atmospheric absorption on sub-bands
-    if x[2] < 0
-        x[2] = 0
-    end
-    
     if settings["absorption"]
         atmospheric_absorption!(spl_sb, vcat(x[1], x[2]), settings, pyna_ip, f_sb)
     end

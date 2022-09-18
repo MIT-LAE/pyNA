@@ -1,7 +1,8 @@
+using ReverseDiff
 include("smooth_max.jl")
 
 
-function lateral_attenuation(input_v, settings, x_obs)
+function lateral_attenuation(input_v::Union{Array, ReverseDiff.TrackedArray}, settings, x_obs::Array{Float64, 1})
 
     # input_v = [x, y, z]
 
@@ -53,4 +54,4 @@ function lateral_attenuation(input_v, settings, x_obs)
 
 end
 
-lateral_attenuation_fwd! = (y,x)->lateral_attenuation!(y, x, settings, x_obs)
+lateral_attenuation_fwd = (x)->lateral_attenuation(x, settings, x_obs)

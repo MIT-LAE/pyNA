@@ -8,6 +8,7 @@ using PCHIPInterpolation
 using Dates
 using BenchmarkTools
 include("get_noise.jl")
+include("get_interpolation_functions.jl")
 
 
 # Define propagation struct
@@ -17,12 +18,12 @@ include("get_noise.jl")
     data
     sealevel_atmosphere
     airframe 
-    n_t :: Int64
-    idx
-    objective :: String
+    n_t
+    n_t_noise
+    objective
     X :: Array{Float64, 1}
     J :: Array{Float64, 2}
-    get_nosie_fwd!
+    compiled_model_tape
 end
 
 struct PynaInterpolations
@@ -37,9 +38,9 @@ struct PynaInterpolations
     f_TCS_takeoff_ih2
     f_TCS_approach_ih1
     f_TCS_approach_ih2
-    f_D_core
+    f_D_core  # Core
     f_S_core
-    f_omega_jet
+    f_omega_jet  # Jet mixing
     f_log10P_jet
     f_log10D_jet
     f_xi_jet
@@ -55,7 +56,124 @@ struct PynaInterpolations
     f_aw
 end
 
-function NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, idx, objective)
+# struct Data
+#     supp_af_freq
+#     supp_af_angles
+#     supp_af
+#     aw_freq
+#     aw_db
+#     abs_alt
+#     abs_freq
+#     abs
+#     supp_fi_angles
+#     supp_fi_freq
+#     supp_fi
+#     supp_fd_angles
+#     supp_fd_freq
+#     supp_fd
+#     Faddeeva_itau_re
+#     Faddeeva_itau_im
+#     Faddeeva_real
+#     Faddeeva_imag
+#     jet_D_angles
+#     jet_D_velocity
+#     jet_D
+#     jet_xi_angles
+#     jet_xi_velocity
+#     jet_xi
+#     jet_F_angles
+#     jet_F_temperature
+#     jet_F_velocity
+#     jet_F_strouhal
+#     jet_F
+#     noy_spl
+#     noy_freq
+#     noy
+#     shield_l
+#     shield_f
+#     shield_a
+# end
+
+function get_noise_input_vector!(X::Array{Float64, 1}, settings, inputs::PyDict{String, PyArray, true}, n_t::Int64)
+
+    # Extract inputs
+    X[0 * n_t + 1: 1 * n_t] = inputs["x"]
+    X[1 * n_t + 1: 2 * n_t] = inputs["y"]
+    X[2 * n_t + 1: 3 * n_t] = inputs["z"]
+    X[3 * n_t + 1: 4 * n_t] = inputs["alpha"]
+    X[4 * n_t + 1: 5 * n_t] = inputs["gamma"]
+    X[5 * n_t + 1: 6 * n_t] = inputs["t_s"]
+    X[6 * n_t + 1: 7 * n_t] = inputs["M_0"]
+    n = 7
+    if settings["core_jet_suppression"] && settings["case_name"] in ["nasa_stca_standard", "stca_enginedesign_standard"]
+        X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["TS"]
+        n += 1
+    end
+    if settings["atmosphere_type"] == "stratified"
+        X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["c_0"]
+        X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["T_0"]
+        X[(n + 2) * n_t + 1: (n + 3) * n_t] = inputs["rho_0"]
+        X[(n + 3) * n_t + 1: (n + 4) * n_t] = inputs["p_0"]
+        X[(n + 4) * n_t + 1: (n + 5) * n_t] = inputs["mu_0"]
+        X[(n + 5) * n_t + 1: (n + 6) * n_t] = inputs["I_0"]
+        n += 6
+    end
+    if settings["fan_inlet_source"]==true || settings["fan_discharge_source"]==true
+        X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["DTt_f"]
+        X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["mdot_f"]
+        X[(n + 2) * n_t + 1: (n + 3) * n_t] = inputs["N_f"]
+        X[(n + 3) * n_t + 1: (n + 4) * n_t] = inputs["A_f"]
+        X[(n + 4) * n_t + 1: (n + 5) * n_t] = inputs["d_f"]
+        n += 5
+    end
+    if settings["core_source"]
+        if settings["core_turbine_attenuation_method"] == "ge"
+            X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["mdoti_c"]
+            X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["Tti_c"]
+            X[(n + 2) * n_t + 1: (n + 3) * n_t] = inputs["Ttj_c"]
+            X[(n + 3) * n_t + 1: (n + 4) * n_t] = inputs["Pti_c"]
+            X[(n + 4) * n_t + 1: (n + 5) * n_t] = inputs["DTt_des_c"]
+            n += 5
+        elseif settings["core_turbine_attenuation_method"] == "pw"
+            X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["mdoti_c"]
+            X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["Tti_c"]
+            X[(n + 2) * n_t + 1: (n + 3) * n_t] = inputs["Ttj_c"]
+            X[(n + 3) * n_t + 1: (n + 4) * n_t] = inputs["Pti_c"]
+            X[(n + 4) * n_t + 1: (n + 5) * n_t] = inputs["rho_te_c"]
+            X[(n + 5) * n_t + 1: (n + 6) * n_t] = inputs["c_te_c"]
+            X[(n + 6) * n_t + 1: (n + 7) * n_t] = inputs["rho_ti_c"]
+            X[(n + 7) * n_t + 1: (n + 8) * n_t] = inputs["c_ti_c"]
+            n += 8
+        end
+    end
+    if settings["jet_mixing_source"] == true && settings["jet_shock_source"] == false
+        X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["V_j"]
+        X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["rho_j"]
+        X[(n + 2) * n_t + 1: (n + 3) * n_t] = inputs["A_j"]
+        X[(n + 3) * n_t + 1: (n + 4) * n_t] = inputs["Tt_j"]
+        n += 4
+    elseif settings["jet_shock_source"] == true && settings["jet_mixing_source"] == false
+        X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["V_j"]
+        X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["M_j"]
+        X[(n + 2) * n_t + 1: (n + 3) * n_t] = inputs["A_j"]
+        X[(n + 3) * n_t + 1: (n + 4) * n_t] = inputs["Tt_j"]
+        n += 4
+    elseif settings["jet_shock_source"] ==true && settings["jet_mixing_source"] == true
+        X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["V_j"]
+        X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["rho_j"]
+        X[(n + 2) * n_t + 1: (n + 3) * n_t] = inputs["A_j"]
+        X[(n + 3) * n_t + 1: (n + 4) * n_t] = inputs["Tt_j"]
+        X[(n + 4) * n_t + 1: (n + 5) * n_t] = inputs["M_j"]
+        n += 5
+    end
+    if settings["airframe_source"]
+        X[(n + 0) * n_t + 1: (n + 1) * n_t] = inputs["theta_flaps"]
+        X[(n + 1) * n_t + 1: (n + 2) * n_t] = inputs["I_landing_gear"]
+    end
+
+end
+
+function NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective)
 
     # Default values for input vector
     X = range(1, 10000, length=n_t)             # x
@@ -128,6 +246,27 @@ function NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, idx, obj
     J = Y.*X'
     #'
 
+    # Get noise data
+    # df_hsr = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/sources/airframe/hsr_suppression.csv")))
+    # df_aw = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/levels/weighting_a.csv")))
+    # df_abs = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/isa/atmospheric_absorption.csv")))
+    # df_i = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/sources/fan/liner_inlet_suppression.csv")))
+    # df_d = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/sources/fan/liner_discharge_suppression.csv")))
+    # df_re = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/propagation/Faddeeva_real_small.csv")))
+    # df_im = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/propagation/Faddeeva_imag_small.csv")))
+    # df_D = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/sources/jet/directivity_function.csv")))
+    # df_xi = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/sources/jet/strouhal_correction.csv")))
+    # df_F = npzread(settings["pyna_directory"] * "/data/sources/jet/spectral_function_extended_T.npy")
+    # jet_a = [0., 90., 100., 110., 120., 130., 140., 150., 160., 170., 180.]
+    # jet_t = [0., 1., 2., 2.5, 3., 3.5, 4., 5., 6., 7.]
+    # jet_v = [-0.4, 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.4]
+    # jet_s = [-2., -1.6, -1.3, -1.15, -1., -0.824, -0.699, -0.602, -0.5, -0.398, -0.301, -0.222, 0, 0.477, 1., 1.6, 1.7, 2.5]
+    # df_noy = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/data/levels/spl_noy.csv")))    
+    # df_shield_f = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/cases/" * settings["case_name"] * "/shielding/" * "Shielding_f.csv")))
+    # df_shield_l = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/cases/" * settings["case_name"] * "/shielding/" * "Shielding_l.csv")))
+    # df_shield_a = Matrix(DataFrame(CSV.File(settings["pyna_directory"] * "/cases/" * settings["case_name"] * "/shielding/" * "Shielding_a.csv")))
+    # data = Data(df_hsr[2:end, 1], df_hsr[1,2:end], df_hsr[2:end,2:end], df_aw[:,1], df_aw[:,2], df_abs[2:end, 1], df_abs[1,2:end], df_abs[2:end,2:end], df_i[1, 2:end], df_i[2:end, 1], df_i[2:end, 2:end], df_d[1, 2:end], df_d[2:end, 1], df_d[2:end, 2:end], df_re[1, 2:end], df_re[2:end, 1], df_re[2:end,2:end], df_im[2:end,2:end], df_D[1, 2:end], df_D[2:end, 1], df_D[2:end, 2:end], df_xi[1, 2:end], df_xi[2:end, 1], df_xi[2:end, 2:end], jet_a, jet_t, jet_v, jet_s, df_F, df_noy[2:end, 1], df_noy[1, 2:end], df_noy[2:end, 2:end], df_shield_l[:,2:end], df_shield_f[:,2:end], df_shield_a[:,2:end])
+
     # Get interpolation functions
     f_supp_fi, f_supp_fd, f_F3IB, f_F3DB, f_F3TI, f_F3TD, f_F2CT, f_TCS_takeoff_ih1, f_TCS_takeoff_ih2, f_TCS_approach_ih1, f_TCS_approach_ih2 = get_fan_interpolation_functions(settings, data)
     f_D_core, f_S_core = get_core_interpolation_functions()
@@ -141,21 +280,24 @@ function NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, idx, obj
     pyna_ip = PynaInterpolations(f_supp_fi, f_supp_fd, f_F3IB, f_F3DB, f_F3TI, f_F3TD, f_F2CT, f_TCS_takeoff_ih1, f_TCS_takeoff_ih2, f_TCS_approach_ih1, f_TCS_approach_ih2, f_D_core, f_S_core, f_omega_jet, f_log10P_jet, f_log10D_jet, f_xi_jet, f_log10F_jet, f_m_theta_jet, f_C_jet, f_H_jet, f_hsr_supp, f_abs, f_faddeeva_real, f_faddeeva_imag, f_noy, f_aw)
 
     # Jacobian configuration
-    # if objective == "noise"
-    get_noise_fwd! = (y,x)->get_noise!(y, x, settings, pyna_ip, airframe, data, sealevel_atmosphere, idx)
-    # model_tape = JacobianTape(get_noise_fwd!, Y, X)
-    # compiled_model_tape = compile(model_tape)
-    # else
-    # compiled_model_tape = nothing
-    # end
+    if objective == "noise"
+        print("--- Compute noise model tape --- ")
+        get_noise_fwd! = (y,x)->get_noise!(y, x, settings, pyna_ip, airframe, data, sealevel_atmosphere, n_t, n_t_noise)
+        model_tape = JacobianTape(get_noise_fwd!, Y, X)
+        compiled_model_tape = compile(model_tape)
+        println("--- Tape computed and compiled ---")
+    else
+        compiled_model_tape = nothing
+    end
 
-    return NoiseModel(settings, pyna_ip, data, sealevel_atmosphere, airframe, n_t, idx, objective, X, J, get_nosie_fwd!)
+    return NoiseModel(settings, pyna_ip, data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective, X, J, compiled_model_tape)
 end
 
 function setup(self::NoiseModel)
     # Load options
     settings = self.settings
     n_t = self.n_t
+    n_t_noise = self.n_t_noise
 
     # Number of observers
     n_obs = size(settings["x_observer_array"])[1]
@@ -229,15 +371,16 @@ function setup(self::NoiseModel)
 
     # Define outputs --------------------------------------------------------------------------------
     outputs = Vector{VarData}()
-    # if self.objective == "noise"
-    push!(outputs, VarData("lateral", shape=(1, ), val=0.))
-    push!(outputs, VarData("flyover", shape=(1, ), val=0.))
-    # else
-        # push!(outputs, VarData("t_o", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
-        # push!(outputs, VarData("spl", shape=(n_obs, n_t, settings["n_frequency_bands"]), val=ones(n_obs, n_t, settings["n_frequency_bands"])))
-        # push!(outputs, VarData("level", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
-        # push!(outputs, VarData(settings["levels_int_metric"], shape=(n_obs, ), val=ones(n_obs, )))
-    # end
+    if self.objective == "noise"
+        push!(outputs, VarData("lateral", shape=(1, ), val=0.))
+        push!(outputs, VarData("flyover", shape=(1, ), val=0.))
+    else
+        n_obs = size(settings["x_observer_array"])[1]
+        push!(outputs, VarData("t_o", shape=(n_obs, n_t_noise), val=ones(n_obs, n_t_noise)))
+        push!(outputs, VarData("spl", shape=(n_obs, n_t_noise, settings["n_frequency_bands"]), val=ones(n_obs, n_t_noise, settings["n_frequency_bands"])))
+        push!(outputs, VarData("level", shape=(n_obs, n_t_noise), val=ones(n_obs, n_t_noise)))
+        push!(outputs, VarData(settings["levels_int_metric"], shape=(n_obs, ), val=ones(n_obs, )))
+    end
 
     ## Define partials --------------------------------------------------------------------------------
     partials = Vector{PartialsData}()
@@ -314,105 +457,30 @@ function setup(self::NoiseModel)
     return inputs, outputs, partials
 end
 
-function get_noise_input_vector!(X::Array{Float64, 1}, settings, inputs::PyDict{String, PyArray, true}, idx::Dict{Any, Any})
-
-    # Extract inputs
-    X[idx["x"][1]:idx["x"][2]] = inputs["x"]
-    X[idx["y"][1]:idx["y"][2]] = inputs["y"]
-    X[idx["z"][1]:idx["z"][2]] = inputs["z"]
-    X[idx["alpha"][1]:idx["alpha"][2]] = inputs["alpha"]
-    X[idx["gamma"][1]:idx["gamma"][2]] = inputs["gamma"]
-    X[idx["t_s"][1]:idx["t_s"][2]] = inputs["t_s"]
-    X[idx["M_0"][1]:idx["M_0"][2]] = inputs["M_0"]
-    if settings["core_jet_suppression"] && settings["case_name"] in ["nasa_stca_standard", "stca_enginedesign_standard"]
-        X[idx["TS"][1]:idx["TS"][2]] = inputs["TS"]
-    end
-    if settings["atmosphere_type"] == "stratified"
-        X[idx["c_0"][1]:idx["c_0"][2]] = inputs["c_0"]
-        X[idx["T_0"][1]:idx["T_0"][2]] = inputs["T_0"]
-        X[idx["rho_0"][1]:idx["rho_0"][2]] = inputs["rho_0"]
-        X[idx["p_0"][1]:idx["p_0"][2]] = inputs["p_0"]
-        X[idx["mu_0"][1]:idx["mu_0"][2]] = inputs["mu_0"]
-        X[idx["I_0"][1]:idx["I_0"][2]] = inputs["I_0"]
-    end
-    if settings["fan_inlet_source"]==true || settings["fan_discharge_source"]==true
-        X[idx["DTt_f"][1]:idx["DTt_f"][2]] = inputs["DTt_f"]
-        X[idx["mdot_f"][1]:idx["mdot_f"][2]] = inputs["mdot_f"]
-        X[idx["N_f"][1]:idx["N_f"][2]] = inputs["N_f"]
-        X[idx["A_f"][1]:idx["A_f"][2]] = inputs["A_f"]
-        X[idx["d_f"][1]:idx["d_f"][2]] = inputs["d_f"]
-    end
-    if settings["core_source"]
-        if settings["core_turbine_attenuation_method"] == "ge"
-            X[idx["mdoti_c"][1]:idx["mdoti_c"][2]] = inputs["mdoti_c"]
-            X[idx["Tti_c"][1]:idx["Tti_c"][2]] = inputs["Tti_c"]
-            X[idx["Ttj_c"][1]:idx["Ttj_c"][2]] = inputs["Ttj_c"]
-            X[idx["Pti_c"][1]:idx["Pti_c"][2]] = inputs["Pti_c"]
-            X[idx["DTt_des_c"][1]:idx["DTt_des_c"][2]] = inputs["DTt_des_c"]
-        elseif settings["core_turbine_attenuation_method"] == "pw"
-            X[idx["mdoti_c"][1]:idx["mdoti_c"][2]] = inputs["mdoti_c"]
-            X[idx["Tti_c"][1]:idx["Tti_c"][2]] = inputs["Tti_c"]
-            X[idx["Ttj_c"][1]:idx["Ttj_c"][2]] = inputs["Ttj_c"]
-            X[idx["Pti_c"][1]:idx["Pti_c"][2]] = inputs["Pti_c"]
-            X[idx["rho_te_c"][1]:idx["rho_te_c"][2]] = inputs["rho_te_c"]
-            X[idx["c_te_c"][1]:idx["c_te_c"][2]] = inputs["c_te_c"]
-            X[idx["rho_ti_c"][1]:idx["rho_ti_c"][2]] = inputs["rho_ti_c"]
-            X[idx["c_ti_c"][1]:idx["c_ti_c"][2]] = inputs["c_ti_c"]
-        end
-    end
-    if settings["jet_mixing_source"] == true && settings["jet_shock_source"] == false
-        X[idx["V_j"][1]:idx["V_j"][2]] = inputs["V_j"]
-        X[idx["rho_j"][1]:idx["rho_j"][2]] = inputs["rho_j"]
-        X[idx["A_j"][1]:idx["A_j"][2]] = inputs["A_j"]
-        X[idx["Tt_j"][1]:idx["Tt_j"][2]] = inputs["Tt_j"]
-    elseif settings["jet_shock_source"] == true && settings["jet_mixing_source"] == false
-        X[idx["V_j"][1]:idx["V_j"][2]] = inputs["V_j"]
-        X[idx["M_j"][1]:idx["M_j"][2]] = inputs["M_j"]
-        X[idx["A_j"][1]:idx["A_j"][2]] = inputs["A_j"]
-        X[idx["Tt_j"][1]:idx["Tt_j"][2]] = inputs["Tt_j"]
-    elseif settings["jet_shock_source"] ==true && settings["jet_mixing_source"] == true
-        X[idx["V_j"][1]:idx["V_j"][2]] = inputs["V_j"]
-        X[idx["rho_j"][1]:idx["rho_j"][2]] = inputs["rho_j"]
-        X[idx["A_j"][1]:idx["A_j"][2]] = inputs["A_j"]
-        X[idx["Tt_j"][1]:idx["Tt_j"][2]] = inputs["Tt_j"]
-        X[idx["M_j"][1]:idx["M_j"][2]] = inputs["M_j"]
-    end
-    if settings["airframe_source"]
-        X[idx["theta_flaps"][1]:idx["theta_flaps"][2]] = inputs["theta_flaps"]
-        X[idx["I_landing_gear"][1]:idx["I_landing_gear"][2]] = inputs["I_landing_gear"]
-    end
-
-end
-
 function compute!(self::NoiseModel, inputs, outputs)
 
     # Get input vector
-    get_noise_input_vector!(self.X, self.settings, inputs, self.idx)
+    get_noise_input_vector!(self.X, self.settings, inputs, self.n_t)
 
-    # if self.objective == "noise"
-    levels_int = zeros(2)
+    if self.objective == "noise"
+        levels_int = zeros(2)
 
-    get_noise!(levels_int, self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.idx)
-    @. outputs["lateral"] = levels_int[1]
-    @. outputs["flyover"] = levels_int[2]
-    
-        # Print outputs to file
-        # open(self.settings["pyna_directory"] * "/cases/" * self.settings["case_name"] * "/output/" * self.settings["output_directory_name"] * "/" * "outputs_levels_int.txt", "a") do io
-            # println(io, levels_int)
-        # end
+        get_noise!(levels_int, self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t, self.n_t_noise)
+        @. outputs["lateral"] = levels_int[1]
+        @. outputs["flyover"] = levels_int[2]
+        
+            # Print outputs to file
+            # open(self.settings["pyna_directory"] * "/cases/" * self.settings["case_name"] * "/output/" * self.settings["output_directory_name"] * "/" * "outputs_levels_int.txt", "a") do io
+                # println(io, levels_int)
+            # end
 
-    # else
-        # t_o, spl, level, levels_int = get_noise(self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.idx)
-        # @. outputs["t_o"] = t_o
-        # @. outputs["spl"] = spl
-        # @. outputs["level"] = level
-        # @. outputs[self.settings["levels_int_metric"]] = levels_int
-    # end
-
-    # Try computing gradients
-    println("--- Computing gradients ---")
-    jacobian!(self.J, self.get_nosie_fwd!, self.X)
-    println(J)
+    else
+        t_o, spl, level, levels_int = get_noise(self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t, self.n_t_noise)
+        @. outputs["t_o"] = t_o
+        @. outputs["spl"] = spl
+        @. outputs["level"] = level
+        @. outputs[self.settings["levels_int_metric"]] = levels_int
+    end
 
 end
 
@@ -420,7 +488,6 @@ function compute_partials!(self::NoiseModel, inputs, partials)
     # Load options
     settings = self.settings
     n_t = self.n_t
-    idx = self.idx
     X = self.X
     J = self.J
 
@@ -428,122 +495,86 @@ function compute_partials!(self::NoiseModel, inputs, partials)
     println("Computing partials noise")
 
     # Get input vector
-    get_noise_input_vector!(X, settings, inputs, idx)
+    get_noise_input_vector!(X, settings, inputs, self.n_t)
 
-    # compute Jacobian
-    jacobian!(J, self.noise_model_fwd, X)
+    # Compute Jacobian
+    jacobian!(J, self.compiled_model_tape, X)
     
+    # Assign gradients
     for (i, mic) in enumerate(["lateral", "flyover"])
-        dnoise_dx = reshape(J[i, idx["x"][1]:idx["x"][2]], (1, n_t))
-        @. partials[mic, "x"] = dnoise_dx
-        dnoise_dy = reshape(J[i, idx["y"][1]:idx["y"][2]], (1, n_t))
-        @. partials[mic, "y"] = dnoise_dy
-        dnoise_dz = reshape(J[i, idx["z"][1]:idx["z"][2]], (1, n_t))
-        @. partials[mic, "z"] = dnoise_dz
-        dnoise_dalpha = reshape(J[i, idx["alpha"][1]:idx["alpha"][2]], (1, n_t))
-        @. partials[mic, "alpha"] = dnoise_dalpha
-        dnoise_dgamma = reshape(J[i, idx["gamma"][1]:idx["gamma"][2]], (1, n_t))
-        @. partials[mic, "gamma"] = dnoise_dgamma
-        dnoise_dts = reshape(J[i, idx["t_s"][1]:idx["t_s"][2]], (1, n_t))
-        @. partials[mic, "t_s"] = dnoise_dts
-        dnoise_dM_0 = reshape(J[i, idx["M_0"][1]:idx["M_0"][2]], (1, n_t))
-        @. partials[mic, "M_0"] = dnoise_dM_0
+        partials[mic, "x"] .= reshape(J[i, 0 * n_t + 1: 1 * n_t], (1, n_t))
+        partials[mic, "y"] .= reshape(J[i, 1 * n_t + 1: 2 * n_t], (1, n_t))
+        partials[mic, "z"] .= reshape(J[i, 2 * n_t + 1: 3 * n_t], (1, n_t))
+        partials[mic, "alpha"] .= reshape(J[i, 3 * n_t + 1: 4 * n_t], (1, n_t))
+        partials[mic, "gamma"] .= reshape(J[i, 4 * n_t + 1: 5 * n_t], (1, n_t))
+        partials[mic, "t_s"] .= reshape(J[i, 5 * n_t + 1: 6 * n_t], (1, n_t))
+        partials[mic, "M_0"] .= reshape(J[i, 6 * n_t + 1: 7 * n_t], (1, n_t))
+        n = 7
         if settings["core_jet_suppression"] && settings["case_name"] in ["nasa_stca_standard", "stca_enginedesign_standard"]        
-            dnoise_dTS = reshape(J[i, idx["TS"][1]:idx["TS"][2]], (1, n_t))
-            @. partials[mic, "TS"] = dnoise_dTS
+            partials[mic, "TS"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+            n += 1
         end
         if settings["atmosphere_type"] == "stratified"
-            dnoise_dc_0 = reshape(J[i, idx["c_0"][1]:idx["c_0"][2]], (1, n_t))
-            @. partials[mic, "c_0"] = dnoise_dc_0
-            dnoise_dT_0 = reshape(J[i, idx["T_0"][1]:idx["T_0"][2]], (1, n_t))
-            @. partials[mic, "T_0"] = dnoise_dT_0
-            dnoise_drho_0 = reshape(J[i, idx["rho_0"][1]:idx["rho_0"][2]], (1, n_t))
-            @. partials[mic, "rho_0"] = dnoise_drho_0
-            dnoise_dp_0 = reshape(J[i, idx["p_0"][1]:idx["p_0"][2]], (1, n_t))
-            @. partials[mic, "p_0"] = dnoise_dp_0
-            dnoise_dmu_0 = reshape(J[i, idx["mu_0"][1]:idx["mu_0"][2]], (1, n_t))
-            @. partials[mic, "mu_0"] = dnoise_dmu_0
-            dnoise_dI_0 = reshape(J[i, idx["I_0"][1]:idx["I_0"][2]], (1, n_t))
-            @. partials[mic, "I_0"] = dnoise_dI_0
+            partials[mic, "c_0"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+            partials[mic, "T_0"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+            partials[mic, "rho_0"] .= reshape(J[i, (n + 2) * n_t + 1: (n + 3) * n_t], (1, n_t))
+            partials[mic, "p_0"] .= reshape(J[i, (n + 3) * n_t + 1: (n + 4) * n_t], (1, n_t))
+            partials[mic, "mu_0"] .= reshape(J[i, (n + 4) * n_t + 1: (n + 5) * n_t], (1, n_t))
+            partials[mic, "I_0"] .= reshape(J[i, (n + 5) * n_t + 1: (n + 6) * n_t], (1, n_t))
+            n += 6
         end
         if settings["fan_inlet_source"]==true || settings["fan_discharge_source"]==true
-            dnoise_dDTt_f = reshape(J[i, idx["DTt_f"][1]:idx["DTt_f"][2]], (1, n_t))
-            @. partials[mic, "DTt_f"] = dnoise_dDTt_f
-            dnoise_dmdot_f = reshape(J[i, idx["mdot_f"][1]:idx["mdot_f"][2]], (1, n_t))
-            @. partials[mic, "mdot_f"] = dnoise_dmdot_f
-            dnoise_dN_f = reshape(J[i, idx["N_f"][1]:idx["N_f"][2]], (1, n_t))
-            @. partials[mic, "N_f"] = dnoise_dN_f
-            dnoise_dA_f = reshape(J[i, idx["A_f"][1]:idx["A_f"][2]], (1, n_t))
-            @. partials[mic, "A_f"] = dnoise_dA_f
-            dnoise_dd_f = reshape(J[i, idx["d_f"][1]:idx["d_f"][2]], (1, n_t))
-            @. partials[mic, "d_f"] = dnoise_dd_f
+            partials[mic, "DTt_f"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+            partials[mic, "mdot_f"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+            partials[mic, "N_f"] .= reshape(J[i, (n + 2) * n_t + 1: (n + 3) * n_t], (1, n_t))
+            partials[mic, "A_f"] .= reshape(J[i, (n + 3) * n_t + 1: (n + 4) * n_t], (1, n_t))
+            partials[mic, "d_f"] .= reshape(J[i, (n + 4) * n_t + 1: (n + 5) * n_t], (1, n_t))
+            n += 5
         end
         if settings["core_source"]
             if settings["core_turbine_attenuation_method"] == "ge"
-                dnoise_dmdoti_c = reshape(J[i, idx["mdoti_c"][1]:idx["mdoti_c"][2]], (1, n_t))
-                @. partials[mic, "mdoti_c"] = dnoise_dmdoti_c
-                dnoise_dTti_c = reshape(J[i, idx["Tti_c"][1]:idx["Tti_c"][2]], (1, n_t))
-                @. partials[mic, "Tti_c"] = dnoise_dTti_c
-                dnoise_dTtj_c = reshape(J[i, idx["Ttj_c"][1]:idx["Ttj_c"][2]], (1, n_t))
-                @. partials[mic, "Ttj_c"] = dnoise_dTtj_c
-                dnoise_dPti_c = reshape(J[i, idx["Pti_c"][1]:idx["Pti_c"][2]], (1, n_t))
-                @. partials[mic, "Pti_c"] = dnoise_dPti_c
-                dnoise_dDTt_des_c = reshape(J[i, idx["DTt_des_c"][1]:idx["DTt_des_c"][2]], (1, n_t))
-                @. partials[mic, "DTt_des_c"] = dnoise_dDTt_des_c
+                partials[mic, "mdoti_c"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+                partials[mic, "Tti_c"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+                partials[mic, "Ttj_c"] .= reshape(J[i, (n + 2) * n_t + 1: (n + 3) * n_t], (1, n_t))
+                partials[mic, "Pti_c"] .= reshape(J[i, (n + 3) * n_t + 1: (n + 4) * n_t], (1, n_t))
+                partials[mic, "DTt_des_c"] .= reshape(J[i, (n + 4) * n_t + 1: (n + 5) * n_t], (1, n_t))
+                n += 5
             elseif settings["core_turbine_attenuation_method"] == "pw"
-                dnoise_dmdoti_c = reshape(J[i, idx["mdoti_c"][1]:idx["mdoti_c"][2]], (1, n_t))
-                @. partials[mic, "mdoti_c"] = dnoise_dmdoti_c
-                dnoise_dTti_c = reshape(J[i, idx["Tti_c"][1]:idx["Tti_c"][2]], (1, n_t))
-                @. partials[mic, "Tti_c"] = dnoise_dTti_c
-                dnoise_dTtj_c = reshape(J[i, idx["Ttj_c"][1]:idx["Ttj_c"][2]], (1, n_t))
-                @. partials[mic, "Ttj_c"] = dnoise_dTtj_c
-                dnoise_dPti_c = reshape(J[i, idx["Pti_c"][1]:idx["Pti_c"][2]], (1, n_t))
-                @. partials[mic, "Pti_c"] = dnoise_dPti_c
-                dnoise_drho_te_c = reshape(J[i, idx["rho_te_c"][1]:idx["rho_te_c"][2]], (1, n_t))
-                @. partials[mic, "rho_te_c"] = dnoise_drho_te_c
-                dnoise_dc_te_c = reshape(J[i, idx["c_te_c"][1]:idx["c_te_c"][2]], (1, n_t))
-                @. partials[mic, "c_te_c"] = dnoise_dc_te_c
-                dnoise_drho_ti_c = reshape(J[i, idx["rho_ti_c"][1]:idx["rho_ti_c"][2]], (1, n_t))
-                @. partials[mic, "rho_ti_c"] = dnoise_drho_ti_c
-                dnoise_dc_ti_c = reshape(J[i, idx["c_ti_c"][1]:idx["c_ti_c"][2]], (1, n_t))
-                @. partials[mic, "c_ti_c"] = dnoise_dc_ti_c
+                partials[mic, "mdoti_c"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+                partials[mic, "Tti_c"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+                partials[mic, "Ttj_c"] .= reshape(J[i, (n + 2) * n_t + 1: (n + 3) * n_t], (1, n_t))
+                partials[mic, "Pti_c"] .= reshape(J[i, (n + 3) * n_t + 1: (n + 4) * n_t], (1, n_t))
+                partials[mic, "rho_te_c"] .= reshape(J[i, (n + 4) * n_t + 1: (n + 5) * n_t], (1, n_t))
+                partials[mic, "c_te_c"] .= reshape(J[i, (n + 5) * n_t + 1: (n + 6) * n_t], (1, n_t))
+                partials[mic, "rho_ti_c"] .= reshape(J[i, (n + 6) * n_t + 1: (n + 7) * n_t], (1, n_t))
+                partials[mic, "c_ti_c"] .= reshape(J[i, (n + 7) * n_t + 1: (n + 8) * n_t], (1, n_t))
+                n += 8
             end
         end
         if settings["jet_mixing_source"] == true && settings["jet_shock_source"] == false
-            dnoise_dvj = reshape(J[i, idx["V_j"][1]:idx["V_j"][2]], (1, n_t))
-            @. partials[mic, "V_j"] = dnoise_dvj
-            dnoise_drhoj = reshape(J[i, idx["rho_j"][1]:idx["rho_j"][2]], (1, n_t))
-            @. partials[mic, "rho_j"] = dnoise_drhoj
-            dnoise_dAj = reshape(J[i, idx["A_j"][1]:idx["A_j"][2]], (1, n_t))
-            @. partials[mic, "A_j"] = dnoise_dAj
-            dnoise_dTtj = reshape(J[i, idx["Tt_j"][1]:idx["Tt_j"][2]], (1, n_t))
-            @. partials[mic, "Tt_j"] = dnoise_dTtj
+            partials[mic, "V_j"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+            partials[mic, "rho_j"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+            partials[mic, "A_j"] .= reshape(J[i, (n + 2) * n_t + 1: (n + 3) * n_t], (1, n_t))
+            partials[mic, "Tt_j"] .= reshape(J[i, (n + 3) * n_t + 1: (n + 4) * n_t], (1, n_t))
+            n += 4
         elseif settings["jet_shock_source"] == true && settings["jet_mixing_source"] == false
-            dnoise_dvj = reshape(J[i, idx["V_j"][1]:idx["V_j"][2]], (1, n_t))
-            @. partials[mic, "V_j"] = dnoise_dvj
-            dnoise_dMj = reshape(J[i, idx["M_j"][1]:idx["M_j"][2]], (1, n_t))
-            @. partials[mic, "M_j"] = dnoise_dMj
-            dnoise_dAj = reshape(J[i, idx["A_j"][1]:idx["A_j"][2]], (1, n_t))
-            @. partials[mic, "A_j"] = dnoise_dAj
-            dnoise_dTtj = reshape(J[i, idx["Tt_j"][1]:idx["Tt_j"][2]], (1, n_t))
-            @. partials[mic, "Tt_j"] = dnoise_dTtj
+            partials[mic, "V_j"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+            partials[mic, "M_j"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+            partials[mic, "A_j"] .= reshape(J[i, (n + 2) * n_t + 1: (n + 3) * n_t], (1, n_t))
+            partials[mic, "Tt_j"] .= reshape(J[i, (n + 3) * n_t + 1: (n + 4) * n_t], (1, n_t))
+            n += 4
         elseif settings["jet_shock_source"] ==true && settings["jet_mixing_source"] == true
-            dnoise_dvj = reshape(J[i, idx["V_j"][1]:idx["V_j"][2]], (1, n_t))
-            @. partials[mic, "V_j"] = dnoise_dvj
-            dnoise_drhoj = reshape(J[i, idx["rho_j"][1]:idx["rho_j"][2]], (1, n_t))
-            @. partials[mic, "rho_j"] = dnoise_drhoj
-            dnoise_dAj = reshape(J[i, idx["A_j"][1]:idx["A_j"][2]], (1, n_t))
-            @. partials[mic, "A_j"] = dnoise_dAj
-            dnoise_dTtj = reshape(J[i, idx["Tt_j"][1]:idx["Tt_j"][2]], (1, n_t))
-            @. partials[mic, "Tt_j"] = dnoise_dTtj
-            dnoise_dMj = reshape(J[i, idx["M_j"][1]:idx["M_j"][2]], (1, n_t))
-            @. partials[mic, "M_j"] = dnoise_dMj
+            partials[mic, "V_j"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+            partials[mic, "rho_j"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+            partials[mic, "A_j"] .= reshape(J[i, (n + 2) * n_t + 1: (n + 3) * n_t], (1, n_t))
+            partials[mic, "Tt_j"] .= reshape(J[i, (n + 3) * n_t + 1: (n + 4) * n_t], (1, n_t))
+            partials[mic, "M_j"] .= reshape(J[i, (n + 4) * n_t + 1: (n + 5) * n_t], (1, n_t))
+            n += 5
         end
         if settings["airframe_source"]
-            dnoise_dtheta_flaps = reshape(J[i, idx["theta_flaps"][1]:idx["theta_flaps"][2]], (1, n_t))
-            @. partials[mic, "theta_flaps"] = dnoise_dtheta_flaps
-            dnoise_dI_landing_gear = reshape(J[i, idx["I_landing_gear"][1]:idx["I_landing_gear"][2]], (1, n_t))
-            @. partials[mic, "I_landing_gear"] = dnoise_dI_landing_gear
+            partials[mic, "theta_flaps"] .= reshape(J[i, n * n_t + 1, (n + 1) * n_t], (1, n_t))
+            partials[mic, "I_landing_gear"] .= reshape(J[i, (n + 1) * n_t + 1: (n + 2) * n_t], (1, n_t))
+            n += 2
         end
     end
 

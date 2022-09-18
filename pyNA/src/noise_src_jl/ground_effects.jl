@@ -1,4 +1,6 @@
-function ground_effects!(spl_sb, x, settings, pyna_ip, f_sb, x_obs)
+using ReverseDiff
+
+function ground_effects!(spl_sb::Array, x::Union{Array, ReverseDiff.TrackedArray}, settings, pyna_ip, f_sb::Array{Float64, 1}, x_obs::Array{Float64, 1})
 
     # x = [r, beta, c_bar, rho_0]
     # y = spl_sb

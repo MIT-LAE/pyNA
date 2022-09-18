@@ -1,15 +1,17 @@
-function f_aspl(spl, pyna_ip, f)
+using ReverseDiff
+
+function f_aspl(spl::Union{Array, ReverseDiff.TrackedArray}, pyna_ip, f::Array{Float64, 1})
     
     # Get a-weights
     weights = pyna_ip.f_aw(f)
     
-    aspl = 10*log10(sum(10 .^((spl .+ weights)./10.)))
-
-    return aspl
+    return 10*log10(sum(10 .^((spl .+ weights)./10.)))
 
 end
 
-function f_aspl!(aspl, spl, pyna_ip, f)
+f_aspl_fwd = (x) -> f_aspl(x, pyna_ip, f)
+
+function f_aspl!(aspl::Array, spl::Union{Array, ReverseDiff.TrackedArray}, pyna_ip, f::Array{Float64, 1})
     
     # Get a-weights
     weights = pyna_ip.f_aw(f)

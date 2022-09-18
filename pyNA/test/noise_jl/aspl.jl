@@ -1,9 +1,9 @@
 using ReverseDiff: JacobianTape, jacobian!, compile
 using CSV
 using DataFrames
+using BenchmarkTools
 include("../../src/noise_src_jl/aspl.jl")
 include("../../src/noise_src_jl/get_interpolation_functions.jl")
-
 
 # Inputs 
 struct Data
@@ -26,8 +26,7 @@ y = ones(24)
 
 # Compute
 println("--- Compute ---")
-@time f_aspl_fwd!(y, x)
-println(y)
+@btime f_aspl_fwd(x)
 
 # Compute partials
 println("\n--- Compute partials ----")
@@ -36,8 +35,8 @@ X = ones(24)
 J = Y.*X'
 #'
 
-const f_tape = JacobianTape(f_aspl_fwd!, Y, X)
+const f_tape = JacobianTape(f_aspl_fwd, X)
 const compiled_f_tape = compile(f_tape)
 
-@time jacobian!(J, compiled_f_tape, x)
+@btime jacobian!(J, compiled_f_tape, x)
 println(J)

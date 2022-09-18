@@ -1,4 +1,4 @@
-function split_subbands!(spl_sb, spl, settings)
+function split_subbands!(spl_sb::Array, spl::Union{Array, ReverseDiff.TrackedArray}, settings)
     
     # x = spl
     # y = spl_sb

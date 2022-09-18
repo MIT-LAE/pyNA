@@ -13,7 +13,6 @@ from pyNA.src.trajectory_src.vnrs import Vnrs
 from pyNA.src.trajectory_src.cutback import CutBack
 from pyNA.src.trajectory_src.take_off_phase_ode import TakeOffPhaseODE
 from pyNA.src.trajectory_src.mux import Mux
-from pyNA.src.noise_src_jl.get_input_vector_indices import get_input_vector_indices
 
 if os.environ['pyna_language']=='julia':
     import julia.Main as julia
@@ -71,44 +70,44 @@ class Trajectory(om.Problem):
         for phase_name in self.phase_name_lst:
 
             if phase_name == 'groundroll':
-                self.mux_input_size_array.append(self.groundroll.phase_size)
+                self.mux_input_size_array.append(self.groundroll.phase_target_size)
             elif phase_name == 'rotation':
-                self.mux_input_size_array.append(self.rotation.phase_size)
+                self.mux_input_size_array.append(self.rotation.phase_target_size)
             elif phase_name == 'liftoff':
-                self.mux_input_size_array.append(self.liftoff.phase_size)
+                self.mux_input_size_array.append(self.liftoff.phase_target_size)
             elif phase_name == 'vnrs':
-                self.mux_input_size_array.append(self.vnrs.phase_size)
+                self.mux_input_size_array.append(self.vnrs.phase_target_size)
             elif phase_name == 'cutback':
-                self.mux_input_size_array.append(self.cutback.phase_size)
+                self.mux_input_size_array.append(self.cutback.phase_target_size)
 
         # List output sizes
         self.mux_output_size = 0
         for i, phase_name in enumerate(self.phase_name_lst):
             if phase_name == 'groundroll':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.groundroll.phase_size
+                    self.mux_output_size += self.groundroll.phase_target_size
                 else:
-                    self.mux_output_size += self.groundroll.phase_size - 1    
+                    self.mux_output_size += self.groundroll.phase_target_size - 1
             elif phase_name == 'rotation':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.rotation.phase_size
+                    self.mux_output_size += self.rotation.phase_target_size
                 else:
-                    self.mux_output_size += self.rotation.phase_size - 1
+                    self.mux_output_size += self.rotation.phase_target_size - 1
             elif phase_name == 'liftoff':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.liftoff.phase_size
+                    self.mux_output_size += self.liftoff.phase_target_size
                 else:
-                    self.mux_output_size += self.liftoff.phase_size - 1
+                    self.mux_output_size += self.liftoff.phase_target_size - 1
             elif phase_name == 'vnrs':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.vnrs.phase_size
+                    self.mux_output_size += self.vnrs.phase_target_size
                 else:
-                    self.mux_output_size += self.vnrs.phase_size - 1
+                    self.mux_output_size += self.vnrs.phase_target_size - 1
             elif phase_name == 'cutback':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.cutback.phase_size
+                    self.mux_output_size += self.cutback.phase_target_size
                 else:
-                    self.mux_output_size += self.cutback.phase_size - 1
+                    self.mux_output_size += self.cutback.phase_target_size - 1
         
         return None
 
@@ -320,7 +319,7 @@ class Trajectory(om.Problem):
 
         return 
 
-    def create_noise(self, settings, data, sealevel_atmosphere, airframe, n_t, objective, mode) -> None:
+    def create_noise(self, settings, data, sealevel_atmosphere, airframe, n_t:int, n_t_noise:int, objective:str, mode:str) -> None:
 
         """
         Setup model for computing noise along computed trajectory.
@@ -417,10 +416,8 @@ class Trajectory(om.Problem):
             self.model.connect('trajectory.rho_0', 'noise.levels.rho_0')
 
         elif self.language == 'julia':
-            idx = get_input_vector_indices(self.language, settings=settings, n_t=n_t)
-
             self.model.add_subsystem(name='noise',
-                                        subsys=make_component(julia.NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t,  idx, objective)),
+                                        subsys=make_component(julia.NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective)),
                                         promotes_inputs=[],
                                         promotes_outputs=[])
 

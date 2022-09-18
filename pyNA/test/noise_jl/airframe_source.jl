@@ -1,6 +1,7 @@
 using ReverseDiff: JacobianTape, jacobian!, compile
 using CSV
 using DataFrames
+using BenchmarkTools
 include("../../src/noise_src_jl/airframe_source.jl")
 include("../../src/noise_src_jl/get_interpolation_functions.jl")
 
@@ -74,25 +75,25 @@ theta = 30.
 phi = 10.
 theta_flaps = 10.
 I_landing_gear = 1
-x = vcat(M_0, c_0, rho_0, mu_0, theta, phi, theta_flaps, I_landing_gear)
+x = vcat(theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi)
 y = zeros(24)
 
 # Compute
 println("--- Compute ---")
-@time airframe_source_fwd!(y, x)
+@btime airframe_source_fwd!(y, x)
 println(y)
 
 # Compute partials
 println("\n--- Compute partials ----")
 Y = zeros(24)
-X = zeros(8)
+X = vcat(theta_flaps, I_landing_gear, c_0, rho_0, mu_0, M_0, theta, phi)
 J = Y.*X'
 #'
 
 const f_tape = JacobianTape(airframe_source_fwd!, Y, X)
 const compiled_f_tape = compile(f_tape)
 
-@time jacobian!(J, compiled_f_tape, x)
+@btime jacobian!(J, compiled_f_tape, x)
 println(J)
 
 
