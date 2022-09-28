@@ -333,7 +333,7 @@ class pyna:
         pyna.load_path_timeseries(self)
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t, mode='trajectory', objective='timeseries')
+        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t_noise, mode='trajectory', objective='timeseries')
         self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='trajectory')
 
         return None

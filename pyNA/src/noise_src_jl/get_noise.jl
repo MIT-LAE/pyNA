@@ -214,12 +214,15 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
             if settings["levels_int_metric"] == "ioaspl"
                 level[i,j] = f_oaspl(spl_j)
             elseif settings["levels_int_metric"] in ["pnlt_max", "ipnlt", "epnl"]
-                level[i,j] = f_pnlt(spl_j, settings, pyna_ip, f)                
+                level[i,j] = f_pnlt(spl_j, settings, pyna_ip, f)
             elseif settings["levels_int_metric"] == "sel"
                 level[i,j] = f_aspl(spl_j, pyna_ip, f)
             end
 
         end
+
+        println(level[i,:])
+        println(kkk)
 
         # Compute integrated levels
         if settings["levels_int_metric"] in ["ioaspl", "ipnlt", "sel"]
@@ -241,11 +244,9 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
     end
 
     # Compute output_v: [level_int_lateral, level_int_flyover]
-    level_lateral = smooth_max(level_int[1:end-1], 50.)
-    output_v .= [level_lateral, level_int[end]]
+    output_v .= [smooth_max(level_int[1:end-1], 50.), level_int[end]]
 
 end
-
 
 function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_t, n_t_noise)
     
@@ -272,8 +273,6 @@ function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_
     input_v_i = zeros(eltype(input_v), Int64(size(input_v)[1]/n_t*n_t_noise))
     get_interpolated_input_v!(input_v_i, input_v, settings, n_t, n_t_noise)        # 274 allocations
     
-
-
     # Iterate over observers
     for i in 1:1:n_obs
         
@@ -446,6 +445,8 @@ function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_
         elseif settings["levels_int_metric"] == "pnlt_max"
             level_int[i] = smooth_max(level[i,:], 50.)
         end
+
+        
 
         # Lateral attenuation post-hoc subtraction on integrated noise levels
         if settings["lateral_attenuation"]

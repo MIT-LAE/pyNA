@@ -502,7 +502,6 @@ class Trajectory(om.Problem):
             self.model.add_objective('trajectory.t_s', index=-1, ref=1000.)
         
         elif objective == 'noise':
-            # No optimization objective required; problem is run with run_driver = False
             self.model.add_constraint('noise.lateral', ref=1., upper=noise_constraint_lateral, units=None)
             self.model.add_objective('noise.flyover', ref=1.)
 

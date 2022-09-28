@@ -45,7 +45,6 @@ class Emissions(om.ExplicitComponent):
         self.declare_partials(of='mdot_NOx', wrt='Tti_c', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='mdot_NOx', wrt='W_f', rows=arange, cols=arange, val=1.0)
 
-
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
 
         # Extract inputs
