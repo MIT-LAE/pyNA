@@ -9,6 +9,7 @@ class Rotation(dm.Phase):
         self.phase_size = int(self.options['transcription'].options['num_segments']*self.options['transcription'].options['order'] + 1)
 
         self.phase_target_size = 3
+        # self.phase_target_size = 10
 
     def create(self, airframe, engine, phld, TS, theta_flaps, theta_slats, objective, atmosphere_type) -> None:
 

@@ -8,7 +8,8 @@ class Vnrs(dm.Phase):
         super().__init__(from_phase, **kwargs)
         self.phase_size = int(self.options['transcription'].options['num_segments']*self.options['transcription'].options['order'] + 1)
 
-        self.phase_target_size = 10
+        # self.phase_target_size = 10
+        self.phase_target_size = 22
 
     def create(self, airframe, engine, ptcb, phld, TS_vnrs, TS_min, theta_flaps, theta_slats, trajectory_mode, objective, atmosphere_type) -> None:
         

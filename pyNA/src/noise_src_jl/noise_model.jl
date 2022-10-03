@@ -19,7 +19,6 @@ include("get_interpolation_functions.jl")
     sealevel_atmosphere
     airframe 
     n_t
-    n_t_noise
     objective
     X :: Array{Float64, 1}
     Y :: Array{Float64, 1}
@@ -135,7 +134,7 @@ function get_noise_input_vector!(X::Array{Float64, 1}, settings, inputs::PyDict{
 
 end
 
-function NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective)
+function NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, objective)
 
     # Default values for input vector
     X = range(1, 10000, length=n_t)             # x
@@ -220,25 +219,13 @@ function NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, n_t_nois
     f_aw = get_a_weighting_interpolation_functions(data)
     pyna_ip = PynaInterpolations(f_supp_fi, f_supp_fd, f_F3IB, f_F3DB, f_F3TI, f_F3TD, f_F2CT, f_TCS_takeoff_ih1, f_TCS_takeoff_ih2, f_TCS_approach_ih1, f_TCS_approach_ih2, f_D_core, f_S_core, f_omega_jet, f_log10P_jet, f_log10D_jet, f_xi_jet, f_log10F_jet, f_m_theta_jet, f_C_jet, f_H_jet, f_hsr_supp, f_abs, f_faddeeva_real, f_faddeeva_imag, f_noy, f_aw)
 
-    # Jacobian configuration
-    # if objective == "noise"
-    # println("--- Compute noise model tape --- ")
-    # get_noise_fwd! = (y,x)->get_noise!(y, x, settings, pyna_ip, airframe, data, sealevel_atmosphere, n_t, n_t_noise)
-    # model_tape = JacobianTape(get_noise_fwd!, Y, X)
-    # compiled_model_tape = compile(model_tape)
-    # println("--- Tape computed and compiled ---\n")
-    # else
-    # compiled_model_tape = nothing
-    # end
-
-    return NoiseModel(settings, pyna_ip, data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective, X, Y, J)
+    return NoiseModel(settings, pyna_ip, data, sealevel_atmosphere, airframe, n_t, objective, X, Y, J)
 end
 
 function setup(self::NoiseModel)
     # Load options
     settings = self.settings
     n_t = self.n_t
-    n_t_noise = self.n_t_noise
 
     # Number of observers
     n_obs = size(settings["x_observer_array"])[1]
@@ -317,9 +304,9 @@ function setup(self::NoiseModel)
         push!(outputs, VarData("flyover", shape=(1, ), val=0.))
     else
         n_obs = size(settings["x_observer_array"])[1]
-        push!(outputs, VarData("t_o", shape=(n_obs, n_t_noise), val=ones(n_obs, n_t_noise)))
-        push!(outputs, VarData("spl", shape=(n_obs, n_t_noise, settings["n_frequency_bands"]), val=ones(n_obs, n_t_noise, settings["n_frequency_bands"])))
-        push!(outputs, VarData("level", shape=(n_obs, n_t_noise), val=ones(n_obs, n_t_noise)))
+        push!(outputs, VarData("t_o", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
+        push!(outputs, VarData("spl", shape=(n_obs, n_t, settings["n_frequency_bands"]), val=ones(n_obs, n_t, settings["n_frequency_bands"])))
+        push!(outputs, VarData("level", shape=(n_obs, n_t), val=ones(n_obs, n_t)))
         push!(outputs, VarData(settings["levels_int_metric"], shape=(n_obs, ), val=ones(n_obs, )))
     end
 
@@ -406,7 +393,7 @@ function compute!(self::NoiseModel, inputs, outputs)
     if self.objective == "noise"
         levels_int = zeros(2)
 
-        get_noise!(levels_int, self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t, self.n_t_noise)
+        get_noise!(levels_int, self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t)
         @. outputs["lateral"] = levels_int[1]
         @. outputs["flyover"] = levels_int[2]
         
@@ -416,7 +403,7 @@ function compute!(self::NoiseModel, inputs, outputs)
         end
 
     else
-        t_o, spl, level, levels_int = get_noise(self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t, self.n_t_noise)
+        t_o, spl, level, levels_int = get_noise(self.X, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t)
         @. outputs["t_o"] = t_o
         @. outputs["spl"] = spl
         @. outputs["level"] = level
@@ -440,7 +427,7 @@ function compute_partials!(self::NoiseModel, inputs, partials)
     get_noise_input_vector!(X, settings, inputs, self.n_t)
 
     # Compute Jacobian
-    get_noise_fwd! = (y,x)->get_noise!(y, x, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t, self.n_t_noise)
+    get_noise_fwd! = (y,x)->get_noise!(y, x, self.settings, self.pyna_ip, self.airframe, self.data, self.sealevel_atmosphere, self.n_t)
     jacobian!(self.J, get_noise_fwd!, self.Y, self.X)
     
     # Assign gradients

@@ -137,7 +137,7 @@ class FlightDynamics(ExplicitComponent):
         # Stick (alpha) controller
         if phase_name in {'groundroll'}:
             outputs['alpha_dot'] = np.zeros(nn)
-        elif phase_name == 'rotation':
+        elif phase_name in {'rotation'}:
             outputs['alpha_dot'] = 3.5 * np.ones(nn)
         elif phase_name in {'liftoff', 'vnrs', 'cutback'}:
             outputs['alpha_dot'] = np.zeros(nn)

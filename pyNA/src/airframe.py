@@ -139,7 +139,6 @@ class Airframe:
 
         return None
 
-
     def get_aerodynamics_deck(self) -> None:
         """
         Load aerodynamic data from aerodynamics deck.

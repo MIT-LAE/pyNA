@@ -32,7 +32,7 @@ include("ilevel.jl")
 include("aspl.jl")
 include("smooth_max.jl")
 
-function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_t, n_t_noise)
+function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_t)
     
     # Number of observers
     n_obs = size(settings["x_observer_array"])[1]
@@ -44,9 +44,9 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
     shield = zeros(settings["n_frequency_bands"])
     spl_j = zeros(eltype(input_v), settings["n_frequency_bands"])
 
-    t_o = zeros(eltype(input_v), (n_obs, n_t_noise))
-    spl = zeros(eltype(input_v), (n_obs, n_t_noise, settings["n_frequency_bands"]))
-    level = zeros(eltype(input_v), (n_obs, n_t_noise))
+    t_o = zeros(eltype(input_v), (n_obs, n_t))
+    spl = zeros(eltype(input_v), (n_obs, n_t, settings["n_frequency_bands"]))
+    level = zeros(eltype(input_v), (n_obs, n_t))
     level_int = zeros(eltype(input_v), n_obs)
     geom_v = zeros(eltype(input_v), 6)
     
@@ -54,38 +54,34 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
     # 1/3rd octave band frequencies
     get_subband_frequencies!(f_sb, f, settings)
 
-    # Interpolate the trajectory and engine inputs at reduced grid size for EPNL calculations 
-    input_v_i = zeros(eltype(input_v), Int64(size(input_v)[1]/n_t*n_t_noise))
-    get_interpolated_input_v!(input_v_i, input_v, settings, n_t, n_t_noise)        # 274 allocations
-    
     # Iterate over observers
     for i in 1:1:n_obs
         
         println("Computing noise at observer: ", i)
 
         # Iterate over time steps
-        for j in 1:1:n_t_noise
+        for j in 1:1:n_t
 
             # Extract inputs
-            x = input_v_i[0 * n_t_noise + j]
-            y = input_v_i[1 * n_t_noise + j]
-            z = input_v_i[2 * n_t_noise + j]
-            alpha = input_v_i[3 * n_t_noise + j]
-            gamma = input_v_i[4 * n_t_noise + j]
-            t_s = input_v_i[5 * n_t_noise + j]
-            M_0 = input_v_i[6 * n_t_noise + j]
+            x = input_v[0 * n_t + j]
+            y = input_v[1 * n_t + j]
+            z = input_v[2 * n_t + j]
+            alpha = input_v[3 * n_t + j]
+            gamma = input_v[4 * n_t + j]
+            t_s = input_v[5 * n_t + j]
+            M_0 = input_v[6 * n_t + j]
             n = 7
             if settings["core_jet_suppression"] && settings["case_name"] in ["nasa_stca_standard", "stca_enginedesign_standard"]
-                TS = input_v_i[(n + 0) * n_t_noise + j]
+                TS = input_v[(n + 0) * n_t + j]
                 n += 1
             end
             if settings["atmosphere_type"] == "stratified"
-                c_0 = input_v_i[(n + 0) * n_t_noise + j]
-                T_0 = input_v_i[(n + 1) * n_t_noise + j]
-                rho_0 = input_v_i[(n + 2) * n_t_noise + j]
-                p_0 = input_v_i[(n + 3) * n_t_noise + j]
-                mu_0 = input_v_i[(n + 4) * n_t_noise + j]
-                I_0 = input_v_i[(n + 5) * n_t_noise + j]
+                c_0 = input_v[(n + 0) * n_t + j]
+                T_0 = input_v[(n + 1) * n_t + j]
+                rho_0 = input_v[(n + 2) * n_t + j]
+                p_0 = input_v[(n + 3) * n_t + j]
+                mu_0 = input_v[(n + 4) * n_t + j]
+                I_0 = input_v[(n + 5) * n_t + j]
                 n += 6
             else
                 c_0 = sealevel_atmosphere["c_0"]
@@ -96,56 +92,56 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
                 I_0 = sealevel_atmosphere["I_0"]
             end  
             if settings["fan_inlet_source"]==true || settings["fan_discharge_source"]==true
-                DTt_f = input_v_i[(n + 0) * n_t_noise + j]
-                mdot_f = input_v_i[(n + 1) * n_t_noise + j]
-                N_f = input_v_i[(n + 2) * n_t_noise + j]
-                A_f = input_v_i[(n + 3) * n_t_noise + j]
-                d_f = input_v_i[(n + 4) * n_t_noise + j]
+                DTt_f = input_v[(n + 0) * n_t + j]
+                mdot_f = input_v[(n + 1) * n_t + j]
+                N_f = input_v[(n + 2) * n_t + j]
+                A_f = input_v[(n + 3) * n_t + j]
+                d_f = input_v[(n + 4) * n_t + j]
                 n += 5
             end
             if settings["core_source"]
                 if settings["core_turbine_attenuation_method"] == "ge"
-                    mdoti_c = input_v_i[(n + 0) * n_t_noise + j]
-                    Tti_c = input_v_i[(n + 1) * n_t_noise + j]
-                    Ttj_c = input_v_i[(n + 2) * n_t_noise + j]
-                    Pti_c = input_v_i[(n + 3) * n_t_noise + j]
-                    DTt_des_c = input_v_i[(n + 4) * n_t_noise + j]
+                    mdoti_c = input_v[(n + 0) * n_t + j]
+                    Tti_c = input_v[(n + 1) * n_t + j]
+                    Ttj_c = input_v[(n + 2) * n_t + j]
+                    Pti_c = input_v[(n + 3) * n_t + j]
+                    DTt_des_c = input_v[(n + 4) * n_t + j]
                     n += 5
                 elseif settings["core_turbine_attenuation_method"] == "pw"
-                    mdoti_c = input_v_i[(n + 0) * n_t_noise + j]
-                    Tti_c = input_v_i[(n + 1) * n_t_noise + j]
-                    Ttj_c = input_v_i[(n + 2) * n_t_noise + j]
-                    Pti_c = input_v_i[(n + 3) * n_t_noise + j]
-                    rho_te_c = input_v_i[(n + 4) * n_t_noise + j]
-                    c_te_c = input_v_i[(n + 5) * n_t_noise + j]
-                    rho_ti_c = input_v_i[(n + 6) * n_t_noise + j]
-                    c_ti_c = input_v_i[(n + 7) * n_t_noise + j]
+                    mdoti_c = input_v[(n + 0) * n_t + j]
+                    Tti_c = input_v[(n + 1) * n_t + j]
+                    Ttj_c = input_v[(n + 2) * n_t + j]
+                    Pti_c = input_v[(n + 3) * n_t + j]
+                    rho_te_c = input_v[(n + 4) * n_t + j]
+                    c_te_c = input_v[(n + 5) * n_t + j]
+                    rho_ti_c = input_v[(n + 6) * n_t + j]
+                    c_ti_c = input_v[(n + 7) * n_t + j]
                     n += 8
                 end
             end
             if settings["jet_mixing_source"] == true && settings["jet_shock_source"] == false
-                V_j = input_v_i[(n + 0) * n_t_noise + j]
-                rho_j = input_v_i[(n + 1) * n_t_noise + j]
-                A_j = input_v_i[(n + 2) * n_t_noise + j]
-                Tt_j = input_v_i[(n + 3) * n_t_noise + j]
+                V_j = input_v[(n + 0) * n_t + j]
+                rho_j = input_v[(n + 1) * n_t + j]
+                A_j = input_v[(n + 2) * n_t + j]
+                Tt_j = input_v[(n + 3) * n_t + j]
                 n += 4
             elseif settings["jet_shock_source"] == true && settings["jet_mixing_source"] == false
-                V_j = input_v_i[(n + 0) * n_t_noise + j]
-                A_j = input_v_i[(n + 1) * n_t_noise + j]
-                Tt_j = input_v_i[(n + 2) * n_t_noise + j]
-                M_j = input_v_i[(n + 3) * n_t_noise + j]
+                V_j = input_v[(n + 0) * n_t + j]
+                A_j = input_v[(n + 1) * n_t + j]
+                Tt_j = input_v[(n + 2) * n_t + j]
+                M_j = input_v[(n + 3) * n_t + j]
                 n += 4
             elseif settings["jet_shock_source"] ==true && settings["jet_mixing_source"] == true
-                V_j = input_v_i[(n + 0) * n_t_noise + j]
-                rho_j = input_v_i[(n + 1) * n_t_noise + j]
-                A_j = input_v_i[(n + 2) * n_t_noise + j]
-                Tt_j = input_v_i[(n + 3) * n_t_noise + j]
-                M_j = input_v_i[(n + 4) * n_t_noise + j]
+                V_j = input_v[(n + 0) * n_t + j]
+                rho_j = input_v[(n + 1) * n_t + j]
+                A_j = input_v[(n + 2) * n_t + j]
+                Tt_j = input_v[(n + 3) * n_t + j]
+                M_j = input_v[(n + 4) * n_t + j]
                 n += 5
             end
             if settings["airframe_source"]==true
-                theta_flaps = input_v_i[(n + 0) * n_t_noise + j]
-                I_landing_gear = input_v_i[(n + 1) * n_t_noise + j]
+                theta_flaps = input_v[(n + 0) * n_t + j]
+                I_landing_gear = input_v[(n + 1) * n_t + j]
                 n += 2
             end
 
@@ -221,9 +217,6 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
 
         end
 
-        println(level[i,:])
-        println(kkk)
-
         # Compute integrated levels
         if settings["levels_int_metric"] in ["ioaspl", "ipnlt", "sel"]
             level_int[i] = f_ilevel(vcat(t_o[i,:], level[i,:]), settings)
@@ -235,9 +228,9 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
 
         # Lateral attenuation post-hoc subtraction on integrated noise levels
         if settings["lateral_attenuation"]
-            x = input_v_i[0 * n_t_noise + 1: 1 * n_t_noise]
-            y = input_v_i[1 * n_t_noise + 1: 2 * n_t_noise]
-            z = input_v_i[2 * n_t_noise + 1: 3 * n_t_noise]
+            x = input_v[0 * n_t + 1: 1 * n_t]
+            y = input_v[1 * n_t + 1: 2 * n_t]
+            z = input_v[2 * n_t + 1: 3 * n_t]
             level_int[i] += lateral_attenuation(vcat(x, y, z), settings, settings["x_observer_array"][i,:])
         end
 
@@ -248,7 +241,7 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
 
 end
 
-function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_t, n_t_noise)
+function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_t)
     
     # Number of observers
     n_obs = size(settings["x_observer_array"])[1]
@@ -260,18 +253,14 @@ function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_
     shield = zeros(settings["n_frequency_bands"])
     spl_j = zeros(eltype(input_v), settings["n_frequency_bands"])
 
-    t_o = zeros(eltype(input_v), (n_obs, n_t_noise))
-    spl = zeros(eltype(input_v), (n_obs, n_t_noise, settings["n_frequency_bands"]))
-    level = zeros(eltype(input_v), (n_obs, n_t_noise))
+    t_o = zeros(eltype(input_v), (n_obs, n_t))
+    spl = zeros(eltype(input_v), (n_obs, n_t, settings["n_frequency_bands"]))
+    level = zeros(eltype(input_v), (n_obs, n_t))
     level_int = zeros(eltype(input_v), n_obs)
     geom_v = zeros(eltype(input_v), 6)
     
     # 1/3rd octave band frequencies
     get_subband_frequencies!(f_sb, f, settings)
-
-    # Interpolate the trajectory and engine inputs at reduced grid size for EPNL calculations 
-    input_v_i = zeros(eltype(input_v), Int64(size(input_v)[1]/n_t*n_t_noise))
-    get_interpolated_input_v!(input_v_i, input_v, settings, n_t, n_t_noise)        # 274 allocations
     
     # Iterate over observers
     for i in 1:1:n_obs
@@ -279,28 +268,28 @@ function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_
         println("Computing noise at observer: ", i)
 
         # Iterate over time steps
-        for j in 1:1:n_t_noise
+        for j in 1:1:n_t
 
             # Extract inputs
-            x = input_v_i[0 * n_t_noise + j]
-            y = input_v_i[1 * n_t_noise + j]
-            z = input_v_i[2 * n_t_noise + j]
-            alpha = input_v_i[3 * n_t_noise + j]
-            gamma = input_v_i[4 * n_t_noise + j]
-            t_s = input_v_i[5 * n_t_noise + j]
-            M_0 = input_v_i[6 * n_t_noise + j]
+            x = input_v[0 * n_t + j]
+            y = input_v[1 * n_t + j]
+            z = input_v[2 * n_t + j]
+            alpha = input_v[3 * n_t + j]
+            gamma = input_v[4 * n_t + j]
+            t_s = input_v[5 * n_t + j]
+            M_0 = input_v[6 * n_t + j]
             n = 7
             if settings["core_jet_suppression"] && settings["case_name"] in ["nasa_stca_standard", "stca_enginedesign_standard"]
-                TS = input_v_i[(n + 0) * n_t_noise + j]
+                TS = input_v[(n + 0) * n_t + j]
                 n += 1
             end
             if settings["atmosphere_type"] == "stratified"
-                c_0 = input_v_i[(n + 0) * n_t_noise + j]
-                T_0 = input_v_i[(n + 1) * n_t_noise + j]
-                rho_0 = input_v_i[(n + 2) * n_t_noise + j]
-                p_0 = input_v_i[(n + 3) * n_t_noise + j]
-                mu_0 = input_v_i[(n + 4) * n_t_noise + j]
-                I_0 = input_v_i[(n + 5) * n_t_noise + j]
+                c_0 = input_v[(n + 0) * n_t + j]
+                T_0 = input_v[(n + 1) * n_t + j]
+                rho_0 = input_v[(n + 2) * n_t + j]
+                p_0 = input_v[(n + 3) * n_t + j]
+                mu_0 = input_v[(n + 4) * n_t + j]
+                I_0 = input_v[(n + 5) * n_t + j]
                 n += 6
             else
                 c_0 = sealevel_atmosphere["c_0"]
@@ -311,57 +300,57 @@ function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_
                 I_0 = sealevel_atmosphere["I_0"]
             end  
             if settings["fan_inlet_source"]==true || settings["fan_discharge_source"]==true
-                DTt_f = input_v_i[(n + 0) * n_t_noise + j]
-                mdot_f = input_v_i[(n + 1) * n_t_noise + j]
-                N_f = input_v_i[(n + 2) * n_t_noise + j]
-                A_f = input_v_i[(n + 3) * n_t_noise + j]
-                d_f = input_v_i[(n + 4) * n_t_noise + j]
+                DTt_f = input_v[(n + 0) * n_t + j]
+                mdot_f = input_v[(n + 1) * n_t + j]
+                N_f = input_v[(n + 2) * n_t + j]
+                A_f = input_v[(n + 3) * n_t + j]
+                d_f = input_v[(n + 4) * n_t + j]
                 n += 5
             end
             if settings["core_source"]
                 if settings["core_turbine_attenuation_method"] == "ge"
-                    mdoti_c = input_v_i[(n + 0) * n_t_noise + j]
-                    Tti_c = input_v_i[(n + 1) * n_t_noise + j]
-                    Ttj_c = input_v_i[(n + 2) * n_t_noise + j]
-                    Pti_c = input_v_i[(n + 3) * n_t_noise + j]
-                    DTt_des_c = input_v_i[(n + 4) * n_t_noise + j]
+                    mdoti_c = input_v[(n + 0) * n_t + j]
+                    Tti_c = input_v[(n + 1) * n_t + j]
+                    Ttj_c = input_v[(n + 2) * n_t + j]
+                    Pti_c = input_v[(n + 3) * n_t + j]
+                    DTt_des_c = input_v[(n + 4) * n_t + j]
                     n += 5
                 elseif settings["core_turbine_attenuation_method"] == "pw"
-                    mdoti_c = input_v_i[(n + 0) * n_t_noise + j]
-                    Tti_c = input_v_i[(n + 1) * n_t_noise + j]
-                    Ttj_c = input_v_i[(n + 2) * n_t_noise + j]
-                    Pti_c = input_v_i[(n + 3) * n_t_noise + j]
-                    rho_te_c = input_v_i[(n + 4) * n_t_noise + j]
-                    c_te_c = input_v_i[(n + 5) * n_t_noise + j]
-                    rho_ti_c = input_v_i[(n + 6) * n_t_noise + j]
-                    c_ti_c = input_v_i[(n + 7) * n_t_noise + j]
+                    mdoti_c = input_v[(n + 0) * n_t + j]
+                    Tti_c = input_v[(n + 1) * n_t + j]
+                    Ttj_c = input_v[(n + 2) * n_t + j]
+                    Pti_c = input_v[(n + 3) * n_t + j]
+                    rho_te_c = input_v[(n + 4) * n_t + j]
+                    c_te_c = input_v[(n + 5) * n_t + j]
+                    rho_ti_c = input_v[(n + 6) * n_t + j]
+                    c_ti_c = input_v[(n + 7) * n_t + j]
                     n += 8
                 end
             end
 
             if settings["jet_mixing_source"] == true && settings["jet_shock_source"] == false
-                V_j = input_v_i[(n + 0) * n_t_noise + j]
-                rho_j = input_v_i[(n + 1) * n_t_noise + j]
-                A_j = input_v_i[(n + 2) * n_t_noise + j]
-                Tt_j = input_v_i[(n + 3) * n_t_noise + j]
+                V_j = input_v[(n + 0) * n_t + j]
+                rho_j = input_v[(n + 1) * n_t + j]
+                A_j = input_v[(n + 2) * n_t + j]
+                Tt_j = input_v[(n + 3) * n_t + j]
                 n += 4
             elseif settings["jet_shock_source"] == true && settings["jet_mixing_source"] == false
-                V_j = input_v_i[(n + 0) * n_t_noise + j]
-                A_j = input_v_i[(n + 1) * n_t_noise + j]
-                Tt_j = input_v_i[(n + 2) * n_t_noise + j]
-                M_j = input_v_i[(n + 3) * n_t_noise + j]
+                V_j = input_v[(n + 0) * n_t + j]
+                A_j = input_v[(n + 1) * n_t + j]
+                Tt_j = input_v[(n + 2) * n_t + j]
+                M_j = input_v[(n + 3) * n_t + j]
                 n += 4
             elseif settings["jet_shock_source"] ==true && settings["jet_mixing_source"] == true
-                V_j = input_v_i[(n + 0) * n_t_noise + j]
-                rho_j = input_v_i[(n + 1) * n_t_noise + j]
-                A_j = input_v_i[(n + 2) * n_t_noise + j]
-                Tt_j = input_v_i[(n + 3) * n_t_noise + j]
-                M_j = input_v_i[(n + 4) * n_t_noise + j]
+                V_j = input_v[(n + 0) * n_t + j]
+                rho_j = input_v[(n + 1) * n_t + j]
+                A_j = input_v[(n + 2) * n_t + j]
+                Tt_j = input_v[(n + 3) * n_t + j]
+                M_j = input_v[(n + 4) * n_t + j]
                 n += 5
             end
             if settings["airframe_source"]==true
-                theta_flaps = input_v_i[(n + 0) * n_t_noise + j]
-                I_landing_gear = input_v_i[(n + 1) * n_t_noise + j]
+                theta_flaps = input_v[(n + 0) * n_t + j]
+                I_landing_gear = input_v[(n + 1) * n_t + j]
                 n += 2
             end
 
@@ -450,9 +439,9 @@ function get_noise(input_v, settings, pyna_ip, af, data, sealevel_atmosphere, n_
 
         # Lateral attenuation post-hoc subtraction on integrated noise levels
         if settings["lateral_attenuation"]
-            x = input_v_i[0 * n_t_noise + 1: 1 * n_t_noise]
-            y = input_v_i[1 * n_t_noise + 1: 2 * n_t_noise]
-            z = input_v_i[2 * n_t_noise + 1: 3 * n_t_noise]
+            x = input_v[0 * n_t + 1: 1 * n_t]
+            y = input_v[1 * n_t + 1: 2 * n_t]
+            z = input_v[2 * n_t + 1: 3 * n_t]
             level_int[i] += lateral_attenuation(vcat(x, y, z), settings, settings["x_observer_array"][i,:])
         end
 

@@ -38,13 +38,13 @@ class pyna:
                 v_max = 128.6,
                 k_rot = 1.3,
                 theta_flaps = 10.,
+                theta_flaps_cb = 10.,
                 theta_slats = -6.,
                 max_iter = 200,
                 tolerance = 1e-6,
                 F00 = None,
                 noise_optimization = False,
                 noise_constraint_lateral = 200.,
-                n_t_noise=100,
                 fan_inlet_source = False,
                 fan_discharge_source = False,
                 core_source = False,
@@ -112,6 +112,7 @@ class pyna:
         self.v_max = v_max
         self.k_rot = k_rot
         self.theta_flaps = theta_flaps
+        self.theta_flaps_cb = theta_flaps_cb
         self.theta_slats = theta_slats
         self.max_iter = max_iter
         self.tolerance = tolerance
@@ -120,8 +121,6 @@ class pyna:
         self.noise_constraint_lateral = noise_constraint_lateral
         
         # Noise
-        self.n_t_noise = n_t_noise
-
         self.fan_inlet_source = fan_inlet_source
         self.fan_discharge_source = fan_discharge_source
         self.core_source = core_source
@@ -252,7 +251,7 @@ class pyna:
         else:
             # Select operating point
             cols = self.path.columns
-            op_point = pd.DataFrame(np.reshape(self.path.values[time_step, :], (1, len(cols))))
+            op_point = pd.DataFrame(np.reshape(self.path.values[timestep, :], (1, len(cols))))
             op_point.columns = cols
 
             # Duplicate operating for theta range (np.linspace(0, 180, 19))
@@ -333,7 +332,7 @@ class pyna:
         pyna.load_path_timeseries(self)
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t_noise, mode='trajectory', objective='timeseries')
+        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
         self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='trajectory')
 
         return None
@@ -391,7 +390,7 @@ class pyna:
             self.engine.get_timeseries()
             pyna.load_path_timeseries(self)
             self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-            self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t_noise, mode='trajectory', objective='timeseries')
+            self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
             self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='trajectory')
 
             # Save solutions
@@ -435,7 +434,7 @@ class pyna:
                 self.x_observer_array[cntr, 2] = 4*0.3048
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t_noise, mode='trajectory', objective='timeseries')
+        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')
         self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='trajectory')
 
         # Extract the contour
@@ -479,7 +478,7 @@ class pyna:
         pyna.load_path_timeseries(self, timestep=timestep)
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
-        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t_noise, mode='distribution', objective=None)
+        self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='distribution', objective=None)
         self.noise_timeseries.solve(path=self.path, engine=self.engine.timeseries, mode='distribution')
 
         return None
@@ -507,7 +506,7 @@ class pyna:
         self.engine.get_performance_deck(atmosphere_type=self.atmosphere_type, thrust_lapse=self.thrust_lapse, F00=self.F00)
 
         self.path = Trajectory(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, output_directory_name=self.output_directory_name, output_file_name=self.output_file_name)
-        self.path.create_trajectory(airframe=self.airframe, engine=self.engine, sealevel_atmosphere=self.sealevel_atmosphere, k_rot=self.k_rot, v_max=self.v_max, TS_to=self.TS_to, TS_vnrs=self.TS_vnrs, TS_cb=self.TS_cb, TS_min=self.TS_cb, theta_flaps=self.theta_flaps, theta_slats=self.theta_slats, atmosphere_type=self.atmosphere_type, atmosphere_dT=self.atmosphere_dT, pkrot=self.pkrot, ptcb=self.ptcb, phld=self.phld, objective=objective, trajectory_mode=trajectory_mode)
+        self.path.create_trajectory(airframe=self.airframe, engine=self.engine, sealevel_atmosphere=self.sealevel_atmosphere, k_rot=self.k_rot, v_max=self.v_max, TS_to=self.TS_to, TS_vnrs=self.TS_vnrs, TS_cb=self.TS_cb, TS_min=self.TS_cb, theta_flaps=self.theta_flaps, theta_flaps_cb=self.theta_flaps_cb, theta_slats=self.theta_slats, atmosphere_type=self.atmosphere_type, atmosphere_dT=self.atmosphere_dT, pkrot=self.pkrot, ptcb=self.ptcb, phld=self.phld, objective=objective, trajectory_mode=trajectory_mode)
         self.path.set_objective(objective='t_end')
         self.path.set_ipopt_settings(objective=objective, tolerance=self.tolerance, max_iter=self.max_iter)
         self.path.setup(force_alloc_complex=True)
@@ -566,7 +565,7 @@ class pyna:
 
             self.path = Trajectory(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, output_directory_name=self.output_directory_name, output_file_name=self.output_file_name)
             self.path.create_trajectory(airframe=self.airframe, engine=self.engine, sealevel_atmosphere=self.sealevel_atmosphere, k_rot=self.k_rot, v_max=self.v_max, TS_to=self.TS_to, TS_vnrs=self.TS_vnrs, TS_cb=self.TS_cb, TS_min=self.TS_cb, theta_flaps=self.theta_flaps, theta_slats=self.theta_slats, atmosphere_type=self.atmosphere_type, atmosphere_dT=self.atmosphere_dT, pkrot=self.pkrot, ptcb=self.ptcb, phld=self.phld, objective=objective, trajectory_mode=trajectory_mode)
-            self.path.create_noise(settings=self.settings, data=self.noise_data, sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t_noise, mode='trajectory', objective='timeseries')            
+            self.path.create_noise(settings=self.settings, data=self.noise_data, sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')            
             
             self.path.set_objective(objective='t_end')
             self.path.set_ipopt_settings(objective=objective, tolerance=self.tolerance, max_iter=self.max_iter)
@@ -627,7 +626,7 @@ class pyna:
 
         self.path = Trajectory(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, output_directory_name=self.output_directory_name, output_file_name=self.output_file_name)
         self.path.create_trajectory(airframe=self.airframe, engine=self.engine, sealevel_atmosphere=self.sealevel_atmosphere, k_rot=self.k_rot, v_max=self.v_max, TS_to=self.TS_to, TS_vnrs=self.TS_vnrs, TS_cb=self.TS_cb, TS_min=self.TS_cb, theta_flaps=self.theta_flaps, theta_slats=self.theta_slats, atmosphere_type=self.atmosphere_type, atmosphere_dT=self.atmosphere_dT, pkrot=self.pkrot, ptcb=self.ptcb, phld=self.phld, objective='noise', trajectory_mode='flyover')
-        self.path.create_noise(settings=self.settings, data=self.noise_data, sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, n_t_noise=self.n_t_noise, mode='trajectory', objective='noise')            
+        self.path.create_noise(settings=self.settings, data=self.noise_data, sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='noise')            
         
         self.path.set_objective(objective='noise', noise_constraint_lateral=self.noise_constraint_lateral)
         self.path.set_ipopt_settings(objective='noise', tolerance=self.tolerance, max_iter=self.max_iter)

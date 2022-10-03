@@ -8,7 +8,8 @@ class LiftOff(dm.Phase):
         super().__init__(from_phase, **kwargs)
         self.phase_size = int(self.options['transcription'].options['num_segments']*self.options['transcription'].options['order'] + 1)
 
-        self.phase_target_size = 3
+        # self.phase_target_size = 3
+        self.phase_target_size = 13
 
     def create(self, airframe, engine, phld, TS, theta_flaps, theta_slats, objective, atmosphere_type) -> None:
 
@@ -18,6 +19,7 @@ class LiftOff(dm.Phase):
         self.add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=10.)
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
         self.add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
+        # self.add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=airframe.aero['alpha'][0], upper=airframe.aero['alpha'][-1], ref=10.)
         self.add_parameter('TS', targets='propulsion.TS', units=None, val=TS, dynamic=True, include_timeseries=True)
         if objective == 'noise' and phld:
             self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True, opt=True, ref=10.)

@@ -197,7 +197,7 @@ class Trajectory(om.Problem):
 
         return trajectory_var
 
-    def create_trajectory(self, airframe, engine, sealevel_atmosphere, k_rot, v_max, TS_to, TS_vnrs, TS_cb, TS_min=0.4, theta_flaps=10., theta_slats=-6, atmosphere_type='stratified', atmosphere_dT=10.0169, pkrot=False, ptcb=False, phld=False, objective='t_end', trajectory_mode='cutback') -> None:
+    def create_trajectory(self, airframe, engine, sealevel_atmosphere, k_rot, v_max, TS_to, TS_vnrs, TS_cb, TS_min=0.4, theta_flaps=10., theta_flaps_cb=10., theta_slats=-6, atmosphere_type='stratified', atmosphere_dT=10.0169, pkrot=False, ptcb=False, phld=False, objective='t_end', trajectory_mode='cutback') -> None:
 
         # Add dymos trajectory to the problem
         self.traj = dm.Trajectory()
@@ -224,12 +224,12 @@ class Trajectory(om.Problem):
 
             elif phase_name == 'vnrs':
                 self.vnrs = Vnrs(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.vnrs.create(airframe, engine, ptcb, phld, TS_vnrs, TS_min, theta_flaps, theta_slats, trajectory_mode, objective, atmosphere_type)
+                self.vnrs.create(airframe, engine, ptcb, phld, TS_vnrs, TS_min, theta_flaps_cb, theta_slats, trajectory_mode, objective, atmosphere_type)
                 self.traj.add_phase(phase_name, self.vnrs)
                 
             elif phase_name == 'cutback':
                 self.cutback = CutBack(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.cutback.create(airframe, engine, phld, v_max, TS_cb, theta_flaps, theta_slats, trajectory_mode, objective, atmosphere_type)
+                self.cutback.create(airframe, engine, phld, v_max, TS_cb, theta_flaps_cb, theta_slats, trajectory_mode, objective, atmosphere_type)
                 self.traj.add_phase(phase_name, self.cutback)        
 
         # Link phases
@@ -284,7 +284,8 @@ class Trajectory(om.Problem):
                 elif var in ['alpha']:
                     if phase_name in {'groundroll'}:
                         self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var,'trajectory.' + var + '_' + str(j))
-                    elif phase_name in {'groundroll', 'rotation'}:
+                    # elif phase_name in {'rotation', 'liftoff'}:
+                    elif phase_name in {'rotation'}:
                         self.model.connect('phases.' + phase_name + '.interpolated.states:' + var,'trajectory.' + var + '_' + str(j))
                     else:
                         self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
@@ -319,7 +320,7 @@ class Trajectory(om.Problem):
 
         return 
 
-    def create_noise(self, settings, data, sealevel_atmosphere, airframe, n_t:int, n_t_noise:int, objective:str, mode:str) -> None:
+    def create_noise(self, settings, data, sealevel_atmosphere, airframe, n_t:int, objective:str, mode:str) -> None:
 
         """
         Setup model for computing noise along computed trajectory.
@@ -417,7 +418,7 @@ class Trajectory(om.Problem):
 
         elif self.language == 'julia':
             self.model.add_subsystem(name='noise',
-                                        subsys=make_component(julia.NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective)),
+                                        subsys=make_component(julia.NoiseModel(settings, data, sealevel_atmosphere, airframe, n_t, objective)),
                                         promotes_inputs=[],
                                         promotes_outputs=[])
 
@@ -498,6 +499,9 @@ class Trajectory(om.Problem):
         elif objective == 'x_end':
             self.model.add_objective('trajectory.x', index=-1, ref=1000.)
         
+        elif objective == 'z_end':
+            self.model.add_objective('trajectory.z', index=-1, ref=-1)
+
         elif objective == 't_end':
             self.model.add_objective('trajectory.t_s', index=-1, ref=1000.)
         
@@ -528,7 +532,7 @@ class Trajectory(om.Problem):
                 self['phases.rotation.t_duration'] = 10.0
                 self['phases.rotation.states:x'] = self.rotation.interp(ys=[1500, 2000], nodes='state_input')
                 self['phases.rotation.states:v'] = self.rotation.interp(ys=[100, 110.], nodes='state_input')
-                self['phases.rotation.states:alpha'] = self.rotation.interp(ys=[airframe.alpha_0, 15*np.pi/180.], nodes='state_input')
+                self['phases.rotation.states:alpha'] = self.rotation.interp(ys=[airframe.alpha_0, 15.], nodes='state_input')
 
             # Phase 3: lift-off
             if 'liftoff' in self.phase_name_lst:
@@ -544,6 +548,7 @@ class Trajectory(om.Problem):
                 self['phases.liftoff.states:v'] = self.liftoff.interp(ys=[110., v_max], nodes='state_input')
                 self['phases.liftoff.states:gamma'] = self.liftoff.interp(ys=[0, 4.], nodes='state_input')
                 self['phases.liftoff.controls:alpha'] = self.liftoff.interp(ys=[15., 15.], nodes='control_input')
+                # self['phases.liftoff.states:alpha'] = self.liftoff.interp(ys=[15., 15.], nodes='state_input')
 
             # # Phase 4: vnrs 
             if 'vnrs' in self.phase_name_lst:
