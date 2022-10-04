@@ -287,10 +287,10 @@ class FlightDynamics(ExplicitComponent):
         # Landing gear extraction
         partials['I_landing_gear', 'z'] = np.zeros(nn)
 
-        # Compute rotation speed residual (v_residual = v - (ac.k_rot * v_stall))
+        # Compute rotation speed residual (v_residual = v - (inputs['k_rot'] * v_stall))
         if phase_name == 'groundroll':
             v_stall = np.sqrt(2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max))
             partials['v_rot_residual', 'v'] = np.ones(nn)
-            partials['v_rot_residual', 'rho_0'] = ac.k_rot / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * c_l_max)
-            partials['v_rot_residual', 'c_l_max'] = ac.k_rot / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * rho_0)
+            partials['v_rot_residual', 'rho_0'] = inputs['k_rot'] / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * c_l_max)
+            partials['v_rot_residual', 'c_l_max'] = inputs['k_rot'] / 2 / v_stall * 2 * ac.mtow * atm['g'] / (ac.af_S_w * rho_0 * c_l_max)**2 * (ac.af_S_w * rho_0)
             partials['v_rot_residual', 'k_rot'] = - v_stall

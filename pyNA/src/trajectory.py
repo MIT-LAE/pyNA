@@ -368,11 +368,10 @@ class Trajectory:
             self.phases['groundroll'].set_time_options(fix_initial=True, duration_bounds=(0, 100), duration_ref=100.)
             self.phases['groundroll'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
             self.phases['groundroll'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=True, fix_final=False, ref=100.)
-            self.phases['groundroll'].add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=True, fix_final=False, lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], ref=1.)
+            self.phases['groundroll'].add_parameter('alpha', targets='alpha', units='deg', val=ac.alpha_0, dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('z', targets='z', units='m', val=0., dynamic=True,include_timeseries=True)
             self.phases['groundroll'].add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
             self.phases['groundroll'].add_parameter('TS', targets='propulsion.TS', units=None, val=settings.TS_to, dynamic=True, include_timeseries=True)
-            self.phases['groundroll'].add_parameter('TS_min', units=None, val=1, dynamic=True, include_timeseries=True)
             if settings.PKROT:
                 self.phases['groundroll'].add_parameter('k_rot', targets='flight_dynamics.k_rot', units=None, lower=1.1, upper=1.6, dynamic=False, val=ac.k_rot, opt=True)
             else:
@@ -408,6 +407,7 @@ class Trajectory:
             self.phases['liftoff'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=10.)
             self.phases['liftoff'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
             self.phases['liftoff'].add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
+            # self.phases['liftoff'].add_state('alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
             self.phases['liftoff'].add_control('alpha', targets='alpha', units='deg', lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
             self.phases['liftoff'].add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_size[2]-1, order=3, solve_segments=False, compressed=True), subset='state_input')
             self.phases['liftoff'].add_path_constraint(name='flight_dynamics.gamma_dot', lower=0., units='deg/s')
@@ -452,8 +452,8 @@ class Trajectory:
                 self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=True, ref=10000.)
                 self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=False, ref=1000.)
             elif trajectory_mode == 'cutback':
-                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=True, ref=10000.)
-                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
+                self.phases['cutback'].add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=False, ref=10000.)
+                self.phases['cutback'].add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=True, ref=1000.)
             self.phases['cutback'].add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
             self.phases['cutback'].add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
             self.phases['cutback'].add_control('alpha', targets='alpha', units='deg', lower=ac.aero['alpha'][0], upper=ac.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
@@ -545,7 +545,9 @@ class Trajectory:
 
             elif var[i] in ['alpha']:
                 for j, phase_name in enumerate(self.phase_name_lst):
-                    if phase_name in {'groundroll', 'rotation'}:
+                    if phase_name in {'groundroll'}:
+                        problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
+                    elif phase_name in {'rotation'}:
                         problem.model.connect('phases.' + phase_name + '.interpolated.states:' + var[i],'trajectory.' + var[i] + '_' + str(j))
                     else:
                         problem.model.connect('phases.' + phase_name + '.interpolated.controls:' + var[i], 'trajectory.' + var[i] + '_' + str(j))
@@ -657,15 +659,14 @@ class Trajectory:
                 problem['phases.groundroll.t_duration'] = 30.0
                 problem['phases.groundroll.states:x'] = self.phases['groundroll'].interp(ys=[0, 1000], nodes='state_input')
                 problem['phases.groundroll.states:v'] = self.phases['groundroll'].interp(ys=[0.0, 60], nodes='state_input')
-                problem['phases.groundroll.states:alpha'] = self.phases['groundroll'].interp(ys=[ac.alpha_0, ac.alpha_0], nodes='state_input')
-
+            
             # Phase 2: rotation
             if 'rotation' in self.phase_name_lst:
                 problem['phases.rotation.t_initial'] = 30.0
                 problem['phases.rotation.t_duration'] = 10.0
                 problem['phases.rotation.states:x'] = self.phases['rotation'].interp(ys=[1500, 2000], nodes='state_input')
                 problem['phases.rotation.states:v'] = self.phases['rotation'].interp(ys=[100, 110.], nodes='state_input')
-                problem['phases.rotation.states:alpha'] = self.phases['rotation'].interp(ys=[ac.alpha_0, 15*np.pi/180.], nodes='state_input')
+                problem['phases.rotation.states:alpha'] = self.phases['rotation'].interp(ys=[ac.alpha_0, 15.], nodes='state_input')
 
             # Phase 3: lift-off
             if 'liftoff' in self.phase_name_lst:
@@ -696,7 +697,7 @@ class Trajectory:
                 problem['phases.cutback.t_initial'] = 100.0
                 problem['phases.cutback.t_duration'] = 50.0
                 problem['phases.cutback.states:x'] = self.phases['cutback'].interp(ys=[6501., 15000.], nodes='state_input')
-                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, 3000.], nodes='state_input')
+                problem['phases.cutback.states:z'] = self.phases['cutback'].interp(ys=[z_cutback_guess, ac.z_max], nodes='state_input')
                 problem['phases.cutback.states:v'] = self.phases['cutback'].interp(ys=[110., 110.], nodes='state_input')
                 problem['phases.cutback.states:gamma'] = self.phases['cutback'].interp(ys=[15, 15.], nodes='state_input')
                 problem['phases.cutback.controls:alpha'] = self.phases['cutback'].interp(ys=[15., 15.], nodes='control_input')
@@ -710,7 +711,6 @@ class Trajectory:
                 problem['phases.groundroll.timeseries.time'] = init_trajectory.get_val('phases.groundroll.timeseries.time')
                 problem['phases.groundroll.states:x'] = init_trajectory.get_val('phases.groundroll.states:x')
                 problem['phases.groundroll.states:v'] = init_trajectory.get_val('phases.groundroll.states:v')
-                problem['phases.groundroll.states:alpha'] = init_trajectory.get_val('phases.groundroll.states:alpha')
 
             # Phase 2: rotation
             if 'rotation' in self.phase_name_lst:
