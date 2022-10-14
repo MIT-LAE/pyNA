@@ -31,7 +31,7 @@ class NoiseTimeSeries(om.Problem):
         self.settings = settings
         self.data = data
 
-    def create(self, sealevel_atmosphere: dict, airframe:Airframe, n_t:int, n_t_noise:int, mode:str, objective:str) -> None:
+    def create(self, sealevel_atmosphere: dict, airframe:Airframe, n_t:int, mode:str, objective:str) -> None:
         """
         Create model for computing noise of predefined trajectory timeseries.
 
@@ -59,7 +59,7 @@ class NoiseTimeSeries(om.Problem):
         
         elif self.language == 'julia':            
             self.model.add_subsystem(name='noise',
-                                        subsys=make_component(julia.NoiseModel(self.settings, self.data, sealevel_atmosphere, airframe, n_t, n_t_noise, objective)),
+                                        subsys=make_component(julia.NoiseModel(self.settings, self.data, sealevel_atmosphere, airframe, n_t, objective)),
                                         promotes_inputs=[],
                                         promotes_outputs=[])
 

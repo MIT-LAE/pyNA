@@ -50,7 +50,6 @@ function get_noise!(output_v, input_v, settings, pyna_ip, af, data, sealevel_atm
     level_int = zeros(eltype(input_v), n_obs)
     geom_v = zeros(eltype(input_v), 6)
     
-
     # 1/3rd octave band frequencies
     get_subband_frequencies!(f_sb, f, settings)
 

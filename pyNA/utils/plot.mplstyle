@@ -7,7 +7,7 @@ figure.edgecolor: 1
 axes.linewidth: 0.8
 axes.titlesize: 18
 axes.labelsize: 18
-axes.grid: True
+axes.grid: False
 axes.prop_cycle: cycler('color', ['1f77b4', 'ff7f0e', '2ca02c', 'd62728', '9467bd', '8c564b', 'e377c2', '7f7f7f', 'bcbd22', '17becf'])
 
 # Ticks

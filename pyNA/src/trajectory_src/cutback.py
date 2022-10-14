@@ -7,7 +7,6 @@ class CutBack(dm.Phase):
         super().__init__(from_phase, **kwargs)
         self.phase_size = int(self.options['transcription'].options['num_segments']*self.options['transcription'].options['order'] + 1)
 
-        # self.phase_target_size = 10
         self.phase_target_size = 37
 
     def create(self, airframe, engine, phld, v_max, TS_min, theta_flaps, theta_slats, trajectory_mode, objective, atmosphere_type) -> None:
@@ -20,7 +19,7 @@ class CutBack(dm.Phase):
         elif trajectory_mode == 'cutback':
             self.add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=True, ref=10000.)
             self.add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
-        self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
+        self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=True, ref=100.)
         self.add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
         
         self.add_parameter('TS', targets='propulsion.TS', units=None, val=TS_min, dynamic=True, include_timeseries=True)
@@ -37,7 +36,7 @@ class CutBack(dm.Phase):
         
         self.add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
         
-        self.add_boundary_constraint('v', loc='final', equals=v_max, ref=100., units='m/s')
+        # self.add_boundary_constraint('v', loc='final', equals=v_max, ref=100., units='m/s')
         
         self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_target_size-1, order=3, solve_segments=False, compressed=True), subset='state_input')
         for var in engine.deck_variables.keys():

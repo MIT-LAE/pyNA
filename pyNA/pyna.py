@@ -424,14 +424,14 @@ class pyna:
         pyna.load_path_timeseries(self)
 
         # Get list of observers
-        self.x_observer_array = np.zeros((np.size(x_lst)*np.size(y_lst), 3))
+        self.settings['x_observer_array'] = np.zeros((np.size(x_lst)*np.size(y_lst), 3))
         cntr = -1
         for i, y in enumerate(y_lst):
             for j, x in enumerate(x_lst):
                 cntr = cntr + 1
-                self.x_observer_array[cntr, 0] = x
-                self.x_observer_array[cntr, 1] = y
-                self.x_observer_array[cntr, 2] = 4*0.3048
+                self.settings['x_observer_array'][cntr, 0] = x
+                self.settings['x_observer_array'][cntr, 1] = y
+                self.settings['x_observer_array'][cntr, 2] = 4*0.3048
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
         self.noise_timeseries.create(sealevel_atmosphere=self.sealevel_atmosphere, airframe=self.airframe, n_t=self.n_t, mode='trajectory', objective='timeseries')

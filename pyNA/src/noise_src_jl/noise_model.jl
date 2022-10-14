@@ -397,6 +397,19 @@ function compute!(self::NoiseModel, inputs, outputs)
         @. outputs["lateral"] = levels_int[1]
         @. outputs["flyover"] = levels_int[2]
         
+        # Print inputs to file
+        open(settings.pyNA_directory * "/cases/" * settings.case_name * "/output/" * settings.output_directory_name * "/" * "inputs_TS.txt","a") do io
+            println(io, inputs["TS"])
+        end
+
+        open(settings.pyNA_directory * "/cases/" * settings.case_name * "/output/" * settings.output_directory_name * "/" * "inputs_alpha.txt","a") do io
+            println(io, inputs["alpha"])
+        end
+
+        open(settings.pyNA_directory * "/cases/" * settings.case_name * "/output/" * settings.output_directory_name * "/" * "inputs_theta_flaps.txt","a") do io
+            println(io, inputs["theta_flaps"])
+        end
+
         # Print outputs to file
         open(self.settings["pyna_directory"] * "/cases/" * self.settings["case_name"] * "/output/" * self.settings["output_directory_name"] * "/" * "outputs_levels_int.txt", "a") do io
             println(io, levels_int)

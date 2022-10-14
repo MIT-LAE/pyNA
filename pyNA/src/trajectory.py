@@ -50,10 +50,10 @@ class Trajectory(om.Problem):
                 self.transcription[phase_name]['num_segments'] = 4
                 self.transcription[phase_name]['order'] = 3
             elif phase_name == 'vnrs':
-                self.transcription[phase_name]['num_segments'] = 7
+                self.transcription[phase_name]['num_segments'] = 8
                 self.transcription[phase_name]['order'] = 3
             elif phase_name == 'cutback':
-                self.transcription[phase_name]['num_segments'] = 12
+                self.transcription[phase_name]['num_segments'] = 10
                 self.transcription[phase_name]['order'] = 3
 
             self.transcription[phase_name]['grid'] = dm.GaussLobatto(num_segments=self.transcription[phase_name]['num_segments'], order=self.transcription[phase_name]['order'], compressed=True, solve_segments=False)
@@ -245,8 +245,8 @@ class Trajectory(om.Problem):
 
         if 'vnrs' in self.phase_name_lst:
             self.traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
-            # if objective == 'noise' and ptcb:
-                # self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+            if objective == 'noise' and ptcb:
+                self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
 
         if 'cutback' in self.phase_name_lst:
             if trajectory_mode == 'flyover':
