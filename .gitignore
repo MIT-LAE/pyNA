@@ -8,5 +8,6 @@ pyNA.egg-info/
 
 pyNA/cases/*
 !pyNA/cases/nasa_stca_standard
+!pyNA/cases/stca
 
 wg3/
