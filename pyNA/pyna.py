@@ -9,6 +9,7 @@ import numpy as np
 from io import StringIO
 import openmdao.api as om
 import pandas as pd
+from shapely.geometry import Polygon
 import os
 import copy
 import pdb
@@ -211,7 +212,7 @@ class pyna:
             elif self.observer_lst == ['lateral', 'flyover'] or self.observer_lst == ['flyover', 'lateral']:
                 self.x_observer_array = np.array([[3756.66, 450., 1.2192], [6500., 0., 1.2192]])
 
-        # Disable validation if not nasa_stca_standard trajectory
+        # Disable verification if not nasa_stca_standard trajectory
         if not self.case_name == 'nasa_stca_standard':
             self.verification = False
 
@@ -242,7 +243,7 @@ class pyna:
         """
 
         # Load trajectory data for the specific observer
-        # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
+        # Source: verification noise assessment data set of NASA STCA (Berton et al., 2019)
         self.path = pd.read_csv(self.pyna_directory + '/cases/' + self.case_name + '/trajectory/' + self.output_directory_name + '/' + self.trajectory_file_name)
         
         if timestep == None:
@@ -455,6 +456,30 @@ class pyna:
 
         return None
 
+    @staticmethod
+    def compute_noise_contour_area(x_lst, y_lst, contours, level):
+        """
+        Compute noise contour area.
+
+        :param x_lst:
+        :type x_lst: np.ndarray
+        :param y_lst:
+        :type y_lst: np.ndarray
+        :param contours:
+        :type contours: np.ndarray
+        :param level:
+        :type level: float
+
+        :return: area
+        :rtype: float
+        """
+
+        ct = plt.contour(x_lst, y_lst, contours, levels=[level])
+        plt.clf()
+        area = Polygon(ct.allsegs[0][0]).area
+        
+        return area
+
     def compute_noise_source_distribution(self, timestep=0) -> None:
         """
         Compute noise source spectral and directional distribution.
@@ -471,10 +496,8 @@ class pyna:
 
         # Single observer setting; disable shielding
         self.shielding = False
-
-        pyna.initialize(self)
-
-        self.engine.get_timeseries(self, timestep=timestep)
+        
+        self.engine.get_timeseries(timestep=timestep)
         pyna.load_path_timeseries(self, timestep=timestep)
 
         self.noise_timeseries = NoiseTimeSeries(pyna_directory=self.pyna_directory, case_name=self.case_name, language=self.language, save_results=self.save_results, settings=self.settings, data=self.noise_data, coloring_dir=self.pyna_directory + '/cases/' + self.case_name + '/coloring_files/')
@@ -672,17 +695,11 @@ class pyna:
                         ax[i].plot(noise_timeseries.get_val('noise.t_o')[i,:180], noise_timeseries.get_val('noise.pnlt')[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
                     else:
                         ax[i].plot(noise_timeseries.get_val('noise.t_o')[i,:], noise_timeseries.get_val('noise.pnlt')[i,:], linewidth=2.5, label='pyNA', color=colors[0])
-                    ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [1.05*np.max(noise_timeseries.get_val('noise.pnlt')[i,:]), 1.05*np.max(noise_timeseries.get_val('noise.pnlt')[i,:])], alpha=0.15,
-                                    label='EPNL domain of dependence', color=colors[0])
+                    ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [110., 110.], alpha=0.15, label='EPNL domain of dependence', color=colors[0])
                     if self.settings['verification']:
                         self.noise_data.load_trajectory_verification_data(settings=self.settings)
                         ax[i].plot(self.noise_data.verification_trajectory[observer]['t observer [s]'],
                                 self.noise_data.verification_trajectory[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
-
-                    ax[i].grid(True)
-                    ax[i].set_xlabel('Time after brake release [s]')
-                    ax[i].tick_params(axis='both')
-                    ax[i].set_ylim([-5, np.max(noise_timeseries.get_val('noise.pnlt')[i,:])*1.05])
 
                     # Zoomed-in plots
                     ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
@@ -704,10 +721,12 @@ class pyna:
                                 self.noise_data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
                                 label='NASA STCA (Berton et al.)')
 
-                ax[i].grid(True)
+                ax[i].grid(False)
                 ax[i].set_xlabel('Time after brake release [s]')
                 ax[i].tick_params(axis='both')
                 ax[i].set_ylim([-5, 110])
+                ax[i].spines['top'].set_visible(False)
+                ax[i].spines['right'].set_visible(False)
 
         elif self.language == 'julia':
             # Iterate over observer locations
@@ -733,10 +752,11 @@ class pyna:
                                 self.noise_data.verification_trajectory[observer]['OASPL'], '--', linewidth=2.5,
                                 label='NASA STCA (Berton et al.)')
 
-                ax[i].grid(True)
                 ax[i].set_xlabel('Time after brake release [s]')
                 ax[i].tick_params(axis='both')
                 ax[i].set_ylim([-5, 105])
+                ax[i].spines['top'].set_visible(False)
+                ax[i].spines['right'].set_visible(False)
 
                 # Zoomed-in plots
                 if metric == 'pnlt':
@@ -751,7 +771,7 @@ class pyna:
                     ax_zoom[i].set_ylim([np.max(noise_timeseries.get_val('noise.level')[i,:])-11, np.max(noise_timeseries.get_val('noise.level')[i,:])+1.5])
                     mark_inset(ax[i], ax_zoom[i], loc1=1, loc2=3)                
 
-                ax[i].grid(True)
+                ax[i].grid(False)
                 ax[i].set_xlabel('Time after brake release [s]')
                 ax[i].tick_params(axis='both')
                 ax[i].set_ylim([-5, 1.05*np.max(noise_timeseries.get_val('noise.level')[i,:])])
@@ -802,7 +822,7 @@ class pyna:
 
         return None
 
-    def plot_noise_source_distribution(self, noise_timeseries, metric:str, components=['core', 'jet_mixing', 'airframe', 'fan_inlet', 'fan_discharge'], timestep=1) -> None:
+    def plot_noise_source_distribution(self, metric:str, components=['core', 'jet_mixing', 'airframe', 'fan_inlet', 'fan_discharge'], timestep=1) -> None:
         
         """
         
@@ -815,38 +835,59 @@ class pyna:
 
         # Plot noise hemispheres 
         if metric == 'spl':
-            fig, ax = plt.subplots(2, 3, subplot_kw={'projection': 'polar'}, figsize=(10, 10), dpi=100)
-            plt.subplots_adjust(wspace=-0.,hspace=-0.2)
+            fig, ax = plt.subplots(2, 3, subplot_kw={'projection': 'polar'}, figsize=(20, 9), dpi=100)
+            plt.subplots_adjust(wspace=-0.,hspace=-0.)
         elif metric == 'oaspl':
-            fig, ax = plt.subplots(2, 3, figsize=(20, 8))
+            fig, ax = plt.subplots(2, 3, figsize=(20, 9))
             plt.subplots_adjust(wspace=0.3, hspace=0.4)
         else:
             raise ValueError('Invalid metric specified. Specify: spl / oaspl.')
+
         plt.style.use(self.pyna_directory + '/utils/' + 'plot.mplstyle')
 
         # Loop through different components
         irow = -1
         icol = -1
-        for i, comp in enumerate([components]):
 
-            self.all_sources = False
-            self.fan_inlet_source = False
-            self.fan_discharge_source = False
-            self.core_source = False
-            self.jet_mixing_source = False
-            self.jet_shock_source = False
-            self.airframe_source = False
+        # Initialize pyna
+        pyna.initialize(self)
 
-            if i == 0:
-                self.core_source = True
-            elif i == 1:
-                self.jet_mixing = True
-            elif i == 2:
-                self.airframe_source = True
-            elif i == 3:
-                self.fan_inlet_source = True        
-            elif i == 4:
-                self.fan_discharge_source = True
+        # Load verification data
+        if self.verification:
+            self.noise_data.load_source_verification_data(components=components)
+
+        self.noise_distribution = dict()
+
+        # Run noise source distribution
+        for i, comp in enumerate(components):
+
+            print('Computing "' + comp + '" source distribution')
+
+            self.settings['all_sources'] = False
+            self.settings['fan_inlet_source'] = False
+            self.settings['fan_discharge_source'] = False
+            self.settings['core_source'] = False
+            self.settings['jet_mixing_source'] = False
+            self.settings['jet_shock_source'] = False
+            self.settings['airframe_source'] = False
+
+            if comp == 'core':
+                self.settings['core_source'] = True
+                title = 'Core'
+            elif comp == 'jet_mixing':
+                self.settings['jet_mixing_source'] = True
+                title = 'Jet mixing'
+            elif comp == 'airframe':
+                self.settings['airframe_source'] = True
+                title = 'Airframe'
+            elif comp == 'fan_inlet':
+                self.settings['fan_inlet_source'] = True        
+                title = 'Fan inlet'
+            elif comp == 'fan_discharge':
+                self.settings['fan_discharge_source'] = True
+                title = 'Fan discharge'
+
+            self.settings['x_observer_array'] = ([1,1,1],)
 
             # Determine row and column in plot
             if np.remainder(i,3) == 0:
@@ -854,17 +895,16 @@ class pyna:
                 icol = 0
             else:
                 icol = icol + 1
-            titles = ['Core', 'Jet mixing', 'Airframe', 'Fan inlet', 'Fan discharge']
-            ax[irow,icol].set_title(titles[i], pad=-60)
 
-            # Run noise source distribution
-            pyna.initialize(self)
-            if self.verification:
-                self.data.load_source_verification_data(components=components)
+            ax[irow,icol].set_title(title, pad=-60)
 
             pyna.compute_noise_source_distribution(self, timestep=timestep)
-
+            
             if metric == 'spl':
+
+                # Save solution
+                self.noise_distribution[comp] = self.noise_timeseries.get_val('noise.spl')
+
                 # Plot frequencies 
                 ci = -1
                 k_plot = [3, 7, 10, 13, 17, 20, 23]
@@ -876,19 +916,21 @@ class pyna:
                     ax[irow,icol].set_thetamax(180)
 
                     colors = plt.cm.magma(np.linspace(0,0.8,7))
+
+                    colors = plt.cm.magma(np.linspace(0,0.8,7))
                     if irow == 0 and icol==0:
                         if self.verification:
-                            data_val = self.data.verification_source_supp[comp][26 * timestep : 26 * (timestep + 1) - 1, :]
+                            data_val = self.noise_data.verification_source_supp[comp][26 * timestep : 26 * (timestep + 1) - 1, :]
                             data_val = data_val[1:,1:]
                             ax[irow,icol].plot( np.pi/180*theta[1:-1], data_val[k_plot[k],:], 'o', color=colors[ci])
-                        ax[irow,icol].plot( np.pi/180*theta, noise_timeseries.get_val('noise.spl')[0, :, k_plot[k]], color=colors[ci], label='$f = $'+str(np.round(self.data.f[k_plot[k]]/1000.,1))+' $kHz$')
+                        ax[irow,icol].plot( np.pi/180*theta, self.noise_distribution[comp][0, :, k_plot[k]], color=colors[ci], label='$f = $'+str(np.round(self.noise_data.f[k_plot[k]]/1000.,1))+' $kHz$')
                     else:
                         if self.verification:
-                            data_val = self.data.verification_source_supp[comp][26 * timestep : 26 * (timestep + 1) - 1, :]
+                            data_val = self.noise_data.verification_source_supp[comp][26 * timestep : 26 * (timestep + 1) - 1, :]
                             data_val = data_val[1:,1:]
                             ax[irow,icol].plot( np.pi/180*theta[1:-1], data_val[k_plot[k],:], 'o', color=colors[ci])        
-                        ax[irow,icol].plot( np.pi/180*theta, noise_timeseries.get_val('noise.spl')[0, :, k_plot[k]], color=colors[ci])
-
+                        ax[irow,icol].plot( np.pi/180*theta, self.noise_distribution[comp][0, :, k_plot[k]], color=colors[ci])
+                    
                 ax[irow,icol].set_ylim([60, 150])
                 ax[irow,icol].set_xticks(np.pi/180*np.array([0,45,90,135,180]))
                 ax[irow,icol].set_yticks([60,90,120,150])
@@ -896,21 +938,25 @@ class pyna:
                 ax[irow,icol].xaxis.set_label_coords(0.93, 0.15)
 
             elif metric == 'oaspl':
+
+                # Save solution
+                self.noise_distribution[comp] = self.noise_timeseries.get_val('noise.oaspl')
+
                 if self.verification:
-                    data_val = self.noise.data.verification_source_supp[comp][26 * timestep : 26 * (timestep + 1) - 1, :]
+                    data_val = self.noise_data.verification_source_supp[comp][26 * timestep : 26 * (timestep + 1) - 1, :]
                     ax[irow,icol].plot(theta[1:-1], data_val[0, 1:], 'o')
-                ax[irow,icol].plot( theta, noise_timeseries.get_val('noise.oaspl')[0, :])
+                ax[irow,icol].plot( theta, self.noise_timeseries.get_val('noise.oaspl')[0, :])
 
                 ax[irow,icol].set_xlabel(r'$\theta$ [deg]')
                 ax[irow,icol].set_ylabel('OASPL [dB]')
 
         # Set legend
         ax[1,2].plot([0],[1], 'k-', label='pyNA')
-        if self.settings.validation:
+        if self.verification:
             ax[1,2].plot([0],[1], 'o', color='white', label='NASA STCA (Berton et al.)')
         if metric == 'spl':
-            ax[0,0].legend(loc='lower left', bbox_to_anchor=(2.5, -0.35), ncol=2, borderaxespad=0, frameon=False)
-        ax[1,2].legend(loc='lower left', bbox_to_anchor=(0.035, 0.3), ncol=1, borderaxespad=0, frameon=False)
+            ax[0,0].legend(loc='lower left', bbox_to_anchor=(2.8, -0.5), ncol=2, borderaxespad=0, frameon=False)
+        ax[1,2].legend(loc='lower left', bbox_to_anchor=(-0.18, 0.2), ncol=1, borderaxespad=0, frameon=False)
 
         # Turn off the unused frames
         ax[1,2].axis('off')

@@ -20,10 +20,13 @@ class Engine():
         self.deck = dict()
         self.deck_variables = dict()
         
-    def get_timeseries(self, timestep=None) -> None:
+    def get_timeseries(self, timestep=0) -> None:
         
         """
         Load engine timeseries from .csv file.
+
+        :param timestep:
+        :type timestep: int
 
         :return: None
         """
@@ -31,17 +34,16 @@ class Engine():
         # Load raw inputs from .csv file
         # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
         self.timeseries = pd.read_csv(self.pyna_directory + '/cases/' + self.case_name + '/engine/' + self.output_directory_name + '/' + self.engine_timeseries_name)
+        
+        # Select operating point
+        cols = self.timeseries.columns
+        op_point = pd.DataFrame(np.reshape(self.timeseries.values[timestep, :], (1, len(cols))))
+        op_point.columns = cols
 
-        if not timestep==None:
-            # Select operating point
-            cols = self.timeseries.columns
-            op_point = pd.DataFrame(np.reshape(self.timeseries.values[timestep, :], (1, len(cols))))
-            op_point.columns = cols
-
-            # Duplicate operating for theta range (np.linspace(0, 180, 19))
-            self.timeseries = pd.DataFrame()
-            for i in np.arange(19):
-                self.timeseries = self.timeseries.append(op_point)
+        # Duplicate operating for theta range (np.linspace(0, 180, 19))
+        self.timeseries = pd.DataFrame()
+        for _ in np.arange(19):
+            self.timeseries = self.timeseries.append(op_point)
 
         return None
 

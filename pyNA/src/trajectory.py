@@ -683,36 +683,48 @@ class Trajectory(om.Problem):
         ax[0,0].set_xlabel('X [m]')
         ax[0,0].set_ylabel('Z [m]')
         ax[0,0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=1, borderaxespad=0, frameon=False)
+        ax[0,0].spines['top'].set_visible(False)
+        ax[0,0].spines['right'].set_visible(False)
 
         ax[0,1].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.v'), '-', color='k')
         if verification:
             ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton et al.)', color='tab:orange')
         ax[0,1].set_xlabel('t [s]')
         ax[0,1].set_ylabel(r'$v$ [m/s]')
+        ax[0,1].spines['top'].set_visible(False)
+        ax[0,1].spines['right'].set_visible(False)
 
         ax[0,2].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.gamma'), '-', color='k')
         if verification:
             ax[0,2].plot(problem_verify['t_source [s]'], problem_verify['gamma [deg]'], '--', color='tab:orange')
         ax[0,2].set_xlabel('t [s]')
         ax[0,2].set_ylabel(r'$\gamma$ [deg]')
+        ax[0,2].spines['top'].set_visible(False)
+        ax[0,2].spines['right'].set_visible(False)
 
         ax[1,0].plot(self.get_val('trajectory.t_s'), 1 / 1000. * self.get_val('engine.F_n'), '-', color='k')
         if verification:
             ax[1,0].plot(problem_verify['t_source [s]'], 1 / 1000. * problem_verify['F_n [N]'], '--', color='tab:orange')
         ax[1,0].set_xlabel('t [s]')
         ax[1,0].set_ylabel(r'$F_n$ [kN]')
+        ax[1,0].spines['top'].set_visible(False)
+        ax[1,0].spines['right'].set_visible(False)
 
         ax[1,1].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.TS'), '-', color='k')
         if verification:
             ax[1,1].plot(problem_verify['t_source [s]'], problem_verify['TS [-]'], '--', color='tab:orange')
         ax[1,1].set_xlabel('t [s]')
         ax[1,1].set_ylabel(r'$TS$ [-]')
-        
+        ax[1,1].spines['top'].set_visible(False)
+        ax[1,1].spines['right'].set_visible(False)
+
         ax[1,2].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.alpha'), '-', color='k')
         if verification:
             ax[1,2].plot(problem_verify['t_source [s]'], problem_verify['alpha [deg]'], '--', color='tab:orange')
         ax[1,2].set_xlabel('t [s]')
         ax[1,2].set_ylabel(r'$\alpha$ [deg]')
+        ax[1,2].spines['top'].set_visible(False)
+        ax[1,2].spines['right'].set_visible(False)
 
         plt.subplots_adjust(hspace=0.37, wspace=0.27)
         plt.show()

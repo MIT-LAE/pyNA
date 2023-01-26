@@ -69,7 +69,7 @@ class Data:
         """
 
         # Load atmospheric absorption coefficient table
-        # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
+        # Source: verification noise assessment data set of NASA STCA (Berton et al., 2019)
         self.abs = pd.read_csv(self.pyna_directory+'/data/isa/atmospheric_absorption.csv', skiprows=1).values[:, 1:]
         self.abs_freq = np.array(pd.read_csv(self.pyna_directory+'/data/isa/atmospheric_absorption.csv', nrows=1).values[0][1:], dtype=float)
         self.abs_alt = pd.read_csv(self.pyna_directory+'/data/isa/atmospheric_absorption.csv', skiprows=1).values[:, 0]
@@ -96,7 +96,7 @@ class Data:
         """
 
         # Load noise source suppression data
-        # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
+        # Source: verification noise assessment data set of NASA STCA (Berton et al., 2019)
         self.supp_fi = pd.read_csv(self.pyna_directory+'/data/sources/fan/liner_inlet_suppression.csv', skiprows=1).values[:, 1:]
         self.supp_fi_angles = np.array(pd.read_csv(self.pyna_directory+'/data/sources/fan/liner_inlet_suppression.csv', skiprows=0).values[0,1:], dtype=float)
         self.supp_fi_freq = pd.read_csv(self.pyna_directory+'/data/sources/fan/liner_inlet_suppression.csv',skiprows=1).values[:, 0]
@@ -218,55 +218,55 @@ class Data:
 
         """
 
-        # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
+        # Source: verification noise assessment data set of NASA STCA (Berton et al., 2019)
         if self.case_name == 'nasa_stca_standard':
             # Check if all sources
             if settings['all_sources']:
                 for i, observer in enumerate(settings['observer_lst']):
                     if observer in ['lateral', 'flyover']:
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/55t-Depart-Standard-Total.xlsx', sheet_name=observer, engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/55t-Depart-Standard-Total.xlsx', sheet_name=observer, engine="openpyxl")
                     elif observer == 'approach':
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Approach Levels.xlsx', sheet_name='total', engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Approach Levels.xlsx', sheet_name='total', engine="openpyxl")
 
             # Check if individual components
             elif settings['jet_mixing_source']:
                 for i, observer in enumerate(settings['observer_lst']):
                     if observer in ['lateral', 'flyover']:
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/55t-Depart-Standard-Jet CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/55t-Depart-Standard-Jet CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
                     elif observer == 'approach':
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Approach Levels.xlsx', sheet_name='jet', engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Approach Levels.xlsx', sheet_name='jet', engine="openpyxl")
 
             elif settings['core_source']:
                 for i, observer in enumerate(settings['observer_lst']):
                     if observer in ['lateral', 'flyover']:
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/55t-Depart-Standard-Core CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/55t-Depart-Standard-Core CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
                     elif observer == 'approach':
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Approach Levels.xlsx', sheet_name='core', engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Approach Levels.xlsx', sheet_name='core', engine="openpyxl")
 
             elif settings['airframe_source']:
                 for i, observer in enumerate(settings['observer_lst']):
                     if observer in ['lateral', 'flyover']:
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/55t-Depart-Standard-Airframe CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/55t-Depart-Standard-Airframe CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
                     elif observer == 'approach':
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Approach Levels.xlsx', sheet_name='airframe', engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Approach Levels.xlsx', sheet_name='airframe', engine="openpyxl")
 
             elif settings['fan_inlet_source']:
                 for i, observer in enumerate(settings['observer_lst']):
                     if observer in ['lateral', 'flyover']:
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/55t-Depart-Standard-Fan Inlet CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/55t-Depart-Standard-Fan Inlet CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
                     elif observer == 'approach':
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Approach Levels.xlsx', sheet_name='fan inlet', engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Approach Levels.xlsx', sheet_name='fan inlet', engine="openpyxl")
 
             elif settings['fan_discharge_source']:
                 for i, observer in enumerate(settings['observer_lst']):
                     if observer in ['lateral', 'flyover']:
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/55t-Depart-Standard-Fan Discharge CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/55t-Depart-Standard-Fan Discharge CaseA-D.xlsx', sheet_name=observer, engine="openpyxl")
                     elif observer == 'approach':
-                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Approach Levels.xlsx', sheet_name='fan discharge', engine="openpyxl")
+                        self.verification_trajectory[observer] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Approach Levels.xlsx', sheet_name='fan discharge', engine="openpyxl")
             else:
-                raise ValueError('Invalid noise component for trajectory validation. Specify core/jet mixing/fan inlet/fan discharge/airframe')
+                raise ValueError('Invalid noise component for trajectory verification. Specify core/jet mixing/fan inlet/fan discharge/airframe')
         else:
-            raise ValueError('No validation data available for this case name. Specify nasa_stca_standard.')
+            raise ValueError('No verification data available for this case name. Specify nasa_stca_standard.')
 
         return None
 
@@ -282,40 +282,41 @@ class Data:
         """
 
         for comp in components:
+
             if comp == 'core':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Core Module Source.xlsx', sheet_name='Full').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Core Module Source.xlsx', sheet_name='Suppressed').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Core Module Source.xlsx', sheet_name='Full').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Core Module Source.xlsx', sheet_name='Suppressed').values
 
             elif comp == 'jet_mixing':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Jet Module Source.xlsx', sheet_name='Full').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Jet Module Source.xlsx', sheet_name='Suppressed').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Jet Module Source.xlsx', sheet_name='Full').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Jet Module Source.xlsx', sheet_name='Suppressed').values
 
             elif comp == 'inlet_BB':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Full Inlet BB').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Suppressed Inlet BB').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Full Inlet BB').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Suppressed Inlet BB').values
 
             elif comp == 'discharge_BB':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Full Discharge BB').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Suppressed Discharge BB').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Full Discharge BB').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Suppressed Discharge BB').values
 
             elif comp == 'inlet_RS':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Full Inlet RS').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Suppressed Inlet RS').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Full Inlet RS').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Suppressed Inlet RS').values
 
             elif comp == 'discharge_RS':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Full Discharge RS').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Suppressed Discharge RS').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Full Discharge RS').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Suppressed Discharge RS').values
 
             elif comp == 'fan_inlet':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Fan Inlet Full').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Fan Inlet Suppressed').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Fan Inlet Full').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Fan Inlet Suppressed').values
 
             elif comp == 'fan_discharge':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Fan Discharge Full').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Fan Module Source.xlsx', sheet_name='Fan Discharge Suppressed').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Fan Discharge Full').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Fan Module Source.xlsx', sheet_name='Fan Discharge Suppressed').values
 
             elif comp == 'airframe':
-                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Airframe Module Source.xlsx', sheet_name='Full').values
-                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/validation/Airframe Module Source.xlsx', sheet_name='Suppressed').values
+                self.verification_source[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Airframe Module Source.xlsx', sheet_name='Full').values
+                self.verification_source_supp[comp] = pd.read_excel(self.pyna_directory + '/cases/' + self.case_name + '/verification/Airframe Module Source.xlsx', sheet_name='Suppressed').values
 
         return None
