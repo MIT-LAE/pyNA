@@ -30,36 +30,6 @@ class Data:
         self.verification_source_supp = dict()
         self.verification_trajectory = dict()
 
-    def compute_frequency_bands(self, settings) -> None:
-        """
-        Compute the 1/3rd order frequency bands and with sub-bands.
-            * f:    1/3rd order frequency bands
-            * f_sb: frequency sub-bands
-
-        :param n_frequency_bands: 
-        :type n_frequency_bands: 
-        :param n_frequency_subbands:
-        :param n_frequency_subbands:
-
-        :return: None
-        """
-
-        # Load 1/3rd order frequency bands
-        # Generate 1/3rd octave frequency bands [Hz]
-        l_i = 16  # Starting no. of the frequency band [-]
-        self.f = 10 ** (0.1 * np.linspace(1+l_i, 40, settings['n_frequency_bands']))
-
-        # Calculate subband frequencies [Hz]
-        # Source: Zorumski report 1982 part 1. Chapter 5.1 Equation 6-7
-        # Source: Berton 2021 Simultaneous use of Ground Reflection and Lateral Attenuation Noise Models Appendix A Eq. 1
-        self.f_sb = np.zeros(settings['n_frequency_subbands'] * settings['n_frequency_bands'])
-        m = (settings['n_frequency_subbands'] - 1) / 2.
-        w = 2. ** (1 / (3. * settings['n_frequency_subbands']))
-        for k in np.arange(settings['n_frequency_bands']):
-            for h in np.arange(settings['n_frequency_subbands']):
-                self.f_sb[k * settings['n_frequency_subbands'] + h] = w ** (h - m) * self.f[k]
-
-        return None
 
     def load_propagation_tables(self) -> None:
         """
