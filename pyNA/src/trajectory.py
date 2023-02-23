@@ -1,51 +1,268 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+import openmdao.api as om
+import dymos as dm
 import os
-from pyNA.src.trajectory_model.trajectory_model import TrajectoryModel
+import pdb
+
 from pyNA.src.utils.compute_frequency_bands import compute_frequency_bands
 from pyNA.src.utils.compute_frequency_subbands import compute_frequency_subbands
+from pyNA.src.trajectory_model.trajectory_data import TrajectoryData
 
+from pyNA.src.trajectory_model.groundroll import GroundRoll
+from pyNA.src.trajectory_model.rotation import Rotation
+from pyNA.src.trajectory_model.liftoff import LiftOff
+from pyNA.src.trajectory_model.vnrs import Vnrs
+from pyNA.src.trajectory_model.cutback import CutBack
+from pyNA.src.trajectory_model.take_off_phase_ode import TakeOffPhaseODE
+from pyNA.src.trajectory_model.mux import Mux
 
 class Trajectory:
     
-    def __init__(self, settings, airframe, engine, noise_data) -> None:
+    def __init__(self, settings, mode:str) -> None:
         
-        self.airframe = airframe
-        self.engine = engine
-        self.noise_data = noise_data
-
-        self.f = compute_frequency_bands(n_frequency_bands=settings['n_frequency_bands'])
-        self.f_sb = compute_frequency_subbands(f=self.f, n_frequency_subbands=settings['n_frequency_subbands'])
-
-    def initialize(self, settings):
-
-        self.engine.get_source_noise_variables(settings=settings)
-        self.engine.get_deck(settings=settings)
-
-        # self.airframe.load_aerodynamics_deck()
+        """
         
-        # self.path = TrajectoryModel()
+        :param mode: use 'data' to input the time history of the trajectory variables and engine operational variables using .csv files; use 'compute' to model the trajectory and engine using Dymos
+        :type mode: str
 
-    def compute_path(self, settings, objective):
-        
-        self.path.create_trajectory(airframe=self.airframe, engine=self.engine, sealevel_atmosphere=self.sealevel_atmosphere, k_rot=self.k_rot, v_max=self.v_max, TS_to=self.TS_to, TS_vnrs=self.TS_vnrs, TS_cb=self.TS_cb, TS_min=self.TS_cb, theta_flaps=self.theta_flaps, theta_flaps_cb=self.theta_flaps_cb, theta_slats=self.theta_slats, atmosphere_type=self.atmosphere_type, atmosphere_dT=self.atmosphere_dT, pkrot=self.pkrot, ptcb=self.ptcb, phld=self.phld, objective=objective, trajectory_mode=trajectory_mode)
-        self.path.set_objective(objective='t_end')
-        self.path.set_ipopt_settings(objective=objective, tolerance=self.tolerance, max_iter=self.max_iter)
-        self.path.setup(force_alloc_complex=True)
-        self.path.set_phases_initial_conditions(airframe=self.airframe, z_cb=self.z_cb, v_max=self.v_max, initialization_trajectory=None, trajectory_mode=trajectory_mode)
-        self.path.solve(run_driver=True, save_results=self.save_results)
+        """
 
-        Trajectory.check_convergence(filename='IPOPT_trajectory_convergence.out')
+        self.mode = mode
+        if self.mode == 'compute':
+            self.path = om.Problem()
+
+        elif self.mode == 'data':
+            # Load data .csv files
+            self.time_history = pd.DataFrame()
+            Trajectory.load_time_history_csv(self, settings=settings)
+
+            # Create openmdao problem
+            self.path = om.Problem()
+            self.path.model.add_subsystem('trajectory', TrajectoryData(num_nodes=self.n_t, settings=settings))
+
+    def load_time_history_csv(self, settings) -> None:
         
-    def compute_noise():
+        """
+        Load engine and trajectory time history from .csv file.
+
+        :param settings:
+        :type settings:
+
+        :return: None
+        """
+
+        # Load raw inputs from .csv file
+        # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
+        try:
+            self.time_history = pd.read_csv(settings['pyna_directory'] + '/cases/' + settings['case_name'] + '/trajectory/' + settings['output_directory_name'] + '/' + settings['time_history_file_name'])
+        except:
+            raise ValueError(settings['time_history_file_name'] + ' file not found at ' + settings['pyna_directory'] + '/cases/' + settings['case_name'] + '/trajectory/' + settings['output_directory_name'] + '/')
+        
+        # Compute number of time steps in the time history
+        self.n_t = np.size(self.time_history['t_s [s]'])
+
+        return None
+
+    def set_time_history_initial_conditions(self, settings):
+        # Trajectory variables
+        self.path.set_val('trajectory.t_s', self.time_history['t_s [s]'])
+        self.path.set_val('trajectory.x', self.time_history['x [m]'])
+        self.path.set_val('trajectory.y', self.time_history['y [m]'])
+        self.path.set_val('trajectory.z', self.time_history['z [m]'])
+        self.path.set_val('trajectory.v', self.time_history['v [m/s]'])
+        self.path.set_val('trajectory.alpha', self.time_history['alpha [deg]'])
+        self.path.set_val('trajectory.gamma', self.time_history['gamma [deg]'])
+        self.path.set_val('trajectory.F_n', self.time_history['F_n [N]'])
+        self.path.set_val('trajectory.tau', self.time_history['tau [-]'])
+        self.path.set_val('trajectory.M_0', self.time_history['M_0 [-]'])
+        self.path.set_val('trajectory.c_0', self.time_history['c_0 [m/s]'])
+        self.path.set_val('trajectory.T_0', self.time_history['T_0 [K]'])
+        self.path.set_val('trajectory.p_0', self.time_history['p_0 [Pa]'])
+        self.path.set_val('trajectory.rho_0', self.time_history['rho_0 [kg/m3]'])
+        self.path.set_val('trajectory.mu_0', self.time_history['mu_0 [kg/ms]'])
+        self.path.set_val('trajectory.I_0', self.time_history['I_0 [kg/m2s]'])
+        
+        if settings['airframe_source']:
+            self.path.set_val('trajectory.theta_flaps', self.time_history['theta_flaps [deg]'])
+            self.path.set_val('trajectory.I_lg', self.time_history['I_lg [-]'])
+
+        # Engine variables
+        if settings['jet_mixing_source'] and not settings['jet_shock_source']:
+            self.path.set_val('trajectory.jet_V', self.time_history['jet_V [m/s]'])
+            self.path.set_val('trajectory.jet_rho', self.time_history['jet_rho [kg/m3]'])
+            self.path.set_val('trajectory.jet_A', self.time_history['jet_A [m2]'])
+            self.path.set_val('trajectory.jet_Tt', self.time_history['jet_Tt [K]'])
+        elif not settings['jet_mixing_source'] and settings['jet_shock_source']:
+            self.path.set_val('trajectory.jet_V', self.time_history['jet_V [m/s]'])
+            self.path.set_val('trajectory.jet_A', self.time_history['jet_A [m2]'])
+            self.path.set_val('trajectory.jet_Tt', self.time_history['jet_Tt [K]'])
+            self.path.set_val('trajectory.jet_M', self.time_history['jet_M [-]'])
+        elif settings['jet_mixing_source'] and settings['jet_shock_source']:
+            self.path.set_val('trajectory.jet_V', self.time_history['jet_V [m/s]'])
+            self.path.set_val('trajectory.jet_rho', self.time_history['jet_rho [kg/m3]'])
+            self.path.set_val('trajectory.jet_A', self.time_history['jet_A [m2]'])
+            self.path.set_val('trajectory.jet_Tt', self.time_history['jet_Tt [K]'])
+            self.path.set_val('trajectory.jet_M', self.time_history['jet_M [-]'])
+
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == "ge":
+                self.path.set_val('trajectory.core_mdot', self.time_history['core_mdot [kg/s]'])
+                self.path.set_val('trajectory.core_Tt_i', self.time_history['core_Tt_i [K]'])
+                self.path.set_val('trajectory.core_Tt_j', self.time_history['core_Tt_j [K]'])
+                self.path.set_val('trajectory.core_Pt_i', self.time_history['core_Pt_i [Pa]'])
+                self.path.set_val('trajectory.turb_DTt_des', self.time_history['turb_DTt_des [K]'])
+            elif settings['core_turbine_attenuation_method'] == "pw":
+                self.path.set_val('trajectory.core_mdot', self.time_history['core_mdot [kg/s]'])
+                self.path.set_val('trajectory.core_Tt_i', self.time_history['core_Tt_i [K]'])
+                self.path.set_val('trajectory.core_Tt_j', self.time_history['core_Tt_j [K]'])
+                self.path.set_val('trajectory.core_Pt_i', self.time_history['core_Pt_i [Pa]'])
+                self.path.set_val('trajectory.turb_rho_i', self.time_history['turb_rho_i [kg/m3]'])
+                self.path.set_val('trajectory.turb_c_i', self.time_history['turb_c_i [m/s]'])
+                self.path.set_val('trajectory.turb_rho_e', self.time_history['turb_rho_e [kg/m3]'])
+                self.path.set_val('trajectory.turb_c_e', self.time_history['turb_c_e [m/s]'])
+                
+        if settings['fan_inlet_source'] or settings['fan_discharge_source']:
+            self.path.set_val('trajectory.fan_DTt', self.time_history['fan_DTt [K]'])
+            self.path.set_val('trajectory.fan_mdot', self.time_history['fan_mdot [kg/s]'])
+            self.path.set_val('trajectory.fan_N', self.time_history['fan_N [rpm]'])
+
+    def create_model(self):
+        
+        self.traj = dm.Trajectory()
+        self.path.add_subsystem('phases', self.traj)
+
+        # Create the trajectory phases 
+        for phase_name in self.phase_name_lst:
+            opts = {'phase': phase_name, 'airframe': airframe, 'engine': engine, 'sealevel_atmosphere': sealevel_atmosphere, 'atmosphere_dT': atmosphere_dT, 'atmosphere_type': atmosphere_type, 'objective': objective, 'case_name': self.case_name, 'output_directory_name': self.output_directory_name}
+            
+            if phase_name == 'groundroll':
+                self.groundroll = GroundRoll(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.groundroll.create(airframe, engine, pkrot, phld, TS_to, k_rot, theta_flaps, theta_slats, objective, atmosphere_type)
+                self.traj.add_phase(phase_name, self.groundroll)
+            
+            elif phase_name == 'rotation':
+                self.rotation = Rotation(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.rotation.create(airframe, engine, phld, TS_to, theta_flaps, theta_slats, objective, atmosphere_type)
+                self.traj.add_phase(phase_name, self.rotation)
+
+            elif phase_name == 'liftoff':
+                self.liftoff = LiftOff(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.liftoff.create(airframe, engine, phld, TS_to, theta_flaps, theta_slats, objective, atmosphere_type)
+                self.traj.add_phase(phase_name, self.liftoff)
+
+            elif phase_name == 'vnrs':
+                self.vnrs = Vnrs(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.vnrs.create(airframe, engine, ptcb, phld, TS_vnrs, TS_min, theta_flaps_cb, theta_slats, trajectory_mode, objective, atmosphere_type)
+                self.traj.add_phase(phase_name, self.vnrs)
+                
+            elif phase_name == 'cutback':
+                self.cutback = CutBack(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.cutback.create(airframe, engine, phld, v_max, TS_cb, theta_flaps_cb, theta_slats, trajectory_mode, objective, atmosphere_type)
+                self.traj.add_phase(phase_name, self.cutback)        
+
+        # Link phases
+        if 'rotation' in self.phase_name_lst:
+            self.traj.link_phases(phases=['groundroll', 'rotation'], vars=['time', 'x', 'v', 'alpha'])    
+            if objective == 'noise' and phld:
+                self.traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+
+        if 'liftoff' in self.phase_name_lst:
+            self.traj.link_phases(phases=['rotation', 'liftoff'], vars=['time', 'x', 'z', 'v', 'alpha', 'gamma'])
+            if objective == 'noise' and phld:
+                self.traj.add_linkage_constraint(phase_a='rotation', phase_b='liftoff', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+
+        if 'vnrs' in self.phase_name_lst:
+            self.traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
+            if objective == 'noise' and ptcb:
+                self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+
+        if 'cutback' in self.phase_name_lst:
+            if trajectory_mode == 'flyover':
+                self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'z', 'v', 'alpha', 'gamma'])
+            elif trajectory_mode == 'cutback':
+                self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
+            if objective == 'noise' and ptcb:
+                self.traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+
+        # Mux trajectory and engine variables
+        Trajectory.get_mux_input_output_size(self)
+        mux_t = self.model.add_subsystem(name='trajectory', subsys=Mux(objective=objective, input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, case_name=self.case_name, output_directory_name=self.output_directory_name))
+        trajectory_var = Trajectory.get_trajectory_var_lst(atmosphere_type)
+
+        for var in trajectory_var.keys():
+            
+            if var == 'time':
+                mux_t.add_var('t_s', units=trajectory_var[var])
+            else:
+                mux_t.add_var(var, units=trajectory_var[var])
+
+            for j, phase_name in enumerate(self.phase_name_lst):
+                if var == 'time':
+                    self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.t_s_' + str(j))
+
+                elif var in ['x', 'v']:
+                    self.model.connect('phases.' + phase_name + '.interpolated.states:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['z', 'gamma']:
+                    if phase_name in {'groundroll','rotation'}:
+                        self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                    else:
+                        self.model.connect('phases.' + phase_name + '.interpolated.states:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['alpha']:
+                    if phase_name in {'groundroll'}:
+                        self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var,'trajectory.' + var + '_' + str(j))
+                    # elif phase_name in {'rotation', 'liftoff'}:
+                    elif phase_name in {'rotation'}:
+                        self.model.connect('phases.' + phase_name + '.interpolated.states:' + var,'trajectory.' + var + '_' + str(j))
+                    else:
+                        self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['TS']:
+                    if objective == 'noise' and ptcb:
+                        if phase_name in ['groundroll', 'rotation', 'liftoff']:
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                        elif phase_name == 'vnrs':
+                            self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
+                        elif phase_name == 'cutback':
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                    else:
+                        if phase_name in ['groundroll', 'rotation', 'liftoff', 'vnrs']:
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                        elif phase_name == 'cutback':
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['theta_flaps', 'theta_slats', 'y', 'I_landing_gear']:
+                    self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['L', 'D', 'eas', 'n','M_0', 'p_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
+                    self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.' + var + '_' + str(j))
+
+        mux_e = self.model.add_subsystem(name='engine', subsys=Mux(objective=objective, input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, case_name=self.case_name, output_directory_name=self.output_directory_name))
+        for var in engine.deck_variables.keys():
+            
+            mux_e.add_var(var, units=engine.deck_variables[var])
+            
+            for j, phase_name in enumerate(self.phase_name_lst):
+                self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'engine.' + var + '_' + str(j))
+
+        return 
+
+    def set_model_initial_conditions():
         pass
 
-    def optimize_path():
-        pass
+    def compute_path(self, settings, objective='time'):
+        if self.mode == 'compute':
+            print(objective)
+            pass
 
-    def save_timeseries():
-        pass
-
+        elif self.mode == 'data':
+            self.path.setup()
+            Trajectory.set_time_history_initial_conditions(self, settings)
+            self.path.run_model()
+  
     def check_convergence(self, filename: str) -> bool:
         """
         Checks convergence of case using optimizer output file.
@@ -85,67 +302,46 @@ class Trajectory:
 
         return converged
 
-
     def plot_ipopt_convergence_data():
         pass
 
+    def plot_path(self):
 
-
-    def plot(self, *problem_verify):
-
-        # Check if problem_verify is empty
-        if problem_verify:
-            verification = True
-            problem_verify = problem_verify[0]
-        else:
-            verification = False
         fig, ax = plt.subplots(2,3, figsize=(20, 8), dpi=100)
-        plt.style.use(self.pyna_directory + '/utils/' + 'plot.mplstyle')
+        plt.style.use('plot.mplstyle')
 
-        ax[0,0].plot(self.get_val('trajectory.x'), self.get_val('trajectory.z'), '-', label='Take-off trajectory module', color='k')
-        if verification:
-            ax[0,0].plot(problem_verify['X [m]'], problem_verify['Z [m]'], '--', label='NASA STCA (Berton et al.)', color='tab:orange')
+        ax[0,0].plot(self.path.get_val('trajectory.x'), self.path.get_val('trajectory.z'), '-', label='Take-off trajectory module', color='k')
         ax[0,0].set_xlabel('X [m]')
         ax[0,0].set_ylabel('Z [m]')
         ax[0,0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=1, borderaxespad=0, frameon=False)
         ax[0,0].spines['top'].set_visible(False)
         ax[0,0].spines['right'].set_visible(False)
 
-        ax[0,1].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.v'), '-', color='k')
-        if verification:
-            ax[0,1].plot(problem_verify['t_source [s]'], problem_verify['V [m/s]'], '--', label='NASA STCA (Berton et al.)', color='tab:orange')
+        ax[0,1].plot(self.path.get_val('trajectory.t_s'), self.path.get_val('trajectory.v'), '-', color='k')
         ax[0,1].set_xlabel('t [s]')
         ax[0,1].set_ylabel(r'$v$ [m/s]')
         ax[0,1].spines['top'].set_visible(False)
         ax[0,1].spines['right'].set_visible(False)
 
-        ax[0,2].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.gamma'), '-', color='k')
-        if verification:
-            ax[0,2].plot(problem_verify['t_source [s]'], problem_verify['gamma [deg]'], '--', color='tab:orange')
+        ax[0,2].plot(self.path.get_val('trajectory.t_s'), self.path.get_val('trajectory.gamma'), '-', color='k')
         ax[0,2].set_xlabel('t [s]')
         ax[0,2].set_ylabel(r'$\gamma$ [deg]')
         ax[0,2].spines['top'].set_visible(False)
         ax[0,2].spines['right'].set_visible(False)
 
-        ax[1,0].plot(self.get_val('trajectory.t_s'), 1 / 1000. * self.get_val('engine.F_n'), '-', color='k')
-        if verification:
-            ax[1,0].plot(problem_verify['t_source [s]'], 1 / 1000. * problem_verify['F_n [N]'], '--', color='tab:orange')
+        ax[1,0].plot(self.path.get_val('trajectory.t_s'), 1 / 1000. * self.path.get_val('trajectory.F_n'), '-', color='k')
         ax[1,0].set_xlabel('t [s]')
         ax[1,0].set_ylabel(r'$F_n$ [kN]')
         ax[1,0].spines['top'].set_visible(False)
         ax[1,0].spines['right'].set_visible(False)
 
-        ax[1,1].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.TS'), '-', color='k')
-        if verification:
-            ax[1,1].plot(problem_verify['t_source [s]'], problem_verify['TS [-]'], '--', color='tab:orange')
+        ax[1,1].plot(self.path.get_val('trajectory.t_s'), self.path.get_val('trajectory.tau'), '-', color='k')
         ax[1,1].set_xlabel('t [s]')
         ax[1,1].set_ylabel(r'$TS$ [-]')
         ax[1,1].spines['top'].set_visible(False)
         ax[1,1].spines['right'].set_visible(False)
 
-        ax[1,2].plot(self.get_val('trajectory.t_s'), self.get_val('trajectory.alpha'), '-', color='k')
-        if verification:
-            ax[1,2].plot(problem_verify['t_source [s]'], problem_verify['alpha [deg]'], '--', color='tab:orange')
+        ax[1,2].plot(self.path.get_val('trajectory.t_s'), self.path.get_val('trajectory.alpha'), '-', color='k')
         ax[1,2].set_xlabel('t [s]')
         ax[1,2].set_ylabel(r'$\alpha$ [deg]')
         ax[1,2].spines['top'].set_visible(False)

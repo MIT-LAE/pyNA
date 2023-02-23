@@ -170,22 +170,7 @@ class Engine:
 
         return None
 
-    def load_timeseries_csv(self, settings) -> None:
-        
-        """
-        Load engine timeseries from .csv file.
 
-        :param timestep:
-        :type timestep: int
-
-        :return: None
-        """
-
-        # Load raw inputs from .csv file
-        # Source: validation noise assessment data set of NASA STCA (Berton et al., 2019)
-        self.timeseries = pd.read_csv(settings['pyna_directory'] + '/cases/' + settings['case_name'] + '/engine/' + settings['output_directory_name'] + '/' + settings['engine_timeseries_file_name'])
-        
-        return None
 
     def load_timeseries_operating_point(self, timestep):
 

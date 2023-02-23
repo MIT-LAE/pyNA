@@ -16,16 +16,6 @@ class Noise:
         self.f = compute_frequency_bands(n_frequency_bands=settings['n_frequency_bands'])
         self.f_sb = compute_frequency_subbands(f=self.f, n_frequency_subbands=settings['n_frequency_subbands'])
 
-    def initialize(self, settings):
-        # Load engine time series from file
-        self.engine.load_timeseries_csv(file_name=settings['engine_file_name'])
-
-        # Load path time series from file
-        self.path.load_timeseries_csv(file_name=settings['path_file_name'])
-
-    def load_path_timeseries_csv(self, file_name:str):
-        self.path = pd.read_csv(file_name)
-
     def compute_noise_level():
         pass
 
