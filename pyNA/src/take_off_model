@@ -86,8 +86,6 @@ class TakeOffModel(om.Problem):
         self.vars.append('I_landing_gear'); self.var_units['I_landing_gear'] = None
         self.vars.append('theta_flaps'); self.var_units['theta_flaps'] = 'deg'
         self.vars.append('theta_slats'); self.var_units['theta_slats'] = 'deg'
-        self.vars.append('L'); self.var_units['L'] = 'N'
-        self.vars.append('D'); self.var_units['D'] = 'N'
         self.vars.append('c_l'); self.var_units['c_l'] = None
         self.vars.append('c_d'); self.var_units['c_d'] = None
         self.vars.append('c_l_max'); self.var_units['c_l_max'] = None
@@ -145,7 +143,7 @@ class TakeOffModel(om.Problem):
         if 'vnrs' in self.phase_name_lst:
             self.traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
             if objective == 'noise' and settings['ptcb']:
-                self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+                self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='tau', var_b='tau', loc_a='final', loc_b='initial')
 
         if 'cutback' in self.phase_name_lst:
             if trajectory_mode == 'flyover':
@@ -153,7 +151,7 @@ class TakeOffModel(om.Problem):
             elif trajectory_mode == 'cutback':
                 self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
             if objective == 'noise' and settings['ptcb']:
-                self.traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
+                self.traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='tau', var_b='tau', loc_a='final', loc_b='initial')
 
         # Mux trajectory and engine variables
         TakeOffModel.get_mux_input_output_size(self)
@@ -186,8 +184,8 @@ class TakeOffModel(om.Problem):
                     else:
                         self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
 
-                elif var in ['TS']:
-                    if objective == 'noise' and ptcb:
+                elif var in ['tau']:
+                    if objective == 'noise' and settings['ptcb']:
                         if phase_name in ['groundroll', 'rotation', 'liftoff']:
                             self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
                         elif phase_name == 'vnrs':
@@ -203,12 +201,12 @@ class TakeOffModel(om.Problem):
                 elif var in ['theta_flaps', 'theta_slats', 'y', 'I_landing_gear']:
                     self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
 
-                elif var in ['L', 'D', 'eas', 'n','M_0', 'p_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
+                elif var in ['eas', 'n','M_0', 'p_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
                     self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.' + var + '_' + str(j))
 
         mux_e = self.model.add_subsystem(name='engine', subsys=Mux(objective=objective, input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, case_name=self.case_name, output_directory_name=self.output_directory_name))
-        for var in engine.vars:
-            mux_e.add_var(var, units=engine.var_units[var])
+        for var in aircraft.engine.vars:
+            mux_e.add_var(var, units=aircraft.engine.var_units[var])
             for j, phase_name in enumerate(self.phase_name_lst):
                 self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'engine.' + var + '_' + str(j))
 
@@ -289,13 +287,13 @@ class TakeOffModel(om.Problem):
                 if trajectory_mode == 'flyover':
                     z_cutback_guess = 500.
                 elif trajectory_mode == 'cutback':
-                    z_cutback_guess = z_cb
+                    z_cutback_guess = settings['z_cb']
 
                 self['phases.liftoff.t_initial'] = 40.0
                 self['phases.liftoff.t_duration'] = 2.
                 self['phases.liftoff.states:x'] = self.liftoff.interp(ys=[2000., 3500.], nodes='state_input')
                 self['phases.liftoff.states:z'] = self.liftoff.interp(ys=[0., 35*0.3048], nodes='state_input')
-                self['phases.liftoff.states:v'] = self.liftoff.interp(ys=[110., v_max], nodes='state_input')
+                self['phases.liftoff.states:v'] = self.liftoff.interp(ys=[110., settings['v_max']], nodes='state_input')
                 self['phases.liftoff.states:gamma'] = self.liftoff.interp(ys=[0, 4.], nodes='state_input')
                 self['phases.liftoff.controls:alpha'] = self.liftoff.interp(ys=[15., 15.], nodes='control_input')
                 # self['phases.liftoff.states:alpha'] = self.liftoff.interp(ys=[15., 15.], nodes='state_input')
@@ -306,7 +304,7 @@ class TakeOffModel(om.Problem):
                 self['phases.vnrs.t_duration'] = 50.0
                 self['phases.vnrs.states:x'] = self.vnrs.interp(ys=[3500., 6501.], nodes='state_input')
                 self['phases.vnrs.states:z'] = self.vnrs.interp(ys=[35*0.3048, z_cutback_guess], nodes='state_input')
-                self['phases.vnrs.states:v'] = self.vnrs.interp(ys=[v_max, v_max], nodes='state_input')
+                self['phases.vnrs.states:v'] = self.vnrs.interp(ys=[settings['v_max'], settings['v_max']], nodes='state_input')
                 self['phases.vnrs.states:gamma'] = self.vnrs.interp(ys=[4., 15.], nodes='state_input')
                 self['phases.vnrs.controls:alpha'] = self.vnrs.interp(ys=[15., 15.], nodes='control_input')
                 
@@ -316,7 +314,7 @@ class TakeOffModel(om.Problem):
                 self['phases.cutback.t_duration'] = 50.0
                 self['phases.cutback.states:x'] = self.cutback.interp(ys=[6501., 15000.], nodes='state_input')
                 self['phases.cutback.states:z'] = self.cutback.interp(ys=[z_cutback_guess, 1500.], nodes='state_input')
-                self['phases.cutback.states:v'] = self.cutback.interp(ys=[v_max, v_max], nodes='state_input')
+                self['phases.cutback.states:v'] = self.cutback.interp(ys=[settings['v_max'], settings['v_max']], nodes='state_input')
                 self['phases.cutback.states:gamma'] = self.cutback.interp(ys=[15, 15.], nodes='state_input')
                 self['phases.cutback.controls:alpha'] = self.cutback.interp(ys=[15., 15.], nodes='control_input')
                 
