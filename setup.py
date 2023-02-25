@@ -11,18 +11,13 @@ setup(
 	include_package_data=True,
 	package_data={'': ['data/*']},
 	install_requires=[
-		'dataclasses==0.6',
-		'dymos>=1.4.0',
-		'ipython==7.31.1',
-		'json5==0.9.5',
+		'numpy==1.21.6',
+		'scipy==1.7.2',
+		'openmdao==3.16.0',
+		'dymos==1.4.0',
 		'julia==0.5.6',
-		'matplotlib==3.2.2',
-		'numpy>1.21.0',
-		'openmdao>=3.16.0',
-		'pandas==1.0.5',
-		'scipy>1.7.0',
-		'tqdm==4.47.0',
-		'openpyxl>=3.0.5'
+		'pandas==1.3.5',
+		'matplotlib==3.5.3'
 	],
 	python_requires=">=3.7"
 )
