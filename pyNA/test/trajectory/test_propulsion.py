@@ -1,8 +1,8 @@
 import unittest
 import openmdao.api as om
-from src.trajectory_model.propulsion import Propulsion
+from pyNA.src.trajectory_model.propulsion import Propulsion
 from openmdao.utils.assert_utils import assert_check_partials
-from pyna import pyna
+from pyNA.pyna import pyna
 import pdb
 
 

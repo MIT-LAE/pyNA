@@ -1,7 +1,7 @@
 import unittest
 import openmdao.api as om
 import numpy as np
-from src.trajectory_model.atmosphere import Atmosphere
+from pyNA.src.trajectory_model.atmosphere import Atmosphere
 from openmdao.utils.assert_utils import assert_check_partials
 
 

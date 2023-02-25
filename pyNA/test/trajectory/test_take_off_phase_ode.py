@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 import openmdao.api as om
 import pdb
-from src.trajectory_model.take_off_phase_ode import TakeOffPhaseODE
-from pyna import pyna
+from pyNA.src.trajectory_model.take_off_phase_ode import TakeOffPhaseODE
+from pyNA.pyna import pyna
 from openmdao.utils.assert_utils import assert_check_partials
 
 

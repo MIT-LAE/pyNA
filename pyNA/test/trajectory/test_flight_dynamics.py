@@ -1,8 +1,8 @@
 import unittest
 import openmdao.api as om
 import numpy as np
-from pyna import pyna
-from src.trajectory_model.flight_dynamics import FlightDynamics
+from pyNA.pyna import pyna
+from pyNA.src.trajectory_model.flight_dynamics import FlightDynamics
 from openmdao.utils.assert_utils import assert_check_partials
 
 

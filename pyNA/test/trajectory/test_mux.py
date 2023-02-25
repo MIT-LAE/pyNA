@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import openmdao.api as om
 import pdb
-from src.trajectory_model.mux import Mux
+from pyNA.src.trajectory_model.mux import Mux
 from openmdao.utils.assert_utils import assert_check_partials
 
 
