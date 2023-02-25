@@ -10,7 +10,7 @@ class Vnrs(dm.Phase):
 
         self.phase_target_size = 22
 
-    def create(self, settings, airframe, engine, objective, trajectory_mode) -> None:
+    def create(self, settings, aircraft, objective, trajectory_mode) -> None:
         
         self.set_time_options(initial_bounds=(10, 300), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)            
         
@@ -23,7 +23,7 @@ class Vnrs(dm.Phase):
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
         self.add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
         
-        self.add_control('alpha', targets='alpha', units='deg', lower=5., upper=airframe.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
+        self.add_control('alpha', targets='alpha', units='deg', lower=5., upper=aircraft.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
         if objective == 'noise' and settings['ptcb']:
             self.add_control('tau', targets='propulsion.tau', units=None, upper=1, lower=tau_min, val=tau_vnrs, opt=True, rate_continuity=True, rate2_continuity=False, ref=1.)
         else:
@@ -40,7 +40,7 @@ class Vnrs(dm.Phase):
         self.add_path_constraint(name='gamma', lower=0., units='deg', ref=10.)
 
         self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_target_size-1, order=3, solve_segments=False, compressed=True), subset='state_input')
-        for var in engine.deck_variables.keys():
+        for var in aircraft.engine.vars:
             self.add_timeseries_output('propulsion.'+ var, timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.M_0', timeseries='interpolated')
         self.add_timeseries_output('p_0', timeseries='interpolated')

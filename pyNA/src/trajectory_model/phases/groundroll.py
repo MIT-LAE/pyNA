@@ -11,14 +11,14 @@ class GroundRoll(dm.Phase):
 
         self.phase_target_size = 10
 
-    def create(self, settings, airframe, engine, objective) -> None:
+    def create(self, settings, aircraft, objective) -> None:
 
         self.set_time_options(fix_initial=True, duration_bounds=(0, 100), duration_ref=100.)
         
         self.add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=True, fix_final=False, ref=100.)
         
-        self.add_parameter('alpha', targets='alpha', units='deg', dynamic=True, include_timeseries=True, val=airframe.alpha_0)
+        self.add_parameter('alpha', targets='alpha', units='deg', dynamic=True, include_timeseries=True, val=aircraft.alpha_0)
         self.add_parameter('z', targets='z', units='m', val=0., dynamic=True,include_timeseries=True)
         self.add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
         self.add_parameter('tau', targets='propulsion.tau', units=None, val=tau, dynamic=True, include_timeseries=True)
@@ -37,7 +37,7 @@ class GroundRoll(dm.Phase):
         self.add_boundary_constraint('flight_dynamics.v_rot_residual', equals=0., loc='final', ref=100, units='m/s')
 
         self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_target_size-1,order=3, solve_segments=False, compressed=True), subset='state_input')
-        for var in engine.deck_variables.keys(): 
+        for var in aircraft.engine.vars: 
             self.add_timeseries_output('propulsion.'+ var, timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.M_0', timeseries='interpolated')
         

@@ -10,13 +10,13 @@ class Rotation(dm.Phase):
 
         self.phase_target_size = 10
 
-    def create(self, settings, airframe, engine, objective) -> None:
+    def create(self, settings, aircraft, objective) -> None:
 
         self.set_time_options(initial_bounds=(10, 100), duration_bounds=(0, 100), initial_ref=100., duration_ref=100.)
         
         self.add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=False, ref=1000.)
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
-        self.add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=airframe.aero['alpha'][0], upper=airframe.aero['alpha'][-1], ref=10.)
+        self.add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=aircraft.aero['alpha'][0], upper=aircraft.aero['alpha'][-1], ref=10.)
         
         self.add_parameter('z', targets='z', units='m', val=0., dynamic=True,include_timeseries=True)
         self.add_parameter('gamma', targets='gamma', units='deg', val=0., dynamic=True, include_timeseries=True)
@@ -32,7 +32,7 @@ class Rotation(dm.Phase):
         self.add_boundary_constraint('flight_dynamics.n', equals=1.1, loc='final', ref=1, units=None)
         
         self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_target_size-1, order=3, solve_segments=False, compressed=True), subset='state_input')
-        for var in engine.deck_variables.keys():
+        for var in aircraft.engine.vars:
             self.add_timeseries_output('propulsion.'+ var, timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.M_0', timeseries='interpolated')
         self.add_timeseries_output('p_0', timeseries='interpolated')

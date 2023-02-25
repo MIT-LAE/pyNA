@@ -10,7 +10,7 @@ class LiftOff(dm.Phase):
 
         self.phase_target_size = 13
 
-    def create(self, settings, airframe, engine, objective) -> None:
+    def create(self, settings, aircraft, objective) -> None:
 
         self.set_time_options(initial_bounds=(20, 200), duration_bounds=(0, 500), initial_ref=100., duration_ref=100., fix_duration=False)
 
@@ -18,7 +18,7 @@ class LiftOff(dm.Phase):
         self.add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=True, ref=10.)
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=False, ref=100.)
         self.add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
-        # self.add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=airframe.aero['alpha'][0], upper=airframe.aero['alpha'][-1], ref=10.)
+        # self.add_state('alpha', targets='alpha', rate_source='flight_dynamics.alpha_dot', units='deg', fix_initial=False, fix_final=False, lower=aircraft.aero['alpha'][0], upper=aircraft.aero['alpha'][-1], ref=10.)
         
         self.add_parameter('tau', targets='propulsion.tau', units=None, val=tau, dynamic=True, include_timeseries=True)
         if objective == 'noise' and settings['phld']:
@@ -29,13 +29,13 @@ class LiftOff(dm.Phase):
         self.add_parameter('I_landing_gear', units=None, val=1, dynamic=True, include_timeseries=True)
         self.add_parameter('y', units='m', val=0, dynamic=True, include_timeseries=True)
 
-        self.add_control('alpha', targets='alpha', units='deg', lower=airframe.aero['alpha'][0], upper=airframe.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
+        self.add_control('alpha', targets='alpha', units='deg', lower=aircraft.aero['alpha'][0], upper=aircraft.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
         
         self.add_path_constraint(name='flight_dynamics.gamma_dot', lower=0., units='deg/s')
         self.add_path_constraint(name='flight_dynamics.v_dot', lower=0., units='m/s**2')
 
         self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_target_size-1, order=3, solve_segments=False, compressed=True), subset='state_input')
-        for var in engine.deck_variables.keys():
+        for var in aircraft.engine.vars:
             self.add_timeseries_output('propulsion.'+ var, timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.M_0', timeseries='interpolated')
         self.add_timeseries_output('p_0', timeseries='interpolated')

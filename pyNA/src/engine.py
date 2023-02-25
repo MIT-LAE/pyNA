@@ -9,7 +9,7 @@ class Engine:
         
         self.deck = dict()
 
-        self.var = list()
+        self.vars = list()
         self.var_units = dict()
 
     def get_var(self, settings) -> None:
@@ -20,49 +20,49 @@ class Engine:
         """
 
         # General variables
-        self.var.append('F_n'); self.var_units['F_n'] = 'N'
-        self.var.append('W_f'); self.var_units['W_f'] = 'kg/s'
-        self.var.append('core_Tt_i'); self.var_units['core_Tt_i'] = 'K'
-        self.var.append('core_Pt_i'); self.var_units['core_Pt_i'] = 'Pa'
+        self.vars.append('F_n'); self.var_units['F_n'] = 'N'
+        self.vars.append('W_f'); self.var_units['W_f'] = 'kg/s'
+        self.vars.append('core_Tt_i'); self.var_units['core_Tt_i'] = 'K'
+        self.vars.append('core_Pt_i'); self.var_units['core_Pt_i'] = 'Pa'
 
         # Jet variables
         if settings['jet_mixing_source'] and not settings['jet_shock_source']:
-            self.var.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
-            self.var.append('jet_rho'); self.var_units['jet_rho'] = 'kg/m**3'
-            self.var.append('jet_A'); self.var_units['jet_A'] = 'm**2'
-            self.var.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
+            self.vars.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
+            self.vars.append('jet_rho'); self.var_units['jet_rho'] = 'kg/m**3'
+            self.vars.append('jet_A'); self.var_units['jet_A'] = 'm**2'
+            self.vars.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
         elif settings['jet_shock_source'] and not settings['jet_mixing_source']:
-            self.var.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
-            self.var.append('jet_A'); self.var_units['jet_A'] = 'm**2'
-            self.var.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
-            self.var.append('jet_M'); self.var_units['jet_M'] = None
+            self.vars.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
+            self.vars.append('jet_A'); self.var_units['jet_A'] = 'm**2'
+            self.vars.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
+            self.vars.append('jet_M'); self.var_units['jet_M'] = None
         elif settings['jet_mixing_source'] and settings['jet_shock_source']:
-            self.var.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
-            self.var.append('jet_rho'); self.var_units['jet_rho'] = 'kg/m**3'
-            self.var.append('jet_A'); self.var_units['jet_A'] = 'm**2'
-            self.var.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
-            self.var.append('jet_M'); self.var_units['jet_M'] = None
+            self.vars.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
+            self.vars.append('jet_rho'); self.var_units['jet_rho'] = 'kg/m**3'
+            self.vars.append('jet_A'); self.var_units['jet_A'] = 'm**2'
+            self.vars.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
+            self.vars.append('jet_M'); self.var_units['jet_M'] = None
         
         # Core variables
         if settings['core_source']:
             if settings['core_turbine_attenuation_method'] == 'ge':
-                self.var.append('core_mdot'); self.var_units['core_mdot'] = 'kg/s'
-                self.var.append('core_Tt_j'); self.var_units['core_Tt_j'] = 'K'
-                self.var.append('turb_DTt_des'); self.var_units['turb_DTt_des'] = 'K'
+                self.vars.append('core_mdot'); self.var_units['core_mdot'] = 'kg/s'
+                self.vars.append('core_Tt_j'); self.var_units['core_Tt_j'] = 'K'
+                self.vars.append('turb_DTt_des'); self.var_units['turb_DTt_des'] = 'K'
 
             elif settings['core_turbine_attenuation_method'].method_core_turb == 'pw':
-                self.var.append('core_mdot'); self.var_units['core_mdot'] = 'kg/s'
-                self.var.append('core_Tt_j'); self.var_units['core_Tt_j'] = 'K'
-                self.var.append('turb_rho_e'); self.var_units['turb_rho_e'] = 'kg/m**3'
-                self.var.append('turb_c_e'); self.var_units['turb_c_e', ] = 'm/s'
-                self.var.append('turb_rho_i'); self.var_units['turb_rho_i'] = 'kg/m**3'
-                self.var.append('turb_c_i'); self.var_units['turb_c_i'] = 'm/s'
+                self.vars.append('core_mdot'); self.var_units['core_mdot'] = 'kg/s'
+                self.vars.append('core_Tt_j'); self.var_units['core_Tt_j'] = 'K'
+                self.vars.append('turb_rho_e'); self.var_units['turb_rho_e'] = 'kg/m**3'
+                self.vars.append('turb_c_e'); self.var_units['turb_c_e', ] = 'm/s'
+                self.vars.append('turb_rho_i'); self.var_units['turb_rho_i'] = 'kg/m**3'
+                self.vars.append('turb_c_i'); self.var_units['turb_c_i'] = 'm/s'
 
         # Fan variables
         if settings['fan_inlet_source'] or settings['fan_discharge_source']:
-            self.var.append('fan_DTt'); self.var_units['fan_DTt'] = 'K'
-            self.var.append('fan_mdot'); self.var_units['fan_mdot'] = 'kg/s'
-            self.var.append('fan_N'); self.var_units['fan_N'] = 'rpm'
+            self.vars.append('fan_DTt'); self.var_units['fan_DTt'] = 'K'
+            self.vars.append('fan_mdot'); self.var_units['fan_mdot'] = 'kg/s'
+            self.vars.append('fan_N'); self.var_units['fan_N'] = 'rpm'
 
         return None
 
@@ -108,7 +108,7 @@ class Engine:
             self.deck['TS'] = np.unique(data[deck_labels['tau']].values)
             
             if not len(self.var) == 0:
-                for var in self.var:
+                for var in self.vars:
                     self.deck[var] = np.zeros((self.deck['z'].shape[0], self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
 
                 # Fill engine deck
@@ -118,7 +118,7 @@ class Engine:
                         for k in np.flip(np.arange(self.deck['TS'].shape[0])):
                             cntr = cntr + 1
 
-                            for var in self.var:
+                            for var in self.vars:
 
                                 if var == 'F_n':
                                     if settings['thrust_lapse']:
@@ -142,8 +142,8 @@ class Engine:
             self.deck['M_0'] = np.unique(data['M_0 [-]'].values)
             self.deck['TS'] = np.unique(data['tau [-]'].values)
 
-            if not len(self.var) == 0:
-                for var in self.var:
+            if not len(self.vars) == 0:
+                for var in self.vars:
                     self.deck[var] = np.zeros((self.deck['M_0'].shape[0], self.deck['TS'].shape[0]))
 
                 # Fill engine deck
@@ -152,7 +152,7 @@ class Engine:
                     for k in np.flip(np.arange(self.deck['TS'].shape[0])):
                         cntr = cntr + 1
 
-                        for var in self.var:
+                        for var in self.vars:
 
                             if var == 'F_n':
                                 if settings['thrust_lapse']:
