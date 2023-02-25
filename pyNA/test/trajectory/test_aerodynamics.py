@@ -2,8 +2,8 @@ import unittest
 import pdb
 import openmdao.api as om
 import numpy as np
-from pyNA.pyna import pyna
-from pyNA.src.trajectory_model.aerodynamics import Aerodynamics
+from pyna import pyna
+from src.trajectory_model.aerodynamics import Aerodynamics
 from openmdao.utils.assert_utils import assert_check_partials
 
 
