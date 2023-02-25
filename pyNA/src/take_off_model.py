@@ -1,7 +1,9 @@
 import openmdao.api as om
 import dymos as dm
 import pyNA
+import pdb
 
+from pyNA.src.aircraft import Aircraft
 from pyNA.src.trajectory_model.take_off_phase_ode import TakeOffPhaseODE
 from pyNA.src.trajectory_model.mux import Mux
 
@@ -66,8 +68,13 @@ class TakeOffModel(om.Problem):
         
         return None
 
-    def get_var(self) -> None:
+    def get_var(self, settings) -> None:
 
+        """
+        """
+        
+        self.vars = list()
+        self.var_units = dict()
         self.vars.append('x'); self.var_units['x'] = 'm'
         self.vars.append('y'); self.var_units['y'] = 'm'
         self.vars.append('z'); self.var_units['z'] = 'm'
@@ -83,152 +90,36 @@ class TakeOffModel(om.Problem):
         self.vars.append('p_0'); self.var_units['p_0'] = 'Pa'
         self.vars.append('mu_0'); self.var_units['mu_0'] = 'kg/m/s'
         self.vars.append('I_0'); self.var_units['I_0'] = 'kg/m**2/s'
-        self.vars.append('I_landing_gear'); self.var_units['I_landing_gear'] = None
+        self.vars.append('I_lg'); self.var_units['I_lg'] = None
         self.vars.append('theta_flaps'); self.var_units['theta_flaps'] = 'deg'
         self.vars.append('theta_slats'); self.var_units['theta_slats'] = 'deg'
         self.vars.append('c_l'); self.var_units['c_l'] = None
         self.vars.append('c_d'); self.var_units['c_d'] = None
         self.vars.append('c_l_max'); self.var_units['c_l_max'] = None
         self.vars.append('n'); self.var_units['n'] = None
-        self.vars.append('mdot_NOx'); self.var_units['mdot_NOx'] = 'kg/s'
-        self.vars.append('EINOx'); self.var_units['EINOx'] = None
+        if settings['emissions']:
+            self.vars.append('mdot_NOx'); self.var_units['mdot_NOx'] = 'kg/s'
+            self.vars.append('EINOx'); self.var_units['EINOx'] = None
 
         return None
 
-    def create(self, settings, aircraft, trajectory_mode, objective):
-    
-        self.traj = dm.Trajectory()
-        self.path.add_subsystem('phases', self.traj)
-
-        # Create the trajectory phases 
-        for phase_name in self.phase_name_lst:
-            opts = {'phase': phase_name, 'settings': settings, 'aircraft': aircraft, 'objective': objective}
-            
-            if phase_name == 'groundroll':
-                self.groundroll = GroundRoll(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.groundroll.create(settings, aircraft, objective)
-                self.traj.add_phase(phase_name, self.groundroll)
-            
-            elif phase_name == 'rotation':
-                self.rotation = Rotation(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.rotation.create(settings, aircraft, objective)
-                self.traj.add_phase(phase_name, self.rotation)
-
-            elif phase_name == 'liftoff':
-                self.liftoff = LiftOff(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.liftoff.create(settings, aircraft, objective)
-                self.traj.add_phase(phase_name, self.liftoff)
-
-            elif phase_name == 'vnrs':
-                self.vnrs = Vnrs(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.vnrs.create(settings, aircraft, objective, trajectory_mode)
-                self.traj.add_phase(phase_name, self.vnrs)
-                
-            elif phase_name == 'cutback':
-                self.cutback = CutBack(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.cutback.create(settings, aircraft, objective, trajectory_mode)
-                self.traj.add_phase(phase_name, self.cutback)        
-
-        # Link phases
-        if 'rotation' in self.phase_name_lst:
-            self.traj.link_phases(phases=['groundroll', 'rotation'], vars=['time', 'x', 'v', 'alpha'])    
-            if objective == 'noise' and settings['phld']:
-                self.traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
-
-        if 'liftoff' in self.phase_name_lst:
-            self.traj.link_phases(phases=['rotation', 'liftoff'], vars=['time', 'x', 'z', 'v', 'alpha', 'gamma'])
-            if objective == 'noise' and settings['phld']:
-                self.traj.add_linkage_constraint(phase_a='rotation', phase_b='liftoff', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
-
-        if 'vnrs' in self.phase_name_lst:
-            self.traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
-            if objective == 'noise' and settings['ptcb']:
-                self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='tau', var_b='tau', loc_a='final', loc_b='initial')
-
-        if 'cutback' in self.phase_name_lst:
-            if trajectory_mode == 'flyover':
-                self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'z', 'v', 'alpha', 'gamma'])
-            elif trajectory_mode == 'cutback':
-                self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
-            if objective == 'noise' and settings['ptcb']:
-                self.traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='tau', var_b='tau', loc_a='final', loc_b='initial')
-
-        # Mux trajectory and engine variables
-        TakeOffModel.get_mux_input_output_size(self)
-        mux_t = self.model.add_subsystem(name='trajectory', subsys=Mux(objective=objective, input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, case_name=self.case_name, output_directory_name=self.output_directory_name))
-        TakeOffModel.get_var()
-        for var in self.var:
-            
-            mux_t.add_var('t_s', units=self.var_units[var])
-            
-
-            for j, phase_name in enumerate(self.phase_name_lst):
-                if var == 't_s':
-                    self.model.connect('phases.' + phase_name + '.interpolated.time', 'trajectory.' + var + '_' + str(j))
-
-                elif var in ['x', 'v']:
-                    self.model.connect('phases.' + phase_name + '.interpolated.states:' + var, 'trajectory.' + var + '_' + str(j))
-
-                elif var in ['z', 'gamma']:
-                    if phase_name in {'groundroll','rotation'}:
-                        self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
-                    else:
-                        self.model.connect('phases.' + phase_name + '.interpolated.states:' + var, 'trajectory.' + var + '_' + str(j))
-
-                elif var in ['alpha']:
-                    if phase_name in {'groundroll'}:
-                        self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var,'trajectory.' + var + '_' + str(j))
-                    # elif phase_name in {'rotation', 'liftoff'}:
-                    elif phase_name in {'rotation'}:
-                        self.model.connect('phases.' + phase_name + '.interpolated.states:' + var,'trajectory.' + var + '_' + str(j))
-                    else:
-                        self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
-
-                elif var in ['tau']:
-                    if objective == 'noise' and settings['ptcb']:
-                        if phase_name in ['groundroll', 'rotation', 'liftoff']:
-                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
-                        elif phase_name == 'vnrs':
-                            self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
-                        elif phase_name == 'cutback':
-                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
-                    else:
-                        if phase_name in ['groundroll', 'rotation', 'liftoff', 'vnrs']:
-                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
-                        elif phase_name == 'cutback':
-                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
-
-                elif var in ['theta_flaps', 'theta_slats', 'y', 'I_landing_gear']:
-                    self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
-
-                elif var in ['eas', 'n','M_0', 'p_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
-                    self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.' + var + '_' + str(j))
-
-        mux_e = self.model.add_subsystem(name='engine', subsys=Mux(objective=objective, input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, case_name=self.case_name, output_directory_name=self.output_directory_name))
-        for var in aircraft.engine.vars:
-            mux_e.add_var(var, units=aircraft.engine.var_units[var])
-            for j, phase_name in enumerate(self.phase_name_lst):
-                self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'engine.' + var + '_' + str(j))
-
-        return 
-
-    def set_objective(self, objective) -> None:
+    def set_objective(self, objective:str) -> None:
         
         """
         """
         
         if objective == 'distance':
-            self.model.add_objective('trajectory.x', index=-1, ref=1000.)
+            self.model.add_objective('x', index=-1, ref=1000.)
 
         elif objective == 'time':
-            self.model.add_objective('trajectory.t_s', index=-1, ref=1000.)
+            self.model.add_objective('t_s', index=-1, ref=1000.)
 
         else:
             raise ValueError('Invalid optimization objective specified.')
 
         return None
 
-    def set_driver_settings(self, settings, objective) -> None:
+    def set_driver_settings(self, settings, objective:str) -> None:
         
         """
         """
@@ -262,7 +153,7 @@ class TakeOffModel(om.Problem):
 
         return None
 
-    def set_initial_conditions(self, settings, aircraft, trajectory_mode, path_init=None) -> None:
+    def set_initial_conditions(self, settings, aircraft:Aircraft, trajectory_mode: str, path_init=None) -> None:
         
         # Set initial guess for the trajectory problem
         if path_init is None:
@@ -347,5 +238,213 @@ class TakeOffModel(om.Problem):
                 self['phases.' + phase_name + '.states:v'] = path_init.get_val('phases.' + phase_name + '.states:v')
                 self['phases.' + phase_name + '.states:gamma'] = path_init.get_val('phases.' + phase_name + '.states:gamma')
                 self['phases.' + phase_name + '.controls:alpha'] = path_init.get_val('phases.' + phase_name + '.controls:alpha')
+
+        return None
+
+    def set_transcription(self) -> None:
+
+        self.transcription = dict()
+        for phase_name in self.phase_name_lst:
+            self.transcription[phase_name] = dict()
+
+            if phase_name == 'groundroll':
+                self.transcription[phase_name]['num_segments'] = 3
+                self.transcription[phase_name]['order'] = 3
+            elif phase_name == 'rotation':
+                self.transcription[phase_name]['num_segments'] = 3
+                self.transcription[phase_name]['order'] = 3
+            elif phase_name == 'liftoff':
+                self.transcription[phase_name]['num_segments'] = 4
+                self.transcription[phase_name]['order'] = 3
+            elif phase_name == 'vnrs':
+                self.transcription[phase_name]['num_segments'] = 8
+                self.transcription[phase_name]['order'] = 3
+            elif phase_name == 'cutback':
+                self.transcription[phase_name]['num_segments'] = 10
+                self.transcription[phase_name]['order'] = 3
+
+            self.transcription[phase_name]['grid'] = dm.GaussLobatto(num_segments=self.transcription[phase_name]['num_segments'], order=self.transcription[phase_name]['order'], compressed=True, solve_segments=False)
+            self.transcription[phase_name]['grid'].init_grid()
+
+        return None
+
+    def get_tau_minimum(self) -> float:
+
+        tau_min = 0.6
+
+        return tau_min
+
+    def set_controls(self, tau:dict, theta_flaps:dict, theta_slats:dict, k_rot:float) -> None:
+
+        """
+        """
+
+        self.controls = dict()
+        self.controls['tau'] = tau
+        self.controls['theta_flaps'] = theta_flaps
+        self.controls['theta_slats'] = theta_slats 
+        self.controls['k_rot'] = k_rot
+
+        self.controls['tau_min'] = TakeOffModel.get_tau_minimum(self)
+
+        return None
+
+    def create(self, settings, aircraft:Aircraft, trajectory_mode:str, objective:str):
+        
+        """
+        """
+        
+        self.traj = dm.Trajectory()
+        self.model.add_subsystem(name='phases', subsys=self.traj)
+
+        # Create the trajectory phases 
+        self.phase_name_lst = ['groundroll', 'rotation', 'liftoff', 'vnrs', 'cutback']
+        TakeOffModel.set_transcription(self)
+
+        for phase_name in self.phase_name_lst:
+            opts = {'phase': phase_name, 'settings': settings, 'aircraft': aircraft, 'objective': objective}
+            
+            if phase_name == 'groundroll':
+                self.groundroll = GroundRoll(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.groundroll.create(settings=settings, aircraft=aircraft, controls=self.controls, objective=objective)
+                self.traj.add_phase(phase_name, self.groundroll)
+            
+            elif phase_name == 'rotation':
+                self.rotation = Rotation(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.rotation.create(settings=settings, aircraft=aircraft, controls=self.controls, objective=objective)
+                self.traj.add_phase(phase_name, self.rotation)
+
+            elif phase_name == 'liftoff':
+                self.liftoff = LiftOff(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.liftoff.create(settings=settings, aircraft=aircraft, controls=self.controls, objective=objective)
+                self.traj.add_phase(phase_name, self.liftoff)
+
+            elif phase_name == 'vnrs':
+                self.vnrs = Vnrs(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.vnrs.create(settings=settings, aircraft=aircraft, controls=self.controls, objective=objective, trajectory_mode=trajectory_mode)
+                self.traj.add_phase(phase_name, self.vnrs)
+                
+            elif phase_name == 'cutback':
+                self.cutback = CutBack(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
+                self.cutback.create(settings=settings, aircraft=aircraft, controls=self.controls, objective=objective, trajectory_mode=trajectory_mode)
+                self.traj.add_phase(phase_name, self.cutback)        
+
+        # Link phases
+        if 'rotation' in self.phase_name_lst:
+            self.traj.link_phases(phases=['groundroll', 'rotation'], vars=['time', 'x', 'v', 'alpha'])    
+            if objective == 'noise' and settings['phld']:
+                self.traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+
+        if 'liftoff' in self.phase_name_lst:
+            self.traj.link_phases(phases=['rotation', 'liftoff'], vars=['time', 'x', 'z', 'v', 'alpha', 'gamma'])
+            if objective == 'noise' and settings['phld']:
+                self.traj.add_linkage_constraint(phase_a='rotation', phase_b='liftoff', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
+
+        if 'vnrs' in self.phase_name_lst:
+            self.traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
+            if objective == 'noise' and settings['ptcb']:
+                self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='tau', var_b='tau', loc_a='final', loc_b='initial')
+
+        if 'cutback' in self.phase_name_lst:
+            if trajectory_mode == 'flyover':
+                self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'z', 'v', 'alpha', 'gamma'])
+            elif trajectory_mode == 'cutback':
+                self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
+            if objective == 'noise' and settings['ptcb']:
+                self.traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='tau', var_b='tau', loc_a='final', loc_b='initial')
+
+        # Mux trajectory and engine variables
+        TakeOffModel.get_mux_input_output_size(self)
+
+        promote_lst = ['t_s', 'x', 'y', 'z', 'v', 'alpha', 'gamma', 'F_n', 'tau', 'M_0', 'c_0', 'T_0', 'p_0', 'rho_0', 'mu_0', 'I_0']
+        if settings['noise']:
+            if settings['airframe_source']:
+                promote_lst.extend(['theta_flaps', 'I_lg'])
+            if settings['jet_mixing_source'] and not settings['jet_shock_source']:
+                promote_lst.extend(['jet_V', 'jet_rho', 'jet_A', 'jet_Tt'])
+            elif not settings['jet_mixing_source'] and settings['jet_shock_source']:
+                promote_lst.extend(['jet_V', 'jet_A', 'jet_Tt', 'jet_M'])
+            elif settings['jet_mixing_source'] and settings['jet_shock_source']:
+                promote_lst.extend(['jet_V', 'jet_rho', 'jet_A', 'jet_Tt', 'jet_M'])
+            if settings['core_source']:
+                if settings['core_turbine_attenuation_method'] == "ge":
+                    promote_lst.extend(['core_mdot', 'core_Tt_i', 'core_Tt_j', 'core_Pt_i', 'turb_DTt_des'])
+                if settings['core_turbine_attenuation_method'] == "pw":
+                    promote_lst.extend(['core_mdot', 'core_Tt_i', 'core_Tt_j', 'core_Pt_i', 'turb_rho_i', 'turb_c_i', 'turb_rho_e', 'turb_c_e'])
+            if settings['fan_inlet_source'] or settings['fan_discharge_source']:
+                promote_lst.extend(['fan_DTt', 'fan_mdot', 'fan_N'])
+
+        mux_t = self.model.add_subsystem(name='trajectory', 
+                                         subsys=Mux(input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, settings=settings, objective=objective),
+                                         promotes_outputs=promote_lst)
+        TakeOffModel.get_var(self, settings=settings)
+        for var in self.vars:
+            
+            mux_t.add_var(var, units=self.var_units[var])
+            
+            for j, phase_name in enumerate(self.phase_name_lst):
+                if var == 't_s':
+                    self.model.connect('phases.' + phase_name + '.interpolated.time', 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['x', 'v']:
+                    self.model.connect('phases.' + phase_name + '.interpolated.states:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['z', 'gamma']:
+                    if phase_name in {'groundroll','rotation'}:
+                        self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                    else:
+                        self.model.connect('phases.' + phase_name + '.interpolated.states:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['alpha']:
+                    if phase_name in {'groundroll'}:
+                        self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var,'trajectory.' + var + '_' + str(j))
+                    # elif phase_name in {'rotation', 'liftoff'}:
+                    elif phase_name in {'rotation'}:
+                        self.model.connect('phases.' + phase_name + '.interpolated.states:' + var,'trajectory.' + var + '_' + str(j))
+                    else:
+                        self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['tau']:
+                    if objective == 'noise' and settings['ptcb']:
+                        if phase_name in ['groundroll', 'rotation', 'liftoff']:
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                        elif phase_name == 'vnrs':
+                            self.model.connect('phases.' + phase_name + '.interpolated.controls:' + var, 'trajectory.' + var + '_' + str(j))
+                        elif phase_name == 'cutback':
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                    else:
+                        if phase_name in ['groundroll', 'rotation', 'liftoff', 'vnrs']:
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+                        elif phase_name == 'cutback':
+                            self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['theta_flaps', 'theta_slats', 'y', 'I_lg']:
+                    self.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
+
+                elif var in ['eas', 'n','M_0', 'p_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
+                    self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.' + var + '_' + str(j))
+
+        for var in aircraft.engine.vars:
+            mux_t.add_var(var, units=aircraft.engine.var_units[var])
+            for j, phase_name in enumerate(self.phase_name_lst):
+                self.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.' + var + '_' + str(j))
+
+        return 
+
+    def solve(self, settings, run_driver:bool) -> None:
+
+        """
+        """
+
+        # Attach a recorder to the problem to save model data
+        if settings['save_results']:
+            self.add_recorder(om.SqliteRecorder(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/output/' + settings['output_directory_name'] + '/' + settings['output_file_name']))
+
+        # Run problem
+        dm.run_problem(self, run_driver=run_driver)
+
+        # Save the results
+        if settings['save_results']:
+            self.record(case_name=settings['case_name'])
 
         return None

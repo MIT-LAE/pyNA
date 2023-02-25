@@ -13,7 +13,7 @@ from pyNA.src.time_history import TimeHistory
 
 class Trajectory:
     
-    def __init__(self, settings, mode:str) -> None:
+    def __init__(self, mode:str) -> None:
         
         """
         
@@ -29,7 +29,6 @@ class Trajectory:
         elif self.mode == 'data':
             # Load data .csv files
             self.data = pd.DataFrame()
-            Trajectory.load_data(self, settings=settings)
 
             # Create openmdao problem
             self.path = TimeHistory()
@@ -60,34 +59,44 @@ class Trajectory:
 
         return None
 
-    def solve(self, settings, aircraft=None, trajectory_mode='cutback', objective='time') -> None:
+    def solve(self, settings, aircraft=None, trajectory_mode='cutback', objective='time',
+                    tau={'groundroll':1., 'rotation':1., 'liftoff':1., 'vnrs':1., 'cutback':0.6},
+                    theta_flaps={'groundroll':10., 'rotation':10., 'liftoff':10., 'vnrs':10., 'cutback':10.},
+                    theta_slats={'groundroll':-6., 'rotation':-6., 'liftoff':-6., 'vnrs':-6., 'cutback':-6.},
+                    k_rot=1.2) -> None:
         
         """
         """
+        
+        if self.mode == 'data':
 
-        if self.mode == 'model':
-            
-            self.path.create(settings, aircraft, trajectory_mode, objective)
-            self.path.set_objective(objective)
-            self.path.set_driver_settings(settings, objective)
-            self.path.setup(force_alloc_complex=True)
-            self.path.set_initial_conditions()
-            self.path.solve(run_driver=True, save_results=settings['save_results'])
+            Trajectory.load_data(self, settings=settings)
 
-            # Check convergence
-            converged = self.path.check_convergence(filename='IPOPT_trajectory_convergence.out')
-            print(converged)
-
-        elif self.mode == 'data':
-            
             self.path.create(settings=settings, num_nodes=self.n_t)
             self.path.setup(force_alloc_complex=True)
             self.path.set_initial_conditions(settings, data=self.data)
             self.path.run_model()
+
+        elif self.mode == 'model':
+
+            if not aircraft:
+                raise ValueError("'aircraft' not defined")
+
+            self.path.set_controls(tau=tau, theta_flaps=theta_flaps, theta_slats=theta_slats, k_rot=k_rot)
+            self.path.create(settings, aircraft, trajectory_mode, objective)
+            self.path.set_objective(objective)
+            self.path.set_driver_settings(settings, objective)
+            self.path.setup(force_alloc_complex=True)
+            self.path.set_initial_conditions(settings=settings, aircraft=aircraft, trajectory_mode=trajectory_mode)
+            self.path.solve(settings, run_driver=True)
+
+            # Check convergence
+            converged = Trajectory.check_convergence(self, settings=settings, filename='IPOPT_trajectory_convergence.out')
+            print('Converged:', converged)
   
         return None
 
-    def check_convergence(self, filename: str) -> bool:
+    def check_convergence(self, settings, filename: str) -> bool:
         """
         Checks convergence of case using optimizer output file.
 
@@ -102,12 +111,12 @@ class Trajectory:
 
         # Save convergence info for trajectory
         # Read IPOPT file
-        file_ipopt = open(self.pyna_directory + '/cases/' + self.case_name + '/output/' + self.output_directory_name + '/' + filename, 'r')
+        file_ipopt = open(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/output/' + settings['output_directory_name'] + '/' + filename, 'r')
         ipopt = file_ipopt.readlines()
         file_ipopt.close()
 
         # Check if convergence summary excel file exists
-        cnvg_file_name = self.pyna_directory + '/cases/' + self.case_name + '/output/' + self.output_directory_name + '/' + 'Convergence.csv'
+        cnvg_file_name = pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/output/' + settings['output_directory_name'] + '/' + 'Convergence.csv'
         if not os.path.isfile(cnvg_file_name):
             file_cvg = open(cnvg_file_name, 'w')
             file_cvg.writelines("Trajectory name , Execution date/time,  Converged")
@@ -117,10 +126,10 @@ class Trajectory:
         # Write convergence output to file
         # file = open(cnvg_file_name, 'a')
         if ipopt[-1] in {'EXIT: Optimal Solution Found.\n', 'EXIT: Solved To Acceptable Level.\n'}:
-            file_cvg.writelines("\n" + self.output_file_name + ", " + str(dt.datetime.now()) + ", Converged")
+            file_cvg.writelines("\n" + settings['output_file_name'] + ", " + str(dt.datetime.now()) + ", Converged")
             converged = True
         else:
-            file_cvg.writelines("\n" + self.output_file_name + ", " + str(dt.datetime.now()) + ", Not converged")
+            file_cvg.writelines("\n" + settings['output_file_name'] + ", " + str(dt.datetime.now()) + ", Not converged")
             converged = False
         file_cvg.close()
 

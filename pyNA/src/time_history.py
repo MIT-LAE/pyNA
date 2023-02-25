@@ -6,7 +6,26 @@ class TimeHistory(om.Problem):
     
     def create(self, num_nodes, settings) -> None:
         
-        self.model.add_subsystem('trajectory', TrajectoryData(num_nodes=num_nodes, settings=settings))
+        promote_lst = ['t_s', 'x', 'y', 'z', 'v', 'alpha', 'gamma', 'F_n', 'tau', 'M_0', 'c_0', 'T_0', 'p_0', 'rho_0', 'mu_0', 'I_0']
+        if settings['airframe_source']:
+            promote_lst.extend(['theta_flaps', 'I_lg'])
+        if settings['jet_mixing_source'] and not settings['jet_shock_source']:
+            promote_lst.extend(['jet_V', 'jet_rho', 'jet_A', 'jet_Tt'])
+        elif not settings['jet_mixing_source'] and settings['jet_shock_source']:
+            promote_lst.extend(['jet_V', 'jet_A', 'jet_Tt', 'jet_M'])
+        elif settings['jet_mixing_source'] and settings['jet_shock_source']:
+            promote_lst.extend(['jet_V', 'jet_rho', 'jet_A', 'jet_Tt', 'jet_M'])
+        if settings['core_source']:
+            if settings['core_turbine_attenuation_method'] == "ge":
+                promote_lst.extend(['core_mdot', 'core_Tt_i', 'core_Tt_j', 'core_Pt_i', 'turb_DTt_des'])
+            if settings['core_turbine_attenuation_method'] == "pw":
+                promote_lst.extend(['core_mdot', 'core_Tt_i', 'core_Tt_j', 'core_Pt_i', 'turb_rho_i', 'turb_c_i', 'turb_rho_e', 'turb_c_e'])
+        if settings['fan_inlet_source'] or settings['fan_discharge_source']:
+            promote_lst.extend(['fan_DTt', 'fan_mdot', 'fan_N'])
+
+        self.model.add_subsystem(name='trajectory', 
+                                 subsys=TrajectoryData(num_nodes=num_nodes, settings=settings),
+                                 promotes_outputs=promote_lst)
 
         return None
 

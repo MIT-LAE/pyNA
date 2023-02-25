@@ -42,5 +42,5 @@ class Propulsion(om.MetaModelStructuredComp):
         self.add_input('M_0', val=np.ones(nn), units=None, training_data=engine.deck['M_0'])
         self.add_input('tau', val=np.ones(nn), units=None, training_data=engine.deck['TS'])
 
-        for var in engine.var:
+        for var in engine.vars:
             self.add_output(var, val=np.ones(nn), units=engine.var_units[var], training_data=engine.deck[var])

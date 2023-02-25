@@ -9,7 +9,7 @@ class CutBack(dm.Phase):
 
         self.phase_target_size = 37
 
-    def create(self, settings, aircraft, objective, trajectory_mode) -> None:
+    def create(self, settings, aircraft, controls, objective, trajectory_mode) -> None:
         
         self.set_time_options(initial_bounds=(10, 400), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)
         
@@ -22,13 +22,13 @@ class CutBack(dm.Phase):
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=True, ref=100.)
         self.add_state('gamma', rate_source='flight_dynamics.gamma_dot', units='deg', fix_initial=False, fix_final=False, ref=10.)
         
-        self.add_parameter('tau', targets='propulsion.tau', units=None, val=tau_min, dynamic=True, include_timeseries=True)
+        self.add_parameter('tau', targets='propulsion.tau', units=None, val=controls['tau']['cutback'], dynamic=True, include_timeseries=True)
         if objective == 'noise' and settings['phld']:
             self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=0., dynamic=True, include_timeseries=True, ref=10.)
         else:
-            self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=theta_flaps, dynamic=True, include_timeseries=True)
-        self.add_parameter('theta_slats', targets='theta_slats', units='deg', val=theta_slats, dynamic=True, include_timeseries=True)
-        self.add_parameter('I_landing_gear', units=None, val=0, dynamic=True, include_timeseries=True)
+            self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=controls['theta_flaps']['cutback'], dynamic=True, include_timeseries=True)
+        self.add_parameter('theta_slats', targets='theta_slats', units='deg', val=controls['theta_slats']['cutback'], dynamic=True, include_timeseries=True)
+        self.add_parameter('I_lg', units=None, val=0, dynamic=True, include_timeseries=True)
         self.add_parameter('y', units='m', val=0, dynamic=True, include_timeseries=True)
 
         self.add_control('alpha', targets='alpha', units='deg', lower=aircraft.aero['alpha'][0], upper=aircraft.aero['alpha'][-1], rate_continuity=True, rate_continuity_scaler=1.0, rate2_continuity=False, opt=True, ref=10.)
@@ -37,9 +37,9 @@ class CutBack(dm.Phase):
         # self.add_boundary_constraint('v', loc='final', equals=v_max, ref=100., units='m/s')
         
         self.add_timeseries('interpolated', transcription=dm.GaussLobatto(num_segments=self.phase_target_size-1, order=3, solve_segments=False, compressed=True), subset='state_input')
-        for var in aircraft.vars:
+        for var in aircraft.engine.vars:
             self.add_timeseries_output('propulsion.'+ var, timeseries='interpolated')
-        self.add_timeseries_output('aerodynamics.M_0', timeseries='interpolated')
+        
         self.add_timeseries_output('p_0', timeseries='interpolated')
         self.add_timeseries_output('rho_0', timeseries='interpolated')
         self.add_timeseries_output('I_0', timeseries='interpolated')
@@ -47,13 +47,13 @@ class CutBack(dm.Phase):
         self.add_timeseries_output('T_0', timeseries='interpolated')
         self.add_timeseries_output('c_0', timeseries='interpolated')
         self.add_timeseries_output('mu_0', timeseries='interpolated')
-        self.add_timeseries_output('emissions.mdot_NOx', timeseries='interpolated')
-        self.add_timeseries_output('emissions.EINOx', timeseries='interpolated')
         self.add_timeseries_output('flight_dynamics.n', timeseries='interpolated')
-        self.add_timeseries_output('aerodynamics.L', timeseries='interpolated')
-        self.add_timeseries_output('aerodynamics.D', timeseries='interpolated')
+        self.add_timeseries_output('flight_dynamics.M_0', timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.c_l', timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.c_l_max', timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.c_d', timeseries='interpolated')
+        if settings['emissions']:
+            self.add_timeseries_output('emissions.mdot_NOx', timeseries='interpolated')
+            self.add_timeseries_output('emissions.EINOx', timeseries='interpolated')
 
         return None        

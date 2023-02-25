@@ -2,6 +2,7 @@ import pdb
 import numpy as np
 import openmdao
 import openmdao.api as om
+import pyNA
 
 
 class Mux(om.ExplicitComponent):
@@ -27,9 +28,8 @@ class Mux(om.ExplicitComponent):
         # self.options.declare('gauss_transcription_order', default=3, desc='transcription_order')
         self.options.declare('input_size_array', default=np.array([20, 20]), desc='Size of input arrays to be muxed')
         self.options.declare('output_size', default=2, desc='Size of the muxed array')
+        self.options.declare('settings', types=dict)
         self.options.declare('objective', types=str)
-        self.options.declare('case_name', types=str)
-        self.options.declare('output_directory_name', types=str)
 
     def add_var(self, name:str, val=1.0, units=None, desc=''):
         """
@@ -122,10 +122,10 @@ class Mux(om.ExplicitComponent):
             # Write stack of vals to outputs
             outputs[var] = np.hstack(output_vals)
 
-            if var in ['TS', 'theta_flaps', 'alpha']:
+            if var in ['tau', 'theta_flaps', 'alpha']:
                 if self.options['objective'] == 'noise':
                     # Write TS to file
-                    f = open('/Users/laurensvoet/Documents/Research/pyNA/pyNA/cases/' + self.options['case_name'] + '/output/' + self.options['output_directory_name'] + '/' + 'inputs_' + var + '.txt' , 'a')
+                    f = open(pyNA.__path__.__dict__["_path"][0] + '/' + self.options['settings']['case_name'] + '/output/' + self.options['settings']['output_directory_name'] + '/' + 'inputs_' + var + '.txt' , 'a')
                     f.write(str(outputs[var]) + '\n')
                     f.close()
 
