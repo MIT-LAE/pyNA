@@ -6,17 +6,16 @@ import dymos as dm
 import os
 import pdb
 
-from pyNA.src.utils.compute_frequency_bands import compute_frequency_bands
-from pyNA.src.utils.compute_frequency_subbands import compute_frequency_subbands
 from pyNA.src.trajectory_model.trajectory_data import TrajectoryData
-
-from pyNA.src.trajectory_model.groundroll import GroundRoll
-from pyNA.src.trajectory_model.rotation import Rotation
-from pyNA.src.trajectory_model.liftoff import LiftOff
-from pyNA.src.trajectory_model.vnrs import Vnrs
-from pyNA.src.trajectory_model.cutback import CutBack
 from pyNA.src.trajectory_model.take_off_phase_ode import TakeOffPhaseODE
 from pyNA.src.trajectory_model.mux import Mux
+
+from pyNA.src.trajectory_model.phases.groundroll import GroundRoll
+from pyNA.src.trajectory_model.phases.rotation import Rotation
+from pyNA.src.trajectory_model.phases.liftoff import LiftOff
+from pyNA.src.trajectory_model.phases.vnrs import Vnrs
+from pyNA.src.trajectory_model.phases.cutback import CutBack
+
 
 class Trajectory:
     
@@ -30,7 +29,7 @@ class Trajectory:
         """
 
         self.mode = mode
-        if self.mode == 'compute':
+        if self.mode == 'model':
             self.path = om.Problem()
 
         elif self.mode == 'data':
@@ -128,54 +127,54 @@ class Trajectory:
             self.path.set_val('trajectory.fan_mdot', self.time_history['fan_mdot [kg/s]'])
             self.path.set_val('trajectory.fan_N', self.time_history['fan_N [rpm]'])
 
-    def create_model(self):
+    def create_model(self, settings, airframe, engine, trajectory_mode='cutback', objective='time'):
         
         self.traj = dm.Trajectory()
         self.path.add_subsystem('phases', self.traj)
 
         # Create the trajectory phases 
         for phase_name in self.phase_name_lst:
-            opts = {'phase': phase_name, 'airframe': airframe, 'engine': engine, 'sealevel_atmosphere': sealevel_atmosphere, 'atmosphere_dT': atmosphere_dT, 'atmosphere_type': atmosphere_type, 'objective': objective, 'case_name': self.case_name, 'output_directory_name': self.output_directory_name}
+            opts = {'phase': phase_name, 'settings': settings, 'airframe': airframe, 'engine': engine, 'objective': objective}
             
             if phase_name == 'groundroll':
                 self.groundroll = GroundRoll(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.groundroll.create(airframe, engine, pkrot, phld, TS_to, k_rot, theta_flaps, theta_slats, objective, atmosphere_type)
+                self.groundroll.create(settings, airframe, engine, objective)
                 self.traj.add_phase(phase_name, self.groundroll)
             
             elif phase_name == 'rotation':
                 self.rotation = Rotation(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.rotation.create(airframe, engine, phld, TS_to, theta_flaps, theta_slats, objective, atmosphere_type)
+                self.rotation.create(settings, airframe, engine, objective)
                 self.traj.add_phase(phase_name, self.rotation)
 
             elif phase_name == 'liftoff':
                 self.liftoff = LiftOff(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.liftoff.create(airframe, engine, phld, TS_to, theta_flaps, theta_slats, objective, atmosphere_type)
+                self.liftoff.create(settings, airframe, engine, objective)
                 self.traj.add_phase(phase_name, self.liftoff)
 
             elif phase_name == 'vnrs':
                 self.vnrs = Vnrs(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.vnrs.create(airframe, engine, ptcb, phld, TS_vnrs, TS_min, theta_flaps_cb, theta_slats, trajectory_mode, objective, atmosphere_type)
+                self.vnrs.create(settings, airframe, engine, objective, trajectory_mode)
                 self.traj.add_phase(phase_name, self.vnrs)
                 
             elif phase_name == 'cutback':
                 self.cutback = CutBack(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
-                self.cutback.create(airframe, engine, phld, v_max, TS_cb, theta_flaps_cb, theta_slats, trajectory_mode, objective, atmosphere_type)
+                self.cutback.create(settings, airframe, engine, objective, trajectory_mode)
                 self.traj.add_phase(phase_name, self.cutback)        
 
         # Link phases
         if 'rotation' in self.phase_name_lst:
             self.traj.link_phases(phases=['groundroll', 'rotation'], vars=['time', 'x', 'v', 'alpha'])    
-            if objective == 'noise' and phld:
+            if objective == 'noise' and settings['phld']:
                 self.traj.add_linkage_constraint(phase_a='groundroll', phase_b='rotation', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
         if 'liftoff' in self.phase_name_lst:
             self.traj.link_phases(phases=['rotation', 'liftoff'], vars=['time', 'x', 'z', 'v', 'alpha', 'gamma'])
-            if objective == 'noise' and phld:
+            if objective == 'noise' and settings['phld']:
                 self.traj.add_linkage_constraint(phase_a='rotation', phase_b='liftoff', var_a='theta_flaps', var_b='theta_flaps', loc_a='final', loc_b='initial')
 
         if 'vnrs' in self.phase_name_lst:
             self.traj.link_phases(phases=['liftoff', 'vnrs'],  vars=['time', 'x', 'v', 'alpha', 'gamma'])
-            if objective == 'noise' and ptcb:
+            if objective == 'noise' and settings['ptcb']:
                 self.traj.add_linkage_constraint(phase_a='liftoff', phase_b='vnrs', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
 
         if 'cutback' in self.phase_name_lst:
@@ -183,7 +182,7 @@ class Trajectory:
                 self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'z', 'v', 'alpha', 'gamma'])
             elif trajectory_mode == 'cutback':
                 self.traj.link_phases(phases=['vnrs', 'cutback'], vars=['time', 'x', 'v', 'alpha', 'gamma'])
-            if objective == 'noise' and ptcb:
+            if objective == 'noise' and settings['ptcb']:
                 self.traj.add_linkage_constraint(phase_a='vnrs', phase_b='cutback', var_a='TS', var_b='TS', loc_a='final', loc_b='initial')
 
         # Mux trajectory and engine variables
@@ -254,7 +253,7 @@ class Trajectory:
         pass
 
     def compute_path(self, settings, objective='time'):
-        if self.mode == 'compute':
+        if self.mode == 'model':
             print(objective)
             pass
 

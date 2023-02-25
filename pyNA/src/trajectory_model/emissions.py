@@ -29,8 +29,8 @@ class Emissions(om.ExplicitComponent):
         nn = self.options['num_nodes']
 
         # Define inputs
-        self.add_input('Tti_c', val=np.ones(nn), units='K', desc='combustor inlet temperature (re. T_0) [-]')
-        self.add_input('Pti_c', val=np.ones(nn), units='Pa', desc='combustor inlet pressure (re. p_0) [-]')
+        self.add_input('core_Tt_i', val=np.ones(nn), units='K', desc='combustor inlet temperature (re. T_0) [-]')
+        self.add_input('core_Pt_i', val=np.ones(nn), units='Pa', desc='combustor inlet pressure (re. p_0) [-]')
         self.add_input('W_f', val=np.ones(nn), units='kg/s', desc='engine fuel flow [kg/s]')
 
         # Define outputs
@@ -39,17 +39,17 @@ class Emissions(om.ExplicitComponent):
 
         # Define partials
         arange = np.arange(self.options['num_nodes'])
-        self.declare_partials(of='EINOx', wrt='Pti_c', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='EINOx', wrt='Tti_c', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='mdot_NOx', wrt='Pti_c', rows=arange, cols=arange, val=1.0)
-        self.declare_partials(of='mdot_NOx', wrt='Tti_c', rows=arange, cols=arange, val=1.0)
+        self.declare_partials(of='EINOx', wrt='core_Pt_i', rows=arange, cols=arange, val=1.0)
+        self.declare_partials(of='EINOx', wrt='core_Tt_i', rows=arange, cols=arange, val=1.0)
+        self.declare_partials(of='mdot_NOx', wrt='core_Pt_i', rows=arange, cols=arange, val=1.0)
+        self.declare_partials(of='mdot_NOx', wrt='core_Tt_i', rows=arange, cols=arange, val=1.0)
         self.declare_partials(of='mdot_NOx', wrt='W_f', rows=arange, cols=arange, val=1.0)
 
     def compute(self, inputs: openmdao.vectors.default_vector.DefaultVector, outputs: openmdao.vectors.default_vector.DefaultVector):
 
         # Extract inputs
-        T3 = inputs['Tti_c']
-        P3 = inputs['Pti_c']
+        T3 = inputs['core_Tt_i']
+        P3 = inputs['core_Pt_i']
 
         # Curve fit for EINOx for CFM56-5B3 engine from EDB (P3 in Pa and T3 in K)
         a = 6.25528852e-08
@@ -64,8 +64,8 @@ class Emissions(om.ExplicitComponent):
     def compute_partials(self, inputs, partials):
         
         # Extract inputs
-        T3 = inputs['Tti_c']
-        P3 = inputs['Pti_c']
+        T3 = inputs['core_Tt_i']
+        P3 = inputs['core_Pt_i']
 
         # Curve fit for EINOx for CFM56-5B3 engine from EDB (P3 in Pa and T3 in K)
         a = 6.25528852e-08
@@ -74,8 +74,8 @@ class Emissions(om.ExplicitComponent):
         d = -1.50392850e+01
         EINOx = (P3 / 1000.) ** 0.4 * (a * T3 ** 3 + b * T3 ** 2 + c * T3 + d)
 
-        partials['EINOx', 'Pti_c'] = 0.4 * (P3 / 1000.) ** (0.4-1) * (1/1000) * (a * T3 ** 3 + b * T3 ** 2 + c * T3 + d)
-        partials['EINOx', 'Tti_c'] = (P3 / 1000.) ** 0.4 * (3* a * T3 ** 2 + 2* b * T3 + c)
-        partials['mdot_NOx', 'Pti_c'] = inputs['W_f'] * 0.4 * (P3 / 1000.) ** (0.4-1) * (1/1000) * (a * T3 ** 3 + b * T3 ** 2 + c * T3 + d)
-        partials['mdot_NOx', 'Tti_c'] = inputs['W_f'] * (P3 / 1000.) ** 0.4 * (3* a * T3 ** 2 + 2* b * T3 + c)
+        partials['EINOx', 'core_Pt_i'] = 0.4 * (P3 / 1000.) ** (0.4-1) * (1/1000) * (a * T3 ** 3 + b * T3 ** 2 + c * T3 + d)
+        partials['EINOx', 'core_Tt_i'] = (P3 / 1000.) ** 0.4 * (3* a * T3 ** 2 + 2* b * T3 + c)
+        partials['mdot_NOx', 'core_Pt_i'] = inputs['W_f'] * 0.4 * (P3 / 1000.) ** (0.4-1) * (1/1000) * (a * T3 ** 3 + b * T3 ** 2 + c * T3 + d)
+        partials['mdot_NOx', 'core_Tt_i'] = inputs['W_f'] * (P3 / 1000.) ** 0.4 * (3* a * T3 ** 2 + 2* b * T3 + c)
         partials['mdot_NOx', 'W_f'] = EINOx

@@ -1,17 +1,18 @@
 import pandas as pd
 import numpy as np
+import pyNA
 
 
 class Engine:
     
     def __init__(self) -> None:
         
+        self.deck = dict()
+
         self.var = list()
         self.var_units = dict()
-        self.deck = dict()
-        self.timeseries = pd.DataFrame()
 
-    def get_source_noise_variables(self, settings) -> None:
+    def get_var(self, settings) -> None:
         """
         Get list of required engine variables for noise calculations
 
@@ -21,54 +22,51 @@ class Engine:
         # General variables
         self.var.append('F_n'); self.var_units['F_n'] = 'N'
         self.var.append('W_f'); self.var_units['W_f'] = 'kg/s'
-        self.var.append('Tti_c'); self.var_units['Tti_c'] = 'K'
-        self.var.append('Pti_c'); self.var_units['Pti_c'] = 'Pa'
+        self.var.append('core_Tt_i'); self.var_units['core_Tt_i'] = 'K'
+        self.var.append('core_Pt_i'); self.var_units['core_Pt_i'] = 'Pa'
 
         # Jet variables
         if settings['jet_mixing_source'] and not settings['jet_shock_source']:
-            self.var.append('V_j'); self.var_units['V_j'] = 'm/s' 
-            self.var.append('rho_j'); self.var_units['rho_j'] = 'kg/m**3'
-            self.var.append('A_j'); self.var_units['A_j'] = 'm**2'
-            self.var.append('Tt_j'); self.var_units['Tt_j'] = 'K'
+            self.var.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
+            self.var.append('jet_rho'); self.var_units['jet_rho'] = 'kg/m**3'
+            self.var.append('jet_A'); self.var_units['jet_A'] = 'm**2'
+            self.var.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
         elif settings['jet_shock_source'] and not settings['jet_mixing_source']:
-            self.var.append('V_j'); self.var_units['V_j'] = 'm/s' 
-            self.var.append('A_j'); self.var_units['A_j'] = 'm**2'
-            self.var.append('Tt_j'); self.var_units['Tt_j'] = 'K'
-            self.var.append('M_j'); self.var_units['M_j'] = None
+            self.var.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
+            self.var.append('jet_A'); self.var_units['jet_A'] = 'm**2'
+            self.var.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
+            self.var.append('jet_M'); self.var_units['jet_M'] = None
         elif settings['jet_mixing_source'] and settings['jet_shock_source']:
-            self.var.append('V_j'); self.var_units['V_j'] = 'm/s' 
-            self.var.append('rho_j'); self.var_units['rho_j'] = 'kg/m**3'
-            self.var.append('A_j'); self.var_units['A_j'] = 'm**2'
-            self.var.append('Tt_j'); self.var_units['Tt_j'] = 'K'
-            self.var.append('M_j'); self.var_units['M_j'] = None
+            self.var.append('jet_V'); self.var_units['jet_V'] = 'm/s' 
+            self.var.append('jet_rho'); self.var_units['jet_rho'] = 'kg/m**3'
+            self.var.append('jet_A'); self.var_units['jet_A'] = 'm**2'
+            self.var.append('jet_Tt'); self.var_units['jet_Tt'] = 'K'
+            self.var.append('jet_M'); self.var_units['jet_M'] = None
         
         # Core variables
         if settings['core_source']:
             if settings['core_turbine_attenuation_method'] == 'ge':
-                self.var.append('mdoti_c'); self.var_units['mdoti_c'] = 'kg/s'
-                self.var.append('Ttj_c'); self.var_units['Ttj_c'] = 'K'
-                self.var.append('DTt_des_c'); self.var_units['DTt_des_c'] = 'K'
+                self.var.append('core_mdot'); self.var_units['core_mdot'] = 'kg/s'
+                self.var.append('core_Tt_j'); self.var_units['core_Tt_j'] = 'K'
+                self.var.append('turb_DTt_des'); self.var_units['turb_DTt_des'] = 'K'
 
             elif settings['core_turbine_attenuation_method'].method_core_turb == 'pw':
-                self.var.append('mdoti_c'); self.var_units['mdoti_c'] = 'kg/s'
-                self.var.append('Ttj_c'); self.var_units['Ttj_c'] = 'K'
-                self.var.append('DTt_des_c'); self.var_units['DTt_des_c'] = 'K'
-                self.var.append('rho_te_c'); self.var_units['rho_te_c'] = 'kg/m**3'
-                self.var.append('c_te_c'); self.var_units['c_te_c', ] = 'm/s'
-                self.var.append('rho_ti_c'); self.var_units['rho_ti_c'] = 'kg/m**3'
-                self.var.append('c_ti_c'); self.var_units['c_ti_c'] = 'm/s'
+                self.var.append('core_mdot'); self.var_units['core_mdot'] = 'kg/s'
+                self.var.append('core_Tt_j'); self.var_units['core_Tt_j'] = 'K'
+                self.var.append('turb_rho_e'); self.var_units['turb_rho_e'] = 'kg/m**3'
+                self.var.append('turb_c_e'); self.var_units['turb_c_e', ] = 'm/s'
+                self.var.append('turb_rho_i'); self.var_units['turb_rho_i'] = 'kg/m**3'
+                self.var.append('turb_c_i'); self.var_units['turb_c_i'] = 'm/s'
 
         # Fan variables
         if settings['fan_inlet_source'] or settings['fan_discharge_source']:
-            self.var.append('DTt_f'); self.var_units['DTt_f'] = 'K'
-            self.var.append('mdot_f'); self.var_units['mdot_f'] = 'kg/s'
-            self.var.append('N_f'); self.var_units['N_f'] = 'rpm'
-            self.var.append('A_f'); self.var_units['A_f'] = 'm**2'
-            self.var.append('d_f'); self.var_units['d_f'] = 'm'
+            self.var.append('fan_DTt'); self.var_units['fan_DTt'] = 'K'
+            self.var.append('fan_mdot'); self.var_units['fan_mdot'] = 'kg/s'
+            self.var.append('fan_N'); self.var_units['fan_N'] = 'rpm'
 
         return None
 
-    def get_deck(self, settings) -> None:
+    def get_performance_deck(self, settings) -> None:
         """
         Load engine deck for trajectory computations.
 
@@ -76,35 +74,38 @@ class Engine:
         """
 
         # Load self.engine data and create interpolation functions
-        data = pd.read_csv(settings['pyna_directory'] + '/cases/' + settings['case_name'] + '/engine/' + settings['engine_deck_file_name'])
-        data_column_labels = {'F_n':'Fn [N]',
-                              'W_f':'Wf [kg/s]',
-                              'V_j':'jet_V [m/s]',
-                              'Tt_j':'jet_Tt [K]',
-                              'rho_j':'jet_rho [kg/m3]',
-                              'A_j':'jet_A [m2]',
-                              'M_j':'jet_M [-]',
-                              'mdoti_c':'core_mdot_in [kg/s]',
-                              'Tti_c':'core_Tt_in [K]',
-                              'Ttj_c':'core_Tt_out [K]',
-                              'Pti_c':'core_Pt_in [Pa]',
-                              'DTt_des_c':'core_DT_t [K]',
-                              'rho_te_c':'core_LPT_rho_out [kg/m3]',
-                              'rho_ti_c':'core_HPT_rho_in [kg/m3]',
-                              'c_te_c':'core_LPT_c_out [m/s]',
-                              'c_ti_c':'core_HPT_c_in [m/s]',
-                              'DTt_f':'fan_DTt [K]',
-                              'mdot_f':'fan_mdot_in [kg/s]',
-                              'N_f':'fan_N [rpm]',
-                              'A_f':'fan_A [m2]',
-                              'd_f':'fan_d [m]',
-                              'M_d_f':'fan_M_d [-]'}
+        data = pd.read_csv(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/aircraft/' + settings['engine_deck_file_name'])
+        deck_labels = {'z':'z [m]',
+                       'M_0':'M_0 [-]',
+                       'tau':'tau [-]',
+                       'F_n':'F_n [N]',
+                       'W_f':'W_f [kg/s]',
+                       'jet_V':'jet_V [m/s]',
+                       'jet_Tt':'jet_Tt [K]',
+                       'jet_rho':'jet_rho [kg/m3]',
+                       'jet_A':'jet_A [m2]',
+                       'jet_M':'jet_M [-]',
+                       'core_mdot':'core_mdot [kg/s]',
+                       'core_Pt_i':'core_Pt_i [Pa]',
+                       'core_Tt_i':'core_Tt_i [K]',
+                       'core_Tt_j':'core_Tt_j [K]',
+                       'turb_DTt_des':'turb_DTt_des [K]',
+                       'turb_rho_te':'turb_rho_e [kg/m3]',
+                       'turb_rho_ti':'turb_rho_i [kg/m3]',
+                       'turb_c_te':'turb_c_e [m/s]',
+                       'turb_c_ti':'turb_c_i [m/s]',
+                       'fan_DTt':'fan_DTt [K]',
+                       'fan_mdot':'fan_mdot [kg/s]',
+                       'fan_N':'fan_N [rpm]'}
+
+        # Get engine variables and units
+        Engine.get_var(self, settings)
 
         # Initialize engine deck variables
-        if settings['atmosphere_type'] == 'stratified':
-            self.deck['z'] = np.unique(data['z [m]'].values)
-            self.deck['M_0'] = np.unique(data['M_0 [-]'].values)
-            self.deck['TS'] = np.unique(data['T/TMAX [-]'].values)
+        if settings['atmosphere_mode'] == 'stratified':
+            self.deck['z'] = np.unique(data[deck_labels['z']].values)
+            self.deck['M_0'] = np.unique(data[deck_labels['M_0']].values)
+            self.deck['TS'] = np.unique(data[deck_labels['tau']].values)
             
             if not len(self.var) == 0:
                 for var in self.var:
@@ -121,25 +122,25 @@ class Engine:
 
                                 if var == 'F_n':
                                     if settings['thrust_lapse']:
-                                        self.deck[var][i, j, k] = data[data_column_labels[var]].values[cntr]
+                                        self.deck[var][i, j, k] = data[deck_labels[var]].values[cntr]
                                     else:
                                         self.deck[var][i, j, k] = settings['F00']
 
                                 else:
                                     if settings['thrust_lapse']:
-                                        self.deck[var][i, j, k] = data[data_column_labels[var]].values[cntr]
+                                        self.deck[var][i, j, k] = data[deck_labels[var]].values[cntr]
                                     else:
-                                        self.deck[var][i, j, k] = data[data_column_labels[var]].values[1]
+                                        self.deck[var][i, j, k] = data[deck_labels[var]].values[1]
             else:
                 raise ValueError('deck_var list is empty') 
 
-        elif settings['atmosphere_type'] == 'sealevel':
+        elif settings['atmosphere_mode'] == 'sealevel':
 
             # Select only sealevel values in engine deck
             data = data[data['z [m]'] == 0]
 
             self.deck['M_0'] = np.unique(data['M_0 [-]'].values)
-            self.deck['TS'] = np.unique(data['T/TMAX [-]'].values)
+            self.deck['TS'] = np.unique(data['tau [-]'].values)
 
             if not len(self.var) == 0:
                 for var in self.var:
@@ -155,34 +156,31 @@ class Engine:
 
                             if var == 'F_n':
                                 if settings['thrust_lapse']:
-                                    self.deck[var][j, k] = data[data_column_labels[var]].values[cntr]
+                                    self.deck[var][j, k] = data[deck_labels[var]].values[cntr]
                                 else:
                                     self.deck[var][j, k] = settings['F00']
 
                             else:
                                 if settings['thrust_lapse']:
-                                    self.deck[var][j, k] = data[data_column_labels[var]].values[cntr]
+                                    self.deck[var][j, k] = data[deck_labels[var]].values[cntr]
                                 else:
-                                    self.deck[var][j, k] = data[data_column_labels[var]].values[1]
+                                    self.deck[var][j, k] = data[deck_labels[var]].values[1]
 
             else:
                 raise ValueError('deck_var list is empty') 
 
         return None
+ 
+    # def load_timeseries_operating_point(self, timestep):
 
+    #     # Select operating point
+    #     cols = self.timeseries.columns
+    #     op_point = pd.DataFrame(np.reshape(self.timeseries.values[timestep, :], (1, len(cols))))
+    #     op_point.columns = cols
 
+    #     # Duplicate operating for theta range (np.linspace(0, 180, 19))
+    #     self.timeseries = pd.DataFrame()
+    #     for _ in np.arange(19):
+    #         self.timeseries = self.timeseries.append(op_point)
 
-    def load_timeseries_operating_point(self, timestep):
-
-        # Select operating point
-        cols = self.timeseries.columns
-        op_point = pd.DataFrame(np.reshape(self.timeseries.values[timestep, :], (1, len(cols))))
-        op_point.columns = cols
-
-        # Duplicate operating for theta range (np.linspace(0, 180, 19))
-        self.timeseries = pd.DataFrame()
-        for _ in np.arange(19):
-            self.timeseries = self.timeseries.append(op_point)
-
-        return None
-
+    #     return None

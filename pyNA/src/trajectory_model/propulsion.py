@@ -13,7 +13,7 @@ class Propulsion(om.MetaModelStructuredComp):
 
     * ``inputs['z']``:                  aircraft z-position [m]
     * ``inputs['M_0']``:                ambient Mach number [-]
-    * ``inputs['TS']``:                 engine thrust-setting [-]
+    * ``inputs['tau']``:                 engine thrust-setting [-]
 
     The *Propulsion* component computes the following outputs:
 
@@ -30,17 +30,17 @@ class Propulsion(om.MetaModelStructuredComp):
         self.options.declare('training_data_gradients', types=bool, default=False, desc='Sets whether gradients with respect to output training data should be computed.')
         self.options.declare('method', values=TABLE_METHODS, default='scipy_cubic', desc='Spline interpolation method to use for all outputs.')
         self.options.declare('engine', types=Engine)
-        self.options.declare('atmosphere_type', types=str)
+        self.options.declare('atmosphere_mode', types=str)
 
     def setup(self):
         # Load options
         nn = self.options['vec_size']
         engine = self.options['engine']
 
-        if self.options['atmosphere_type'] == 'stratified':
+        if self.options['atmosphere_mode'] == 'stratified':
             self.add_input('z', val=np.ones(nn), units='m', training_data=engine.deck['z'])
         self.add_input('M_0', val=np.ones(nn), units=None, training_data=engine.deck['M_0'])
-        self.add_input('TS', val=np.ones(nn), units=None, training_data=engine.deck['TS'])
+        self.add_input('tau', val=np.ones(nn), units=None, training_data=engine.deck['TS'])
 
-        for var in self.options['engine'].deck_variables.keys():
-            self.add_output(var, val=np.ones(nn), units=self.options['engine'].deck_variables[var], training_data=engine.deck[var])
+        for var in engine.var:
+            self.add_output(var, val=np.ones(nn), units=engine.var_units[var], training_data=engine.deck[var])
