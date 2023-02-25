@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import openmdao.api as om
+import datetime as dt
 import os
 import pdb
 import pyNA
@@ -59,16 +60,16 @@ class Trajectory:
 
         return None
 
-    def solve(self, settings, aircraft, trajectory_mode='cutback', objective='time') -> None:
+    def solve(self, settings, aircraft=None, trajectory_mode='cutback', objective='time') -> None:
         
         """
         """
 
         if self.mode == 'model':
             
-            self.path.create(self, settings, aircraft, trajectory_mode, objective)
-            self.path.set_objective(self, objective)
-            self.path.set_driver_settings(self, settings, objective)
+            self.path.create(settings, aircraft, trajectory_mode, objective)
+            self.path.set_objective(objective)
+            self.path.set_driver_settings(settings, objective)
             self.path.setup(force_alloc_complex=True)
             self.path.set_initial_conditions()
             self.path.solve(run_driver=True, save_results=settings['save_results'])
@@ -81,7 +82,7 @@ class Trajectory:
             
             self.path.create(settings=settings, num_nodes=self.n_t)
             self.path.setup(force_alloc_complex=True)
-            self.path.set_initial_conditions(self, settings)
+            self.path.set_initial_conditions(settings, data=self.data)
             self.path.run_model()
   
         return None
