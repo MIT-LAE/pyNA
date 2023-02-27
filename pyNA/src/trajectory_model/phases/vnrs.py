@@ -1,5 +1,6 @@
 import dymos as dm
 import numpy as np
+import openmdao.api as om
 
 
 class Vnrs(dm.Phase):

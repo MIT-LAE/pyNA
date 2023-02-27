@@ -14,6 +14,8 @@ class TestAerodynamics(unittest.TestCase):
 		settings = dict()
 		settings['case_name'] = 'stca'
 		settings['ac_name'] = 'stca'
+		settings['engine_deck_file_name'] = 'engine_deck_stca.csv'
+
 		py = pyna(settings, trajectory_mode='model')
 		py.aircraft.get_aerodynamics_deck(settings=py.settings)
 

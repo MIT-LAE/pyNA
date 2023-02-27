@@ -203,7 +203,7 @@ class TakeOffModel(om.Problem):
             if 'cutback' in self.phase_name_lst:
                 self['phases.cutback.t_initial'] = 100.0
                 self['phases.cutback.t_duration'] = 50.0
-                self['phases.cutback.states:x'] = self.cutback.interp(ys=[6501., 15000.], nodes='state_input')
+                self['phases.cutback.states:x'] = self.cutback.interp(ys=[6501., settings['x_max']], nodes='state_input')
                 self['phases.cutback.states:z'] = self.cutback.interp(ys=[z_cutback_guess, 1500.], nodes='state_input')
                 self['phases.cutback.states:v'] = self.cutback.interp(ys=[settings['v_max'], settings['v_max']], nodes='state_input')
                 self['phases.cutback.states:gamma'] = self.cutback.interp(ys=[15, 15.], nodes='state_input')

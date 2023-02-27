@@ -13,7 +13,7 @@ from pyNA.src.time_history import TimeHistory
 
 class Trajectory:
     
-    def __init__(self, mode:str) -> None:
+    def __init__(self, settings) -> None:
         
         """
         
@@ -22,11 +22,10 @@ class Trajectory:
 
         """
 
-        self.mode = mode
-        if self.mode == 'model':
+        if settings['trajectory_mode'] == 'model':
             self.path = TakeOffModel()
 
-        elif self.mode == 'data':
+        elif settings['trajectory_mode'] == 'data':
             # Load data .csv files
             self.data = pd.DataFrame()
 
@@ -68,7 +67,7 @@ class Trajectory:
         """
         """
         
-        if self.mode == 'data':
+        if settings['trajectory_mode'] == 'data':
 
             Trajectory.load_data(self, settings=settings)
 
@@ -77,7 +76,7 @@ class Trajectory:
             self.path.set_initial_conditions(settings, data=self.data)
             self.path.run_model()
 
-        elif self.mode == 'model':
+        elif settings['trajectory_mode'] == 'model':
 
             if not aircraft:
                 raise ValueError("'aircraft' not defined")
