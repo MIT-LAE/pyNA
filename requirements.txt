@@ -1,7 +1,7 @@
 numpy==1.21.6
 scipy==1.7.3
 openmdao==3.25.0
-dymos==1.5.0
+dymos==1.7.0
 julia==0.6.0
 pandas==1.3.5
 matplotlib==3.5.3
