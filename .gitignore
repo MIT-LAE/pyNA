@@ -6,6 +6,10 @@ __pycache__/
 venv/
 pyNA.egg-info/
 
+pyNA/run/reports/
+pyNA/run/coloring_files/
+pyNA/run/.ipynb_checkpoints/
+
 pyNA/cases/*
 !pyNA/cases/nasa_stca_standard
 !pyNA/cases/stca

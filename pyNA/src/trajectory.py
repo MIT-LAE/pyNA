@@ -133,3 +133,5 @@ class Trajectory:
         file_cvg.close()
 
         return converged
+
+

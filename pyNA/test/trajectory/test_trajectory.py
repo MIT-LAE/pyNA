@@ -46,5 +46,5 @@ class TestTrajectory(unittest.TestCase):
             self.assertLessEqual(mre, 0.05)
 
 
-
-            
+if __name__ == '__main__':
+	unittest.main()

@@ -5,7 +5,7 @@ class CutBack(dm.Phase):
 
     def __init__(self, from_phase=None, **kwargs):
         super().__init__(from_phase, **kwargs)
-        self.phase_size = int(self.options['transcription'].options['num_segments']*self.options['transcription'].options['order'] + 1)
+        self.phase_size = int(self.options['transcription'].options['num_segments']*self.options['transcription'].options['order'][0] + 1)
 
         self.phase_target_size = 37
 

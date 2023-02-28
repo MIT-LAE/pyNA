@@ -1,12 +1,28 @@
 
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit http://projects.coin-or.org/Ipopt
-******************************************************************************
+List of user-set options:
 
-This is Ipopt version 3.13.1, running with linear solver mumps.
-NOTE: Other linear solvers might be more efficient (see Ipopt documentation).
+                                    Name   Value                used
+                acceptable_compl_inf_tol = 0.1                   yes
+              acceptable_constr_viol_tol = 0.1                   yes
+                         acceptable_iter = 0                     yes
+               acceptable_obj_change_tol = 0.1                   yes
+                          acceptable_tol = 0.01                  yes
+                  bound_mult_init_method = mu-based              yes
+                           compl_inf_tol = 0.001                 yes
+                         constr_viol_tol = 0.001                 yes
+                        file_print_level = 5                     yes
+                   hessian_approximation = limited-memory        yes
+                           linear_solver = mumps                 yes
+                                max_iter = 200                   yes
+                                 mu_init = 0.01                  yes
+                             mu_strategy = adaptive              yes
+                      nlp_scaling_method = gradient-based        yes
+                             output_file = /Users/laurensvoet/Documents/Research/pyNA/pyNA/cases/stca/output//IPOPT_trajectory_convergence.out  yes
+                             print_level = 5                     yes
+                      print_user_options = yes                   yes
+                                      sb = yes                   yes
+                                     tol = 1e-06                 yes
+This is Ipopt version 3.14.11, running with linear solver MUMPS 5.2.1.
 
 Number of nonzeros in equality constraint Jacobian...:     1105
 Number of nonzeros in inequality constraint Jacobian.:     5184
@@ -57,11 +73,12 @@ iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
 Number of Iterations....: 27
 
                                    (scaled)                 (unscaled)
-Objective...............:   1.2821963603221342e-01    1.2821963603221342e-01
-Dual infeasibility......:   3.8115484920717638e-07    3.8115484920717638e-07
-Constraint violation....:   3.6486240224714079e-07    3.6486240224714079e-07
-Complementarity.........:   2.9717528878898712e-10    2.9717528878898712e-10
-Overall NLP error.......:   3.8115484920717638e-07    3.8115484920717638e-07
+Objective...............:   1.2821963603221348e-01    1.2821963603221348e-01
+Dual infeasibility......:   3.8115484814464110e-07    3.8115484814464110e-07
+Constraint violation....:   3.6486240171201169e-07    3.6486240171201169e-07
+Variable bound violation:   0.0000000000000000e+00    0.0000000000000000e+00
+Complementarity.........:   2.9717528848519248e-10    2.9717528848519248e-10
+Overall NLP error.......:   3.8115484814464110e-07    3.8115484814464110e-07
 
 
 Number of objective function evaluations             = 28
@@ -71,7 +88,6 @@ Number of inequality constraint evaluations          = 28
 Number of equality constraint Jacobian evaluations   = 28
 Number of inequality constraint Jacobian evaluations = 28
 Number of Lagrangian Hessian evaluations             = 0
-Total CPU secs in IPOPT (w/o function evaluations)   =      0.633
-Total CPU secs in NLP function evaluations           =      9.656
+Total seconds in IPOPT                               = 9.250
 
 EXIT: Optimal Solution Found.
