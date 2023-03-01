@@ -44,13 +44,13 @@ class TakeOffPhaseODE(om.Group):
 
         # Aerodynamics module
         self.add_subsystem(name='aerodynamics',
-                        subsys=Aerodynamics(vec_size=nn, extrapolate=True, method='3D-lagrange3', aircraft=aircraft),
+                        subsys=Aerodynamics(vec_size=nn, extrapolate=True, method='cubic', aircraft=aircraft),
                         promotes_inputs=['alpha', 'theta_flaps', 'theta_slats'],
                         promotes_outputs=[])
 
         # Propulsion module
         self.add_subsystem(name='propulsion',
-                        subsys=Propulsion(vec_size=nn, extrapolate=True, method='3D-lagrange3', engine=aircraft.engine, atmosphere_mode=settings['atmosphere_mode']),
+                        subsys=Propulsion(vec_size=nn, extrapolate=True, method='cubic', engine=aircraft.engine, atmosphere_mode=settings['atmosphere_mode']),
                         promotes_inputs=['z'],
                         promotes_outputs=[])
         self.connect('flight_dynamics.M_0', 'propulsion.M_0')
