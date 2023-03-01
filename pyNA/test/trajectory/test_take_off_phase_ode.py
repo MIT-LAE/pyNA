@@ -19,8 +19,6 @@ class TestTakeOffPhaseODE(unittest.TestCase):
 				  jet_mixing_source = True,
 				  jet_shock_source = True,
 				  airframe_source = True)
-		py.aircraft.get_aerodynamics_deck(settings=py.settings)		
-		py.aircraft.engine.get_performance_deck(settings=py.settings)
 		
 		# Inputs
 		nn = 10
