@@ -19,5 +19,5 @@ setup(
 		'pandas==1.3.5',
 		'matplotlib==3.5.3'
 	],
-	python_requires=">=3.7"
+	python_requires=">=3.10"
 )

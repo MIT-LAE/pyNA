@@ -10,11 +10,8 @@ class TestFlightDynamics(unittest.TestCase):
 
 	def test_evaluate(self):
 
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		py = pyna(settings, trajectory_mode='model')
-
+		py = pyna(trajectory_mode='model', 
+				  case_name = 'stca')
 		nn = 1
 		phase_name = 'cutback'
 		objective = 'time'
@@ -33,7 +30,7 @@ class TestFlightDynamics(unittest.TestCase):
 
 		# Create problem
 		prob = om.Problem()
-		comp = FlightDynamics(num_nodes=nn, phase=phase_name, settings=settings, aircraft=py.aircraft, objective=objective)
+		comp = FlightDynamics(num_nodes=nn, phase=phase_name, settings=py.settings, aircraft=py.aircraft, objective=objective)
 		prob.model.add_subsystem("f", comp)
 		prob.setup(force_alloc_complex=True)
 		    
@@ -61,11 +58,8 @@ class TestFlightDynamics(unittest.TestCase):
 
 	def test_partials(self):
 
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		py = pyna(settings, trajectory_mode='model')
-
+		py = pyna(trajectory_mode='model', 
+				  case_name = 'stca')
 		nn = 20
 		objective = 'time'
 		
@@ -87,7 +81,7 @@ class TestFlightDynamics(unittest.TestCase):
 
 				# Create problem
 				prob = om.Problem()
-				comp = FlightDynamics(num_nodes=nn, phase=phase_name, settings=settings, aircraft=py.aircraft, objective=objective, constant_LD=constant_LD)
+				comp = FlightDynamics(num_nodes=nn, phase=phase_name, settings=py.settings, aircraft=py.aircraft, objective=objective, constant_LD=constant_LD)
 				prob.model.add_subsystem("f", comp)
 				prob.setup(force_alloc_complex=True)
 					

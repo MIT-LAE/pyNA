@@ -4,6 +4,7 @@ from pyNA.src.aircraft import Aircraft
 import matplotlib.pyplot as plt
 import pdb
 import numpy as np
+import os
 
 
 class pyna:
@@ -270,6 +271,9 @@ class pyna:
             self.aircraft.engine.get_performance_deck(settings=self.settings)
 
         self.trajectory = Trajectory(settings=self.settings)
+
+        # Disable openmdao reports
+        os.environ["OPENMDAO_REPORTS"] = 'none'
 
     def plot_ipopt_convergence_data():
         pass

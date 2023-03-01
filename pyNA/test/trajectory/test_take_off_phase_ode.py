@@ -11,21 +11,14 @@ class TestTakeOffPhaseODE(unittest.TestCase):
 
 	def test_partials(self):
 
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		settings['atmosphere_mode'] = 'stratified'
-		settings['atmosphere_dT'] = 10.0169
-		settings['engine_deck_file_name'] = 'engine_deck_stca.csv'
-		settings['fan_inlet_source'] = True
-		settings['fan_discharge_source'] = True
-		settings['core_source'] = True
-		settings['jet_mixing_source'] = True
-		settings['jet_shock_source'] = True
-		settings['airframe_source'] = True
-		settings['core_turbine_attenuation_method'] = 'ge'
-		settings['thrust_lapse'] = True
-		py = pyna(settings, trajectory_mode='model')
+		py = pyna(trajectory_mode='model',
+				  case_name = 'stca',
+				  fan_inlet_source = True,
+				  fan_discharge_source = True,
+				  core_source = True,
+				  jet_mixing_source = True,
+				  jet_shock_source = True,
+				  airframe_source = True)
 		py.aircraft.get_aerodynamics_deck(settings=py.settings)		
 		py.aircraft.engine.get_performance_deck(settings=py.settings)
 		

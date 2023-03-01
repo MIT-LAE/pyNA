@@ -10,23 +10,17 @@ class TestPropulsion(unittest.TestCase):
 
 	def test_evaluate_stratified(self):
 
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		settings['atmosphere_mode'] = 'stratified'
-		settings['engine_deck_file_name'] = 'engine_deck_stca.csv'
-		settings['fan_inlet_source'] = True
-		settings['fan_discharge_source'] = True
-		settings['core_source'] = True
-		settings['jet_mixing_source'] = True
-		settings['jet_shock_source'] = True
-		settings['airframe_source'] = True
-		settings['core_turbine_attenuation_method'] = 'ge'
-		settings['thrust_lapse'] = True
-
-		py = pyna(settings, trajectory_mode='model')
-		py.aircraft.engine.get_performance_deck(settings=py.settings)
-
+		py = pyna(trajectory_mode='model',
+				  case_name = 'stca',
+				  atmosphere_mode='stratified',
+				  noise=True,
+				  fan_inlet_source = True,
+				  fan_discharge_source = True,
+				  core_source = True,
+				  jet_mixing_source = True,
+				  jet_shock_source = True,
+				  airframe_source = True)
+		
 		nn = 1
 		
 		prob = om.Problem()
@@ -43,23 +37,18 @@ class TestPropulsion(unittest.TestCase):
 		self.assertAlmostEqual(prob.get_val('p.fan_N')[0], 3134.53006, 2)
 
 	def test_evaluate_sealevel(self):
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		settings['atmosphere_mode'] = 'sealevel'
-		settings['engine_deck_file_name'] = 'engine_deck_stca.csv'
-		settings['fan_inlet_source'] = True
-		settings['fan_discharge_source'] = True
-		settings['core_source'] = True
-		settings['jet_mixing_source'] = True
-		settings['jet_shock_source'] = True
-		settings['airframe_source'] = True
-		settings['core_turbine_attenuation_method'] = 'ge'
-		settings['thrust_lapse'] = False
-		settings['F00'] = 80000.
 
-		py = pyna(settings, trajectory_mode='model')
-		py.aircraft.engine.get_performance_deck(settings=py.settings)
+		py = pyna(trajectory_mode='model', 
+	 	  		  case_name = 'stca',
+				  noise=True,
+				  atmosphere_mode='sealevel',
+				  thrust_lapse=False,
+				  fan_inlet_source = True,
+				  fan_discharge_source = True,
+				  core_source = True,
+				  jet_mixing_source = True,
+				  jet_shock_source = True,
+				  airframe_source = True)
 
 		nn = 1
 		
@@ -75,25 +64,18 @@ class TestPropulsion(unittest.TestCase):
 		self.assertAlmostEqual(prob.get_val('p.core_mdot')[0], 32.00774, 2)
 		self.assertAlmostEqual(prob.get_val('p.fan_N')[0], 3419.83905, 2)
 
-
 	def test_partials(self):
 
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		settings['atmosphere_mode'] = 'stratified'
-		settings['engine_deck_file_name'] = 'engine_deck_stca.csv'
-		settings['fan_inlet_source'] = True
-		settings['fan_discharge_source'] = True
-		settings['core_source'] = True
-		settings['jet_mixing_source'] = True
-		settings['jet_shock_source'] = True
-		settings['airframe_source'] = True
-		settings['core_turbine_attenuation_method'] = 'ge'
-		settings['thrust_lapse'] = True
-
-		py = pyna(settings, trajectory_mode='model')
-		py.aircraft.engine.get_performance_deck(settings=py.settings)
+		py = pyna(trajectory_mode='model', 
+	 	  		  case_name = 'stca',
+				  atmosphere_mode='stratified',   
+				  noise=True,
+				  fan_inlet_source = True,
+				  fan_discharge_source = True,
+				  core_source = True,
+				  jet_mixing_source = True,
+				  jet_shock_source = True,
+				  airframe_source = True)
 
 		nn = 1
 		

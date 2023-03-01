@@ -38,15 +38,6 @@ class TestAtmosphere(unittest.TestCase):
 		prob.set_val('a.z', z)
 		prob.run_model()
 
-		print(prob.get_val('a.I_0'))
-		print(prob.get_val('a.T_0'))
-		print(prob.get_val('a.c_0'))
-		print(prob.get_val('a.drho_0_dz'))
-		print(prob.get_val('a.mu_0'))
-		print(prob.get_val('a.p_0'))
-		print(prob.get_val('a.rh'))
-		print(prob.get_val('a.rho_0'))
-
 		self.assertAlmostEqual(prob.get_val('a.I_0')[0], 409.798, 2)
 		self.assertAlmostEqual(prob.get_val('a.T_0')[0], 298.167, 2)
 		self.assertAlmostEqual(prob.get_val('a.c_0')[0], 346.157, 2)

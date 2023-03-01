@@ -3,6 +3,7 @@ import numpy as np
 import json
 import pyNA
 from pyNA.src.engine import Engine
+import pdb
 
 
 class Aircraft:

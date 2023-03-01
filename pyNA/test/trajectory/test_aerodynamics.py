@@ -11,12 +11,8 @@ class TestAerodynamics(unittest.TestCase):
 
 	def test_evaluate(self):
 		
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		settings['engine_deck_file_name'] = 'engine_deck_stca.csv'
-
-		py = pyna(settings, trajectory_mode='model')
+		py = pyna(trajectory_mode='model', 
+				  case_name='stca')
 		py.aircraft.get_aerodynamics_deck(settings=py.settings)
 
 		nn = 1
@@ -36,10 +32,8 @@ class TestAerodynamics(unittest.TestCase):
 
 	def test_partials(self):
 
-		settings = dict()
-		settings['case_name'] = 'stca'
-		settings['ac_name'] = 'stca'
-		py = pyna(settings, trajectory_mode='model')
+		py = pyna(trajectory_mode='model', 
+		 		  case_name='stca')
 		py.aircraft.get_aerodynamics_deck(settings=py.settings)
 		
 		nn = 10
