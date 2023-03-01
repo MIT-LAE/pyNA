@@ -3,6 +3,7 @@ __pycache__/
 .DS_Store
 .idea/
 
+
 venv/
 pyNA.egg-info/
 
@@ -14,4 +15,6 @@ pyNA/cases/*
 !pyNA/cases/nasa_stca_standard
 !pyNA/cases/stca
 
-wg3/
+**/n2.html
+**/dymos_solution.db
+
