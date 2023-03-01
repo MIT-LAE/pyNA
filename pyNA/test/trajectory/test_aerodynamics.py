@@ -13,7 +13,6 @@ class TestAerodynamics(unittest.TestCase):
 		
 		py = pyna(trajectory_mode='model', 
 				  case_name='stca')
-		py.aircraft.get_aerodynamics_deck(settings=py.settings)
 
 		nn = 1
 		
@@ -34,7 +33,6 @@ class TestAerodynamics(unittest.TestCase):
 
 		py = pyna(trajectory_mode='model', 
 		 		  case_name='stca')
-		py.aircraft.get_aerodynamics_deck(settings=py.settings)
 		
 		nn = 10
 		

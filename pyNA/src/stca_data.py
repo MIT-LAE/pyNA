@@ -5,28 +5,28 @@ class StcaData:
 
     def __init__(self) -> None:
         
-        self.shield = dict()
+        # self.shield = dict()
         self.levels_time_history = dict()
         self.spl_distribution = dict()
         self.spl_distribution_supp = dict()
 
 
-    def load_shielding_time_history(self, settings):
-        """
-        Load shielding time history (Berton et al., 2019).
-        """
+    # def load_shielding_time_history(self, settings):
+    #     """
+    #     Load shielding time history (Berton et al., 2019).
+    #     """
 
-        if settings['case_name'] == 'nasa_stca_standard':
-            for observer in settings['observer_lst']:
-                if observer == 'lateral':
-                    file_name = 'shielding_l.csv'
-                elif observer == 'flyover':
-                    file_name = 'shielding_f.csv'
-                elif observer == 'approach':
-                    file_name = 'shielding_a.csv'
-                self.shield[observer] = pd.read_csv(settings['pyna_directory']+'/cases/'+settings['case_name'] + '/shielding/'+file_name).values[:,1:]
-        else:
-            raise ValueError('No shielding time history available for the "' + settings['case_name'] + '" case' )
+    #     if settings['case_name'] == 'nasa_stca_standard':
+    #         for observer in settings['observer_lst']:
+    #             if observer == 'lateral':
+    #                 file_name = 'shielding_l.csv'
+    #             elif observer == 'flyover':
+    #                 file_name = 'shielding_f.csv'
+    #             elif observer == 'approach':
+    #                 file_name = 'shielding_a.csv'
+    #             self.shield[observer] = pd.read_csv(settings['pyna_directory']+'/cases/'+settings['case_name'] + '/shielding/'+file_name).values[:,1:]
+    #     else:
+    #         raise ValueError('No shielding time history available for the "' + settings['case_name'] + '" case' )
 
 
     def load_levels_time_history(self, settings) -> None:

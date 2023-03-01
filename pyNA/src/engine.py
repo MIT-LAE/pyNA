@@ -10,9 +10,6 @@ class Engine:
         
         self.deck = dict()
 
-        self.vars = list()
-        self.var_units = dict()
-
     def get_var(self, settings) -> None:
         """
         Get list of required engine variables for noise calculations
@@ -21,6 +18,7 @@ class Engine:
         """
 
         # General variables
+        self.vars = list(); self.var_units = dict()
         self.vars.append('F_n'); self.var_units['F_n'] = 'N'
         self.vars.append('W_f'); self.var_units['W_f'] = 'kg/s'
         

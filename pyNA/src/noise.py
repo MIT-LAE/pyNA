@@ -1,17 +1,14 @@
 import pandas as pd
+from pyNA.src.tables import Tables
 from pyNA.src.utils.compute_frequency_bands import compute_frequency_bands
 from pyNA.src.utils.compute_frequency_subbands import compute_frequency_subbands
 
 
 class Noise:
     
-    def __init__(self, settings, engine, airframe, noise_data) -> None:
+    def __init__(self, settings) -> None:
         
-        self.engine = engine
-        self.airframe = airframe
-        self.noise_data = noise_data
-
-        self.path = pd.DataFrame()
+        self.tables = Tables(settings=settings)
 
         self.f = compute_frequency_bands(n_frequency_bands=settings['n_frequency_bands'])
         self.f_sb = compute_frequency_subbands(f=self.f, n_frequency_subbands=settings['n_frequency_subbands'])
