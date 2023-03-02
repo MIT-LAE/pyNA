@@ -7,8 +7,10 @@ import os
 import pdb
 import pyNA
 
-from pyNA.src.take_off_model import TakeOffModel
-from pyNA.src.time_history import TimeHistory
+from pyNA.src.trajectory_model.sst.sst_take_off_model import SSTTakeOffModel
+from pyNA.src.trajectory_model.vtol.vtol_take_off_model import VTOLTakeOffModel
+from pyNA.src.trajectory_model.subsonic.subsonic_take_off_model import SubsonicTakeOffModel
+from pyNA.src.trajectory_model.time_history.time_history_model import TimeHistoryModel
 
 
 class Trajectory:
@@ -22,15 +24,24 @@ class Trajectory:
 
         """
 
-        if settings['trajectory_mode'] == 'model':
-            self.path = TakeOffModel()
+        if settings['trajectory_mode'] == 'sst':
+            self.path = SSTTakeOffModel()
 
-        elif settings['trajectory_mode'] == 'data':
+        elif settings['trajectory_mode'] == 'vtol':
+            self.path = VTOLTakeOffModel()
+
+        elif settings['trajectory_mode'] == 'subsonic':
+            self.path = SubsonicTakeOffModel()
+
+        elif settings['trajectory_mode'] == 'time_history':
             # Load data .csv files
             self.data = pd.DataFrame()
 
             # Create openmdao problem
-            self.path = TimeHistory()
+            self.path = TimeHistoryModel()
+
+        else:
+            raise ValueError("Trajectory mode '" + settings['trajectory_mode'] + "' is invalid.")
 
         self.vars = list()
         self.var_units = dict()
@@ -67,16 +78,24 @@ class Trajectory:
         """
         """
         
-        if settings['trajectory_mode'] == 'data':
+        if settings['trajectory_mode'] == 'time_history':
 
             Trajectory.load_data(self, settings=settings)
+            for col in self.data.columns:
+                var, unit = col.split(' ')
+                unit = unit.replace('[','').replace(']','')
+                self.vars.append(var)
+                if unit == '-':
+                    self.var_units[var] = None
+                else:
+                    self.var_units[var] = unit
 
-            self.path.create(settings=settings, num_nodes=self.n_t)
+            self.path.create(num_nodes=self.n_t, vars=self.vars, var_units=self.var_units)
             self.path.setup(force_alloc_complex=True)
             self.path.set_initial_conditions(settings, data=self.data)
             self.path.run_model()
 
-        elif settings['trajectory_mode'] == 'model':
+        elif settings['trajectory_mode'] == 'sst':
 
             if not aircraft:
                 raise ValueError("'aircraft' not defined")
@@ -93,6 +112,12 @@ class Trajectory:
             converged = Trajectory.check_convergence(self, settings=settings, filename='IPOPT_trajectory_convergence.out')
             print('Converged:', converged)
   
+        elif settings['trajectory_mode'] == 'subsonic':
+            pass
+
+        elif settings['trajectory_mode'] == 'vtol':
+            pass
+        
         return None
 
     def check_convergence(self, settings, filename: str) -> bool:

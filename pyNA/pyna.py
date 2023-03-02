@@ -1,10 +1,12 @@
 
 from pyNA.src.trajectory import Trajectory
 from pyNA.src.aircraft import Aircraft
+from pyNA.src.noise import Noise
 import matplotlib.pyplot as plt
-import pdb
 import numpy as np
 import os
+os.environ["OPENMDAO_REPORTS"] = 'none'
+import pdb
 
 
 class pyna:
@@ -14,14 +16,14 @@ class pyna:
                 ac_name = 'stca',
                 output_directory_name = '',
                 output_file_name = 'trajectory_stca.sql',
-                time_history_file_name = 'time_history.csv',
+                time_history_file_name = 'time_history_to.csv',
                 engine_deck_file_name = 'engine_deck_stca.csv',
                 atmosphere_mode = 'stratified',
                 fan_BB_method = 'geae',
                 fan_RS_method = 'allied_signal',
                 fan_ge_flight_cleanup = 'takeoff',
                 core_turbine_attenuation_method = 'ge',
-                trajectory_mode='data',
+                trajectory_mode='time_history',
                 lateral_attenuation_engine_mounting = 'underwing',
                 levels_int_metric = 'epnl',
                 observer_lst = ('lateral', 'flyover'),
@@ -266,14 +268,13 @@ class pyna:
         self.settings['p_ref'] = p_ref
 
         self.aircraft = Aircraft(settings=self.settings)
-        if self.settings['trajectory_mode'] == 'model':
+        if not self.settings['trajectory_mode'] == 'time_history':
             self.aircraft.get_aerodynamics_deck(settings=self.settings)
             self.aircraft.engine.get_performance_deck(settings=self.settings)
 
         self.trajectory = Trajectory(settings=self.settings)
 
-        # Disable openmdao reports
-        os.environ["OPENMDAO_REPORTS"] = 'none'
+        self.noise = Noise(settings=self.settings)
 
     def plot_ipopt_convergence_data():
         pass
