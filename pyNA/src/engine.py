@@ -1,14 +1,28 @@
 import pandas as pd
 import numpy as np
 import pyNA
+import json
 import pdb
 
 
 class Engine:
     
-    def __init__(self) -> None:
+    def __init__(self, settings) -> None:
         
         self.deck = dict()
+
+        with open(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/aircraft/' + settings['engine_name'] + '.json') as f:
+                params = json.load(f)
+        Engine.__set_parameters(self, **params)
+
+    def __set_parameters(self, fan_B: np.int64, fan_V: np.int64, fan_RSS: np.float64, fan_M_d: np.float64, fan_A: np.float64, fan_d: np.float64):
+
+        self.fan_B = fan_B
+        self.fan_V = fan_V
+        self.fan_RSS = fan_RSS
+        self.fan_M_d = fan_M_d
+        self.fan_A = fan_A
+        self.fan_d = fan_d
 
     def get_var(self, settings) -> None:
         """

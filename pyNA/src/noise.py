@@ -8,7 +8,7 @@ class Noise:
     
     def __init__(self, settings) -> None:
         
-        self.tables = Tables()
+        self.tables = Tables(settings=settings)
 
         self.f = compute_frequency_bands(n_frequency_bands=settings['n_frequency_bands'])
         self.f_sb = compute_frequency_subbands(f=self.f, n_frequency_subbands=settings['n_frequency_subbands'])

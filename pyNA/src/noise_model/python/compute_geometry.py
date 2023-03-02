@@ -1,6 +1,6 @@
 import numpy as np
 
-def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_obs):
+def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_mic):
 
     # Geometry calculations
     # Compute body angles (psi_B, theta_B, phi_B): angle of body w.r.t. horizontal
@@ -8,13 +8,13 @@ def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_obs):
     phi_B = np.zeros(alpha.shape)
     psi_B = np.zeros(alpha.shape)
 
-    # Compute the relative observer-source position vector i.e. difference between observer and ac coordinate
+    # Compute the relative microphone-source position vector i.e. difference between microphone and ac coordinate
     # Note: add 4 meters to the alitude of the aircraft (for engine height)
-    r_0 =  x_obs[0] - x
-    r_1 =  x_obs[1] - y
-    r_2 = -x_obs[2] + (z + 4)
+    r_0 =  x_mic[0] - x
+    r_1 =  x_mic[1] - y
+    r_2 = -x_mic[2] + (z + 4)
 
-    # Compute the distance of the observer-source vector
+    # Compute the distance of the microphone-source vector
     r = np.sqrt(r_0 ** 2 + r_1 ** 2 + r_2 ** 2)
     
     # Normalize the distance vector
@@ -48,7 +48,7 @@ def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_obs):
     # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 27
     phi = -180. / np.pi * np.arctan2(n_vcr_s_1, n_vcr_s_2)
     
-    # Compute average speed of sound between source and observer
+    # Compute average speed of sound between source and microphone
     n_intermediate = 11
     dz = z / n_intermediate
     c_bar = c_0

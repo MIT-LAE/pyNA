@@ -13,7 +13,8 @@ class pyna:
 
     def __init__(self, 
                 case_name = 'nasa_stca_standard',
-                ac_name = 'stca',
+                aircraft_name = 'stca',
+                engine_name = 'engine_berton',
                 output_directory_name = '',
                 output_file_name = 'trajectory_stca.sql',
                 time_history_file_name = 'time_history_to.csv',
@@ -79,8 +80,10 @@ class pyna:
         
         :param case_name:
         :type case_name: str
-        :param ac_name:
-        :type ac_name: str
+        :param aircraft_name:
+        :type aircraft_name: str
+        :param engine_name:
+        :type engine_name: str
         :param output_directory_name:
         :type output_directory_name: str
         :param output_file_name:
@@ -205,7 +208,8 @@ class pyna:
 
         self.settings = dict()
         self.settings['case_name'] = case_name
-        self.settings['ac_name'] = ac_name
+        self.settings['aircraft_name'] = aircraft_name
+        self.settings['engine_name'] = engine_name
         self.settings['output_directory_name'] = output_directory_name
         self.settings['output_file_name'] = output_file_name
         self.settings['time_history_file_name'] = time_history_file_name

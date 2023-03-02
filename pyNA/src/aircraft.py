@@ -10,21 +10,19 @@ class Aircraft:
     
     def __init__(self, settings) -> None:
         
-        with open(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/aircraft/' + settings['ac_name'] + '.json') as f:
-                params = json.load(f)
+        with open(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/aircraft/' + settings['aircraft_name'] + '.json') as f: 
+            params = json.load(f)
         Aircraft.__set_parameters(self, **params)
 
         self.aero = dict()
-        self.engine = Engine()
-
+        self.engine = Engine(settings=settings)
 
     def __set_parameters(self, mtow: np.float64, n_eng: np.int64, comp_lst: list, af_S_h: np.float64, af_S_v: np.float64, 
                                 af_S_w: np.float64, af_b_f: np.float64, af_b_h: np.float64, af_b_v: np.float64, af_b_w: np.float64, 
                                 af_S_f: np.float64, af_s: np.int64, af_d_mg: np.float64,  af_d_ng: np.float64, af_l_mg:np.float64, 
                                 af_l_ng: np.float64, af_n_mg: np.float64,  af_n_ng: np.float64, af_N_mg: np.float64, af_N_ng: np.float64, 
-                                c_d_g: np.float64, mu_r: np.float64,  B_fan: np.int64,  V_fan: np.int64, RSS_fan: np.float64, M_d_fan: np.float64, 
-                                inc_F_n: np.float64,  TS_lower: np.float64, TS_upper: np.float64, af_clean_w: bool, af_clean_h:bool, af_clean_v: bool, 
-                                af_delta_wing: bool,  alpha_0: np.float64) -> None:
+                                c_d_g: np.float64, mu_r: np.float64, inc_F_n: np.float64,  TS_lower: np.float64, TS_upper: np.float64, 
+                                af_clean_w: bool, af_clean_h:bool, af_clean_v: bool,  af_delta_wing: bool,  alpha_0: np.float64) -> None:
         """
         Set the aircraft parameters in the aircraft class.
 
@@ -72,14 +70,6 @@ class Aircraft:
         :type c_d_g; np.float64 
         :param mu_r: Rolling resistance coefficient [-]
         :type mu_r: np.float64
-        :param B_fan: Number of fan blades [-]
-        :type B_fan: np.int64
-        :param V_fan: Number of fan vanes [-]
-        :type V_fan: np.int64
-        :param RSS_fan: Rotor-stator spacing [%]
-        :type RSS_fan: np.float64
-        :param M_d_fan: Relative tip Mach number of fan at design [-]
-        :type M_d_fan: np.float64
         :param inc_F_n: Thrust inclination angle [deg]
         :type inc_F_n: np.float64
         :param TS_lower: Min. power setting [-]
@@ -122,10 +112,6 @@ class Aircraft:
         self.af_N_ng = af_N_ng
         self.c_d_g = c_d_g       
         self.mu_r = mu_r
-        self.B_fan = B_fan
-        self.V_fan = V_fan
-        self.RSS_fan = RSS_fan
-        self.M_d_fan = M_d_fan
         self.inc_F_n = inc_F_n
         self.TS_lower = TS_lower
         self.TS_upper = TS_upper
@@ -144,7 +130,7 @@ class Aircraft:
         :return: None
         """
 
-        if settings['ac_name'] == 'stca':
+        if settings['aircraft_name'] == 'stca':
             # Load data 
             self.aero['alpha'] = np.array([-2.,  0.,  2.,  4.,  6.,  8., 10., 12., 15., 18., 21., 23., 25.])
             self.aero['theta_flaps'] = np.array([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22., 24., 26.])
@@ -153,7 +139,7 @@ class Aircraft:
             self.aero['c_l_max'] = np.load(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/aircraft/c_l_max_stca.npy')
             self.aero['c_d'] = np.load(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/aircraft/c_d_stca.npy')
 
-        elif settings['ac_name'] == 'a10':
+        elif settings['aircraft_name'] == 'a10':
             self.aero['alpha'] = np.array([-2.,  0.,  2.,  4.,  6.,  8., 10., 12., 15., 18., 21., 23., 25.])
             self.aero['theta_flaps'] = np.array([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22., 24., 26.])
             self.aero['theta_slats'] = np.array([-26., -24., -22., -20., -18., -16., -14., -12., -10.,  -8.,  -6., -4.,  -2.,   0.])

@@ -3,7 +3,7 @@
 "comp_lst" : ["wing", "tail_h", "les", "tef", "lg"],   
 "af_S_h" : 20.16,
 "af_S_v" : 21.3677,
-"af_S_w" : 150.41,
+"af_S_w" : 150.41, 
 "af_b_f" : 6.096,
 "af_b_h" : 5.6388,
 "af_b_v" : 4.7244,
@@ -17,13 +17,9 @@
 "af_n_mg" : 4.0,  
 "af_n_ng" : 2.0,  
 "af_N_mg" : 2.0,  
-"af_N_ng" : 1.0,  
-"c_d_g" : 0.0240,
+"af_N_ng" : 1.0,
+"c_d_g" : 0.0240,  
 "mu_r" : 0.0175,
-"B_fan" : 25,  
-"V_fan" : 48,  
-"RSS_fan" : 300.0,
-"M_d_fan" : 1.68,
 "inc_F_n" : 0.25, 
 "TS_lower" : 0.65,  
 "TS_upper" : 1.0,  
@@ -33,5 +29,3 @@
 "af_delta_wing" : true, 
 "alpha_0" : -0.85
 }
-
-
