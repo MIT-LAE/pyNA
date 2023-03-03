@@ -1,7 +1,9 @@
 import jax.numpy as jnp
+from pyNA.src.noise_model.tables import Tables
+from pyNA.src.aircraft import Aircraft
 
 
-def inlet_broadband(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables):
+def inlet_broadband(settings, tables: Tables, theta, M_tip, tsqem, fan_M_d, fan_RSS):
     """
     Compute the broadband component of the fan inlet mean-square acoustic pressure (msap).
 
@@ -112,7 +114,7 @@ def inlet_broadband(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables):
 
     return bblv_I
 
-def discharge_broadband(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables):
+def discharge_broadband(settings, tables: Tables, theta, M_tip, tsqem, fan_M_d, fan_RSS):
     """
     Compute the broadband component of the fan discharge mean-square acoustic pressure (msap).
 
@@ -228,7 +230,7 @@ def discharge_broadband(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables)
 
     return bblv_D
 
-def inlet_tones(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables):
+def inlet_tones(settings, tables: Tables, theta, M_tip, tsqem, fan_M_d, fan_RSS):
     """
     Compute the tone component of the fan inlet mean-square acoustic pressure (msap)
 
@@ -367,7 +369,7 @@ def inlet_tones(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables):
 
     return tonlv_I
 
-def discharge_tones(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables):
+def discharge_tones(settings, tables: Tables, theta, M_tip, tsqem, fan_M_d, fan_RSS):
     """
     Compute the tone component of the fan discharge mean-square acoustic pressure (msap)
 
@@ -479,14 +481,14 @@ def discharge_tones(settings, theta, M_tip, tsqem, fan_M_d, fan_RSS, tables):
 
     return tonlv_X
 
-def combination_tones(settings, freq, theta, M_tip, bpf, tsqem, tables):
+def combination_tones(settings, tables: Tables, f, theta, M_tip, bpf, tsqem):
     """
     Compute the combination tone component of the fan mean-square acoustic pressure (msap).
 
     :param settings: pyna settings
     :type settings: Dict[str, Any]
-    :param freq: 1/3rd octave frequency bands [Hz]
-    :type freq
+    :param f: 1/3rd octave frequency bands [Hz]
+    :type f
     :param theta: polar directivity angle [deg]
     :type theta
     :param M_tip: relative (i.e., helical) tip Mach number [-]
@@ -606,7 +608,7 @@ def combination_tones(settings, freq, theta, M_tip, bpf, tsqem, tables):
 
             # Cycle through frequencies and make assignments:
             for j in jnp.arange(settings['n_frequency_bands']):
-                fqfb = freq[j] / bpf
+                fqfb = f[j] / bpf
 
                 if fqfb <= 1 / fk:
                     # For frequencies less than the subharmonic:
@@ -662,14 +664,14 @@ def calculate_cutoff(M_tip_tan, fan_B, fan_V):
 
     return i_cut
 
-def calculate_harmonics(settings, freq, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf, comp):
+def calculate_harmonics(settings, tables: Tables, f, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf, comp: str):
     """
     Compute fan tone harmonics for inlet (dp) and discharge (dpx).
 
     :param settings: pyna settings
     :type settings: Dict[str, Any]
-    :param freq: 1/3rd octave frequency bands [Hz]
-    :type freq
+    :param f: 1/3rd octave frequency bands [Hz]
+    :type f
     :param theta: polar directivity angle [deg]
     :type theta
     :param tonlv_I: inlet tone level [-]
@@ -907,12 +909,6 @@ def calculate_harmonics(settings, freq, theta, tonlv_I, tonlv_X, i_cut, M_tip, b
             # Compute suppression factors for GE#s "Flight cleanup Turbulent Control Structure."
             # Approach or takeoff values to be applied to inlet discrete interaction tones
             # at bpf and 2bpf.  Accounts for observed in-flight tendencies.
-            TCSTHA = 
-            TCSAT1 = 
-            TCSAT2 = 
-            TCSAA1 = 
-            TCSAA2 = 
-
             if settings['fan_ge_flight_cleanup'] == 'takeoff':
                 if ih == 1:
                     TCS = jnp.interp(theta, tables.source.fan.fe_theta, tables.source.fan.fe_takeoff_1_data)
@@ -962,7 +958,7 @@ def calculate_harmonics(settings, freq, theta, tonlv_I, tonlv_X, i_cut, M_tip, b
 
         # Cycle through frequencies and assign tones to 1/3rd octave bins:
         for l in jnp.arange(nfi - 1, settings['n_frequency_bands']):
-            Frat = bpf * ih / freq[l]
+            Frat = bpf * ih / f[l]
             FR = 1
             if Frat < F1:
                 break
@@ -981,7 +977,7 @@ def calculate_harmonics(settings, freq, theta, tonlv_I, tonlv_X, i_cut, M_tip, b
     return dp, dpx
 
 
-def fan_heidman(fan_DTt, fan_mdot, fan_N, M_0, c_0, rho_0, theta, f, settings, aircraft, tables, comp):
+def fan_heidman(fan_DTt, fan_mdot, fan_N, M_0, c_0, rho_0, theta, f, settings, aircraft: Aircraft, tables: Tables, comp: str):
 
     """
     Calculates fan noise mean-square acoustic pressure (msap) using Berton's implementation of the fan noise method.
@@ -990,12 +986,12 @@ def fan_heidman(fan_DTt, fan_mdot, fan_N, M_0, c_0, rho_0, theta, f, settings, a
     :type comp: str
 
     :return: msap_fan
-    :rtype: jjnp.ndarray
+    :rtype: jnp.ndarray
     """
     
     ### Extract the ijnputs
-    M_tip_tan = (aircraft.engine.fan_d / 2) * fan_N * 2 * jjnp.pi / 60 / c_0  # Tangential (i.e., radius*omega) tip Mach number: ! Doesn't need correction
-    bpf = fan_N * aircraft.engine.fan_B / 60. / (1 - M_0 * jjnp.cos(theta * jjnp.pi / 180))  # Blade passing frequency, [Hz]
+    M_tip_tan = (aircraft.engine.fan_d / 2) * fan_N * 2 * jnp.pi / 60 / c_0  # Tangential (i.e., radius*omega) tip Mach number: ! Doesn't need correction
+    bpf = fan_N * aircraft.engine.fan_B / 60. / (1 - M_0 * jnp.cos(theta * jnp.pi / 180))  # Blade passing frequency, [Hz]
     flow_M = fan_mdot / (rho_0 * aircraft.engine.fan_A * c_0)  # Fan face flow Mach number (assumes ambient and fan face static densities are equal): !!!!!!!
     M_tip = (M_tip_tan ** 2 + flow_M ** 2) ** 0.5  # Relative (i.e., helical) tip Mach number: ! Doesn't need correction
 
@@ -1003,61 +999,61 @@ def fan_heidman(fan_DTt, fan_mdot, fan_N, M_0, c_0, rho_0, theta, f, settings, a
     rho_sl = 1.22514
     c_sl = 340.29395
     if settings['fan_BB_method'] == 'kresja':
-        tsqem = 10 * jjnp.log10((fan_DTt * 1.8) ** 4 * 2.20462 * fan_mdot / (1 - M_0 * jjnp.cos(theta * jjnp.pi / 180)) ** 4 / settings['r_0'] ** 2 / (rho_sl ** 2 * c_sl ** 4))
+        tsqem = 10 * jnp.log10((fan_DTt * 1.8) ** 4 * 2.20462 * fan_mdot / (1 - M_0 * jnp.cos(theta * jnp.pi / 180)) ** 4 / settings['r_0'] ** 2 / (rho_sl ** 2 * c_sl ** 4))
     else:  # All other methods:
-        tsqem = 10 * jjnp.log10((fan_DTt * 1.8) ** 2 * 2.20462 * fan_mdot / (1 - M_0 * jjnp.cos(theta * jjnp.pi / 180)) ** 4 / settings['r_0'] ** 2 / (rho_sl ** 2 * c_sl ** 4))
+        tsqem = 10 * jnp.log10((fan_DTt * 1.8) ** 2 * 2.20462 * fan_mdot / (1 - M_0 * jnp.cos(theta * jnp.pi / 180)) ** 4 / settings['r_0'] ** 2 / (rho_sl ** 2 * c_sl ** 4))
 
     # Calculate individual noise components
-    dcp = jjnp.zeros(settings['n_frequency_bands'])
+    dcp = jnp.zeros(settings['n_frequency_bands'])
     if comp == 'fan_inlet':
-        bblv_I = inlet_broadband(settings, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
-        tonlv_I = inlet_tones(settings, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
+        bblv_I = inlet_broadband(settings, tables, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
+        tonlv_I = inlet_tones(settings, tables, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
         bblv_D = 0.
         tonlv_X = 0.
     elif comp == 'fan_discharge':
         bblv_I = 0.
         tonlv_I = 0.
-        bblv_D = discharge_broadband(settings, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
-        tonlv_X = discharge_tones(settings, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
+        bblv_D = discharge_broadband(settings, tables, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
+        tonlv_X = discharge_tones(settings, tables, theta, M_tip, tsqem, aircraft.engine.fan_M_d, aircraft.engine.fan_fan_RSS)
     else:
         raise ValueError('Invalid component specified. Specify "fan_inlet" or "fan discharge".')
 
     # Compute combination tones
     if settings['fan_combination_tones']:
-        dcp = combination_tones(settings, f, theta, M_tip, bpf, tsqem)
+        dcp = combination_tones(settings, tables, f, theta, M_tip, bpf, tsqem)
 
     # Calculate if cut-off happens (1) or not (0)
     i_cut = calculate_cutoff(M_tip_tan, aircraft.engine.fan_B, aircraft.engine.fan_V)
 
     # Assign tones_to bands
-    dp, dpx = calculate_harmonics(settings, f, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf,comp)
+    dp, dpx = calculate_harmonics(settings, tables, f, theta, tonlv_I, tonlv_X, i_cut, M_tip, bpf,comp)
 
     # Final calculations;  cycle through frequencies and assign values:
     if settings['fan_BB_method'] == 'allied_signal':
         # Eqn 2 or Figure 3A:
         # if f[j] / bpf < 2:
-        # FLOGinlet,exit = -10 * jjnp.log10(jjnp.exp(-0.35 * (jjnp.log(f[j] / bpf / 2.0) / jjnp.log(2.2)) ** 2))
-        FLOGinlet = 2.445096095 * (jjnp.log(f / bpf / 2)) ** 2
+        # FLOGinlet,exit = -10 * jnp.log10(jnp.exp(-0.35 * (jnp.log(f[j] / bpf / 2.0) / jnp.log(2.2)) ** 2))
+        FLOGinlet = 2.445096095 * (jnp.log(f / bpf / 2)) ** 2
         # elif f[j] / bpf > 2:
-        # FLOGinlet,exit = -10 * jjnp.log10(jjnp.exp(-2.0 * (jjnp.log(f[j] / bpf / 2.0) / jjnp.log(2.2)) ** 2))
-        FLOGinlet[f/bpf > 2] = (13.97197769 * (jjnp.log(f / bpf / 2)) ** 2)[f/bpf > 2]
+        # FLOGinlet,exit = -10 * jnp.log10(jnp.exp(-2.0 * (jnp.log(f[j] / bpf / 2.0) / jnp.log(2.2)) ** 2))
+        FLOGinlet[f/bpf > 2] = (13.97197769 * (jnp.log(f / bpf / 2)) ** 2)[f/bpf > 2]
         FLOGexit = FLOGinlet
 
     elif settings['fan_BB_method'] == 'kresja':
         # Eqn 2 or Figure 3A:
-        # FLOGinlet = -10 * jjnp.log10(jjnp.exp(-0.5 * (jjnp.log(f[j] / bpf / 4) / jjnp.log(2.2)) ** 2))
+        # FLOGinlet = -10 * jnp.log10(jnp.exp(-0.5 * (jnp.log(f[j] / bpf / 4) / jnp.log(2.2)) ** 2))
         # Which may be simplified as:
-        FLOGinlet = 3.4929944 * (jjnp.log(f / bpf / 4)) ** 2
-        # FLOGexit = -10 * jjnp.log10(jjnp.exp(-0.5 * (jjnp.log(f[j] / bpf / 2.5) / jjnp.log(2.2)) ** 2))
+        FLOGinlet = 3.4929944 * (jnp.log(f / bpf / 4)) ** 2
+        # FLOGexit = -10 * jnp.log10(jnp.exp(-0.5 * (jnp.log(f[j] / bpf / 2.5) / jnp.log(2.2)) ** 2))
         # Which may be simplified as:
-        FLOGexit = 3.4929944 * (jjnp.log(f / bpf / 2.5)) ** 2
+        FLOGexit = 3.4929944 * (jnp.log(f / bpf / 2.5)) ** 2
 
     else:
         # For the original or the GE large fan methods:
         # Eqn 2 or Figure 3A:
-        # FLOGinlet,exit = -10 * jjnp.log10(jjnp.exp(-0.5 * (jjnp.log(f[j] / bpf / 2.5) / jjnp.log(2.2)) ** 2))
+        # FLOGinlet,exit = -10 * jnp.log10(jnp.exp(-0.5 * (jnp.log(f[j] / bpf / 2.5) / jnp.log(2.2)) ** 2))
         # Which may be simplified as:
-        FLOGinlet = 3.4929944 * (jjnp.log(f / bpf / 2.5)) ** 2
+        FLOGinlet = 3.4929944 * (jnp.log(f / bpf / 2.5)) ** 2
         FLOGexit = FLOGinlet
 
     # Add frequency distribution to the fan broadband noise and add the tones
@@ -1086,4 +1082,4 @@ def fan_heidman(fan_DTt, fan_mdot, fan_N, M_0, c_0, rho_0, theta, f, settings, a
 
         msap = supp * msap
 
-    return msap_fan
+    return msap

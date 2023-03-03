@@ -15,7 +15,7 @@ from pyNA.src.trajectory_model.time_history.time_history_model import TimeHistor
 
 class Trajectory:
     
-    def __init__(self, settings) -> None:
+    def __init__(self, settings, path=om.Problem()) -> None:
         
         """
         
@@ -24,14 +24,17 @@ class Trajectory:
 
         """
 
-        if settings['trajectory_mode'] == 'sst':
-            self.path = SSTTakeOffModel()
+        # if settings['trajectory_mode'] == 'sst':
+        #     self.path = SSTTakeOffModel()
 
-        elif settings['trajectory_mode'] == 'vtol':
-            self.path = VTOLTakeOffModel()
+        # elif settings['trajectory_mode'] == 'vtol':
+        #     self.path = VTOLTakeOffModel()
 
-        elif settings['trajectory_mode'] == 'subsonic':
-            self.path = SubsonicTakeOffModel()
+        # elif settings['trajectory_mode'] == 'subsonic':
+        #     self.path = SubsonicTakeOffModel()
+
+        if settings['trajectory_mode'] == 'model':
+            self.path = path
 
         elif settings['trajectory_mode'] == 'time_history':
             # Load data .csv files
