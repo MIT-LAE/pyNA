@@ -604,7 +604,7 @@ def combination_tones(settings, tables: Tables, f, theta, M_tip, bpf, tsqem):
 
             ctlc = tsqem + f1ct + f2ct + cct
             # Frequency-dependent term (F3 of Eqn 9, Figure 14):
-            fk = 2 ** K
+            fk = 2 ** k
 
             # Cycle through frequencies and make assignments:
             for j in jnp.arange(settings['n_frequency_bands']):
