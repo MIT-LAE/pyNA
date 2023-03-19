@@ -1,5 +1,6 @@
 import dymos as dm
 import numpy as np
+from pyNA.src.aircraft import Aircraft
 
 
 class LiftOff(dm.Phase):
@@ -10,7 +11,7 @@ class LiftOff(dm.Phase):
 
         self.phase_target_size = 13
 
-    def create(self, settings, aircraft, controls, objective) -> None:
+    def create(self, settings: dict, aircraft: Aircraft, controls: dict, objective: str) -> None:
 
         self.set_time_options(initial_bounds=(20, 200), duration_bounds=(0, 500), initial_ref=100., duration_ref=100., fix_duration=False)
 

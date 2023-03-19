@@ -1,7 +1,7 @@
 import pandas as pd
 from pyNA.src.noise_model.tables import Tables
-from pyNA.src.utils.compute_frequency_bands import compute_frequency_bands
-from pyNA.src.utils.compute_frequency_subbands import compute_frequency_subbands
+from pyNA.src.noise_model.python.utils.compute_frequency_bands import compute_frequency_bands
+from pyNA.src.noise_model.python.utils.compute_frequency_subbands import compute_frequency_subbands
 
 
 class Noise:

@@ -1,5 +1,7 @@
 import dymos as dm
 import numpy as np
+from pyNA.src.aircraft import Aircraft
+
 
 class CutBack(dm.Phase):
 
@@ -9,14 +11,14 @@ class CutBack(dm.Phase):
 
         self.phase_target_size = 37
 
-    def create(self, settings, aircraft, controls, objective, trajectory_mode) -> None:
+    def create(self, settings: dict, aircraft: Aircraft, controls: dict, objective: str, mode: str) -> None:
         
         self.set_time_options(initial_bounds=(10, 400), duration_bounds=(0, 500), initial_ref=100., duration_ref=100.)
         
-        if trajectory_mode == 'flyover':
+        if mode == 'flyover':
             self.add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=True, fix_final=True, ref=10000.)
             self.add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=False, fix_final=False, ref=1000.)
-        elif trajectory_mode == 'cutback':
+        elif mode == 'cutback':
             self.add_state('x', rate_source='flight_dynamics.x_dot', units='m', fix_initial=False, fix_final=True, ref=10000.)
             self.add_state('z', rate_source='flight_dynamics.z_dot', units='m', fix_initial=True, fix_final=False, ref=1000.)
         self.add_state('v', targets='v', rate_source='flight_dynamics.v_dot', units='m/s', fix_initial=False, fix_final=True, ref=100.)

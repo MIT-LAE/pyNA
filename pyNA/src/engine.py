@@ -9,6 +9,8 @@ class Engine:
     
     def __init__(self, settings) -> None:
         
+        self.vars = list()
+        self.var_units = dict()
         self.deck = dict()
 
         with open(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/aircraft/' + settings['engine_name'] + '.json') as f:
@@ -32,7 +34,6 @@ class Engine:
         """
 
         # General variables
-        self.vars = list(); self.var_units = dict()
         self.vars.append('F_n'); self.var_units['F_n'] = 'N'
         self.vars.append('W_f'); self.var_units['W_f'] = 'kg/s'
         

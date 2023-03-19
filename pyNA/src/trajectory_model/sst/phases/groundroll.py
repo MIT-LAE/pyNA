@@ -1,6 +1,7 @@
 import dymos as dm
 import numpy as np
 import pdb
+from pyNA.src.aircraft import Aircraft
 
 
 class GroundRoll(dm.Phase):
@@ -12,7 +13,7 @@ class GroundRoll(dm.Phase):
 
         self.phase_target_size = 10
 
-    def create(self, settings, aircraft, controls, objective) -> None:
+    def create(self, settings: dict, aircraft: Aircraft, controls: dict, objective: str) -> None:
 
         self.set_time_options(fix_initial=True, duration_bounds=(0, 100), duration_ref=100.)
         

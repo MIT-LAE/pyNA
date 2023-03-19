@@ -1,15 +1,38 @@
-
-from pyNA.src.trajectory import Trajectory
+from pyNA.src.problem import Problem
 from pyNA.src.aircraft import Aircraft
+from pyNA.src.trajectory import Trajectory
+from pyNA.src.time_history import TimeHistory
 from pyNA.src.noise import Noise
 import matplotlib.pyplot as plt
 import numpy as np
+import openmdao.api as om
 import os
 os.environ["OPENMDAO_REPORTS"] = 'none'
 import pdb
 
 
 class pyna:
+
+    """
+    
+    Parameters
+    ----------
+
+    Attributes
+    ----------
+    problem : Problem
+        pyNA model 
+    settings : dict
+        pyNA settings
+    aircraft : Aircraft
+        _
+    trajectory : Trajectory
+        _
+    noise : Noise
+        _
+
+    """
+
 
     def __init__(self, 
                 case_name = 'nasa_stca_standard',
@@ -24,10 +47,10 @@ class pyna:
                 fan_RS_method = 'allied_signal',
                 fan_ge_flight_cleanup = 'takeoff',
                 core_turbine_attenuation_method = 'ge',
-                trajectory_mode='time_history',
                 lateral_attenuation_engine_mounting = 'underwing',
                 levels_int_metric = 'epnl',
                 observer_lst = ('lateral', 'flyover'),
+                trajectory_mode = 'time_history',
                 noise = False,
                 emissions = False,
                 thrust_lapse = True,
@@ -78,132 +101,134 @@ class pyna:
         
         """
         
-        :param case_name:
-        :type case_name: str
-        :param aircraft_name:
-        :type aircraft_name: str
-        :param engine_name:
-        :type engine_name: str
-        :param output_directory_name:
-        :type output_directory_name: str
-        :param output_file_name:
-        :type output_file_name: str
-        :param time_history_file_name:
-        :type time_history_file_name: str
-        :param engine_deck_file_name:
-        :type engine_deck_file_name: str
-        :param atmosphere_mode:
-        :type atmosphere_mode: str
-        :param fan_BB_method:
-        :type fan_BB_method: str
-        :param fan_RS_method:
-        :type fan_RS_method: str
-        :param fan_ge_flight_cleanup:
-        :type fan_ge_flight_cleanup: str
-        :param core_turbine_attenuation_method:
-        :type core_turbine_attenuation_method: str
-        :param trajectory_mode:
-        :type trajectory_mode: str
-        :param lateral_attenuation_engine_mounting:
-        :type lateral_attenuation_engine_mounting: str
-        :param levels_int_metric:
-        :type levels_int_metric: str
-        :param observer_lst:
-        :type observer_lst: list
-        :param noise:
-        :type noise: bool
-        :param emissions:
-        :type emissions: bool
-        :param thrust_lapse:
-        :type thrust_lapse: bool
-        :param ptcb:
-        :type ptcb: bool
-        :param phld:
-        :type phld: bool
-        :param pkrot:
-        :type pkrot: bool
-        :param all_sources:
-        :type all_sources: bool
-        :param fan_inlet_source:
-        :type fan_inlet_source: bool
-        :param fan_discharge_source:
-        :type fan_discharge_source: bool
-        :param core_source:
-        :type core_source: bool
-        :param jet_mixing_source:
-        :type jet_mixing_source: bool
-        :param jet_shock_source:
-        :type jet_shock_source: bool
-        :param airframe_source:
-        :type airframe_source: bool
-        :param fan_igv:
-        :type fan_igv: bool
-        :param fan_id:
-        :type fan_id: bool
-        :param fan_combination_tones:
-        :type fan_combination_tones: bool
-        :param fan_liner_suppression:
-        :type fan_liner_suppression: bool
-        :param airframe_hsr_calibration:
-        :type airframe_hsr_calibration: bool
-        :param direct_propagation:
-        :type direct_propagation: bool
-        :param absorption:
-        :type absorption: bool
-        :param ground_effects:
-        :type ground_effects: bool
-        :param lateral_attenuation:
-        :type lateral_attenuation: bool
-        :param shielding:
-        :type shielding: bool
-        :param tones_under_800Hz:
-        :type tones_under_800Hz: bool
-        :param epnl_bandshare:
-        :type epnl_bandshare: bool
-        :param core_jet_suppression:
-        :type core_jet_suppression: bool
-        :param save_results:
-        :type save_results: bool
-        :param verification:
-        :type verification: bool
-        :param F00:
-        :type F00: float
-        :param z_cb:
-        :type z_cb: float
-        :param v_max:
-        :type v_max: float
-        :param x_max:
-        :type x_max: float
-        :param epnl_dt:
-        :type epnl_dt: float
-        :param atmosphere_dT:
-        :type atmosphere_dT: float
-        :param max_iter:
-        :type max_iter: int
-        :param tolerance:
-        :type tolerance: float
-        :param x_observer_array:
-        :type x_observer_array: np.ndarray
-        :param ground_resistance:
-        :type ground_resistance: float
-        :param incoherence_constant:
-        :type incoherence_constant: float
-        :param n_frequency_bands:
-        :type n_frequency_bands: int
-        :param n_frequency_subbands:
-        :type n_frequency_subbands: int
-        :param n_altitude_absorption:
-        :type n_altitude_absorption: int
-        :param n_harmonics:
-        :type n_harmonics: int
-        :param n_shock:
-        :type n_shock: int
-        :param A_e:
-        :type A_e: float
-        :param r_0:
-        :type r_0: float
-        :param p_ref
-        :type p_ref: float
+        Parameters
+        ----------
+        case_name : str
+            _
+        aircraft_name : str
+            _
+        engine_name : str
+            _
+        output_directory_name : str
+            _
+        output_file_name : str
+            _
+        time_history_file_name : str
+            _
+        engine_deck_file_name : str
+            _
+        atmosphere_mode : str
+            _
+        fan_BB_method : str
+            _
+        fan_RS_method : str
+            _
+        fan_ge_flight_cleanup : str
+            _
+        core_turbine_attenuation_method : str
+            _
+        lateral_attenuation_engine_mounting : str
+            _
+        levels_int_metric : str
+            _
+        param observer_lst : list
+            _
+        trajectory_mode : string
+            _
+        noise : bool
+            _
+        emissions : bool
+            _
+        thrust_lapse : bool
+            _
+        ptcb : bool
+            _
+        phld : bool
+            _
+        pkrot : bool
+            _
+        all_sources : bool
+            _
+        fan_inlet_source : bool
+            _
+        fan_discharge_source : bool
+            _
+        core_source : bool
+            _
+        jet_mixing_source : bool
+            _
+        jet_shock_source : bool
+            _
+        airframe_source : bool
+            _
+        fan_igv : bool
+            _
+        fan_id : bool
+            _
+        fan_combination_tones : bool
+            _
+        fan_liner_suppression: bool
+            _
+        airframe_hsr_calibration : bool
+            _
+        direct_propagation : bool
+            _
+        absorption : bool 
+            _
+        ground_effects : bool
+            _
+        lateral_attenuation : bool
+            _
+        shielding : bool
+            _
+        tones_under_800Hz : bool
+            _
+        epnl_bandshare : bool
+            _
+        core_jet_suppression : bool
+            _
+        save_results : bool
+            _
+        verification : bool
+            _
+        F00 : float
+            _
+        z_cb : float
+            _
+        v_max : float
+            _
+        x_max : float
+            _
+        epnl_dt : float
+            _
+        atmosphere_dT : float
+            _
+        max_iter : int
+            _
+        tolerance : float
+            _
+        x_observer_array : np.ndarray
+            _
+        ground_resistance : float
+            _
+        incoherence_constant : float
+            _
+        n_frequency_bands : int
+            _
+        n_frequency_subbands : int
+            _
+        n_altitude_absorption: int
+            _
+        n_harmonics : int
+            _
+        n_shock : int
+            _
+        A_e : float
+            _
+        r_0 : float
+            _
+        p_ref : float
+            _
         """
 
         self.settings = dict()
@@ -219,10 +244,10 @@ class pyna:
         self.settings['fan_RS_method'] = fan_RS_method
         self.settings['fan_ge_flight_cleanup'] = fan_ge_flight_cleanup
         self.settings['core_turbine_attenuation_method'] = core_turbine_attenuation_method
-        self.settings['trajectory_mode'] = trajectory_mode
         self.settings['lateral_attenuation_engine_mounting'] = lateral_attenuation_engine_mounting
         self.settings['levels_int_metric'] = levels_int_metric
         self.settings['observer_lst'] = observer_lst
+        self.settings['trajectory_mode'] = trajectory_mode
         self.settings['noise'] = noise
         self.settings['emissions'] = emissions
         self.settings['thrust_lapse'] = thrust_lapse
@@ -271,13 +296,24 @@ class pyna:
         self.settings['r_0'] = r_0
         self.settings['p_ref'] = p_ref
 
+        # Initialize aircraft
         self.aircraft = Aircraft(settings=self.settings)
-        if not self.settings['trajectory_mode'] == 'time_history':
+        if self.settings['trajectory_mode'] == 'model':
             self.aircraft.get_aerodynamics_deck(settings=self.settings)
             self.aircraft.engine.get_performance_deck(settings=self.settings)
+                
+        # Initialize pyNA model
+        self.problem = Problem()
+        
+        # Trajectory model
+        if self.settings['trajectory_mode'] == 'model':
+            self.trajectory = Trajectory()
 
-        self.trajectory = Trajectory(settings=self.settings)
-
+        elif self.settings['trajectory_mode'] == 'time_history':
+            self.trajectory = TimeHistory()
+            self.trajectory.load_data(settings=self.settings)
+            
+        # Noise model 
         self.noise = Noise(settings=self.settings)
 
     def plot_ipopt_convergence_data():
@@ -294,7 +330,7 @@ class pyna:
         fig, ax = plt.subplots(2,3, figsize=(20, 8), dpi=100)
         plt.style.use('plot.mplstyle')
 
-        ax[0,0].plot(self.trajectory.path.get_val('trajectory.x'), self.trajectory.path.get_val('trajectory.z'), '-', label='Take-off trajectory module', color='k')
+        ax[0,0].plot(self.problem.get_val('trajectory.x'), self.problem.get_val('trajectory.z'), '-', label='Take-off trajectory module', color='k')
         for i,path in enumerate(paths_compare):
             ax[0,0].plot(path.get_val('trajectory.x'), path.get_val('trajectory.z'), '-', label=labels_compare[i])
         ax[0,0].set_xlabel('X [m]')
@@ -303,7 +339,7 @@ class pyna:
         ax[0,0].spines['top'].set_visible(False)
         ax[0,0].spines['right'].set_visible(False)
 
-        ax[0,1].plot(self.trajectory.path.get_val('trajectory.t_s'), self.trajectory.path.get_val('trajectory.v'), '-', color='k')
+        ax[0,1].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.v'), '-', color='k')
         for path in paths_compare:
             ax[0,1].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.v'), '-')
         ax[0,1].set_xlabel('t [s]')
@@ -311,7 +347,7 @@ class pyna:
         ax[0,1].spines['top'].set_visible(False)
         ax[0,1].spines['right'].set_visible(False)
 
-        ax[0,2].plot(self.trajectory.path.get_val('trajectory.t_s'), self.trajectory.path.get_val('trajectory.gamma'), '-', color='k')
+        ax[0,2].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.gamma'), '-', color='k')
         for path in paths_compare:
             ax[0,2].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.gamma'), '-')
         ax[0,2].set_xlabel('t [s]')
@@ -319,7 +355,7 @@ class pyna:
         ax[0,2].spines['top'].set_visible(False)
         ax[0,2].spines['right'].set_visible(False)
 
-        ax[1,0].plot(self.trajectory.path.get_val('trajectory.t_s'), 1 / 1000. * self.trajectory.path.get_val('trajectory.F_n'), '-', color='k')
+        ax[1,0].plot(self.problem.get_val('trajectory.t_s'), 1 / 1000. * self.problem.get_val('trajectory.F_n'), '-', color='k')
         for path in paths_compare:
             ax[1,0].plot(path.get_val('trajectory.t_s'), 1 / 1000. * path.get_val('trajectory.F_n'), '-')
         ax[1,0].set_xlabel('t [s]')
@@ -327,7 +363,7 @@ class pyna:
         ax[1,0].spines['top'].set_visible(False)
         ax[1,0].spines['right'].set_visible(False)
 
-        ax[1,1].plot(self.trajectory.path.get_val('trajectory.t_s'), self.trajectory.path.get_val('trajectory.tau'), '-', color='k')
+        ax[1,1].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.tau'), '-', color='k')
         for path in paths_compare:
             ax[1,1].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.tau'), '-')
         ax[1,1].set_xlabel('t [s]')
@@ -336,7 +372,7 @@ class pyna:
         ax[1,1].spines['top'].set_visible(False)
         ax[1,1].spines['right'].set_visible(False)
 
-        ax[1,2].plot(self.trajectory.path.get_val('trajectory.t_s'), self.trajectory.path.get_val('trajectory.alpha'), '-', color='k')
+        ax[1,2].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.alpha'), '-', color='k')
         for path in paths_compare:
             ax[1,2].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.alpha'), '-')
         ax[1,2].set_xlabel('t [s]')
@@ -348,4 +384,3 @@ class pyna:
         plt.show()
 
         return None
-
