@@ -2,7 +2,6 @@ import openmdao.api as om
 import dymos as dm
 import pyNA
 import pdb
-
 from pyNA.src.trajectory_model.sst.take_off_phase_ode import TakeOffPhaseODE
 from pyNA.src.trajectory_model.sst.phases.groundroll import GroundRoll
 from pyNA.src.trajectory_model.sst.phases.rotation import Rotation
@@ -33,18 +32,20 @@ class SSTTakeOffTrajectory(dm.Trajectory):
 
     """
 
-    def __init__(self, settings, aircraft:Aircraft, controls: dict, mode:str, objective:str, **kwargs):
+    def __init__(self, settings: dict, aircraft:Aircraft, controls: dict, mode:str, objective:str, **kwargs):
         
         """
 
         Parameters
         ----------
-        settings :
-            _
-        aircraft : 
+        settings : dict
+            pyna settings
+        aircraft : Aircraft
             _
         controls : 
             _
+        n_t : int
+            Number of time steps in the trajectory
         mode : str
             'cutback' or 'flyover'
         objective : str
@@ -70,13 +71,17 @@ class SSTTakeOffTrajectory(dm.Trajectory):
         super().__init__(**kwargs)
 
         self.vars = list()
+        
         self.var_units = dict()
+        
         self.objective = objective
+
         self.mode = mode
 
-        # Create the trajectory phases 
         self.phase_name_lst = ['groundroll', 'rotation', 'liftoff', 'vnrs', 'cutback']
+
         SSTTakeOffTrajectory.set_transcription(self)
+
         controls['tau_min'] = SSTTakeOffTrajectory.get_minimum_thrust_setting(self)
 
         for phase_name in self.phase_name_lst:
@@ -106,6 +111,9 @@ class SSTTakeOffTrajectory(dm.Trajectory):
                 self.cutback = CutBack(ode_class=TakeOffPhaseODE, transcription=self.transcription[phase_name]['grid'], ode_init_kwargs=opts)
                 self.cutback.create(settings=settings, aircraft=aircraft, controls=controls, objective=objective, mode=mode)
                 self.add_phase(phase_name, self.cutback)        
+
+        # Get trajectory output size 
+        SSTTakeOffTrajectory.get_mux_input_output_size(self)
 
         # Link phases
         if 'rotation' in self.phase_name_lst:
@@ -170,9 +178,8 @@ class SSTTakeOffTrajectory(dm.Trajectory):
             if settings['fan_inlet_source'] or settings['fan_discharge_source']:
                 promote_lst.extend(['fan_DTt', 'fan_mdot', 'fan_N'])
 
-        SSTTakeOffTrajectory.get_mux_input_output_size(self)
         mux = problem.model.add_subsystem(name='trajectory', 
-                                         subsys=Mux(input_size_array=self.mux_input_size_array, output_size=self.mux_output_size, settings=settings, objective=self.objective),
+                                         subsys=Mux(input_size_array=self.mux_input_size_array, output_size=self.n_t, settings=settings, objective=self.objective),
                                          promotes_outputs=promote_lst)
         
         SSTTakeOffTrajectory.get_var(self, settings=settings)
@@ -386,33 +393,33 @@ class SSTTakeOffTrajectory(dm.Trajectory):
                 self.mux_input_size_array.append(self.cutback.phase_target_size)
 
         # List output sizes
-        self.mux_output_size = 0
+        self.n_t = 0
         for i, phase_name in enumerate(self.phase_name_lst):
             if phase_name == 'groundroll':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.groundroll.phase_target_size
+                    self.n_t += self.groundroll.phase_target_size
                 else:
-                    self.mux_output_size += self.groundroll.phase_target_size - 1
+                    self.n_t += self.groundroll.phase_target_size - 1
             elif phase_name == 'rotation':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.rotation.phase_target_size
+                    self.n_t += self.rotation.phase_target_size
                 else:
-                    self.mux_output_size += self.rotation.phase_target_size - 1
+                    self.n_t += self.rotation.phase_target_size - 1
             elif phase_name == 'liftoff':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.liftoff.phase_target_size
+                    self.n_t += self.liftoff.phase_target_size
                 else:
-                    self.mux_output_size += self.liftoff.phase_target_size - 1
+                    self.n_t += self.liftoff.phase_target_size - 1
             elif phase_name == 'vnrs':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.vnrs.phase_target_size
+                    self.n_t += self.vnrs.phase_target_size
                 else:
-                    self.mux_output_size += self.vnrs.phase_target_size - 1
+                    self.n_t += self.vnrs.phase_target_size - 1
             elif phase_name == 'cutback':
                 if i+1 == len(self.phase_name_lst):
-                    self.mux_output_size += self.cutback.phase_target_size
+                    self.n_t += self.cutback.phase_target_size
                 else:
-                    self.mux_output_size += self.cutback.phase_target_size - 1
+                    self.n_t += self.cutback.phase_target_size - 1
         
         return None
     

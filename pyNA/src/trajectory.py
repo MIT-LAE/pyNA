@@ -3,8 +3,6 @@ import dymos as dm
 import pandas as pd
 import numpy as np
 import openmdao.api as om
-import datetime as dt
-import os
 import pdb
 import pyNA
 from pyNA.src.aircraft import Aircraft
@@ -16,20 +14,31 @@ class Trajectory:
     
     Attributes
     ----------
+    problem : om.Problem
+        _
+    settings : dict
+        _
     vars : list
         _
     var_units : dict
         _
+    model : dm.Trajectory
+        _
+    n_t : int
+        _
         
     """
 
-    def __init__(self) -> None:
+    def __init__(self, problem: om.Problem, settings: dict, aircraft: Aircraft) -> None:
 
+        self.problem = problem
+        self.settings = settings
+        self.aircraft = aircraft
         self.vars = list()
         self.var_units = dict()
-        self.path = dm.Trajectory()
+        self.model = dm.Trajectory()
 
-    def connect(self, problem: om.Problem, settings, aircraft: Aircraft, path=dm.Trajectory()) -> None:
+    def connect(self, model=dm.Trajectory()) -> None:
         
         """
         
@@ -43,60 +52,30 @@ class Trajectory:
 
         """
 
-        self.path = path
-        self.path.connect_to_model(problem=problem, settings=settings, aircraft=aircraft)
+        self.model = model
+        self.model.connect_to_model(problem=self.problem, settings=self.settings, aircraft=self.aircraft)
+        self.n_t = self.model.n_t
 
-        return
+        return None
     
-    def set_initial_conditions(self, problem: om.Problem, settings: dict, aircraft:Aircraft, path_init=None):
+    def set_initial_conditions(self, path_init=None) -> None:
         """
         
         Parameters
         ----------
-
+        problem : 
+            _
+        settings : dict
+            pyna settings
+        aircraft : Aircraft
+            _
+        path_init : 
+            _
+        
         """
 
-        self.path.set_initial_conditions(problem=problem, settings=settings, aircraft=aircraft, path_init=path_init)
+        self.model.set_initial_conditions(problem=self.problem, settings=self.settings, aircraft=self.aircraft, path_init=path_init)
 
-        return 
-
-    def check_convergence(self, settings, filename: str) -> bool:
-        """
-        Checks convergence of case using optimizer output file.
-
-        :param settings: pyna settings
-        :type settings: Settings
-        :param filename: file name of IPOPT output
-        :type filename: str
-
-        :return: converged
-        :rtype: bool
-        """
-
-        # Save convergence info for trajectory
-        # Read IPOPT file
-        file_ipopt = open(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/output/' + settings['output_directory_name'] + '/' + filename, 'r')
-        ipopt = file_ipopt.readlines()
-        file_ipopt.close()
-
-        # Check if convergence summary excel file exists
-        cnvg_file_name = pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/output/' + settings['output_directory_name'] + '/' + 'Convergence.csv'
-        if not os.path.isfile(cnvg_file_name):
-            file_cvg = open(cnvg_file_name, 'w')
-            file_cvg.writelines("Trajectory name , Execution date/time,  Converged")
-        else:
-            file_cvg = open(cnvg_file_name, 'a')
-
-        # Write convergence output to file
-        # file = open(cnvg_file_name, 'a')
-        if ipopt[-1] in {'EXIT: Optimal Solution Found.\n', 'EXIT: Solved To Acceptable Level.\n'}:
-            file_cvg.writelines("\n" + settings['output_file_name'] + ", " + str(dt.datetime.now()) + ", Converged")
-            converged = True
-        else:
-            file_cvg.writelines("\n" + settings['output_file_name'] + ", " + str(dt.datetime.now()) + ", Not converged")
-            converged = False
-        file_cvg.close()
-
-        return converged
+        return None
 
 

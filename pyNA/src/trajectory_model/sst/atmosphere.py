@@ -50,14 +50,14 @@ class Atmosphere(om.ExplicitComponent):
 
         self.add_input('z', val=np.ones(nn), units='m', desc='aircraft z-position [m]')
         
-        self.add_output('p_0', val=np.ones(nn), units='Pa', desc='ambient pressure [Pa]')
-        self.add_output('rho_0', val=np.ones(nn), units='kg/m**3', desc='ambient density [kg/m3]')
-        self.add_output('drho_0_dz', val=1.*np.ones(nn), units='kg/m**4', desc='change of density with altitude [kg/m4]')
-        self.add_output('T_0', val=np.ones(nn), units='K', desc='ambient temperature [K]')
-        self.add_output('c_0', val=np.ones(nn), units='m/s', desc='ambient speed of sound [m/s]')
-        self.add_output('mu_0', val=np.ones(nn), units='kg/m/s', desc='ambient dynamic viscosity [kg/ms]')
-        self.add_output('I_0', val=np.ones(nn), units='kg/m**2/s', desc='ambient characteristic impedance [kg/m2/s]')
-        self.add_output('rh', val=np.ones(nn), units=None, desc='Relative humidity [%]')
+        self.add_output('p_0', val=np.ones(nn), units='Pa', desc='ambient pressure')
+        self.add_output('rho_0', val=np.ones(nn), units='kg/m**3', desc='ambient density')
+        self.add_output('drho_0_dz', val=1.*np.ones(nn), units='kg/m**4', desc='change of density with altitude')
+        self.add_output('T_0', val=np.ones(nn), units='K', desc='ambient temperature')
+        self.add_output('c_0', val=np.ones(nn), units='m/s', desc='ambient speed of sound')
+        self.add_output('mu_0', val=np.ones(nn), units='kg/m/s', desc='ambient dynamic viscosity')
+        self.add_output('I_0', val=np.ones(nn), units='kg/m**2/s', desc='ambient characteristic impedance')
+        self.add_output('rh', val=np.ones(nn), units=None, desc='Relative humidity')
 
     def setup_partials(self):
         """

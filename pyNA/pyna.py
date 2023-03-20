@@ -1,15 +1,19 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import openmdao.api as om
+import pdb
+import os
+import dymos as dm
+os.environ["OPENMDAO_REPORTS"] = 'none'
+os.environ["PYNA_LANGUAGE"] = 'python'
+import pyNA
 from pyNA.src.problem import Problem
 from pyNA.src.aircraft import Aircraft
 from pyNA.src.trajectory import Trajectory
 from pyNA.src.time_history import TimeHistory
 from pyNA.src.noise import Noise
-import matplotlib.pyplot as plt
-import numpy as np
-import openmdao.api as om
-import os
-os.environ["OPENMDAO_REPORTS"] = 'none'
-import pdb
-
+if os.environ["PYNA_LANGUAGE"] == 'julia':
+    from pyNA.src.noise_jl import NoiseJl
 
 class pyna:
 
@@ -87,7 +91,7 @@ class pyna:
                 atmosphere_dT = 10.0169,
                 max_iter = 200,
                 tolerance = 1e-6,
-                x_observer_array = np.array([[12325.*0.3048, 450., 4*0.3048], [21325.*0.3048, 0., 4*0.3048]]),
+                x_microphones = np.array([[12325.*0.3048, 450., 4*0.3048], [21325.*0.3048, 0., 4*0.3048]]),
                 ground_resistance = 291.0 * 515.379,
                 incoherence_constant = 0.01,
                 n_frequency_bands = 24,
@@ -207,7 +211,7 @@ class pyna:
             _
         tolerance : float
             _
-        x_observer_array : np.ndarray
+        x_microphones : np.ndarray
             _
         ground_resistance : float
             _
@@ -284,7 +288,7 @@ class pyna:
         self.settings['atmosphere_dT'] = atmosphere_dT
         self.settings['max_iter'] = max_iter
         self.settings['tolerance'] = tolerance
-        self.settings['x_observer_array'] = x_observer_array
+        self.settings['x_microphones'] = x_microphones
         self.settings['ground_resistance'] = ground_resistance
         self.settings['incoherence_constant'] = incoherence_constant
         self.settings['n_frequency_bands'] = n_frequency_bands
@@ -301,23 +305,78 @@ class pyna:
         if self.settings['trajectory_mode'] == 'model':
             self.aircraft.get_aerodynamics_deck(settings=self.settings)
             self.aircraft.engine.get_performance_deck(settings=self.settings)
-                
+
         # Initialize pyNA model
         self.problem = Problem()
-        
+
         # Trajectory model
         if self.settings['trajectory_mode'] == 'model':
-            self.trajectory = Trajectory()
+            self.trajectory = Trajectory(problem=self.problem, settings=self.settings, aircraft=self.aircraft)
+            # TO DO: assess size of the output trajectory
 
         elif self.settings['trajectory_mode'] == 'time_history':
-            self.trajectory = TimeHistory()
-            self.trajectory.load_data(settings=self.settings)
-            
-        # Noise model 
-        self.noise = Noise(settings=self.settings)
+            self.trajectory = TimeHistory(problem=self.problem, settings=self.settings)
+            self.trajectory.load_data()
 
-    def plot_ipopt_convergence_data():
+        # Noise model
+        if os.environ['PYNA_LANGUAGE'] == 'python': 
+            self.noise = Noise(problem=self.problem, settings=self.settings, aircraft=self.aircraft, trajectory=self.trajectory)
+        elif os.environ['PYNA_LANGUAGE'] == 'julia':
+            self.noise = NoiseJl(problem=self.problem, settings=self.settings, aircraft=self.aircraft, trajectory=self.trajectory)
+        else:
+            raise ValueError('Invalid PYNA_LANGUAGE environment variable. Specify: "python" or "julia".')
+
+        return
+
+    def calculate_time_history(self):
+
+        """
+        
+        Parameters 
+        ----------
+        trajectory : 
+            _
+        settings : 
+            _
+
+        """
+
+        # OpenMDAO problem setup
+        self.problem.setup(force_alloc_complex=True)
+        
+        # Set trajectory initial conditions
+        self.trajectory.set_initial_conditions()
+
+        # OpenMDAO run model
+        self.problem.run_model()
+
         pass
+
+    def calculate_trajectory(self, objective='time', path_init=None) -> None:
+        
+        """
+        """
+
+        self.problem.set_objective(objective=objective)
+        self.problem.set_driver_settings(settings=self.settings, objective=objective)
+        self.problem.setup(force_alloc_complex=True)
+        self.trajectory.set_initial_conditions(path_init=path_init)
+
+        # Attach a recorder to the problem to save model data
+        if self.settings['save_results']:
+            self.add_recorder(om.SqliteRecorder(pyNA.__path__.__dict__["_path"][0] + '/cases/' + self.settings['case_name'] + '/output/' + self.settings['output_directory_name'] + '/' + self.settings['output_file_name']))
+
+        # Run problem
+        dm.run_problem(self.problem, run_driver=True)
+
+        # Save the results
+        if self.settings['save_results']:
+            self.record(case_name=self.settings['case_name'])
+
+        # Check convergence
+        self.problem.check_convergence(settings=self.settings, filename='IPOPT_trajectory_convergence.out')
+        
+        return None
 
     def plot_trajectory(self, paths_compare=[], labels_compare=[]):
 

@@ -27,3 +27,21 @@ class SubsonicTakeOffTrajectory(dm.Trajectory):
                 
         pass
 
+    def set_initial_conditions(self, problem: om.Problem, settings: dict, aircraft:Aircraft, path_init=None):
+
+        """
+        
+        Parameters
+        ----------
+        problem : om.Problem
+            _
+        settings : dict
+            pyna settings
+        aircraft : Aircraft
+            _
+        path_init : 
+            _
+             
+        """
+
+        pass
