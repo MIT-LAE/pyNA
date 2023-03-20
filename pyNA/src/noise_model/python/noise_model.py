@@ -20,6 +20,7 @@ class NoiseModel(om.ExplicitComponent):
 
         n_t = self.options['n_t'] 
         settings = self.options['settings']
+        n_obs = settings["x_microphones"].shape[0]
 
         self.add_input(name='x', val=np.ones(n_t, ), desc='position along the trajectory', units='m')
         self.add_input(name='y', val=np.ones(n_t, ), desc='lateral position from the centerline of the trajectory', units='m')
@@ -56,7 +57,6 @@ class NoiseModel(om.ExplicitComponent):
         self.add_input(name='theta_flaps', val=np.ones(n_t, ), units='deg', desc='flap deflection angle')
         self.add_input(name='I_lg', val=np.ones(n_t, ), units=None, desc='flag for landing gear extraction (1: yes; 0: no)')
 
-        n_obs = settings["x_microphones"].shape[0]
         if self.options['optimization']:
             self.add_output(name='level_int', val=np.ones(n_obs,))
         else:
@@ -110,28 +110,43 @@ class NoiseModel(om.ExplicitComponent):
         f_sb = self.options['f_sb']
         aircraft = self.options['aircraft']
         tables = self.options['tables']
+        n_t = self.options['n_t']
+        n_obs = settings["x_microphones"].shape[0]
+
 
         if self.options['optimization']:
-            outputs['level_int'] = calculate_noise(inputs['x'], inputs['y'], inputs['z'], inputs['alpha'], inputs['gamma'], inputs['t_s'], inputs['tau'], 
-                                                   inputs['M_0'], inputs['c_0'], inputs['T_0'], inputs['rho_0'], inputs['P_0'], inputs['mu_0'], inputs['I_0'],
-                                                   inputs['fan_DTt'], inputs['fan_mdot'], inputs['fan_N'], 
-                                                   inputs['core_mdot'], inputs['core_Tt_i'], inputs['core_Tt_j'], inputs['core_Pt_i'], inputs['turb_DTt_des'], inputs['turb_rho_e'], inputs['turb_c_e'], inputs['turb_rho_i'], inputs['turb_c_i'],
-                                                   inputs['jet_V'], inputs['jet_rho'], inputs['jet_A'], inputs['jet_Tt'], inputs['jet_M'], 
-                                                   inputs['theta_flaps'], inputs['I_lg'],  
-                                                   x_microphone,
-                                                   f, f_sb, 
-                                                   settings, aircraft, tables)
             
+            for i in np.arange(n_obs):
+                for j in np.arange(n_t):
+        
+                    x_microphone = settings['x_microphones'][i,:]
+
+                    outputs['level_int'][i] = calculate_noise(inputs['x'][j], inputs['y'][j], inputs['z'][j], inputs['alpha'][j], inputs['gamma'][j], inputs['t_s'][j], inputs['tau'][j], 
+                                                    inputs['M_0'][j], inputs['c_0'][j], inputs['T_0'][j], inputs['rho_0'][j], inputs['P_0'][j], inputs['mu_0'][j], inputs['I_0'][j],
+                                                    inputs['fan_DTt'][j], inputs['fan_mdot'][j], inputs['fan_N'][j], 
+                                                    inputs['core_mdot'][j], inputs['core_Tt_i'][j], inputs['core_Tt_j'][j], inputs['core_Pt_i'][j], inputs['turb_DTt_des'][j], inputs['turb_rho_e'][j], inputs['turb_c_e'][j], inputs['turb_rho_i'][j], inputs['turb_c_i'][j],
+                                                    inputs['jet_V'][j], inputs['jet_rho'][j], inputs['jet_A'][j], inputs['jet_Tt'][j], inputs['jet_M'][j], 
+                                                    inputs['theta_flaps'][j], inputs['I_lg'][j],  
+                                                    x_microphone,
+                                                    f, f_sb,
+                                                    settings, aircraft, tables)
+
         else:
-            outputs['t_o'], outputs['spl'], outputs['level'], outputs['level_int'] = calculate_noise(inputs['x'], inputs['y'], inputs['z'], inputs['alpha'], inputs['gamma'], inputs['t_s'], inputs['tau'], 
-                                                                                                     inputs['M_0'], inputs['c_0'], inputs['T_0'], inputs['rho_0'], inputs['P_0'], inputs['mu_0'], inputs['I_0'],
-                                                                                                     inputs['fan_DTt'], inputs['fan_mdot'], inputs['fan_N'], 
-                                                                                                     inputs['core_mdot'], inputs['core_Tt_i'], inputs['core_Tt_j'], inputs['core_Pt_i'], inputs['turb_DTt_des'], inputs['turb_rho_e'], inputs['turb_c_e'], inputs['turb_rho_i'], inputs['turb_c_i'],
-                                                                                                     inputs['jet_V'], inputs['jet_rho'], inputs['jet_A'], inputs['jet_Tt'], inputs['jet_M'], 
-                                                                                                     inputs['theta_flaps'], inputs['I_lg'], 
-                                                                                                     x_microphone,
-                                                                                                     f, f_sb, 
-                                                                                                     settings, aircraft, tables)
+
+            for i in np.arange(n_obs):
+                for j in np.arange(n_t):
+
+                    x_microphone = settings['x_microphones'][i,:]
+
+                    outputs['t_o'][i,:], outputs['spl'][i,j,:], outputs['level'][i,:], outputs['level_int'][i] = calculate_noise(inputs['x'][j], inputs['y'][j], inputs['z'][j], inputs['alpha'][j], inputs['gamma'][j], inputs['t_s'][j], inputs['tau'][j], 
+                                                    inputs['M_0'][j], inputs['c_0'][j], inputs['T_0'][j], inputs['rho_0'][j], inputs['P_0'][j], inputs['mu_0'][j], inputs['I_0'][j],
+                                                    inputs['fan_DTt'][j], inputs['fan_mdot'][j], inputs['fan_N'][j], 
+                                                    inputs['core_mdot'][j], inputs['core_Tt_i'][j], inputs['core_Tt_j'][j], inputs['core_Pt_i'][j], inputs['turb_DTt_des'][j], inputs['turb_rho_e'][j], inputs['turb_c_e'][j], inputs['turb_rho_i'][j], inputs['turb_c_i'][j],
+                                                    inputs['jet_V'][j], inputs['jet_rho'][j], inputs['jet_A'][j], inputs['jet_Tt'][j], inputs['jet_M'][j], 
+                                                    inputs['theta_flaps'][j], inputs['I_lg'][j],  
+                                                    x_microphone,
+                                                    f, f_sb,
+                                                    settings, aircraft, tables)
 
         return
 
