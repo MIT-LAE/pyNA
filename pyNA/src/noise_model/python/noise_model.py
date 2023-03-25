@@ -58,7 +58,7 @@ class NoiseModel(om.ExplicitComponent):
         self.add_input(name='jet_Tt', val=np.ones(n_t, ), units='K', desc='jet total temperature')
         self.add_input(name='jet_M', val=np.ones(n_t, ), units=None, desc='jet Mach number')
         self.add_input(name='theta_flaps', val=np.ones(n_t, ), units='deg', desc='flap deflection angle')
-        self.add_input(name='I_lg', val=np.ones(n_t, ), units=None, desc='flag for landing gear extraction (1: yes; 0: no)')
+        self.add_input(name='I_landing_gear', val=np.ones(n_t, ), units=None, desc='flag for landing gear extraction (1: yes; 0: no)')
 
         if self.options['optimization']:
             self.add_output(name='level', val=np.ones(n_obs, n_t))
@@ -97,7 +97,7 @@ class NoiseModel(om.ExplicitComponent):
                                                     inputs['fan_DTt'][j], inputs['fan_mdot'][j], inputs['fan_N'][j], 
                                                     inputs['core_mdot'][j], inputs['core_Tt_i'][j], inputs['core_Tt_j'][j], inputs['core_Pt_i'][j], inputs['turb_DTt_des'][j], inputs['turb_rho_e'][j], inputs['turb_c_e'][j], inputs['turb_rho_i'][j], inputs['turb_c_i'][j],
                                                     inputs['jet_V'][j], inputs['jet_rho'][j], inputs['jet_A'][j], inputs['jet_Tt'][j], inputs['jet_M'][j], 
-                                                    inputs['theta_flaps'][j], inputs['I_lg'][j],  
+                                                    inputs['theta_flaps'][j], inputs['I_landing_gear'][j],  
                                                     shielding,
                                                     x_microphone,
                                                     f, f_sb,
@@ -119,7 +119,7 @@ class NoiseModel(om.ExplicitComponent):
                                                     inputs['fan_DTt'][j], inputs['fan_mdot'][j], inputs['fan_N'][j], 
                                                     inputs['core_mdot'][j], inputs['core_Tt_i'][j], inputs['core_Tt_j'][j], inputs['core_Pt_i'][j], inputs['turb_DTt_des'][j], inputs['turb_rho_e'][j], inputs['turb_c_e'][j], inputs['turb_rho_i'][j], inputs['turb_c_i'][j],
                                                     inputs['jet_V'][j], inputs['jet_rho'][j], inputs['jet_A'][j], inputs['jet_Tt'][j], inputs['jet_M'][j], 
-                                                    inputs['theta_flaps'][j], inputs['I_lg'][j],  
+                                                    inputs['theta_flaps'][j], inputs['I_landing_gear'][j],  
                                                     shielding,
                                                     x_microphone,
                                                     f, f_sb,

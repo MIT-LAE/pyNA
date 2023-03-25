@@ -18,7 +18,7 @@ def calculate_noise(x, y, z, alpha, gamma, t_s, tau, M_0, c_0, T_0, rho_0, P_0, 
                     fan_DTt, fan_mdot, fan_N,
                     core_mdot, core_Tt_i, core_Tt_j, core_Pt_i, turb_DTt_des, turb_rho_e, turb_c_e, turb_rho_i, turb_c_i,
                     jet_V, jet_rho, jet_A, jet_Tt, jet_M,
-                    theta_flaps, I_lg,
+                    theta_flaps, I_landing_gear,
                     shielding,
                     x_microphone,
                     f, f_sb, 
@@ -74,7 +74,7 @@ def calculate_noise(x, y, z, alpha, gamma, t_s, tau, M_0, c_0, T_0, rho_0, P_0, 
         msap_source += msap_jet_shock
     
     if settings['airframe_source']:
-        msap_airframe = airframe_fink(theta_flaps, I_lg, M_0, c_0, rho_0, mu_0, theta, phi, f, settings, aircraft, tables)
+        msap_airframe = airframe_fink(theta_flaps, I_landing_gear, M_0, c_0, rho_0, mu_0, theta, phi, f, settings, aircraft, tables)
         msap_source += msap_airframe
 
     msap_source = msap_source.clip(min=1e-99)

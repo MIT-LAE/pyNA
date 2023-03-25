@@ -27,7 +27,7 @@ class Rotation(dm.Phase):
         else:
             self.add_parameter('theta_flaps', targets='theta_flaps', units='deg', val=controls['theta_flaps']['rotation'], dynamic=True, include_timeseries=True)
         self.add_parameter('theta_slats', targets='theta_slats', units='deg', val=controls['theta_slats']['rotation'], dynamic=True, include_timeseries=True)
-        self.add_parameter('I_lg', units=None, val=1, dynamic=True, include_timeseries=True)
+        self.add_parameter('I_landing_gear', units=None, val=1, dynamic=True, include_timeseries=True)
         self.add_parameter('y', units='m', val=0, dynamic=True, include_timeseries=True)
 
         self.add_boundary_constraint('flight_dynamics.n', equals=1.1, loc='final', ref=1, units=None)
@@ -48,8 +48,8 @@ class Rotation(dm.Phase):
         self.add_timeseries_output('aerodynamics.c_l', timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.c_l_max', timeseries='interpolated')
         self.add_timeseries_output('aerodynamics.c_d', timeseries='interpolated')
-        if settings['emissions']:
-            self.add_timeseries_output('emissions.mdot_NOx', timeseries='interpolated')
-            self.add_timeseries_output('emissions.EINOx', timeseries='interpolated')
+        
+        self.add_timeseries_output('emissions.mdot_NOx', timeseries='interpolated')
+        self.add_timeseries_output('emissions.EINOx', timeseries='interpolated')
 
         return None

@@ -70,7 +70,7 @@ class Noise:
                        'fan_DTt', 'fan_mdot', 'fan_N', 
                        'core_mdot', 'core_Tt_i', 'core_Tt_j', 'core_Pt_i', 'turb_DTt_des', 'turb_rho_e', 'turb_c_e', 'turb_rho_i', 'turb_c_i', 
                        'jet_V', 'jet_rho', 'jet_A', 'jet_Tt', 'jet_M', 
-                       'theta_flaps', 'I_lg']
+                       'theta_flaps', 'I_landing_gear']
 
         self.problem.model.add_subsystem(name='noise',
                                  subsys=NoiseModel(settings=self.settings, aircraft=self.aircraft, tables=self.tables, f=self.f, f_sb=self.f_sb, n_t=self.trajectory.n_t, optimization=optimization), 
@@ -78,6 +78,7 @@ class Noise:
                                  promotes_outputs=[])
 
         return
+
 
     # def compute_noise_level():
     #     pass

@@ -65,11 +65,10 @@ class TakeOffPhaseODE(om.Group):
         self.connect('aerodynamics.c_l_max', 'flight_dynamics.c_l_max')
 
         # Emissions module
-        if settings['emissions']:
-            self.add_subsystem(name='emissions',
-                            subsys=Emissions(num_nodes=nn),
-                            promotes_inputs=[],
-                            promotes_outputs=[])
-            self.connect('propulsion.W_f', 'emissions.W_f')
-            self.connect('propulsion.core_Tt_i', 'emissions.core_Tt_i')
-            self.connect('propulsion.core_Pt_i', 'emissions.core_Pt_i')
+        self.add_subsystem(name='emissions',
+                        subsys=Emissions(num_nodes=nn),
+                        promotes_inputs=[],
+                        promotes_outputs=[])
+        self.connect('propulsion.W_f', 'emissions.W_f')
+        self.connect('propulsion.core_Tt_i', 'emissions.core_Tt_i')
+        self.connect('propulsion.core_Pt_i', 'emissions.core_Pt_i')

@@ -324,13 +324,13 @@ class Tables:
             Load shielding time history (Berton et al., 2019).
             """
 
-            if settings['case_name'] == 'nasa_stca_standard':
+            if settings['case_name'] == 'nasa_stca_standard' and settings['shielding']:
                 self.lateral = pd.read_csv(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/shielding/shielding_l.csv').values[:,1:]
                 self.flyover = pd.read_csv(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/shielding/shielding_f.csv').values[:,1:]
                 self.approach = pd.read_csv(pyNA.__path__.__dict__["_path"][0] + '/cases/' + settings['case_name'] + '/shielding/shielding_a.csv').values[:,1:]
 
             else:
-                raise ValueError('No shielding time history available for the "' + settings['case_name'] + '" case' )
+                pass
 
 
         

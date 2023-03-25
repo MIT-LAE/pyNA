@@ -59,7 +59,6 @@ class pyna:
                 levels_int_metric = 'epnl',
                 observer_lst = ('lateral', 'flyover'),
                 trajectory_mode = 'time_history',
-                emissions = False,
                 thrust_lapse = True,
                 ptcb = False,
                 phld = False,
@@ -141,8 +140,6 @@ class pyna:
         param observer_lst : list
             _
         trajectory_mode : string
-            _
-        emissions : bool
             _
         thrust_lapse : bool
             _
@@ -253,7 +250,6 @@ class pyna:
         self.settings['levels_int_metric'] = levels_int_metric
         self.settings['observer_lst'] = observer_lst
         self.settings['trajectory_mode'] = trajectory_mode
-        self.settings['emissions'] = emissions
         self.settings['thrust_lapse'] = thrust_lapse
         self.settings['ptcb'] = ptcb
         self.settings['phld'] = phld
@@ -389,6 +385,10 @@ class pyna:
         
         return None
 
+    def calculate_noise():
+
+        return
+
     def plot_trajectory(self, path_compare=[], labels_compare=[]):
 
         """
@@ -403,8 +403,8 @@ class pyna:
         ax[0,0].plot(self.problem.get_val('trajectory.x'), self.problem.get_val('trajectory.z'), '-', label='Take-off trajectory module', color='k')
         for i,path in enumerate(path_compare):
             ax[0,0].plot(path.get_val('trajectory.x'), path.get_val('trajectory.z'), '-', label=labels_compare[i])
-        ax[0,0].set_xlabel('X [m]')
-        ax[0,0].set_ylabel('Z [m]')
+        ax[0,0].set_xlabel('x [m]')
+        ax[0,0].set_ylabel('z [m]')
         ax[0,0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=1, borderaxespad=0, frameon=False)
         ax[0,0].spines['top'].set_visible(False)
         ax[0,0].spines['right'].set_visible(False)
@@ -461,10 +461,10 @@ class pyna:
 
         Plot the noise metric along the trajectory.
 
-        :param metric: noise metric to plot. Specify 'pnlt' or 'oaspl'/
-        :type metric: str
-
-        :return: None
+        Arguments
+        ---------
+        metric: str
+            noise metric to plot. Specify 'pnlt' or 'oaspl'/
 
         """
 
@@ -525,3 +525,5 @@ class pyna:
         ax[0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.09), ncol=1, borderaxespad=0, frameon=False)
         plt.subplots_adjust(wspace=0.2)
         plt.show()
+
+

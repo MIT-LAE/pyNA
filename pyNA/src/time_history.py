@@ -109,7 +109,7 @@ class TimeHistory:
         
         if self.settings['airframe_source']:
             self.problem.model.set_val('trajectory.theta_flaps', self.data['theta_flaps [deg]'])
-            self.problem.model.set_val('trajectory.I_lg', self.data['I_lg [-]'])
+            self.problem.model.set_val('trajectory.I_landing_gear', self.data['I_landing_gear [-]'])
 
         # Engine variables
         if self.settings['jet_mixing_source'] and not self.settings['jet_shock_source']:
