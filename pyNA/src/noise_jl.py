@@ -39,18 +39,6 @@ class NoiseJl:
     def set_initial_conditions():
         pass
 
-    # def compute_noise_level():
-    #     pass
-
-    # def compute_epnl_table():
-    #     pass
-
-    # def compute_noise_contours():
-    #     pass
-
-    # def compute_noise_contour_area():
-    #     pass
-
     def plot_noise_level():
         pass
 

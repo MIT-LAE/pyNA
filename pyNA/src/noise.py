@@ -78,25 +78,3 @@ class Noise:
                                  promotes_outputs=[])
 
         return
-
-
-    # def compute_noise_level():
-    #     pass
-
-    # def compute_epnl_table():
-    #     pass
-
-    # def compute_noise_contours():
-    #     pass
-
-    # def compute_noise_contour_area():
-    #     pass
-
-    # def plot_noise_level():
-    #     pass
-
-    # def plot_noise_contours():
-    #     pass
-
-    # def plot_noise_source_distribution():
-    #     pass
