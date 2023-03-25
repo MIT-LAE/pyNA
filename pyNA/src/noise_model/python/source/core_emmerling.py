@@ -1,11 +1,60 @@
-import jax.numpy as jnp
+from pyNA.src.aircraft import Aircraft
+from pyNA.src.noise_model.tables import Tables
+import numpy as np
 import pdb
 
 
-def core_emmerling(core_mdot, core_Tt_i, core_Tt_j, core_Pt_i, turb_DTt_des, turb_rho_e, turb_c_e, turb_rho_i, turb_c_i, M_0, rho_0, c_0, T_0, P_0, theta, f, settings, aircraft, tables):
+def core_emmerling(core_mdot: float, core_Tt_i: float, core_Tt_j: float, core_Pt_i: float, turb_DTt_des: float, turb_rho_e: float, turb_c_e: float, 
+                   turb_rho_i: float, turb_c_i: float, M_0: float, rho_0: float, c_0: float, T_0: float, P_0: float, theta: float, f: np.ndarray, 
+                   settings: dict, aircraft: Aircraft, tables: Tables) -> np.ndarray:
 
     """
 	Compute core noise mean-square acoustic pressure (msap).
+
+    Arguments
+    ---------
+    core_mdot : float
+        _
+    core_Tt_i : float
+        _
+    core_Tt_j : float
+        _
+    core_Pt_i : float
+        _
+    turb_DTt_des : float
+        _
+    turb_rho_e : float
+        _
+    turb_c_e : float 
+        _
+    turb_rho_i : float
+        _
+    turb_c_i : float
+        _
+    M_0 : float
+        _
+    rho_0 : float
+        _
+    c_0 : float
+        _
+    T_0 : float
+        _
+    P_0 : float
+        _
+    theta : float
+        _
+    f : np.ndarray, 
+        _
+    settings : dict
+        pyna settings
+    aircraft : Aircraft
+        aircraft parameters
+    tables : Tables
+
+    Outputs
+    -------
+    msap : np.ndarray
+        _
 
 	:param source: pyNA component computing noise sources
 	:type source: Source
@@ -13,7 +62,7 @@ def core_emmerling(core_mdot, core_Tt_i, core_Tt_j, core_Pt_i, turb_DTt_des, tur
 	:type inputs: openmdao.vectors.default_vector.DefaultVector
 
 	:return: msap
-	:rtype: jnp.ndarray [settings['n_frequency_bands'],]
+	:rtype: np.ndarray [settings['n_frequency_bands'],]
 	"""
 	
     # Normalize engine inputs
@@ -28,7 +77,7 @@ def core_emmerling(core_mdot, core_Tt_i, core_Tt_j, core_Pt_i, turb_DTt_des, tur
     turb_c_e_star = turb_c_e/c_0
 
 	# Extract inputs
-    r_s_star = settings['r_0'] / jnp.sqrt(settings['A_e'])
+    r_s_star = settings['r_0'] / np.sqrt(settings['A_e'])
     A_c_star = 1.
 
     # Turbine transmission loss function
@@ -48,21 +97,21 @@ def core_emmerling(core_mdot, core_Tt_i, core_Tt_j, core_Pt_i, turb_DTt_des, tur
 
     # Calculate directivity function (D)
     # Take the D function as SAE ARP876E Table 18 and all other values which are not in the table from Zorumski report 1982 part 2. Chapter 8.2 Table II
-    D_function = jnp.interp(theta, tables.core.D_theta, tables.core.D_data)
+    D_function = np.interp(theta, tables.source.core.D_theta, tables.source.core.D_data)
     D_function = 10 ** D_function
 
     # Calculate the spectral function (S)
     # Source Zorumski report 1982 part 2. Chapter 8.2 Equation 4
-    f_p = 400 / (1 - M_0 * jnp.cos(theta * jnp.pi / 180.))
-    log10ffp = jnp.log10(f / f_p)
+    f_p = 400 / (1 - M_0 * np.cos(theta * np.pi / 180.))
+    log10ffp = np.log10(f / f_p)
 
     # Take the S function as SAE ARP876E Table 17 and all other values which are not in the table from Zorumski report 1982 part 2. Chapter 8.2 Table III
-    S_function = jnp.interp(log10ffp, tables.core.S_log10ffp, tables.core.S_data)
+    S_function = np.interp(log10ffp, tables.source.core.S_log10ffp, tables.source.core.S_data)
     S_function = 10 ** S_function
 
     # Calculate mean-square acoustic pressure (msap)
     # Multiply with number of engines and normalize msap by reference pressure
     # Source Zorumski report 1982 part 2. Chapter 8.2 Equation 1
-    msap = Pi_star * A_c_star / (4 * jnp.pi * r_s_star ** 2) * D_function * S_function / (1. - M_0 * jnp.cos(jnp.pi / 180. * theta)) ** 4 * (aircraft.n_eng/settings['p_ref']**2)
+    msap = Pi_star * A_c_star / (4 * np.pi * r_s_star ** 2) * D_function * S_function / (1. - M_0 * np.cos(np.pi / 180. * theta)) ** 4 * (aircraft.n_eng/settings['p_ref']**2)
 
     return msap

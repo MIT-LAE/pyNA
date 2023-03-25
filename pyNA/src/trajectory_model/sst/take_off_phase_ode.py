@@ -39,7 +39,7 @@ class TakeOffPhaseODE(om.Group):
         self.add_subsystem(name='atmosphere',
                             subsys=Atmosphere(num_nodes=nn, settings=settings),
                             promotes_inputs=['z'],
-                            promotes_outputs=['p_0', 'rho_0', 'drho_0_dz', 'T_0', 'c_0', 'mu_0', 'I_0'])
+                            promotes_outputs=['P_0', 'rho_0', 'drho_0_dz', 'T_0', 'c_0', 'mu_0', 'I_0'])
 
         # Aerodynamics module
         self.add_subsystem(name='aerodynamics',

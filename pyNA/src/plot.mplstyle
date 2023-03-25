@@ -1,0 +1,27 @@
+# Figure parameters
+figure.figsize: 12, 5
+figure.dpi: 100
+figure.edgecolor: 1
+
+# Axes parameters
+axes.linewidth: 0.8
+axes.titlesize: 18
+axes.labelsize: 18
+axes.grid: False
+axes.prop_cycle: cycler('color', ['1f77b4', 'ff7f0e', '2ca02c', 'd62728', '9467bd', '8c564b', 'e377c2', '7f7f7f', 'bcbd22', '17becf'])
+
+# Ticks
+xtick.labelsize:18
+ytick.labelsize:18
+
+# Grid parameters
+grid.linewidth:0.5
+grid.alpha: 0.5
+
+lines.linewidth:2
+lines.markersize: 3
+
+# Legend parameters
+legend.fontsize: 18
+legend.title_fontsize: 18
+legend.shadow: False

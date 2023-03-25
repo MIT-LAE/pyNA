@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes, mark_inset
 import numpy as np
 import openmdao.api as om
-import pdb
 import os
+import pdb
+import copy
 import dymos as dm
 os.environ["OPENMDAO_REPORTS"] = 'none'
 os.environ["PYNA_LANGUAGE"] = 'python'
@@ -11,9 +13,11 @@ from pyNA.src.problem import Problem
 from pyNA.src.aircraft import Aircraft
 from pyNA.src.trajectory import Trajectory
 from pyNA.src.time_history import TimeHistory
+from pyNA.src.stca_data import StcaData
 from pyNA.src.noise import Noise
 if os.environ["PYNA_LANGUAGE"] == 'julia':
     from pyNA.src.noise_jl import NoiseJl
+
 
 class pyna:
 
@@ -55,19 +59,18 @@ class pyna:
                 levels_int_metric = 'epnl',
                 observer_lst = ('lateral', 'flyover'),
                 trajectory_mode = 'time_history',
-                noise = False,
                 emissions = False,
                 thrust_lapse = True,
                 ptcb = False,
                 phld = False,
                 pkrot = False,
                 all_sources = True,
-                fan_inlet_source = False,
-                fan_discharge_source = False,
-                core_source = False,
-                jet_mixing_source = False,
+                fan_inlet_source = True,
+                fan_discharge_source = True,
+                core_source = True,
+                jet_mixing_source = True,
                 jet_shock_source = False,
-                airframe_source = False,
+                airframe_source = True,
                 fan_igv = False,
                 fan_id = False,
                 fan_combination_tones = False,
@@ -77,10 +80,10 @@ class pyna:
                 absorption = True,
                 ground_effects = True,
                 lateral_attenuation = True,
-                shielding = False,
+                shielding = True,
                 tones_under_800Hz = False,
                 epnl_bandshare = False,
-                core_jet_suppression = False,
+                core_jet_suppression = True,
                 save_results = False,
                 verification = False,
                 F00 = None,
@@ -138,8 +141,6 @@ class pyna:
         param observer_lst : list
             _
         trajectory_mode : string
-            _
-        noise : bool
             _
         emissions : bool
             _
@@ -252,7 +253,6 @@ class pyna:
         self.settings['levels_int_metric'] = levels_int_metric
         self.settings['observer_lst'] = observer_lst
         self.settings['trajectory_mode'] = trajectory_mode
-        self.settings['noise'] = noise
         self.settings['emissions'] = emissions
         self.settings['thrust_lapse'] = thrust_lapse
         self.settings['ptcb'] = ptcb
@@ -319,6 +319,17 @@ class pyna:
             self.trajectory.load_data()
 
         # Noise model
+        if self.settings['all_sources']:
+            self.settings['fan_inlet_source'] = True
+            self.settings['fan_discharge_source'] = True
+            self.settings['core_source'] = True
+            self.settings['jet_mixing_source'] = True
+            self.settings['jet_shock_source'] = False
+            self.settings['airframe_source'] = True
+
+            if self.settings['verification']:
+                self.stca_data = StcaData(settings=self.settings)
+
         if os.environ['PYNA_LANGUAGE'] == 'python': 
             self.noise = Noise(problem=self.problem, settings=self.settings, aircraft=self.aircraft, trajectory=self.trajectory)
         elif os.environ['PYNA_LANGUAGE'] == 'julia':
@@ -378,19 +389,19 @@ class pyna:
         
         return None
 
-    def plot_trajectory(self, paths_compare=[], labels_compare=[]):
+    def plot_trajectory(self, path_compare=[], labels_compare=[]):
 
         """
         
-        :param paths_compare:
-        :type paths_compare: tuple of om.Problem()
+        :param path_compare:
+        :type path_compare: tuple of om.Problem()
         """
 
         fig, ax = plt.subplots(2,3, figsize=(20, 8), dpi=100)
-        plt.style.use('plot.mplstyle')
+        plt.style.use(pyNA.__path__.__dict__["_path"][0] + '/src/' + 'plot.mplstyle')
 
         ax[0,0].plot(self.problem.get_val('trajectory.x'), self.problem.get_val('trajectory.z'), '-', label='Take-off trajectory module', color='k')
-        for i,path in enumerate(paths_compare):
+        for i,path in enumerate(path_compare):
             ax[0,0].plot(path.get_val('trajectory.x'), path.get_val('trajectory.z'), '-', label=labels_compare[i])
         ax[0,0].set_xlabel('X [m]')
         ax[0,0].set_ylabel('Z [m]')
@@ -399,7 +410,7 @@ class pyna:
         ax[0,0].spines['right'].set_visible(False)
 
         ax[0,1].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.v'), '-', color='k')
-        for path in paths_compare:
+        for path in path_compare:
             ax[0,1].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.v'), '-')
         ax[0,1].set_xlabel('t [s]')
         ax[0,1].set_ylabel(r'$v$ [m/s]')
@@ -407,7 +418,7 @@ class pyna:
         ax[0,1].spines['right'].set_visible(False)
 
         ax[0,2].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.gamma'), '-', color='k')
-        for path in paths_compare:
+        for path in path_compare:
             ax[0,2].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.gamma'), '-')
         ax[0,2].set_xlabel('t [s]')
         ax[0,2].set_ylabel(r'$\gamma$ [deg]')
@@ -415,7 +426,7 @@ class pyna:
         ax[0,2].spines['right'].set_visible(False)
 
         ax[1,0].plot(self.problem.get_val('trajectory.t_s'), 1 / 1000. * self.problem.get_val('trajectory.F_n'), '-', color='k')
-        for path in paths_compare:
+        for path in path_compare:
             ax[1,0].plot(path.get_val('trajectory.t_s'), 1 / 1000. * path.get_val('trajectory.F_n'), '-')
         ax[1,0].set_xlabel('t [s]')
         ax[1,0].set_ylabel(r'$F_n$ [kN]')
@@ -423,7 +434,7 @@ class pyna:
         ax[1,0].spines['right'].set_visible(False)
 
         ax[1,1].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.tau'), '-', color='k')
-        for path in paths_compare:
+        for path in path_compare:
             ax[1,1].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.tau'), '-')
         ax[1,1].set_xlabel('t [s]')
         ax[1,1].set_ylabel(r'$\tau$ [-]')
@@ -432,7 +443,7 @@ class pyna:
         ax[1,1].spines['right'].set_visible(False)
 
         ax[1,2].plot(self.problem.get_val('trajectory.t_s'), self.problem.get_val('trajectory.alpha'), '-', color='k')
-        for path in paths_compare:
+        for path in path_compare:
             ax[1,2].plot(path.get_val('trajectory.t_s'), path.get_val('trajectory.alpha'), '-')
         ax[1,2].set_xlabel('t [s]')
         ax[1,2].set_ylabel(r'$\alpha$ [deg]')
@@ -443,3 +454,74 @@ class pyna:
         plt.show()
 
         return None
+    
+    def plot_noise_timeseries(self, metric='pnlt') -> None:
+
+        """
+
+        Plot the noise metric along the trajectory.
+
+        :param metric: noise metric to plot. Specify 'pnlt' or 'oaspl'/
+        :type metric: str
+
+        :return: None
+
+        """
+
+        # Create figure
+        fig, ax = plt.subplots(1, len(self.settings['observer_lst']), figsize=(20, 4.3), dpi=100)
+        if len(self.settings['observer_lst']) == 1:
+            ax = [ax]
+        ax_zoom = copy.copy(ax)
+        plt.style.use(pyNA.__path__.__dict__["_path"][0] + '/src/' + 'plot.mplstyle')
+
+        colors = plt.cm.magma(np.linspace(0,0.8,2))
+
+        # Iterate over observer locations
+        for i, observer in enumerate(self.settings['observer_lst']):
+
+            # Time range of epnl domain of dependence
+            time_epnl = self.problem.get_val('noise.t_o')[i,:][np.where(self.problem.get_val('noise.'+metric)[i,:] > max(self.problem.get_val('noise.'+metric)[i,:]) - 10.)]
+
+            if metric == 'pnlt':
+                if observer == 'lateral':
+                    ax[i].plot(self.problem.get_val('noise.t_o')[i,:180], self.problem.get_val('noise.'+metric)[i,:180], linewidth=2.5, label='pyNA', color=colors[0])
+                else:
+                    ax[i].plot(self.problem.get_val('noise.t_o')[i,:], self.problem.get_val('noise.'+metric)[i,:], linewidth=2.5, label='pyNA', color=colors[0])                
+                ax[i].fill_between([time_epnl[0], time_epnl[-1]], [-5, -5], [110., 110.], alpha=0.15, color=colors[0])
+                ax[i].set_ylabel('$PNLT_{' + observer + '}$ [TPNdB]')
+
+                # Zoomed-in plots
+                ax_zoom[i] = zoomed_inset_axes(ax[i], zoom=4, loc='lower right')
+                ax_zoom[i].plot(self.problem.get_val('noise.t_o')[i,:180], self.problem.get_val('noise.'+metric)[i,:180], linewidth=2.5, color=colors[0])
+                ax_zoom[i].set_xticks([])
+                ax_zoom[i].set_yticks([])
+
+                ax_zoom[i].set_xlim([time_epnl[0], time_epnl[-1]])
+                ax_zoom[i].set_ylim([np.max(self.problem.get_val('noise.'+metric)[i,:])-11, np.max(self.problem.get_val('noise.'+metric)[i,:])+1.5])
+                mark_inset(ax[i], ax_zoom[i], loc1=1, loc2=3)                
+
+                if self.settings['verification']:
+                    self.stca_data.load_levels_time_history()
+                    ax[i].plot(self.stca_data.levels_time_history[observer]['t observer [s]'], self.stca_data.levels_time_history[observer]['PNLT'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)', color=colors[1])
+                    ax_zoom[i].plot(self.stca_data.levels_time_history[observer]['t observer [s]'], self.stca_data.levels_time_history[observer]['PNLT'], '--', linewidth=2.5, color=colors[1])
+
+            elif metric == 'oaspl':
+                ax[i].plot(self.problem.get_val('noise.t_o')[i,:], self.problem.get_val('noise.'+metric)[i,:], linewidth=2.5, label='pyNA')
+                ax[i].set_ylabel('$OASPL_{' + observer + '}$ [dB]')
+
+                if self.settings['verification']:
+                    self.stca_data.load_trajectory_verification_data()
+                    ax[i].plot(self.stca_data.levels_time_history[observer]['t observer [s]'], self.stca_data.levels_time_history[observer]['OASPL'], '--', linewidth=2.5, label='NASA STCA (Berton et al.)')
+
+            ax[i].grid(False)
+            ax[i].set_xlabel('Time after brake release [s]')
+            ax[i].tick_params(axis='both')
+            ax[i].set_ylim([-5, 110])
+            ax[i].spines['top'].set_visible(False)
+            ax[i].spines['right'].set_visible(False)
+        
+        # Set legend
+        ax[0].legend(loc='lower left', bbox_to_anchor=(0.0, 1.09), ncol=1, borderaxespad=0, frameon=False)
+        plt.subplots_adjust(wspace=0.2)
+        plt.show()

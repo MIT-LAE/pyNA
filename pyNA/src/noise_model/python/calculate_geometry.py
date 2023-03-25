@@ -1,6 +1,50 @@
-import jax.numpy as jnp
+import numpy as np
+from typing import Tuple
 
-def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_mic):
+
+def compute_geometry(x: float, y: float, z: float, alpha: float, gamma: float, t_s: float, c_0: float, T_0: float, x_mic: np.ndarray) -> Tuple:
+
+    """
+    
+    Calculate geometrical parameters between flight path and microphone
+
+    Arguments
+    ---------
+    x : float
+        _
+    y : float
+        _
+    z : float
+        _
+    alpha : float
+        _
+    gamma : float
+        _
+    t_s : float
+        _
+    c_0 : float
+        _
+    T_0 : float
+        _
+    x_mic : np.ndarray
+        _
+    
+    Outputs
+    -------
+    r : float
+        _
+    theta : float
+        _
+    phi : float
+        _
+    beta : float
+        _
+    t_o : float
+        _
+    c_bar : float
+        _
+    
+    """
 
     # Geometry calculations
     # Compute body angles (psi_B, theta_B, phi_B): angle of body w.r.t. horizontal
@@ -15,7 +59,7 @@ def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_mic):
     r_2 = -x_mic[2] + (z + 4)
 
     # Compute the distance of the microphone-source vector
-    r = jnp.sqrt(r_0 ** 2 + r_1 ** 2 + r_2 ** 2)
+    r = np.sqrt(r_0 ** 2 + r_1 ** 2 + r_2 ** 2)
     
     # Normalize the distance vector
     # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 17
@@ -25,16 +69,16 @@ def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_mic):
 
     # Define elevation angle
     # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 21
-    beta = 180. / jnp.pi * jnp.arcsin(n_vcr_a_2)
+    beta = 180. / np.pi * np.arcsin(n_vcr_a_2)
 
     # Transformation direction cosines (Euler angles) to the source coordinate system (i.e. take position of the aircraft into account)
     # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 22-25
-    cth  = jnp.cos(jnp.pi / 180. * theta_B)
-    sth  = jnp.sin(jnp.pi / 180. * theta_B)
-    cphi = jnp.cos(jnp.pi / 180. * phi_B)
-    sphi = jnp.sin(jnp.pi / 180. * phi_B)
-    cpsi = jnp.cos(jnp.pi / 180. * psi_B)
-    spsi = jnp.sin(jnp.pi / 180. * psi_B)
+    cth  = np.cos(np.pi / 180. * theta_B)
+    sth  = np.sin(np.pi / 180. * theta_B)
+    cphi = np.cos(np.pi / 180. * phi_B)
+    sphi = np.sin(np.pi / 180. * phi_B)
+    cpsi = np.cos(np.pi / 180. * psi_B)
+    spsi = np.sin(np.pi / 180. * psi_B)
 
     n_vcr_s_0 = cth * cpsi * n_vcr_a_0 + cth * spsi * n_vcr_a_1 - sth * n_vcr_a_2
     n_vcr_s_1 = (-spsi * cphi + sphi * sth * cpsi) * n_vcr_a_0 + ( cphi * cpsi + sphi * sth * spsi) * n_vcr_a_1 + sphi * cth * n_vcr_a_2
@@ -42,19 +86,19 @@ def compute_geometry(x, y, z, alpha, gamma, t_s, c_0, T_0, x_mic):
 
     # Compute polar directivity angle
     # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 26
-    theta = 180. / jnp.pi * jnp.arccos(n_vcr_s_0)
+    theta = 180. / np.pi * np.arccos(n_vcr_s_0)
     
     # Compute azimuthal directivity angle
     # Source: Zorumski report 1982 part 1. Chapter 2.2 Equation 27
-    phi = -180. / jnp.pi * jnp.arctan2(n_vcr_s_1, n_vcr_s_2)
+    phi = -180. / np.pi * np.arctan2(n_vcr_s_1, n_vcr_s_2)
     
     # Compute average speed of sound between source and microphone
     n_intermediate = 11
     dz = z / n_intermediate
     c_bar = c_0
-    for k in jnp.arange(1, n_intermediate):
+    for k in np.arange(1, n_intermediate):
         T_im = T_0 - k * dz * (-0.0065)
-        c_im = jnp.sqrt(1.4 * 287. * T_im)
+        c_im = np.sqrt(1.4 * 287. * T_im)
         c_bar = (k) / (k + 1) * c_bar + c_im / (k + 1)
 
     # Compute observed time

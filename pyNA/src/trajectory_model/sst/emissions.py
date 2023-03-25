@@ -11,7 +11,7 @@ class Emissions(om.ExplicitComponent):
     The *Emissions* component requires the following inputs:
 
     * ``inputs['Tti_c']``:      combustor inlet temperature (re. T_0) [-]
-    * ``inputs['Pti_c']``:      combustor inlet pressure (re. p_0) [-]
+    * ``inputs['Pti_c']``:      combustor inlet pressure (re. P_0) [-]
     * ``inputs['W_f']``:        engine fuel flow [kg/s]
     
     The *Emissions* component computes the following outputs:
@@ -30,7 +30,7 @@ class Emissions(om.ExplicitComponent):
 
         # Define inputs
         self.add_input('core_Tt_i', val=np.ones(nn), units='K', desc='combustor inlet temperature (re. T_0) [-]')
-        self.add_input('core_Pt_i', val=np.ones(nn), units='Pa', desc='combustor inlet pressure (re. p_0) [-]')
+        self.add_input('core_Pt_i', val=np.ones(nn), units='Pa', desc='combustor inlet pressure (re. P_0) [-]')
         self.add_input('W_f', val=np.ones(nn), units='kg/s', desc='engine fuel flow [kg/s]')
 
         # Define outputs

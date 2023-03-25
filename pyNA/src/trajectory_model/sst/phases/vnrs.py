@@ -45,7 +45,7 @@ class Vnrs(dm.Phase):
         for var in aircraft.engine.vars:
             self.add_timeseries_output('propulsion.'+ var, timeseries='interpolated')
 
-        self.add_timeseries_output('p_0', timeseries='interpolated')
+        self.add_timeseries_output('P_0', timeseries='interpolated')
         self.add_timeseries_output('rho_0', timeseries='interpolated')
         self.add_timeseries_output('I_0', timeseries='interpolated')
         self.add_timeseries_output('drho_0_dz', timeseries='interpolated')

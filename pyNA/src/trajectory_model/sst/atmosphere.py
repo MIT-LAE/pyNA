@@ -14,7 +14,7 @@ class Atmosphere(om.ExplicitComponent):
 
     The *Atmosphere* component computes the following outputs:
 
-    * ``outputs['p_0']``:           ambient pressure [Pa]
+    * ``outputs['P_0']``:           ambient pressure [Pa]
     * ``outputs['rho_0']``:         ambient density [kg/m3]
     * ``outputs['T_0']``:           ambient temperature [K]
     * ``outputs['c_0']``:           ambient speed of sound [m/s]
@@ -35,7 +35,7 @@ class Atmosphere(om.ExplicitComponent):
         self.sl['R'] = 287.05
         self.sl['T_0'] = 288.15
         self.sl['c_0'] = 340.294
-        self.sl['p_0'] = 101325.
+        self.sl['P_0'] = 101325.
         self.sl['rho_0'] = 1.225
         self.sl['mu_0'] = 1.7894e-5
         self.sl['k_0'] = 25.5e-3
@@ -50,7 +50,7 @@ class Atmosphere(om.ExplicitComponent):
 
         self.add_input('z', val=np.ones(nn), units='m', desc='aircraft z-position [m]')
         
-        self.add_output('p_0', val=np.ones(nn), units='Pa', desc='ambient pressure')
+        self.add_output('P_0', val=np.ones(nn), units='Pa', desc='ambient pressure')
         self.add_output('rho_0', val=np.ones(nn), units='kg/m**3', desc='ambient density')
         self.add_output('drho_0_dz', val=1.*np.ones(nn), units='kg/m**4', desc='change of density with altitude')
         self.add_output('T_0', val=np.ones(nn), units='K', desc='ambient temperature')
@@ -68,7 +68,7 @@ class Atmosphere(om.ExplicitComponent):
 
         ar = np.arange(nn)
         self.declare_partials('T_0', 'z', rows=ar, cols=ar)
-        self.declare_partials('p_0', 'z', rows=ar, cols=ar)
+        self.declare_partials('P_0', 'z', rows=ar, cols=ar)
         self.declare_partials('rho_0', 'z', rows=ar, cols=ar)
         self.declare_partials('drho_0_dz', 'z', rows=ar, cols=ar)
         self.declare_partials('c_0', 'z', rows=ar, cols=ar)
@@ -91,12 +91,12 @@ class Atmosphere(om.ExplicitComponent):
         # Temperature, pressure, density and speed of sound
         T_isa = self.sl['T_0'] - z * self.sl['lapse_0']  # Temperature without dT_isa
         outputs['T_0'] = self.sl['T_0'] + settings['atmosphere_dT'] - z * self.sl['lapse_0']  # Temperature
-        outputs['p_0'] = self.sl['p_0'] * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'])  # Pressure
-        outputs['rho_0'] = outputs['p_0'] / outputs['T_0'] / self.sl['R']  # Density
+        outputs['P_0'] = self.sl['P_0'] * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'])  # Pressure
+        outputs['rho_0'] = outputs['P_0'] / outputs['T_0'] / self.sl['R']  # Density
         if settings['atmosphere_mode'] == 'stratified':
             dT_0_dz = -self.sl['lapse_0']
-            dp_0_dz =  self.sl['p_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * (-self.sl['lapse_0'] / self.sl['T_0']) * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'] - 1)
-            outputs['drho_0_dz'] = 1/self.sl['R'] * (dp_0_dz*outputs['T_0'] - outputs['p_0']*dT_0_dz)/outputs['T_0']**2
+            dP_0_dz =  self.sl['P_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * (-self.sl['lapse_0'] / self.sl['T_0']) * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'] - 1)
+            outputs['drho_0_dz'] = 1/self.sl['R'] * (dP_0_dz*outputs['T_0'] - outputs['P_0']*dT_0_dz)/outputs['T_0']**2
         else:
             outputs['drho_0_dz'] = np.zeros(nn,)
         outputs['c_0'] = np.sqrt(self.sl['gamma'] * self.sl['R'] * outputs['T_0'])  # Speed of sound
@@ -107,7 +107,7 @@ class Atmosphere(om.ExplicitComponent):
 
         # Characteristic impedance
         # Source: Zorumski report 1982 part 1. Chapter 2.1 Equation 13
-        outputs['I_0'] = self.sl['rho_0'] * self.sl['c_0'] * outputs['p_0'] / self.sl['p_0'] * (self.sl['T_0'] / outputs['T_0']) ** 0.5
+        outputs['I_0'] = self.sl['rho_0'] * self.sl['c_0'] * outputs['P_0'] / self.sl['P_0'] * (self.sl['T_0'] / outputs['T_0']) ** 0.5
 
         # Relative humidity 
         # Source: Berton, NASA STCA Release Package 2018. Note: relative humidity at sea-level in standard day is 70%.
@@ -124,33 +124,33 @@ class Atmosphere(om.ExplicitComponent):
             # Temperature, pressure, density and speed of sound
             T_isa = self.sl['T_0'] - z * self.sl['lapse_0']  # Temperature without dT_isa
             T_0 = self.sl['T_0'] + settings['atmosphere_dT'] - z * self.sl['lapse_0']  # Temperature
-            p_0 = self.sl['p_0'] * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'])  # Pressure
+            P_0 = self.sl['P_0'] * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'])  # Pressure
             c_0 = np.sqrt(self.sl['gamma'] * self.sl['R'] * T_0)  # Speed of sound
 
             # Calculate partials
             partials['T_0', 'z'] = -self.sl['lapse_0']
-            partials['p_0', 'z'] = self.sl['p_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'] - 1) *  (-self.sl['lapse_0'] / self.sl['T_0'])
-            partials['rho_0', 'z'] = 1/self.sl['R'] * (partials['p_0', 'z']*T_0 - p_0*partials['T_0', 'z'])/T_0**2
+            partials['P_0', 'z'] = self.sl['P_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'] - 1) *  (-self.sl['lapse_0'] / self.sl['T_0'])
+            partials['rho_0', 'z'] = 1/self.sl['R'] * (partials['P_0', 'z']*T_0 - P_0*partials['T_0', 'z'])/T_0**2
             partials['c_0', 'z'] = 1/2/np.sqrt(self.sl['gamma'] * self.sl['R'] * T_0) * self.sl['gamma'] * self.sl['R']*(-self.sl['lapse_0'])
             
             dT_0_dz = -self.sl['lapse_0']
-            dp_0_dz =  self.sl['p_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * \
+            dP_0_dz =  self.sl['P_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * \
                     (-self.sl['lapse_0'] / self.sl['T_0']) * \
                     (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'] - 1)         
             dT_0_dz2 = 0
-            dp_0_dz2 = self.sl['p_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * \
+            dP_0_dz2 = self.sl['P_0'] * ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R']) * \
                     (-self.sl['lapse_0'] / self.sl['T_0']) * \
                     ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'] - 1)*\
                     (T_isa / self.sl['T_0']) ** ( self.sl['g'] / self.sl['lapse_0'] / self.sl['R'] - 2) * \
                     (-self.sl['lapse_0'] / self.sl['T_0'])
-            dnum_dz = dp_0_dz2*T_0 + dp_0_dz*dT_0_dz - dp_0_dz*dT_0_dz
-            partials['drho_0_dz', 'z'] = 1/self.sl['R'] * (dnum_dz*T_0**2 - (dp_0_dz*T_0 - p_0*dT_0_dz)*2*T_0*dT_0_dz)/T_0**4
+            dnum_dz = dP_0_dz2*T_0 + dP_0_dz*dT_0_dz - dP_0_dz*dT_0_dz
+            partials['drho_0_dz', 'z'] = 1/self.sl['R'] * (dnum_dz*T_0**2 - (dP_0_dz*T_0 - P_0*dT_0_dz)*2*T_0*dT_0_dz)/T_0**4
 
             dmuN_dz = 1.38313 * (1.5*T_0**0.5*(-self.sl['lapse_0'])/self.sl['T_0']**1.5)
             dmuD_dz = ( -self.sl['lapse_0'] / self.sl['T_0'] )
             partials['mu_0', 'z'] = self.sl['mu_0'] * (dmuN_dz*( T_0 / self.sl['T_0'] + 0.38313) -  (1.38313 * (T_0 / self.sl['T_0']) ** 1.5)*dmuD_dz)/( T_0 / self.sl['T_0'] + 0.38313)**2
 
-            partials['I_0', 'z'] = (self.sl['rho_0'] * self.sl['c_0']/ self.sl['p_0'] * self.sl['T_0']**0.5) * (dp_0_dz*T_0**0.5 - p_0*0.5*T_0**(-0.5)*dT_0_dz)/T_0
+            partials['I_0', 'z'] = (self.sl['rho_0'] * self.sl['c_0']/ self.sl['P_0'] * self.sl['T_0']**0.5) * (dP_0_dz*T_0**0.5 - P_0*0.5*T_0**(-0.5)*dT_0_dz)/T_0
 
             partials['rh', 'z'] = -0.012467191601049869*np.ones(nn,)
 

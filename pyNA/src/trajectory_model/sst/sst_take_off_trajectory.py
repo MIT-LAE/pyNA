@@ -160,7 +160,7 @@ class SSTTakeOffTrajectory(dm.Trajectory):
         problem.model.add_subsystem(name='phases', subsys=self)
 
         # Mux trajectory and engine variables
-        promote_lst = ['t_s', 'x', 'y', 'z', 'v', 'alpha', 'gamma', 'F_n', 'tau', 'M_0', 'c_0', 'T_0', 'p_0', 'rho_0', 'mu_0', 'I_0']
+        promote_lst = ['t_s', 'x', 'y', 'z', 'v', 'alpha', 'gamma', 'F_n', 'tau', 'M_0', 'c_0', 'T_0', 'P_0', 'rho_0', 'mu_0', 'I_0']
         if settings['noise']:
             if settings['airframe_source']:
                 promote_lst.extend(['theta_flaps', 'I_lg'])
@@ -225,7 +225,7 @@ class SSTTakeOffTrajectory(dm.Trajectory):
                 elif var in ['theta_flaps', 'theta_slats', 'y', 'I_lg']:
                     problem.model.connect('phases.' + phase_name + '.interpolated.parameters:' + var, 'trajectory.' + var + '_' + str(j))
 
-                elif var in ['eas', 'n','M_0', 'p_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
+                elif var in ['eas', 'n','M_0', 'P_0','rho_0', 'T_0', 'c_0', 'c_bar', 'mu_0', 'I_0', 'mdot_NOx', 'EINOx', 'c_l', 'c_d', 'c_l_max']:
                     problem.model.connect('phases.' + phase_name + '.interpolated.' + var, 'trajectory.' + var + '_' + str(j))
 
         for var in aircraft.engine.vars:
@@ -440,7 +440,7 @@ class SSTTakeOffTrajectory(dm.Trajectory):
         self.vars.append('c_0'); self.var_units['c_0'] = 'm/s'
         self.vars.append('T_0'); self.var_units['T_0'] = 'K'
         self.vars.append('rho_0'); self.var_units['rho_0'] = 'kg/m**3'
-        self.vars.append('p_0'); self.var_units['p_0'] = 'Pa'
+        self.vars.append('P_0'); self.var_units['P_0'] = 'Pa'
         self.vars.append('mu_0'); self.var_units['mu_0'] = 'kg/m/s'
         self.vars.append('I_0'); self.var_units['I_0'] = 'kg/m**2/s'
         self.vars.append('I_lg'); self.var_units['I_lg'] = None

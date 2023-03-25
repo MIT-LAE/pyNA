@@ -3,6 +3,9 @@ import numpy as np
 from pyNA.src.noise_model.tables import Tables
 from pyNA.src.aircraft import Aircraft
 from pyNA.src.noise_model.python.calculate_noise import calculate_noise
+from pyNA.src.noise_model.python.source.calculate_shielding_factor import calculate_shielding_factor
+import pdb
+
 
 class NoiseModel(om.ExplicitComponent):
 
@@ -58,50 +61,18 @@ class NoiseModel(om.ExplicitComponent):
         self.add_input(name='I_lg', val=np.ones(n_t, ), units=None, desc='flag for landing gear extraction (1: yes; 0: no)')
 
         if self.options['optimization']:
-            self.add_output(name='level_int', val=np.ones(n_obs,))
+            self.add_output(name='level', val=np.ones(n_obs, n_t))
         else:
             self.add_output(name='t_o', val=np.ones((n_obs, n_t,)))
             self.add_output(name='spl', val=np.ones((n_obs, n_t, settings['n_frequency_bands'],)))
-            self.add_output(name='level', val=np.ones((n_obs, n_t,)))
-            self.add_output(name='level_int', val=np.ones((n_obs,)))
+            self.add_output(name='aspl', val=np.ones((n_obs, n_t,)))
+            self.add_output(name='oaspl', val=np.ones((n_obs, n_t,)))
+            self.add_output(name='pnlt', val=np.ones((n_obs, n_t,)))
+            # self.add_output(name='level_int', val=np.ones((n_obs,)))
 
     def setup_partials(self):
 
-        if self.options['optimization']:
-                        
-            self.declare_partials(of='level_int', wrt='x')
-            self.declare_partials(of='level_int', wrt='y')
-            self.declare_partials(of='level_int', wrt='z')
-            self.declare_partials(of='level_int', wrt='alpha')
-            self.declare_partials(of='level_int', wrt='gamma')
-            self.declare_partials(of='level_int', wrt='t_s')
-            self.declare_partials(of='level_int', wrt='tau')
-            self.declare_partials(of='level_int', wrt='M_0')
-            self.declare_partials(of='level_int', wrt='c_0')
-            self.declare_partials(of='level_int', wrt='T_0')
-            self.declare_partials(of='level_int', wrt='rho_0')
-            self.declare_partials(of='level_int', wrt='P_0')
-            self.declare_partials(of='level_int', wrt='mu_0')
-            self.declare_partials(of='level_int', wrt='I_0')
-            self.declare_partials(of='level_int', wrt='fan_DTt')
-            self.declare_partials(of='level_int', wrt='fan_mdot')
-            self.declare_partials(of='level_int', wrt='fan_N')
-            self.declare_partials(of='level_int', wrt='core_mdot')
-            self.declare_partials(of='level_int', wrt='core_Tt_i')
-            self.declare_partials(of='level_int', wrt='core_Tt_j')
-            self.declare_partials(of='level_int', wrt='core_Pt_i')
-            self.declare_partials(of='level_int', wrt='turb_DTt_des')
-            self.declare_partials(of='level_int', wrt='turb_rho_e')
-            self.declare_partials(of='level_int', wrt='turb_c_e')
-            self.declare_partials(of='level_int', wrt='turb_rho_i')
-            self.declare_partials(of='level_int', wrt='turb_c_i')
-            self.declare_partials(of='level_int', wrt='jet_V')
-            self.declare_partials(of='level_int', wrt='jet_rho')
-            self.declare_partials(of='level_int', wrt='jet_A')
-            self.declare_partials(of='level_int', wrt='jet_Tt')
-            self.declare_partials(of='level_int', wrt='jet_M')
-            self.declare_partials(of='level_int', wrt='theta_flaps')
-            self.declare_partials(of='level_int', wrt='I_lg')
+        pass
 
     def compute(self, inputs, outputs):
         
@@ -113,44 +84,50 @@ class NoiseModel(om.ExplicitComponent):
         n_t = self.options['n_t']
         n_obs = settings["x_microphones"].shape[0]
 
-
         if self.options['optimization']:
             
             for i in np.arange(n_obs):
                 for j in np.arange(n_t):
-        
                     x_microphone = settings['x_microphones'][i,:]
 
-                    outputs['level_int'][i] = calculate_noise(inputs['x'][j], inputs['y'][j], inputs['z'][j], inputs['alpha'][j], inputs['gamma'][j], inputs['t_s'][j], inputs['tau'][j], 
+                    shielding = calculate_shielding_factor(settings)
+
+                    outputs['t_o'][i, j], outputs['spl'][i, j, :], outputs['level'][i, j] = calculate_noise(inputs['x'][j], inputs['y'][j], inputs['z'][j], inputs['alpha'][j], inputs['gamma'][j], inputs['t_s'][j], inputs['tau'][j], 
                                                     inputs['M_0'][j], inputs['c_0'][j], inputs['T_0'][j], inputs['rho_0'][j], inputs['P_0'][j], inputs['mu_0'][j], inputs['I_0'][j],
                                                     inputs['fan_DTt'][j], inputs['fan_mdot'][j], inputs['fan_N'][j], 
                                                     inputs['core_mdot'][j], inputs['core_Tt_i'][j], inputs['core_Tt_j'][j], inputs['core_Pt_i'][j], inputs['turb_DTt_des'][j], inputs['turb_rho_e'][j], inputs['turb_c_e'][j], inputs['turb_rho_i'][j], inputs['turb_c_i'][j],
                                                     inputs['jet_V'][j], inputs['jet_rho'][j], inputs['jet_A'][j], inputs['jet_Tt'][j], inputs['jet_M'][j], 
                                                     inputs['theta_flaps'][j], inputs['I_lg'][j],  
+                                                    shielding,
                                                     x_microphone,
                                                     f, f_sb,
-                                                    settings, aircraft, tables)
+                                                    settings, aircraft, tables,
+                                                    self.options['optimization'])
 
         else:
 
             for i in np.arange(n_obs):
+                
                 for j in np.arange(n_t):
 
                     x_microphone = settings['x_microphones'][i,:]
+    
+                    shielding = calculate_shielding_factor(settings, tables, i, j)
 
-                    outputs['t_o'][i,:], outputs['spl'][i,j,:], outputs['level'][i,:], outputs['level_int'][i] = calculate_noise(inputs['x'][j], inputs['y'][j], inputs['z'][j], inputs['alpha'][j], inputs['gamma'][j], inputs['t_s'][j], inputs['tau'][j], 
+                    outputs['t_o'][i, j], outputs['spl'][i, j, :], outputs['aspl'][i, j], outputs['oaspl'][i, j], outputs['pnlt'][i, j] = calculate_noise(inputs['x'][j], inputs['y'][j], inputs['z'][j], inputs['alpha'][j], inputs['gamma'][j], inputs['t_s'][j], inputs['tau'][j], 
                                                     inputs['M_0'][j], inputs['c_0'][j], inputs['T_0'][j], inputs['rho_0'][j], inputs['P_0'][j], inputs['mu_0'][j], inputs['I_0'][j],
                                                     inputs['fan_DTt'][j], inputs['fan_mdot'][j], inputs['fan_N'][j], 
                                                     inputs['core_mdot'][j], inputs['core_Tt_i'][j], inputs['core_Tt_j'][j], inputs['core_Pt_i'][j], inputs['turb_DTt_des'][j], inputs['turb_rho_e'][j], inputs['turb_c_e'][j], inputs['turb_rho_i'][j], inputs['turb_c_i'][j],
                                                     inputs['jet_V'][j], inputs['jet_rho'][j], inputs['jet_A'][j], inputs['jet_Tt'][j], inputs['jet_M'][j], 
                                                     inputs['theta_flaps'][j], inputs['I_lg'][j],  
+                                                    shielding,
                                                     x_microphone,
                                                     f, f_sb,
-                                                    settings, aircraft, tables)
+                                                    settings, aircraft, tables,
+                                                    self.options['optimization'])
 
         return
 
     def compute_partials(self, inputs, partials):
         
-        if self.options['optimization']:
-            pass
+        pass

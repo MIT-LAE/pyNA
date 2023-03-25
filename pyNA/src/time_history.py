@@ -102,7 +102,7 @@ class TimeHistory:
         self.problem.model.set_val('trajectory.M_0', self.data['M_0 [-]'])
         self.problem.model.set_val('trajectory.c_0', self.data['c_0 [m/s]'])
         self.problem.model.set_val('trajectory.T_0', self.data['T_0 [K]'])
-        self.problem.model.set_val('trajectory.p_0', self.data['p_0 [Pa]'])
+        self.problem.model.set_val('trajectory.P_0', self.data['P_0 [Pa]'])
         self.problem.model.set_val('trajectory.rho_0', self.data['rho_0 [kg/m**3]'])
         self.problem.model.set_val('trajectory.mu_0', self.data['mu_0 [kg/m/s]'])
         self.problem.model.set_val('trajectory.I_0', self.data['I_0 [kg/m**2/s]'])
@@ -115,7 +115,7 @@ class TimeHistory:
         if self.settings['jet_mixing_source'] and not self.settings['jet_shock_source']:
             self.problem.model.set_val('trajectory.jet_V', self.data['jet_V [m/s]'])
             self.problem.model.set_val('trajectory.jet_rho', self.data['jet_rho [kg/m**3]'])
-            self.problem.model.set_val('trajectory.jet_A', self.data['jet_A [m2]'])
+            self.problem.model.set_val('trajectory.jet_A', self.data['jet_A [m**2]'])
             self.problem.model.set_val('trajectory.jet_Tt', self.data['jet_Tt [K]'])
         elif not self.settings['jet_mixing_source'] and self.settings['jet_shock_source']:
             self.problem.model.set_val('trajectory.jet_V', self.data['jet_V [m/s]'])

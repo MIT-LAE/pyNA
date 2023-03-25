@@ -23,7 +23,7 @@ class TestAtmosphere(unittest.TestCase):
 		self.assertAlmostEqual(prob.get_val('a.c_0')[0], 342.363, 2)
 		self.assertAlmostEqual(prob.get_val('a.drho_0_dz')[0], -0.000106287, 2)
 		self.assertAlmostEqual(prob.get_val('a.mu_0')[0], 0.0000180632, 2)
-		self.assertAlmostEqual(prob.get_val('a.p_0')[0], 89874.46, 2)
+		self.assertAlmostEqual(prob.get_val('a.P_0')[0], 89874.46, 2)
 		self.assertAlmostEqual(prob.get_val('a.rh')[0], 57.5328, 2)
 		self.assertAlmostEqual(prob.get_val('a.rho_0')[0], 1.07347, 2)
 
@@ -43,7 +43,7 @@ class TestAtmosphere(unittest.TestCase):
 		self.assertAlmostEqual(prob.get_val('a.c_0')[0], 346.157, 2)
 		self.assertAlmostEqual(prob.get_val('a.drho_0_dz')[0], 0., 2)
 		self.assertAlmostEqual(prob.get_val('a.mu_0')[0], 0.0000183733, 2)
-		self.assertAlmostEqual(prob.get_val('a.p_0')[0], 101325., 2)
+		self.assertAlmostEqual(prob.get_val('a.P_0')[0], 101325., 2)
 		self.assertAlmostEqual(prob.get_val('a.rh')[0], 70., 2)
 		self.assertAlmostEqual(prob.get_val('a.rho_0')[0], 1.18386, 2)
 

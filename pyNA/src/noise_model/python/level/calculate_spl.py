@@ -1,4 +1,5 @@
-import jax.numpy as jnp
+import numpy as np
+
 
 def calculate_spl(msap_prop, rho_0, c_0):
     """
@@ -17,10 +18,10 @@ def calculate_spl(msap_prop, rho_0, c_0):
     """
 
     # Compute SPL
-    spl = 10.*jnp.log10(msap_prop) + 20.*jnp.log10(rho_0 * c_0 ** 2)
+    spl = 10.*np.log10(msap_prop) + 20.*np.log10(rho_0 * c_0 ** 2)
 
     # Clip values to avoid (spl < 0)
-    spl = jnp.clip(spl, a_min=1e-99)
+    spl = spl.clip(min=1e-99)
 
     return spl
 
